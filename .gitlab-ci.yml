@@ -1,0 +1,70 @@
+variables:
+  # When using DinD service, we need to instruct docker, to talk with
+  # the daemon started inside of the service. The daemon is available
+  # with a network connection instead of the default /var/run/docker.sock socket.
+  DOCKER_HOST: "tcp://docker:2375"
+
+.base-helm:
+  image: dtzar/helm-kubectl:3.3.1
+  tags:
+    - docker
+    - privileged
+  only:
+    - merge_requests
+    - master
+
+.base-jsonnet:
+  image: docker:18.09
+  tags:
+    - docker
+    - privileged
+  only:
+    - merge_requests
+    - master
+  services:
+    - docker:18.09-dind
+
+stages:
+  - build jsonnet
+  - build helm
+  - test
+  - publish
+
+build jsonnet dashboards:
+  stage: build jsonnet
+  extends: .base-jsonnet
+  script:
+    - mkdir templates/k8s-m8g
+    - docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -m templates/k8s-m8g -S jsonnet/helm.jsonnet
+  artifacts:
+    paths:
+    - templates/k8s-m8g
+
+build helm package:
+  stage: build helm
+  extends: .base-helm
+  script:
+    - helm package -u -d release .
+  artifacts:
+    paths:
+    - release/
+
+test lint:
+  stage: test
+  extends: .base-helm
+  script:
+    - helm lint . -f values.yaml
+
+test lint jsonnet:
+  stage: test
+  extends: .base-jsonnet
+  script:
+  - find ./jsonnet/ -name 'vendor' -prune -o -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet-lint "$f" || exit 1; done;
+
+publish:
+  stage: publish
+  image: cfmanteiga/alpine-bash-curl-jq
+  only:
+    - master
+  script:
+    - curl -u "$IFNE_HELM_USER":"$IFNE_HELM_PASS" "$IFNE_HELM_URL" --upload-file release/k8s-m8g-*.tgz

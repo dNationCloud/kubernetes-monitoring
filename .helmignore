@@ -1,0 +1,20 @@
+# Patterns to ignore when building helm package
+# Various IDEs
+.project
+.idea/
+*.tmproj
+# Common backup files
+*.swp
+*.bak
+*.tmp
+# Helm files
+test/*
+release/*
+snapshot/*
+# Images
+images/*
+# Helpers
+helpers/*
+# Common Git dirs
+.git/
+.gitignore
