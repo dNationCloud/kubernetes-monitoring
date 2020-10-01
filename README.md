@@ -4,7 +4,7 @@ A set of Grafana dashboards and Prometheus alerts to cover Kubernetes monitoring
 
 # Getting Started
 
-K8s-m8g helm chart is designed to be installed on the top of the existing [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+K8s-m8g helm chart is designed to be installed on top of the existing [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 and [loki-stack](https://github.com/grafana/loki/tree/master/production/helm/loki-stack) monitoring infrastructure.
 
 ### Prerequisites
