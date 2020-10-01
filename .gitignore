@@ -1,0 +1,14 @@
+# Various IDEs
+.project
+.idea/
+*.tmproj
+# Common backup files
+*.swp
+*.bak
+*.tmp
+# Helm files
+charts/*
+test/*
+release/*
+snapshot/*
+Chart.lock
