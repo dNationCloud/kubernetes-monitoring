@@ -63,6 +63,6 @@ find ./jsonnet/ -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read
 
 # Project Background
 
-K8s-m8g project has been developed, maintained and used in production by [dNation](https://www.dnation.tech/) professionals 
+K8s-m8g project is developed, maintained and used in production by [dNation](https://www.dnation.tech/) professionals 
 to simplify their day-to-day monitoring tasks.  
 The development of K8s-m8g was transformed to an open source project in October 2020.
