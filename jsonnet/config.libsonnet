@@ -34,6 +34,8 @@
       memoryNamespaceDetail: 'memorynamespacedetail',
       networkDetail: 'networkdetail',
       networkNamespaceDetail: 'networknamespacedetail',
+      cpuDetail: 'cpudetail',
+
       // Kube system dashboards
       controllerManager: 'controllermanager',
       scheduler: 'scheduler',
@@ -41,8 +43,10 @@
       apiServer: 'apiserver',
       proxy: 'proxy',
       etcd: 'etcd',
+
       // Kube compute dashboards
       statefulSet: 'statefulset',
+
       // Kube pvc dashboard
       persistentVolumes: 'persistentvolumes',
 
@@ -78,6 +82,7 @@
       'memory-namespace-detail.json': self.k8sPath,
       'network-detail.json': self.k8sPath,
       'network-namespace-detail.json': self.k8sPath,
+      'cpu-detail.json': self.k8sPath,
       'pod-detail.json': self.dnationPath,
       'logs': self.k8sPath,
 
@@ -121,7 +126,7 @@
         black: '#000000',  // black
       },
       dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
-      templateRefresh: 'time',
+      templateRefresh: 'time',  // on time range change
       templateSort: 5,  // case insensitive ascent sort
     },
 

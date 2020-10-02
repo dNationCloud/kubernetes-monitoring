@@ -78,12 +78,11 @@ local polystatPanel = grafana.polystatPanel;
         polystatPanel.new(
           title='Disk per Node',
           datasource='$datasource',
-          description='The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity,  because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.',
+          description='The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.',
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
           default_click_through_new_tab=true,
           font_size=20,
           global_unit_format='percent',
-          global_decimals=0,
           global_operator_name='current',
           global_thresholds=polystatThresholds,
           hexagon_sort_by_direction=4,
@@ -105,7 +104,7 @@ local polystatPanel = grafana.polystatPanel;
       local diskUtilGraphPanel =
         graphPanel.new(
           title='Disk Utilization',
-          description='The value of the available disk capacity is reduced by  5%,  because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.',
+          description='The value of the available disk capacity is reduced by  5%, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.',
           datasource='$datasource',
           format='bytes',
           min=0,
@@ -129,7 +128,6 @@ local polystatPanel = grafana.polystatPanel;
         .addTarget(prometheus.target(legendFormat='read {{device}}', expr='sum(rate(node_disk_read_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
         .addTarget(prometheus.target(legendFormat='written {{device}}', expr='sum(rate(node_disk_written_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
         .addTarget(prometheus.target(legendFormat='io time {{device}}', expr='sum(rate(node_disk_io_time_seconds_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
-
 
       dashboard.new(
         'Disk per Node',

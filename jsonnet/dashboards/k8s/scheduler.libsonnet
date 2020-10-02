@@ -49,7 +49,6 @@ local statPanel = grafana.statPanel;
         .addTarget(prometheus.target('sum(rate(scheduler_scheduling_algorithm_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} scheduling algorithm'))
         .addTarget(prometheus.target('sum(rate(scheduler_volume_scheduling_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} volume'));
 
-
       local schedulingLatency =
         graphPanel.new(
           title='Scheduling latency 99th Quantile',
@@ -161,7 +160,8 @@ local statPanel = grafana.statPanel;
         tags=$._config.dashboardCommon.tags.k8sSystem,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
-      ).addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate])
+      )
+      .addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate])
       .addPanels(
         [
           upCount { gridPos: { x: 0, y: 0, w: 4, h: 7 } },

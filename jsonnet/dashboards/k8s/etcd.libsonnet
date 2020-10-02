@@ -81,7 +81,7 @@ local statPanel = grafana.statPanel;
         )
         .addTarget(
           prometheus.target(
-            expr='etcd_mvcc_db_total_size_in_bytes{cluster=~"$cluster", %(etcd)s, instance=~"$instance",}' % $._config.dashboardSelectors,
+            expr='etcd_mvcc_db_total_size_in_bytes{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}' % $._config.dashboardSelectors,
             legendFormat='{{instance}} DB Size',
           )
         );

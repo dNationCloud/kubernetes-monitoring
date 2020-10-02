@@ -20,7 +20,6 @@ local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local statPanel = grafana.statPanel;
 
-
 {
   grafanaDashboards+:: {
     'proxy.json':
@@ -131,7 +130,6 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
         )
         .addTarget(prometheus.target('go_goroutines{cluster=~"$cluster", %(proxy)s, instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
-
 
       local datasourceTemplate =
         template.datasource(

@@ -82,7 +82,6 @@ local polystatPanel = grafana.polystatPanel;
           default_click_through_new_tab=true,
           font_size=20,
           global_unit_format='pps',
-          global_decimals=2,
           global_operator_name='current',
           global_thresholds=polystatThresholds,
           hexagon_sort_by_direction=4,

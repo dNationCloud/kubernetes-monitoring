@@ -62,7 +62,8 @@ local text = grafana.text;
           datasource='$alertmanager',
           graphMode='none',
           colorMode='background',
-        ).addTarget({ type: 'single', expr: expr });
+        )
+        .addTarget({ type: 'single', expr: expr });
 
       local criticalPanel =
         alertPanel(
@@ -252,12 +253,12 @@ local text = grafana.text;
       local overallUtilizationCPUPanel =
         percentStatPanel(
           title='Overall Utilization',
-          expr='round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job" ,mode="idle"}[5m])))) * 100)',
+          expr='round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * 100)',
         )
         .addThresholds(nodeMetricsThresholds)
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/jNR_edMMz?%s&var-instance=All' % [$._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true },
+            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuDetail, $._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true },
             { title: 'per Namespace', url: '/d/bEN1iiMGz?%s' % [$._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true },
           ]
         );
@@ -270,7 +271,7 @@ local text = grafana.text;
         .addThresholds(nodeMetricsThresholds)
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/jNR_edMMz?%s&var-instance=All' % [$._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true },
+            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuDetail, $._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true },
             { title: 'per Namespace', url: '/d/bEN1iiMGz?%s' % [$._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true },
           ]
         );
@@ -308,7 +309,7 @@ local text = grafana.text;
           title='Overall Utilization',
           expr='round(\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device))\n * 100\n))',
         )
-        { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity,  because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
+        { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
         .addThresholds(nodeMetricsThresholds)
         .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskDetail, $._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true });
 
@@ -317,7 +318,7 @@ local text = grafana.text;
           title='Most Utilized Node',
           expr='round(\nmax(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device))\n * 100\n))',
         )
-        { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity,  because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
+        { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
         .addThresholds(nodeMetricsThresholds)
         .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskDetail, $._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true });
 
@@ -354,9 +355,8 @@ local text = grafana.text;
       local usedCoresPanel =
         valueStatPanel(
           title='Used Cores',
-          expr='(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job" ,mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"})',
-        )
-        { fieldConfig: { defaults: { decimals: 2 } } };
+          expr='(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"})',
+        );
 
       local totalCoresPanel =
         valueStatPanel(
@@ -467,10 +467,10 @@ local text = grafana.text;
           proxyPanel { gridPos: { x: 16, y: 12, w: 4, h: 3 } },
           schedulerPanel { gridPos: { x: 20, y: 12, w: 4, h: 3 } },
           row.new('Node Metrics (including Master)') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
-          text.new('CPU', datasource='$datasource') { gridPos: { x: 0, y: 16, w: 6, h: 1 } },
-          text.new('RAM', datasource='$datasource') { gridPos: { x: 6, y: 16, w: 6, h: 1 } },
-          text.new('Disk', datasource='$datasource') { gridPos: { x: 12, y: 16, w: 6, h: 1 } },
-          text.new('Network', datasource='$datasource') { gridPos: { x: 18, y: 16, w: 6, h: 1 } },
+          text.new('CPU') { gridPos: { x: 0, y: 16, w: 6, h: 1 } },
+          text.new('RAM') { gridPos: { x: 6, y: 16, w: 6, h: 1 } },
+          text.new('Disk') { gridPos: { x: 12, y: 16, w: 6, h: 1 } },
+          text.new('Network') { gridPos: { x: 18, y: 16, w: 6, h: 1 } },
           overallUtilizationCPUPanel { gridPos: { x: 0, y: 17, w: 3, h: 3 } },
           mostUtilizedNodeCPUPanel { gridPos: { x: 3, y: 17, w: 3, h: 3 } },
           overallUtilizationRAMPanel { gridPos: { x: 6, y: 17, w: 3, h: 3 } },
