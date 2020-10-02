@@ -67,4 +67,5 @@ publish:
   only:
     - master
   script:
-    - curl -u "$IFNE_HELM_USER":"$IFNE_HELM_PASS" "$IFNE_HELM_URL" --upload-file release/k8s-m8g-*.tgz
+    - curl --fail --user "$IFNE_HELM_USER":"$IFNE_HELM_PASS" "$IFNE_HELM_URL" --upload-file release/k8s-m8g-*.tgz
+  when: manual
