@@ -46,26 +46,6 @@ local text = grafana.text;
           url='/explore?orgId=1&left=%5B%22now-7d%22,%22now%22,%22k8s-h-01-logs%22,%7B%22expr%22:%22%7Bnamespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
         );
 
-      local applicationLink =
-        link.dashboards(
-          icon='dashboard',
-          targetBlank=true,
-          tags=[],
-          title='Application Green/Red Monitoring',
-          type='link',
-          url='/d/%s?from=$__from&to=$__to' % $._config.dashboardIDs.appMonitoring,
-        );
-
-      local hostLink =
-        link.dashboards(
-          icon='dashboard',
-          targetBlank=true,
-          tags=[],
-          title='Host Green/Red Monitoring',
-          type='link',
-          url='/d/%s?from=$__from&to=$__to' % $._config.dashboardIDs.hostMonitoring,
-        );
-
       local dNationLink =
         link.dashboards(
           icon='cloud',
@@ -463,8 +443,6 @@ local text = grafana.text;
       )
       .addLink(experimentalLink)
       .addLink(explorerLink)
-      .addLink(applicationLink)
-      .addLink(hostLink)
       .addLink(dNationLink)
       .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate, jobTemplate])
       .addPanels(

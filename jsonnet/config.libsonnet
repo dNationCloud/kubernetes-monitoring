@@ -19,8 +19,6 @@
     dashboardIDs: {
       // dNation dashboards
       k8sMonitoring: 'k8smonitoring',
-      hostMonitoring: 'hostmonitoring',
-      appMonitoring: 'appmonitoring',
       alertDetail: 'alertdetail',
       nodeDetail: 'nodedetail',
       jobDetail: 'jobdetail',
