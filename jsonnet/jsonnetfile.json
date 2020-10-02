@@ -22,7 +22,8 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/thelastpickle/grafonnet-polystat-panel"
+          "remote": "https://github.com/thelastpickle/grafonnet-polystat-panel.git",
+          "subdir": ""
         }
       },
       "version": "master"

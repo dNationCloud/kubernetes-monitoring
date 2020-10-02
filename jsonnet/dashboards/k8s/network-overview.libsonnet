@@ -24,7 +24,7 @@ local polystatPanel = grafana.polystatPanel;
 
 {
   grafanaDashboards+:: {
-    'network-overview.json':
+    'network-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

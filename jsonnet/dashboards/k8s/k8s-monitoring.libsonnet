@@ -24,7 +24,7 @@ local text = grafana.text;
 
 {
   grafanaDashboards+:: {
-    'k8s-monitoring.json':
+    'k8s-monitoring':
       local containerLink =
         link.dashboards(
           title='Logs Container',

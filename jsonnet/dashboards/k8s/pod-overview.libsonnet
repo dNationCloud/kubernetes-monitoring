@@ -22,7 +22,7 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    'pod-overview.json':
+    'pod-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

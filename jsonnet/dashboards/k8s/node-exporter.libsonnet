@@ -24,7 +24,7 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    'node-exporter.json':
+    'node-exporter':
       local upTimePanel =
         statPanel.new(
           title='Uptime',

@@ -24,7 +24,7 @@ local polystatPanel = grafana.polystatPanel;
 
 {
   grafanaDashboards+:: {
-    'cpu-overview.json':
+    'cpu-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

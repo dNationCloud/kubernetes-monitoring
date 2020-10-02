@@ -24,7 +24,7 @@ local errorBudgetTarget = 0.99;
 
 {
   grafanaDashboards+:: {
-    'api-server.json':
+    'api-server':
       local availability1d =
         statPanel.new(
           title='Availability (%dd) > %.3f%%' % [availabilityDays, 100 * errorBudgetTarget],

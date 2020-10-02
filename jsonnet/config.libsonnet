@@ -90,5 +90,14 @@
 
     isLoki: true,
 
+    ruleCommon: {
+      appName: 'prom-op',
+      alertNamePrefix: 'K8sM8g',
+      thresholds: {
+        critical: 99,
+        warning: 95,
+      }
+    }
+
   },
 }

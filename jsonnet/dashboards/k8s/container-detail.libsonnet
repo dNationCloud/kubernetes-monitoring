@@ -23,7 +23,7 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    'container-detail.json':
+    'container-detail':
       local cpu =
         graphPanel.new(
           title='CPU Usage',

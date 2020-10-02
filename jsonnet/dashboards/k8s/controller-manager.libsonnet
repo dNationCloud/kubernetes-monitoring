@@ -22,7 +22,7 @@ local statPanel = grafana.statPanel;
 
 {
   grafanaDashboards+:: {
-    'controller-manager.json':
+    'controller-manager':
       local upCount =
         statPanel.new(
           title='Up',

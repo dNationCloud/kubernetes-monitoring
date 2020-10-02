@@ -14,63 +14,78 @@
 /* Module comprises the logic to encapsulate grafana dashboards writted in jsonnet into k8s configmaps */
 
 local dashboards = (import 'dashboards/dashboards.libsonnet').grafanaDashboards;
+local rules = (import 'rules/rules.libsonnet').prometheusRules;
+local config = (import 'config.libsonnet')._config;
 local kube = import 'kube-libsonnet/kube.libsonnet';
+local escapeDoubleBrackets = (import 'util.libsonnet').escapeDoubleBrackets;
 
-local dashboardToString(dashboard) =
+local k8sObjectName(name) =
   /**
-   * Parse grafana dashboard and replace {{.*}} by {{`{{`}}.*{{`}}`}}
-   * Helm chart as a consumer of generated grafana dashboard uses the same format of variable definition as grafana.
-   * The grafana dashboard variables need to be escaped to resolve this conflict.
+   * Construct k8s object name from name
    *
-   * @param dashboard The input dashboard object.
-   * @return parsed dashboard as a string.
+   * @param filename The input name string.
+   * @return k8s object name.
    */
-  std.strReplace(
-    std.strReplace(
-      std.strReplace(
-        std.strReplace(
-          std.toString(dashboard), '{{', '{{`{{'
-        ), '}}', '}}`}}'
-      ), '{{`{{', '{{`{{`}}'
-    ), '}}`}}', '{{`}}`}}'
-  );
+  '{{ $.Release.Name }}-%s' % name;
 
-local dashboardConfigMapName(filename) =
+local k8sManifestFileName(name) =
   /**
-   * Parse k8s configmap name from the dashboard filename
+   * Construct k8s manifest filename from name
    *
-   * @param filename The input filename string.
-   * @return k8s configmap name.
+   * @param filename The input name string.
+   * @return k8s manifest filename.
    */
-  '{{ $.Release.Name }}-%(name)s' % std.strReplace(filename, '.json', '');
+  "%s.yaml" % name;
 
-local dashboardConfigMapFileName(filename) =
+local dashboardJsonFileName(name) =
   /**
-   * Parse k8s configmap filename from the dashboard filename
+   * Construct dashboard json filename from name
    *
-   * @param filename The input filename string.
-   * @return k8s configmap filename.
+   * @param filename The input name string.
+   * @return dashboard json filename.
    */
-  std.strReplace(filename, '.json', '.yaml');
+  "%s.json" % name;
 
 local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet template.\n\n';
 
 {
-  [dashboardConfigMapFileName(filename)]:
+  [k8sManifestFileName(filename)]:
     doNotChangeMessage +
     std.manifestYamlDoc(
-      kube.ConfigMap(dashboardConfigMapName(filename)) {
+      kube.ConfigMap(k8sObjectName(filename)) {
         metadata+: {
+          namespace: '{{ $.Release.Namespace }}',
           labels: {
             grafana_dashboard: '1',
             app: '{{ $.Release.Name }}-grafana',
+            release: '{{ $.Release.Name }}',
           },
-          namespace: '{{ $.Release.Namespace }}',
         },
         data: {
-          [filename]: dashboardToString(dashboards[filename]),
+          [dashboardJsonFileName(filename)]: escapeDoubleBrackets(std.toString(dashboards[filename])),
         },
       }
     )
   for filename in std.objectFields(dashboards)
+} +
+
+{
+  [k8sManifestFileName(filename)]:
+    doNotChangeMessage +
+    std.manifestYamlDoc(
+      {
+        apiVersion: 'monitoring.coreos.com/v1',
+        kind: 'PrometheusRule',
+        metadata: {
+          name: k8sObjectName(filename),
+          namespace: '{{ $.Release.Namespace }}',
+          labels: {
+            app: config.ruleCommon.appName,
+            release: '{{ $.Release.Name }}',
+          },
+        },
+        spec: rules[filename],
+      }
+    )
+  for filename in std.objectFields(rules)
 }
