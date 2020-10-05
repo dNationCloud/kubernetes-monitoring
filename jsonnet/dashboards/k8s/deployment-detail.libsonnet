@@ -52,7 +52,7 @@ local table = grafana.tablePanel;
         );
 
       local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
-      local colorsInverse = [colors[2], colors[1], colors[0]];
+      local colorsInverse = std.reverse(colors);
       local thresholds = [1, 1];
       local rangeMaps = [
         { from: '0', text: 'OK', to: '0' },

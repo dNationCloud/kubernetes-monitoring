@@ -31,15 +31,6 @@ local row = grafana.row;
           current=null,
         );
 
-      local alertManagerTemplate =
-        template.datasource(
-          name='alertmanager',
-          label='AlertManager',
-          query='camptocamp-prometheus-alertmanager-datasource',
-          current=null,
-          hide='variable',
-        );
-
       local clusterTemplate =
         template.new(
           name='cluster',
@@ -52,14 +43,14 @@ local row = grafana.row;
         );
 
       local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
-      local colorsInverse = [colors[2], colors[1], colors[0]];
+      local colorsInverse = std.reverse(colors);
       local thresholds = [1, 1];
-
 
       local podsTable =
         table.new(
           title='Pods',
           datasource='$datasource',
+          sort={ col: 3, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
@@ -78,7 +69,6 @@ local row = grafana.row;
             prometheus.target(format='table', instant=true, expr='sum by (pod, namespace) (kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"}) > 0'),
             prometheus.target(format='table', instant=true, expr='sum by (pod, namespace) (kube_pod_status_phase{cluster=~"$cluster", phase="Failed"}) > 0'),
             prometheus.target(format='table', instant=true, expr='sum by (pod, namespace) (kube_pod_status_phase{cluster=~"$cluster", phase="Pending"}) > 0'),
-
           ]
         );
 
@@ -91,15 +81,12 @@ local row = grafana.row;
         tags=$._config.dashboardCommon.tags.k8sDetail,
         uid=$._config.dashboardIDs.podDetail,
       )
-
-      .addTemplates([datasourceTemplate,alertManagerTemplate,clusterTemplate])
-
+      .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate])
       .addPanels(
         [
           row.new('Pods') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
           podsTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
         ]
-
       ),
   },
 }
