@@ -55,7 +55,7 @@ local getNextIndex(arrays) =
           name='alertmanager',
           label='AlertManager',
           query='camptocamp-prometheus-alertmanager-datasource',
-          current='cluster-alertmanager',
+          current=null,
           hide='variable',
         );
 
@@ -104,16 +104,16 @@ local getNextIndex(arrays) =
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Status', pattern: 'Value #A', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [4, 4], colorMode: 'cell', colors: colors },
-            { alias: 'Restarts', pattern: 'Value #B', type: 'number', decimals: 0, thresholds: [5, 10], colorMode: 'cell', colors: colors },
-            { alias: 'Container', pattern: 'container', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s/kubernetes-compute-resources-detail?&var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Restarts', pattern: 'Value #B', type: 'number', thresholds: [5, 10], colorMode: 'cell', colors: colors },
+            { alias: 'Container', pattern: 'container', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
             { alias: 'Pod', pattern: 'pod', type: 'string' },
           ]
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr=statusExpr, intervalFactor=1),
-            prometheus.target(format='table', instant=true, expr='sum by (container, namespace, pod) (kube_pod_container_status_restarts_total{cluster=~"$cluster"})', intervalFactor=1),
+            prometheus.target(format='table', instant=true, expr=statusExpr),
+            prometheus.target(format='table', instant=true, expr='sum by (container, namespace, pod) (kube_pod_container_status_restarts_total{cluster=~"$cluster"})'),
           ]
         );
 

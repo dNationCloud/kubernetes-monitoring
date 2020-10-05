@@ -31,7 +31,7 @@ local table = grafana.tablePanel;
           current=null,
         );
 
-      local alertmanagerTemplate =
+      local alertManagerTemplate =
         template.datasource(
           name='alertmanager',
           label='AlertManager',
@@ -51,17 +51,17 @@ local table = grafana.tablePanel;
           hide='variable',
         );
 
-      local nodesTable =
+      local statefulSetsTable =
         table.new(
           title='Stateful Sets',
           datasource='$datasource',
-          sort={ col: 2, desc: true },
+          sort={ col: 6, desc: false },
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { alias: 'Desired', pattern: 'Value #A', type: 'number', decimals: 0 },
-            { alias: 'Current', pattern: 'Value #B', type: 'number', decimals: 0 },
-            { alias: 'Ready', pattern: 'Value #C', type: 'number', decimals: 0 },
-            { alias: 'Desired/Ready', pattern: 'Value #D', type: 'number', decimals: 0, unit: 'percent', thresholds: [95, 99], colorMode: 'cell', colors: [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green] },
+            { alias: 'Desired', pattern: 'Value #A', type: 'number' },
+            { alias: 'Current', pattern: 'Value #B', type: 'number' },
+            { alias: 'Ready', pattern: 'Value #C', type: 'number' },
+            { alias: 'Desired/Ready', pattern: 'Value #D', type: 'number', unit: 'percent', thresholds: [95, 99], colorMode: 'cell', colors: [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
             { alias: 'Stateful Set', pattern: 'statefulset', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&var-view=statefulset&%s' % [$._config.dashboardIDs.statefulSet, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
@@ -71,7 +71,7 @@ local table = grafana.tablePanel;
             prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster"})'),
             prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
             prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
-            prometheus.target(format='table', instant=true, expr='\n(sum by (statefulset, namespace) (kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s}) ) / (sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s}) ) * 100' % $._config.dashboardSelectors),
+            prometheus.target(format='table', instant=true, expr='(sum by (statefulset, namespace) (kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s}) ) / (sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s}) ) * 100' % $._config.dashboardSelectors),
           ]
         );
 
@@ -84,11 +84,11 @@ local table = grafana.tablePanel;
         tags=$._config.dashboardCommon.tags.k8sDetail,
         uid=$._config.dashboardIDs.statefulSetDetail,
       )
-      .addTemplates([datasourceTemplate, alertmanagerTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate])
       .addPanels(
         [
           row.new('Stateful Sets') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-          nodesTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
+          statefulSetsTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
         ]
       ),
   },

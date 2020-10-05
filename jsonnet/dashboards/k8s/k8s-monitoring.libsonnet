@@ -128,7 +128,7 @@ local text = grafana.text;
           title='Running Stateful Sets',
           expr='sum(kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s}) / sum(kube_statefulset_replicas{%(stateMetrics)s}) * 100' % $._config.dashboardSelectors,
         )
-        .addDataLink({ title: 'Detail', url: 'd/%s/stateful-sets?%s' % [$._config.dashboardIDs.statefulSetDetail, $._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true })
+        .addDataLink({ title: 'Detail', url: 'd/%s?%s' % [$._config.dashboardIDs.statefulSetDetail, $._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true })
         .addThresholds(overviewThresholds);
 
       local pvcBoundPanel =
@@ -266,7 +266,7 @@ local text = grafana.text;
       local mostUtilizedNodeCPUPanel =
         percentStatPanel(
           title='Most Utilized Node',
-          expr='round(max((1 - (avg by (instance) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job",mode="idle"}[5m])))) * 100))\n\n',
+          expr='round(max((1 - (avg by (instance) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job",mode="idle"}[5m])))) * 100))',
         )
         .addThresholds(nodeMetricsThresholds)
         .addDataLinks(
@@ -327,7 +327,7 @@ local text = grafana.text;
           title='Errors',
           expr='sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]))',
         )
-        { fieldConfig: { defaults: { unit: 'pps', decimals: 0 } } }
+        { fieldConfig: { defaults: { unit: 'none' } } }
         .addThresholds(
           [
             { color: $._config.dashboardCommon.color.green, value: null },
@@ -381,7 +381,7 @@ local text = grafana.text;
       local usedDiskPanel =
         valueStatPanel(
           title='Used',
-          expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device))\n\n)))\n\n',
+          expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device))\n\n)))',
           unit='bytes',
         );
 

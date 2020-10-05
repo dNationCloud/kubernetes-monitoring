@@ -87,7 +87,7 @@ local graphPanel = grafana.graphPanel;
           formatY1='bytes',
           min=0,
         )
-        .addTarget(prometheus.target(legendFormat='{{pod}}', expr='sum(\n    container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", container!="", id!=""}\n  * on(namespace,pod)\n    group_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$type"}\n) by (pod)\n'));
+        .addTarget(prometheus.target(legendFormat='{{pod}}', expr='sum(\n    container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", container!="", id!=""}\n  * on(namespace,pod)\n    group_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$type"}\n) by (pod)'));
 
       local memReqTable =
         table.new(
@@ -95,7 +95,7 @@ local graphPanel = grafana.graphPanel;
           datasource='$datasource',
           sort={ col: 4, desc: true },
           styles=[
-            { alias: 'Time', pattern: 'Time', type: 'hidden' },
+            { pattern: 'Time', type: 'hidden' },
             { alias: 'Pods', pattern: 'Value #A', type: 'number' },
             { alias: 'Workloads', pattern: 'Value #B', type: 'number' },
             { alias: 'Memory Usage', pattern: 'Value #C', type: 'number', unit: 'bytes', decimals: 2 },
@@ -103,7 +103,7 @@ local graphPanel = grafana.graphPanel;
             { alias: 'Memory Requests %', pattern: 'Value #E', type: 'number', unit: 'percentunit', decimals: 2 },
             { alias: 'Memory Limits', pattern: 'Value #F', type: 'number', unit: 'bytes', decimals: 2 },
             { alias: 'Memory Limits %', pattern: 'Value #G', type: 'number', unit: 'percentunit', decimals: 2 },
-            { alias: 'Namespace', pattern: 'namespace', type: 'number', link: true, linkTargetBlank: true, linkTooltip: 'Drill down to pods', linkUrl: './d/%s?var-namespace=$__cell&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTargetBlank: true, linkTooltip: 'Drill down to pods', linkUrl: './d/%s?var-namespace=$__cell&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(

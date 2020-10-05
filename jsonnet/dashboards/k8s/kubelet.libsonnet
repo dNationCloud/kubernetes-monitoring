@@ -259,7 +259,7 @@ local statPanel = grafana.statPanel;
           name='datasource',
           label='Datasource',
           query='prometheus',
-          current='default',
+          current=null,
         );
 
       local clusterTemplate =

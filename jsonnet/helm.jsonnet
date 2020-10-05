@@ -71,7 +71,7 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
           },
           namespace: '{{ $.Release.Namespace }}',
           annotations+:
-             if config.dashboardDirs.enable then {'k8s-sidecar-target-directory': config.dashboardDirs[filename]} else {},
+            if config.dashboardDirs.enable then { 'k8s-sidecar-target-directory': config.dashboardDirs[filename] } else {},
         },
         data: {
           [filename]: dashboardToString(dashboards[filename]),

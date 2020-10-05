@@ -84,6 +84,7 @@ local polystatPanel = grafana.polystatPanel;
           default_click_through_new_tab=true,
           font_size=20,
           global_unit_format='percent',
+          global_decimals=0,
           global_operator_name='current',
           global_thresholds=polystatThresholds,
           hexagon_sort_by_direction=4,
@@ -135,7 +136,7 @@ local polystatPanel = grafana.polystatPanel;
           max=100,
         )
         .addThresholds(utilThresholds)
-        .addTarget(prometheus.target(expr='round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)\n'));
+        .addTarget(prometheus.target(expr='round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'));
 
       dashboard.new(
         'Memory per Node',

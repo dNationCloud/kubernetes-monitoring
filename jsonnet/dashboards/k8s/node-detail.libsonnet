@@ -31,7 +31,7 @@ local table = grafana.tablePanel;
           current=null,
         );
 
-      local alertmanagerTemplate =
+      local alertManagerTemplate =
         template.datasource(
           name='alertmanager',
           label='AlertManager',
@@ -89,7 +89,7 @@ local table = grafana.tablePanel;
         tags=$._config.dashboardCommon.tags.k8sDetail,
         uid=$._config.dashboardIDs.nodeDetail,
       )
-      .addTemplates([datasourceTemplate, alertmanagerTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate])
       .addPanels(
         [
           row.new('Nodes') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

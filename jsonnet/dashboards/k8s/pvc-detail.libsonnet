@@ -64,11 +64,11 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           sort={ col: 3, desc: true },
           styles=[
-            { alias: 'Time', pattern: 'Time', type: 'hidden' },
+            { pattern: 'Time', type: 'hidden' },
             { alias: 'Capacity', pattern: 'Value #A', colors: colors, colorMode: 'cell', type: 'number', unit: 'percent', thresholds: [85, 97] },
             { alias: 'Status', pattern: 'Value #B', colors: colors, colorMode: 'cell', type: 'string', thresholds: [2, 2], valueMaps: valueMaps, mappingType: 1 },
-            { alias: 'PVC', pattern: 'persistentvolumeclaim', type: 'string', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s/kubernetes-persistent-volumes?var-namespace=${__cell_1}&var-volume=${__cell_2}&%s' % [$._config.dashboardIDs.persistentVolumes, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { alias: 'Namespace', pattern: 'namespace' },
+            { alias: 'PVC', pattern: 'persistentvolumeclaim', type: 'string', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-volume=${__cell_2}&%s' % [$._config.dashboardIDs.persistentVolumes, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', type: 'string' },
           ]
         )
         .addTargets(

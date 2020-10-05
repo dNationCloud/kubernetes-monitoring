@@ -66,11 +66,11 @@ local table = grafana.tablePanel;
           styles=[
             { alias: 'Starts At', pattern: 'Time', type: 'date' },
             { alias: 'Severity', pattern: 'severity', colors: colors, colorMode: 'row', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
-            { alias: 'Alertname', pattern: 'alertname', type: 'number' },
-            { alias: 'Job', pattern: 'job', type: 'number' },
-            { alias: 'Node', pattern: 'nodename', type: 'number' },
+            { alias: 'Alertname', pattern: 'alertname', type: 'string' },
+            { alias: 'Job', pattern: 'job', type: 'string' },
+            { alias: 'Node', pattern: 'nodename', type: 'string' },
             { pattern: 'prometheus', type: 'hidden' },
-            { alias: 'Message', pattern: 'message', type: 'number' },
+            { alias: 'Message', pattern: 'message', type: 'string' },
           ]
         )
         .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity="$severity"}' });

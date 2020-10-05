@@ -63,7 +63,7 @@ local errorBudgetTarget = 0.99;
         .addSeriesOverride({ alias: '/3../i', color: '#F2CC0C' })
         .addSeriesOverride({ alias: '/4../i', color: '#3274D9' })
         .addSeriesOverride({ alias: '/5../i', color: '#E02F44' })
-        .addTarget(prometheus.target('sum(code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read"})', legendFormat='{{ code }}'));
+        .addTarget(prometheus.target('sum(code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read"})', legendFormat='{{code}}'));
 
       local readErrors =
         graphPanel.new(
@@ -72,7 +72,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           format='percentunit',
         )
-        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read",code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read"})', legendFormat='{{ resource }}'));
+        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read",code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read"})', legendFormat='{{resource}}'));
 
       local readDuration =
         graphPanel.new(
@@ -80,7 +80,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{verb="read"}', legendFormat='{{ resource }}'));
+        .addTarget(prometheus.target('cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{verb="read"}', legendFormat='{{resource}}'));
 
       local writeAvailability =
         statPanel.new(
@@ -102,7 +102,7 @@ local errorBudgetTarget = 0.99;
         .addSeriesOverride({ alias: '/3../i', color: '#F2CC0C' })
         .addSeriesOverride({ alias: '/4../i', color: '#3274D9' })
         .addSeriesOverride({ alias: '/5../i', color: '#E02F44' })
-        .addTarget(prometheus.target('sum(code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write"})', legendFormat='{{ code }}'));
+        .addTarget(prometheus.target('sum(code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write"})', legendFormat='{{code}}'));
 
       local writeErrors =
         graphPanel.new(
@@ -111,7 +111,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           format='percentunit',
         )
-        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write",code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write"})', legendFormat='{{ resource }}'));
+        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write",code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write"})', legendFormat='{{resource}}'));
 
       local writeDuration =
         graphPanel.new(
@@ -119,7 +119,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="write"}', legendFormat='{{ resource }}'));
+        .addTarget(prometheus.target('cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="write"}', legendFormat='{{resource}}'));
 
       local upCount =
         statPanel.new(
@@ -154,7 +154,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           legend_show=false,
         )
-        .addTarget(prometheus.target('sum(rate(workqueue_adds_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance"}[5m])) by (instance, name)\n' % $._config.dashboardSelectors, legendFormat='{{instance}} {{name}}'));
+        .addTarget(prometheus.target('sum(rate(workqueue_adds_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.dashboardSelectors, legendFormat='{{instance}} {{name}}'));
 
       local workQueueDepth =
         graphPanel.new(

@@ -117,7 +117,7 @@
       tooltip: 'shared_crosshair',
       editable: true,
       refresh: '10s',
-      time_from: 'now-1h',
+      time_from: 'now-5m',
       color: {
         red: '#e02f44',  // semi-dark-red
         orange: '#ff780a',  // semi-dark-orange
