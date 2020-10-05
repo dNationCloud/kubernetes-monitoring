@@ -81,7 +81,7 @@ local row = grafana.row;
         tags=$._config.dashboardCommon.tags.k8sDetail,
         uid=$._config.dashboardIDs.podDetail,
       )
-      .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(
         [
           row.new('Pods') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
