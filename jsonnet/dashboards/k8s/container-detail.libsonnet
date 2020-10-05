@@ -50,15 +50,6 @@ local getNextIndex(arrays) =
           current=null,
         );
 
-      local alertManagerTemplate =
-        template.datasource(
-          name='alertmanager',
-          label='AlertManager',
-          query='camptocamp-prometheus-alertmanager-datasource',
-          current=null,
-          hide='variable',
-        );
-
       local clusterTemplate =
         template.new(
           name='cluster',
@@ -126,7 +117,7 @@ local getNextIndex(arrays) =
         tags=$._config.dashboardCommon.tags.k8sDetail,
         uid=$._config.dashboardIDs.containerDetail,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate, alertManagerTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(
         [
           row.new('Containers') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
