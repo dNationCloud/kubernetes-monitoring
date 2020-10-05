@@ -78,6 +78,7 @@
       'memory-namespace-detail.json': self.k8sPath,
       'network-detail.json': self.k8sPath,
       'network-namespace-detail.json': self.k8sPath,
+      'logs': self.k8sPath,
 
       // Kube system dashboards
       kubeSystemPath: self.basePath + 'kube_system',
@@ -105,6 +106,7 @@
         k8sNodeExporter: ['k8s', 'node', 'L3'],
         k8sPVC: ['k8s', 'compute', 'pvc', 'L3'],
         k8sStateful: ['k8s', 'compute', 'statefulset', 'L3'],
+        k8sLogs: ['k8s', 'compute', 'logs', 'pod', 'view', 'L3'],
       },
       tooltip: 'shared_crosshair',
       editable: true,
@@ -121,5 +123,8 @@
       templateRefresh: 'time',
       templateSort: 5,  // case insensitive ascent sort
     },
+
+    isLoki: false,
+
   },
 }
