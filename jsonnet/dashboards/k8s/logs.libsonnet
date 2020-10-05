@@ -155,8 +155,8 @@ local row = grafana.row;
           label='Namespace',
           datasource='$datasource',
           query='label_values(kube_pod_container_info{cluster=~"$cluster"}, namespace)',
-          refresh='load',
-          sort=1,
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -167,8 +167,8 @@ local row = grafana.row;
           label='Pod',
           datasource='$datasource',
           query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace"}, pod)',
-          refresh='time',
-          sort=1,
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -179,8 +179,8 @@ local row = grafana.row;
           label='Container',
           datasource='$datasource',
           query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, container)',
-          refresh='time',
-          sort=1,
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -197,19 +197,21 @@ local row = grafana.row;
           label='Cluster',
           query='label_values(kube_pod_container_info, cluster)',
           datasource='$datasource',
-          sort=1,
-          refresh='time',
-          hide=2,
+          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.dashboardCommon.templateRefresh,
+          hide='variable',
         );
 
       local templates = [
         datasourceTemplate,
+      ] + ( if $._config.isLoki then [datasourceLogsTemplate] else [] )
+      + [
         viewByTemplate,
         namespaceTemplate,
         podTemplate,
         containerTemplate,
         clusterTemplate,
-      ] + if $._config.isLoki then [datasourceLogsTemplate, searchTemplate] else [];
+      ] + if $._config.isLoki then [searchTemplate] else [];
 
       local logsPanels = [
         row.new('Logs') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
@@ -229,7 +231,7 @@ local row = grafana.row;
       ] + if $._config.isLoki then logsPanels else [];
 
       dashboard.new(
-        'Logs',
+        'Logs (Experimental)',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,

@@ -124,7 +124,7 @@
       templateSort: 5,  // case insensitive ascent sort
     },
 
-    isLoki: false,
+    isLoki: true,
 
   },
 }
