@@ -27,7 +27,6 @@ local statPanel = grafana.statPanel;
         statPanel.new(
           title='Up',
           datasource='$datasource',
-          graphMode='none',
         )
         .addTarget(prometheus.target('sum(up{cluster=~"$cluster", %(proxy)s})' % $._config.dashboardSelectors));
 

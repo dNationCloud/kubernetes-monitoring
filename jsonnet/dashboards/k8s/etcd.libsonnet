@@ -27,7 +27,6 @@ local statPanel = grafana.statPanel;
         statPanel.new(
           title='Up',
           datasource='$datasource',
-          graphMode='none',
         )
         .addTarget(prometheus.target('sum(etcd_server_has_leader{cluster=~"$cluster", %(etcd)s})' % $._config.dashboardSelectors));
 

@@ -26,12 +26,11 @@ local template = grafana.template;
       local greenStep = { color: $._config.dashboardCommon.color.green, value: null };
       local redStep = { color: $._config.dashboardCommon.color.red, value: 80 };
 
-      local panel(title, expr, unit='none', graphMode='area') =
+      local panel(title, expr, unit='none') =
         statPanel.new(
           title=title,
           datasource='$datasource',
           unit=unit,
-          graphMode=graphMode,
         )
         .addThreshold(greenStep)
         .addTarget(prometheus.target(expr=expr % $._config.dashboardSelectors));
@@ -61,7 +60,6 @@ local template = grafana.template;
         panel(
           title='Desired Replicas',
           expr='sum(kube_statefulset_replicas{%(stateMetrics)s, cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
-          graphMode='none',
         )
         .addThreshold(redStep);
 
@@ -69,7 +67,6 @@ local template = grafana.template;
         panel(
           title='Replicas of current version',
           expr='sum(kube_statefulset_status_replicas_current{%(stateMetrics)s, cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
-          graphMode='none',
         )
         .addThreshold(redStep);
 
@@ -77,7 +74,6 @@ local template = grafana.template;
         panel(
           title='Observed Generation',
           expr='sum(kube_statefulset_status_observed_generation{%(stateMetrics)s, cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
-          graphMode='none',
         )
         .addThreshold(redStep);
 
@@ -85,7 +81,6 @@ local template = grafana.template;
         panel(
           title='Metadata Generation',
           expr='sum(kube_statefulset_metadata_generation{%(stateMetrics)s, statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"})',
-          graphMode='none',
         )
         .addThreshold(redStep);
 

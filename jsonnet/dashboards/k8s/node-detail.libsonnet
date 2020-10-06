@@ -60,7 +60,7 @@ local table = grafana.tablePanel;
             { alias: 'Schedulable', pattern: 'Value #A', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
             { alias: 'Disk Pressure', pattern: 'Value #B', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
             { alias: 'Memory Pressure', pattern: 'Value #C', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
-            { alias: 'Node', pattern: 'node', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-job=node-exporter&var-instance=${__cell_1}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Node', pattern: 'node', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-job=node-exporter&var-instance=$__cell&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(

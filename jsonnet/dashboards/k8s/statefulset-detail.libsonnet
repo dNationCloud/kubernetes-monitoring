@@ -54,7 +54,7 @@ local table = grafana.tablePanel;
             { alias: 'Ready', pattern: 'Value #C', type: 'number' },
             { alias: 'Desired/Ready', pattern: 'Value #D', type: 'number', unit: 'percent', thresholds: [95, 99], colorMode: 'cell', colors: [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
-            { alias: 'Stateful Set', pattern: 'statefulset', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&var-view=statefulset&%s' % [$._config.dashboardIDs.statefulSet, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Stateful Set', pattern: 'statefulset', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&var-view=statefulset&%s' % [$._config.dashboardIDs.statefulSet, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(

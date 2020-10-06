@@ -46,7 +46,6 @@ local row = grafana.row;
         statPanel.new(
           title='CPU Cores',
           datasource='$datasource',
-          graphMode='none',
           decimals=0,
           unit='short',
         )
@@ -63,7 +62,6 @@ local row = grafana.row;
         statPanel.new(
           title='Memory',
           datasource='$datasource',
-          graphMode='none',
           decimals=0,
           unit='bytes',
         )
