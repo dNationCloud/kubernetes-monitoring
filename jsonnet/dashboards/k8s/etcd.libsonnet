@@ -36,7 +36,7 @@ local statPanel = grafana.statPanel;
           title='RPC Rate',
           datasource='$datasource',
           linewidth=2,
-          formatY1='ops',
+          format='ops',
           fill=0,
           legend_show=false,
         )

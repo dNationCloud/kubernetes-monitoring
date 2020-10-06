@@ -85,7 +85,7 @@ local graphPanel = grafana.graphPanel;
           title='Memory Usage',
           stack=true,
           datasource='$datasource',
-          formatY1='bytes',
+          format='bytes',
           min=0,
         )
         .addTarget(prometheus.target(legendFormat='{{pod}}', expr='sum(\ncontainer_memory_working_set_bytes{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$type"}\n) by (pod) or on() sum(container_memory_working_set_bytes{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}) by (pod)'));
