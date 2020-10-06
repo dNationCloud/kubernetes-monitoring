@@ -43,7 +43,7 @@ local row = grafana.row;
         );
 
       local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
-      local colorsInverse = std.reverse(colors);
+      local colorsInverse = [colors[2], colors[1], colors[0]];
       local thresholds = [1, 1];
 
       local podsTable =
