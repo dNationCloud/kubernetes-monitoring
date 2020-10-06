@@ -84,7 +84,6 @@ local polystatPanel = grafana.polystatPanel;
           font_size=20,
           global_unit_format='percent',
           global_decimals=0,
-          global_operator_name='current',
           global_thresholds=polystatThresholds,
           hexagon_sort_by_direction=4,
           hexagon_sort_by_field='value',

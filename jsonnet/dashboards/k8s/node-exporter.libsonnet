@@ -87,7 +87,6 @@ local row = grafana.row;
         gaugePanel.new(
           title='CPU Utilization',
           datasource='$datasource',
-          reducerFunction='lastNotNull',
         )
         .addThresholds(utilThresholds)
         .addTarget(prometheus.target(expr='round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'));
@@ -97,7 +96,6 @@ local row = grafana.row;
           title='Memory Utilization',
           datasource='$datasource',
           description='The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
-          reducerFunction='lastNotNull',
           min=0,
           max=100,
         )
@@ -120,7 +118,6 @@ local row = grafana.row;
           title='Network Errors',
           datasource='$datasource',
           unit='pps',
-          reducerFunction='lastNotNull',
           min=0,
           max=100,
         )
