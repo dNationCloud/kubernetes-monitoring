@@ -53,20 +53,21 @@ local table = grafana.tablePanel;
         table.new(
           title='Jobs',
           datasource='$datasource',
-          sort={ col: 3, desc: true },
+          sort={ col: 4, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
-            { alias: 'Job name', pattern: 'job_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Job name', pattern: 'job_name', type: 'string' },
+            { alias: 'Owner', pattern: 'owner_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_3}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
           ]
         )
         .addTargets(
           [
             prometheus.target(format='table', instant=true, expr=|||
-              sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster"} * 1) +
-              sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster"} * 2) +
-              sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster"} * 3)
+              sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster"} * 1) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"} +
+              sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster"} * 2) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"} +
+              sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster"} * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"}
             |||),
           ]
         );
