@@ -28,6 +28,7 @@
 (import 'k8s/memory-namespace-detail.libsonnet') +
 (import 'k8s/network-detail.libsonnet') +
 (import 'k8s/network-namespace-detail.libsonnet') +
+(import 'k8s/logs.libsonnet') +
 
 // Kube system dashboards
 (import 'k8s/controller-manager.libsonnet') +

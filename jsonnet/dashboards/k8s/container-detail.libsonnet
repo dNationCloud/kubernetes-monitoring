@@ -80,11 +80,11 @@ local getNextIndex(arrays) =
         { text: 'Running', value: 2 },
         { text: 'Waiting (ContainerCreating)', value: 3 },
       ];
-      local writingErrorsValues = [ { err: waitingErrors[i], value: getNextIndex([valueMapsOk]) + i } for i in std.range(0, std.length(waitingErrors) - 1) ];
-      local terminatedErrorsValues = [ { err: terminatedErrors[i], value: getNextIndex([valueMapsOk, writingErrorsValues]) + i } for i in std.range(0, std.length(terminatedErrors) - 1) ];
+      local writingErrorsValues = [{ err: waitingErrors[i], value: getNextIndex([valueMapsOk]) + i } for i in std.range(0, std.length(waitingErrors) - 1)];
+      local terminatedErrorsValues = [{ err: terminatedErrors[i], value: getNextIndex([valueMapsOk, writingErrorsValues]) + i } for i in std.range(0, std.length(terminatedErrors) - 1)];
 
-      local valueMapsWaitingErrors = [ { text: 'Waiting (%s)' % map.err, value: map.value } for map in writingErrorsValues ];
-      local valueMapsTerminatedErrors = [ { text: 'Terminated (%s)' % map.err, value: map.value } for map in terminatedErrorsValues ];
+      local valueMapsWaitingErrors = [{ text: 'Waiting (%s)' % map.err, value: map.value } for map in writingErrorsValues];
+      local valueMapsTerminatedErrors = [{ text: 'Terminated (%s)' % map.err, value: map.value } for map in terminatedErrorsValues];
       local valueMaps = std.flattenArrays([valueMapsOk, valueMapsWaitingErrors, valueMapsTerminatedErrors]);
 
       local okQueries = [
