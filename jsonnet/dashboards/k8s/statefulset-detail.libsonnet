@@ -62,7 +62,7 @@ local table = grafana.tablePanel;
             prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster"})'),
             prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
             prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
-            prometheus.target(format='table', instant=true, expr='(sum by (statefulset, namespace) (kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s}) ) / (sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s}) ) * 100' % $._config.dashboardSelectors),
+            prometheus.target(format='table', instant=true, expr='(sum by (statefulset, namespace) (kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s})) / (sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s}) ) * 100' % $._config.dashboardSelectors),
           ]
         );
 

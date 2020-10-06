@@ -119,10 +119,14 @@ local polystatPanel = grafana.polystatPanel;
           min=0,
         )
         .addSeriesOverride({ alias: 'logical cores', linewidth: 2, color: '#C4162A' })
-        .addTarget(prometheus.target(legendFormat='1m load average', expr='node_load1{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
-        .addTarget(prometheus.target(legendFormat='5m load average', expr='node_load5{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
-        .addTarget(prometheus.target(legendFormat='15m load average', expr='node_load15{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
-        .addTarget(prometheus.target(legendFormat='logical cores', expr='count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
+        .addTargets(
+          [
+            prometheus.target(legendFormat='1m load average', expr='node_load1{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='5m load average', expr='node_load5{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='15m load average', expr='node_load15{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='logical cores', expr='count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+          ]
+        );
 
       dashboard.new(
         'CPU per Node',

@@ -33,7 +33,6 @@ local row = grafana.row;
           stack=true,
           linewidth=2,
           fill=2,
-          nullPointMode='connected',
         )
         .addTargets(
           [
@@ -54,7 +53,6 @@ local row = grafana.row;
           stack=true,
           linewidth=2,
           fill=2,
-          nullPointMode='connected',
         )
         .addTargets(
           [
@@ -74,7 +72,6 @@ local row = grafana.row;
           stack=true,
           linewidth=2,
           fill=2,
-          nullPointMode='null as zero',
         )
         .addTargets(
           [
@@ -93,7 +90,6 @@ local row = grafana.row;
           stack=true,
           linewidth=2,
           fill=2,
-          nullPointMode='null as zero',
         )
         .addTargets(
           [
@@ -204,7 +200,8 @@ local row = grafana.row;
 
       local templates = [
         datasourceTemplate,
-      ] + ( if $._config.isLoki then [datasourceLogsTemplate] else [] )
+      ]
+      + ( if $._config.isLoki then [datasourceLogsTemplate] else [] )
       + [
         viewByTemplate,
         namespaceTemplate,

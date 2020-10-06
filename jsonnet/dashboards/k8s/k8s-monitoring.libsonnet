@@ -126,7 +126,7 @@ local text = grafana.text;
       local runningStatefulSetsPanel =
         percentStatPanel(
           title='Running Stateful Sets',
-          expr='sum(kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s}) / sum(kube_statefulset_replicas{%(stateMetrics)s}) * 100' % $._config.dashboardSelectors,
+          expr='sum(kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s}) / sum(kube_statefulset_replicas{cluster=~"$cluster", %(stateMetrics)s}) * 100' % $._config.dashboardSelectors,
         )
         .addDataLink({ title: 'Detail', url: 'd/%s?%s' % [$._config.dashboardIDs.statefulSetDetail, $._config.dashboardCommon.dataLinkCommonArgs], targetBlank: true })
         .addThresholds(overviewThresholds);
@@ -266,7 +266,7 @@ local text = grafana.text;
       local mostUtilizedNodeCPUPanel =
         percentStatPanel(
           title='Most Utilized Node',
-          expr='round(max((1 - (avg by (instance) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job",mode="idle"}[5m])))) * 100))',
+          expr='round(max((1 - (avg by (instance) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * 100))',
         )
         .addThresholds(nodeMetricsThresholds)
         .addDataLinks(
@@ -381,7 +381,7 @@ local text = grafana.text;
       local usedDiskPanel =
         valueStatPanel(
           title='Used',
-          expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device))\n\n)))',
+          expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device))\n)))',
           unit='bytes',
         );
 

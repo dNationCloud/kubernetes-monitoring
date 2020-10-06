@@ -83,8 +83,8 @@
       'network-detail.json': self.k8sPath,
       'network-namespace-detail.json': self.k8sPath,
       'cpu-detail.json': self.k8sPath,
-      'pod-detail.json': self.dnationPath,
-      'logs': self.k8sPath,
+      'pod-detail.json': self.k8sPath,
+      'logs.json': self.k8sPath,
 
       // Kube system dashboards
       kubeSystemPath: self.basePath + 'kube_system',

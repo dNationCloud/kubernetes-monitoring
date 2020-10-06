@@ -112,9 +112,13 @@ local polystatPanel = grafana.polystatPanel;
         )
         .addSeriesOverride({ alias: 'used', color: '#E0B400' })
         .addSeriesOverride({ alias: '/available/', fill: 0, linewidth: 2 })
-        .addTarget(prometheus.target(legendFormat='used {{device}}', expr='(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance))\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
-        .addTarget(prometheus.target(legendFormat='size {{device}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
-        .addTarget(prometheus.target(legendFormat='available {{device}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
+        .addTargets(
+          [
+            prometheus.target(legendFormat='used {{device}}', expr='(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance))\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='size {{device}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='available {{device}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+          ]
+        );
 
       local diskIOGraphPanel =
         graphPanel.new(
@@ -126,9 +130,13 @@ local polystatPanel = grafana.polystatPanel;
         )
         .addSeriesOverride({ alias: '/read*|written*/', yaxis: 1 })
         .addSeriesOverride({ alias: '/io time*/', yaxis: 2 })
-        .addTarget(prometheus.target(legendFormat='read {{device}}', expr='sum(rate(node_disk_read_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
-        .addTarget(prometheus.target(legendFormat='written {{device}}', expr='sum(rate(node_disk_written_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
-        .addTarget(prometheus.target(legendFormat='io time {{device}}', expr='sum(rate(node_disk_io_time_seconds_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
+        .addTargets(
+          [
+            prometheus.target(legendFormat='read {{device}}', expr='sum(rate(node_disk_read_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='written {{device}}', expr='sum(rate(node_disk_written_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='io time {{device}}', expr='sum(rate(node_disk_io_time_seconds_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+          ]
+        );
 
       dashboard.new(
         'Disk per Node',

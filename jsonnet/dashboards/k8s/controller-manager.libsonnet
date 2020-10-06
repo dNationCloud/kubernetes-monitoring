@@ -29,8 +29,12 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           graphMode='none',
         )
-        .addThreshold({ color: $._config.dashboardCommon.color.red, value: null })
-        .addThreshold({ color: $._config.dashboardCommon.color.green, value: 1 })
+        .addThresholds(
+          [
+            { color: $._config.dashboardCommon.color.red, value: null },
+            { color: $._config.dashboardCommon.color.green, value: 1 },
+          ]
+        )
         .addTarget(prometheus.target('sum(up{cluster=~"$cluster", %(controllerManager)s})' % $._config.dashboardSelectors));
 
       local workQueueAddRate =
@@ -75,10 +79,14 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           format='ops',
         )
-        .addTarget(prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance",code=~"2.."}[5m]))' % $._config.dashboardSelectors, legendFormat='2xx'))
-        .addTarget(prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance",code=~"3.."}[5m]))' % $._config.dashboardSelectors, legendFormat='3xx'))
-        .addTarget(prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance",code=~"4.."}[5m]))' % $._config.dashboardSelectors, legendFormat='4xx'))
-        .addTarget(prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance",code=~"5.."}[5m]))' % $._config.dashboardSelectors, legendFormat='5xx'));
+        .addTargets(
+          [
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"2.."}[5m]))' % $._config.dashboardSelectors, legendFormat='2xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"3.."}[5m]))' % $._config.dashboardSelectors, legendFormat='3xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"4.."}[5m]))' % $._config.dashboardSelectors, legendFormat='4xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"5.."}[5m]))' % $._config.dashboardSelectors, legendFormat='5xx'),
+          ]
+        );
 
       local postRequestLatency =
         graphPanel.new(
@@ -108,7 +116,7 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('process_resident_memory_bytes{cluster=~"$cluster", %(controllerManager)s,instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('process_resident_memory_bytes{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
 
       local cpu =
         graphPanel.new(
@@ -116,14 +124,14 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           min=0,
         )
-        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster=~"$cluster", %(controllerManager)s,instance=~"$instance"}[5m])' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
 
       local goroutines =
         graphPanel.new(
           title='Goroutines',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('go_goroutines{cluster=~"$cluster", %(controllerManager)s,instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('go_goroutines{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
 
       local datasourceTemplate =
         template.datasource(

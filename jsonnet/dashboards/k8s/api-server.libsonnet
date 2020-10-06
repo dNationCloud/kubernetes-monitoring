@@ -72,7 +72,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           format='percentunit',
         )
-        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read",code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read"})', legendFormat='{{resource}}'));
+        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read", code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read"})', legendFormat='{{resource}}'));
 
       local readDuration =
         graphPanel.new(
@@ -80,7 +80,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{verb="read"}', legendFormat='{{resource}}'));
+        .addTarget(prometheus.target('cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="read"}', legendFormat='{{resource}}'));
 
       local writeAvailability =
         statPanel.new(
@@ -111,7 +111,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           format='percentunit',
         )
-        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write",code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write"})', legendFormat='{{resource}}'));
+        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write", code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write"})', legendFormat='{{resource}}'));
 
       local writeDuration =
         graphPanel.new(
@@ -134,11 +134,14 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='ops',
         )
-        .addTarget(prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance",code=~"2.."}[5m]))' % $._config.dashboardSelectors, legendFormat='2xx'))
-        .addTarget(prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance",code=~"3.."}[5m]))' % $._config.dashboardSelectors, legendFormat='3xx'))
-        .addTarget(prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance",code=~"4.."}[5m]))' % $._config.dashboardSelectors, legendFormat='4xx'))
-        .addTarget(prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance",code=~"5.."}[5m]))' % $._config.dashboardSelectors, legendFormat='5xx'));
-
+        .addTargets(
+          [
+            prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", code=~"2.."}[5m]))' % $._config.dashboardSelectors, legendFormat='2xx'),
+            prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", code=~"3.."}[5m]))' % $._config.dashboardSelectors, legendFormat='3xx'),
+            prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", code=~"4.."}[5m]))' % $._config.dashboardSelectors, legendFormat='4xx'),
+            prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", code=~"5.."}[5m]))' % $._config.dashboardSelectors, legendFormat='5xx'),
+          ]
+        );
       local requestDuration =
         graphPanel.new(
           title='Request duration 99th quantile',

@@ -65,6 +65,7 @@ local graphPanel = grafana.graphPanel;
           refresh=$._config.dashboardCommon.templateRefresh,
           multi=true,
           includeAll=true,
+          allValues='workaround',  // workaround for pods without workload
         );
 
       local workloadTypeTemplate =
@@ -87,11 +88,12 @@ local graphPanel = grafana.graphPanel;
           formatY1='bytes',
           min=0,
         )
-        .addTarget(prometheus.target(legendFormat='{{pod}}', expr='sum(\n    container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", container!="", id!=""}\n  * on(namespace,pod)\n    group_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$type"}\n) by (pod)'));
+        .addTarget(prometheus.target(legendFormat='{{pod}}', expr='sum(\ncontainer_memory_working_set_bytes{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$type"}\n) by (pod) or on() sum(container_memory_working_set_bytes{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}) by (pod)'));
 
       local memReqTable =
         table.new(
           title='Requests by Namespace',
+          description='* `Memory Usage` defines memory consumption of all pods living in selected namespace\n* `Memory Requests` defines sum of all memory requests\n* `Memory Requests %` defines ratio between consumed memory and requests by containers which have defined memory requests\n* `Memory Limits` defines sum of all memory limits\n* `Memory Limits %` defines ratio between consumed memory and limits by containers which have defined memory limits',
           datasource='$datasource',
           sort={ col: 4, desc: true },
           styles=[
@@ -108,13 +110,13 @@ local graphPanel = grafana.graphPanel;
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='count(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='count(sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", container!~"POD|", id!=""}) by (namespace, pod)) by (namespace)'),
             prometheus.target(format='table', instant=true, expr='count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace"}) by (workload, namespace)) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum(container_memory_working_set_bytes{cluster=~"$cluster", container!="", id!="", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum(container_memory_working_set_bytes{cluster=~"$cluster", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace)'),
             prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum(container_memory_working_set_bytes{cluster=~"$cluster", container!="", id!="", namespace=~"$namespace"}) by (namespace) / sum(kube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='avg by (namespace) (sum(container_memory_working_set_bytes{cluster=~"$cluster", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace, pod, container) / sum(kube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace, pod, container))'),
             prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum(container_memory_working_set_bytes{cluster=~"$cluster", container!="", id!="", namespace=~"$namespace"}) by (namespace) / sum(kube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='avg by (namespace) (sum(container_memory_working_set_bytes{cluster=~"$cluster", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace, pod, container) / sum(kube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace, pod, container))'),
           ]
         );
 
