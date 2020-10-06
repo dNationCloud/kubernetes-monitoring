@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s alert detail dashboard */
+/* K8s alert overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -21,7 +21,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'alert-detail.json':
+    'alert-overview.json':
       local datasourceTemplate =
         template.datasource(
           query='prometheus',
@@ -81,8 +81,8 @@ local table = grafana.tablePanel;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.alertDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.alertOverview,
       )
       .addTemplates([datasourceTemplate, alertManagerTemplate, severityTemplate])
       .addPanels(

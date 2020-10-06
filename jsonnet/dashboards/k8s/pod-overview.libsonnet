@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s pod detail dashboard */
+/* K8s pod overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    'pod-detail.json':
+    'pod-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -78,8 +78,8 @@ local row = grafana.row;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.podDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.podOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(

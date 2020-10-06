@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s disk detail dashboard */
+/* K8s disk overview dashboard */
 
 local grafana = (import 'grafonnet/grafana.libsonnet')
                 + (import 'grafonnet-polystat-panel/plugin.libsonnet');
@@ -24,7 +24,7 @@ local polystatPanel = grafana.polystatPanel;
 
 {
   grafanaDashboards+:: {
-    'disk-detail.json':
+    'disk-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -142,8 +142,8 @@ local polystatPanel = grafana.polystatPanel;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.diskDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.diskOverview,
       )
       .addTemplates([datasourceTemplate, instanceTemplate, jobTemplate, clusterTemplate])
       .addPanels(

@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s memory namespace detail dashboard */
+/* K8s memory namespace overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -23,7 +23,7 @@ local graphPanel = grafana.graphPanel;
 
 {
   grafanaDashboards+:: {
-    'memory-namespace-detail.json':
+    'memory-namespace-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -126,8 +126,8 @@ local graphPanel = grafana.graphPanel;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.memoryNamespaceDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.memoryNamespaceOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, workloadTemplate, workloadTypeTemplate])
       .addPanels(

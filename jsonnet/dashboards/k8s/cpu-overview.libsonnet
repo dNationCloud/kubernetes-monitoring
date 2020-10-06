@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s memory detail dashboard */
+/* K8s cpu overview dashboard */
 
 local grafana = (import 'grafonnet/grafana.libsonnet')
                 + (import 'grafonnet-polystat-panel/plugin.libsonnet');
@@ -19,13 +19,12 @@ local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
 local template = grafana.template;
 local row = grafana.row;
-local gaugePanel = grafana.gaugePanel;
 local graphPanel = grafana.graphPanel;
 local polystatPanel = grafana.polystatPanel;
 
 {
   grafanaDashboards+:: {
-    'memory-detail.json':
+    'cpu-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -75,11 +74,10 @@ local polystatPanel = grafana.polystatPanel;
           { color: $._config.dashboardCommon.color.red, state: 2, value: 90 },
         ];
 
-      local memPerNodePolystat =
+      local cpuPerNodePolystat =
         polystatPanel.new(
-          title='Memory per Node',
+          title='CPU per Node',
           datasource='$datasource',
-          description='The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
           font_size=20,
           global_unit_format='percent',
@@ -99,62 +97,52 @@ local polystatPanel = grafana.polystatPanel;
             fontColor: $._config.dashboardCommon.color.white,
           },
         }
-        .addTarget(prometheus.target(legendFormat='{{nodename}}', expr='round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}) by (instance) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}) by (instance) )) * 100)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
+        .addTarget(prometheus.target(legendFormat='{{nodename}}', expr='round((1 - (avg by (instance) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * 100)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
 
-      local memUtilGraphPanel =
+      local cpuUtilGraphPanel =
         graphPanel.new(
-          title='Memory Utilization',
-          description='The used memory is calculated by:\n```\n<memory total> - <memory available>\n```',
+          title='CPU Utilization',
           datasource='$datasource',
-          format='bytes',
-          min=0,
-        )
-        .addSeriesOverride({ alias: '/total/', color: '#C4162A', fill: 0, linewidth: 2 })
-        .addTargets(
-          [
-            prometheus.target(legendFormat='memory used', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) - sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory available', expr='sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory buffers', expr='sum by (nodename) (node_memory_Buffers_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory cached', expr='sum by (nodename) (node_memory_Cached_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory free', expr='sum by (nodename) (node_memory_MemFree_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory total', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-          ]
-        );
-
-      local utilThresholds =
-        [
-          { color: $._config.dashboardCommon.color.green, value: null },
-          { color: $._config.dashboardCommon.color.orange, value: 75 },
-          { color: $._config.dashboardCommon.color.red, value: 90 },
-        ];
-
-      local memUtilGaugePanel =
-        gaugePanel.new(
-          title='Memory Utilization',
-          datasource='$datasource',
-          description='The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
+          stack=true,
+          format='percent',
           min=0,
           max=100,
         )
-        .addThresholds(utilThresholds)
-        .addTarget(prometheus.target(expr='round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'));
+        .addTarget(prometheus.target(legendFormat='cpu usage', expr='round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'));
+
+      local loadAvgGraphPanel =
+        graphPanel.new(
+          title='Load Average',
+          datasource='$datasource',
+          fill=0,
+          min=0,
+        )
+        .addSeriesOverride({ alias: 'logical cores', linewidth: 2, color: '#C4162A' })
+        .addTargets(
+          [
+            prometheus.target(legendFormat='1m load average', expr='node_load1{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='5m load average', expr='node_load5{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='15m load average', expr='node_load15{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='logical cores', expr='count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+          ]
+        );
 
       dashboard.new(
-        'Memory per Node',
+        'CPU per Node',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.memoryDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.cpuOverview,
       )
       .addTemplates([datasourceTemplate, instanceTemplate, jobTemplate, clusterTemplate])
       .addPanels(
         [
-          memPerNodePolystat { gridPos: { x: 0, y: 0, w: 24, h: 6 } },
+          cpuPerNodePolystat { gridPos: { x: 0, y: 0, w: 24, h: 6 } },
           row.new('$instance', repeat='instance', collapse=true) { gridPos: { x: 0, y: 6, w: 24, h: 1 } }
-          .addPanel(memUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 7, w: 18, h: 7 })
-          .addPanel(memUtilGaugePanel, { x: 18, y: 7, w: 6, h: 7 }),
+          .addPanel(cpuUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 7, w: 24, h: 7 })
+          .addPanel(loadAvgGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 14, w: 24, h: 7 }),
         ]
       ),
   },

@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s deployment detail dashboard */
+/* K8s job overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'deployment-detail.json':
+    'job-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -35,55 +35,56 @@ local table = grafana.tablePanel;
         template.new(
           name='cluster',
           label='Cluster',
-          query='label_values(kube_deployment_status_replicas, cluster)',
+          query='label_values(kube_job_info, cluster)',
           datasource='$datasource',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           hide='variable',
         );
 
-      local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
-      local colorsInverse = [colors[2], colors[1], colors[0]];
-      local thresholds = [1, 1];
-      local rangeMaps = [
-        { from: 0, text: 'OK', to: 0 },
-        { from: 1, text: 'Failed', to: 10000 },
+      local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
+      local valueMaps = [
+        { text: 'Succeeded', value: 1 },
+        { text: 'Active', value: 2 },
+        { text: 'Failed', value: 3 },
       ];
 
-      local deploymentsTable =
+      local jobsTable =
         table.new(
-          title='Deployments',
+          title='Jobs',
           datasource='$datasource',
-          sort={ col: 4, desc: true },
+          sort={ col: 3, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { alias: 'Updated', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colorsInverse },
-            { alias: 'Available', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colorsInverse },
-            { alias: 'Deployment', pattern: 'deployment', type: 'string' },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?&var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
+            { alias: 'Job name', pattern: 'job_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', type: 'string' },
           ]
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas_unavailable{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas_updated - kube_deployment_status_replicas{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr=|||
+              sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster"} * 1) +
+              sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster"} * 2) +
+              sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster"} * 3)
+            |||),
           ]
         );
 
       dashboard.new(
-        'Deployment',
+        'Job',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.deploymentDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.jobOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(
         [
-          row.new('Deployments') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-          deploymentsTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
+          row.new('Jobs') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          jobsTable { gridPos: { x: 0, y: 1, w: 24, h: 23 } },
         ]
       ),
   },
