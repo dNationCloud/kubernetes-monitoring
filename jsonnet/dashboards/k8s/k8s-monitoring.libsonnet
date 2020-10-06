@@ -32,7 +32,7 @@ local text = grafana.text;
           tags=['view'],
           title='Logs (Experimental)',
           type='link',
-          url='/d/%s' % $._config.dashboardIDs.logs,
+          url='/d/%s' % $._config.dashboardIDs.containerDetail,
         );
 
       local explorerLink =
@@ -68,7 +68,7 @@ local text = grafana.text;
           title='Critical',
           expr='ALERTS{alertname!="Watchdog", severity="critical"}',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s' % [$._config.dashboardIDs.alertDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s' % [$._config.dashboardIDs.alertOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(
           [
             { color: $._config.dashboardCommon.color.green, value: null },
@@ -81,7 +81,7 @@ local text = grafana.text;
           title='Warning',
           expr='ALERTS{alertname!="Watchdog", severity="warning"}',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s' % [$._config.dashboardIDs.alertDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s' % [$._config.dashboardIDs.alertOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(
           [
             { color: $._config.dashboardCommon.color.green, value: null },
@@ -110,7 +110,7 @@ local text = grafana.text;
           title='Nodes Health',
           expr='sum(kube_node_info{cluster=~"$cluster"}) / (sum(kube_node_info{cluster=~"$cluster"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="DiskPressure", status="true"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="MemoryPressure", status="true"})) * 100',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.nodeDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.nodeOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
 
       local runningPodsPanel =
@@ -118,7 +118,7 @@ local text = grafana.text;
           title='Running PODs',
           expr='sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"})) * 100',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.podDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.podOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
 
       local runningStatefulSetsPanel =
@@ -126,7 +126,7 @@ local text = grafana.text;
           title='Running Stateful Sets',
           expr='sum(kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s}) / sum(kube_statefulset_replicas{cluster=~"$cluster", %(stateMetrics)s}) * 100' % $._config.dashboardSelectors,
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
 
       local pvcBoundPanel =
@@ -135,7 +135,7 @@ local text = grafana.text;
           expr='sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Pending"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Lost"})\n) * 100 OR on() vector(-1)',
         )
         .addMapping({ text: '-', type: 1, value: -1 })
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThreshold({ color: $._config.dashboardCommon.color.black, value: -1 })
         .addThresholds(overviewThresholds);
 
@@ -144,7 +144,7 @@ local text = grafana.text;
           title='Deployments Health',
           expr='sum(kube_deployment_status_replicas_updated{cluster=~"$cluster"}) / (sum(kube_deployment_status_replicas{cluster=~"$cluster"}) + sum(kube_deployment_status_replicas_unavailable{cluster=~"$cluster"})) * 100',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.deploymentDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.deploymentOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
 
       local runningContainersPanel =
@@ -152,7 +152,7 @@ local text = grafana.text;
           title='Running Containers',
           expr='sum(kube_pod_container_status_running{cluster=~"$cluster"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster"})) * 100',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.containerOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
 
       local succeededJobsPanel =
@@ -161,7 +161,7 @@ local text = grafana.text;
           expr='sum(kube_job_status_succeeded{cluster=~"$cluster"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster"}) + sum(kube_job_status_failed{cluster=~"$cluster"})) * 100 OR on() vector(-1)',
         )
         .addMapping({ text: '-', type: 1, value: -1 })
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.jobDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.jobOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThreshold({ color: $._config.dashboardCommon.color.black, value: -1 })
         .addThresholds(overviewThresholds);
 
@@ -171,7 +171,7 @@ local text = grafana.text;
           expr='max(sum(\n  ((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster"}) / \n  kubelet_volume_stats_capacity_bytes{cluster=~"$cluster"}) * 100\n) by (persistentvolumeclaim)) OR on() vector(-1)',
         )
         .addMapping({ text: '-', type: 1, value: -1 })
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcDetail, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(
           [
             { color: $._config.dashboardCommon.color.black, value: -1 },
@@ -256,7 +256,7 @@ local text = grafana.text;
         .addThresholds(nodeMetricsThresholds)
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
             { title: 'per Namespace', url: '/d/bEN1iiMGz?%s' % [$._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
@@ -269,7 +269,7 @@ local text = grafana.text;
         .addThresholds(nodeMetricsThresholds)
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
             { title: 'per Namespace', url: '/d/bEN1iiMGz?%s' % [$._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
@@ -283,8 +283,8 @@ local text = grafana.text;
         .addThresholds(nodeMetricsThresholds)
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.memoryNamespaceDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.memoryNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 
@@ -297,8 +297,8 @@ local text = grafana.text;
         .addThresholds(nodeMetricsThresholds)
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.memoryNamespaceDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.memoryNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 
@@ -309,7 +309,7 @@ local text = grafana.text;
         )
         { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
         .addThresholds(nodeMetricsThresholds)
-        .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskDetail, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskOverview, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local mostUtilizedNodeDiskPanel =
         percentStatPanel(
@@ -318,7 +318,7 @@ local text = grafana.text;
         )
         { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
         .addThresholds(nodeMetricsThresholds)
-        .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskDetail, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskOverview, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local networkErrorsPanel =
         percentStatPanel(
@@ -335,8 +335,8 @@ local text = grafana.text;
         )
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.networkDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.networkNamespaceDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.networkOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.networkNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 

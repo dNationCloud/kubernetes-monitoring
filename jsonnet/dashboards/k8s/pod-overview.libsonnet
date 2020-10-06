@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s pod detail dashboard */
+/* K8s pod overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    'pod-detail.json':
+    'pod-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -54,7 +54,7 @@ local row = grafana.row;
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
-            { alias: 'Pod', pattern: 'pod', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Pod', pattern: 'pod', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=All&var-view=pod&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
             { alias: 'Running', pattern: 'Value #A', type: 'string', colors: colors, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'OK', value: 1 }], mappingType: 1 },
             { alias: 'Succeeded', pattern: 'Value #B', type: 'string', colors: colors, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'OK', value: 1 }], mappingType: 1 },
             { alias: 'Failed', pattern: 'Value #C', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Unknown', value: 1 }], mappingType: 1 },
@@ -78,8 +78,8 @@ local row = grafana.row;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.podDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.podOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(

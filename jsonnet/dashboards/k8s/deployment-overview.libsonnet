@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s deployment detail dashboard */
+/* K8s deployment overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'deployment-detail.json':
+    'deployment-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -60,7 +60,7 @@ local table = grafana.tablePanel;
             { alias: 'Updated', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colorsInverse },
             { alias: 'Available', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colorsInverse },
             { alias: 'Deployment', pattern: 'deployment', type: 'string' },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?&var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?&var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
@@ -76,8 +76,8 @@ local table = grafana.tablePanel;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.deploymentDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.deploymentOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(

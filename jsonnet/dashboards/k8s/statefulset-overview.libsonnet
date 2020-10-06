@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s statefulset detail dashboard */
+/* K8s statefulset overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'statefulset-detail.json':
+    'statefulset-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -72,8 +72,8 @@ local table = grafana.tablePanel;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.statefulSetDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.statefulSetOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(

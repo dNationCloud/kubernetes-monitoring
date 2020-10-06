@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s network namespace detail dashboard */
+/* K8s network namespace overview dashboard */
 
 local grafana = (import 'grafonnet/grafana.libsonnet');
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local graphPanel = grafana.graphPanel;
 
 {
   grafanaDashboards+:: {
-    'network-namespace-detail.json':
+    'network-namespace-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -136,8 +136,8 @@ local graphPanel = grafana.graphPanel;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.networkNamespaceDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.networkNamespaceOverview,
       )
       .addTemplates([datasourceTemplate, resolutionTemplate, intervalTemplate, clusterTemplate])
       .addPanels(

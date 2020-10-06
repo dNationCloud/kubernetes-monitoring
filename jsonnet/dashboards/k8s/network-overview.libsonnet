@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s network detail dashboard */
+/* K8s network overview dashboard */
 
 local grafana = (import 'grafonnet/grafana.libsonnet')
                 + (import 'grafonnet-polystat-panel/plugin.libsonnet');
@@ -24,7 +24,7 @@ local polystatPanel = grafana.polystatPanel;
 
 {
   grafanaDashboards+:: {
-    'network-detail.json':
+    'network-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -141,8 +141,8 @@ local polystatPanel = grafana.polystatPanel;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.networkDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.networkOverview,
       )
       .addTemplates([datasourceTemplate, instanceTemplate, jobTemplate, clusterTemplate])
       .addPanels(

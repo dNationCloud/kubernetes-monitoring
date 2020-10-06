@@ -17,31 +17,110 @@ local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
 local template = grafana.template;
+local graphPanel = grafana.graphPanel;
+local logPanel = grafana.logPanel;
 local row = grafana.row;
-local table = grafana.tablePanel;
-
-local sumArr(arr) =
-  /**
-   * Compute sum of array elements.
-   *
-   * @param arrays The input array.
-   * @return sum as number.
-   */
-  std.foldl(function(x, y) x + y, arr, 0);
-
-local getNextIndex(arrays) =
-  /**
-   * Compute index (starting from 1) which would have new element
-   * in array made by concatenating input arrays.
-   *
-   * @param arrays The input array of arrays.
-   * @return next index as number.
-   */
-  sumArr([std.length(arr) for arr in arrays]) + 1;
 
 {
   grafanaDashboards+:: {
     'container-detail.json':
+      local cpu =
+        graphPanel.new(
+          title='CPU Usage',
+          datasource='$datasource',
+          min=0,
+          format='core',
+          stack=true,
+          linewidth=2,
+          fill=2,
+        )
+        .addTargets(
+          [
+            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(kube_pod_container_resource_requests_cpu_cores{namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(kube_pod_container_resource_limits_cpu_cores{namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
+          ]
+        )
+        .addSeriesOverride({ alias: '/PodRequests/', color: '#F2495C', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
+        .addSeriesOverride({ alias: '/PodLimits/', color: '#FF9830', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false });
+
+      local memory =
+        graphPanel.new(
+          title='Memory Usage',
+          datasource='$datasource',
+          min=0,
+          format='bytes',
+          stack=true,
+          linewidth=2,
+          fill=2,
+        )
+        .addTargets(
+          [
+            prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", id!="", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(kube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(kube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
+          ]
+        )
+        .addSeriesOverride({ alias: '/PodRequests/', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
+        .addSeriesOverride({ alias: '/PodLimits/', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false });
+
+      local bandwidth =
+        graphPanel.new(
+          title='Transmit/Receive Bandwidth',
+          datasource='$datasource',
+          format='Bps',
+          stack=true,
+          linewidth=2,
+          fill=2,
+        )
+        .addTargets(
+          [
+            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+          ]
+        )
+        .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
+        .addSeriesOverride({ alias: '/Tx_/', stack: 'A' });
+
+      local drops =
+        graphPanel.new(
+          title='Transmit/Receive Drops',
+          datasource='$datasource',
+          format='Bps',
+          stack=true,
+          linewidth=2,
+          fill=2,
+        )
+        .addTargets(
+          [
+            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+          ]
+        )
+        .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
+        .addSeriesOverride({ alias: '/Tx_/', stack: 'A' });
+
+      local count =
+        graphPanel.new(
+          title='Count (avg for 10s intervals)',
+          datasource='$datasource_logs',
+          format='logs',
+          min=0,
+          stack=true,
+          legend_alignAsTable=true,
+          legend_current=true,
+          legend_rightSide=true,
+        )
+        .addTarget(prometheus.target('sum(count_over_time( ({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search" )[10s] )) by ($view)'));
+
+      local logs =
+        logPanel.new(
+          title='Logs',
+          datasource='$datasource_logs',
+          showLabels=true,
+        )
+        .addTarget(prometheus.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
+
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -50,66 +129,106 @@ local getNextIndex(arrays) =
           current=null,
         );
 
+      local datasourceLogsTemplate =
+        template.datasource(
+          name='datasource_logs',
+          label='Logs datasource',
+          query='loki',
+          current=null,
+        );
+
+      local viewByTemplate =
+        template.custom(
+          name='view',
+          label='View by',
+          query='pod,container',
+          current='container',
+        );
+
+      local namespaceTemplate =
+        template.new(
+          name='namespace',
+          label='Namespace',
+          datasource='$datasource',
+          query='label_values(kube_pod_container_info{cluster=~"$cluster"}, namespace)',
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local podTemplate =
+        template.new(
+          name='pod',
+          label='Pod',
+          datasource='$datasource',
+          query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace"}, pod)',
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local containerTemplate =
+        template.new(
+          name='container',
+          label='Container',
+          datasource='$datasource',
+          query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, container)',
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local searchTemplate =
+        template.text(
+          name='search',
+          label='Logs Search',
+        );
+
       local clusterTemplate =
         template.new(
           name='cluster',
           label='Cluster',
+          query='label_values(kube_pod_container_info, cluster)',
           datasource='$datasource',
-          query='label_values(kube_pod_container_info{cluster=~"$cluster"}, cluster)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           hide='variable',
         );
 
-      local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
+      local templates = [
+        datasourceTemplate,
+      ]
+      + ( if $._config.isLoki then [datasourceLogsTemplate] else [] )
+      + [
+        viewByTemplate,
+        namespaceTemplate,
+        podTemplate,
+        containerTemplate,
+        clusterTemplate,
+      ] + if $._config.isLoki then [searchTemplate] else [];
 
-      local waitingErrors = ['CrashLoopBackOff', 'CreateContainerConfigError', 'ErrImagePull', 'ImagePullBackOff', 'CreateContainerError', 'InvalidImageName', 'CrashLoopBackOff'];
-      local terminatedErrors = ['OOMKilled', 'Error', 'ContainerCannotRun', 'DeadlineExceeded', 'Evicted'];
-
-      local valueMapsOk = [
-        { text: 'Terminated (Completed)', value: 1 },
-        { text: 'Running', value: 2 },
-        { text: 'Waiting (ContainerCreating)', value: 3 },
+      local logsPanels = [
+        row.new('Logs') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
+        count { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 12, w: 24, h: 5 } },
+        logs { gridPos: { x: 0, y: 17, w: 24, h: 13 } },
       ];
-      local writingErrorsValues = [{ err: waitingErrors[i], value: getNextIndex([valueMapsOk]) + i } for i in std.range(0, std.length(waitingErrors) - 1)];
-      local terminatedErrorsValues = [{ err: terminatedErrors[i], value: getNextIndex([valueMapsOk, writingErrorsValues]) + i } for i in std.range(0, std.length(terminatedErrors) - 1)];
 
-      local valueMapsWaitingErrors = [{ text: 'Waiting (%s)' % map.err, value: map.value } for map in writingErrorsValues];
-      local valueMapsTerminatedErrors = [{ text: 'Terminated (%s)' % map.err, value: map.value } for map in terminatedErrorsValues];
-      local valueMaps = std.flattenArrays([valueMapsOk, valueMapsWaitingErrors, valueMapsTerminatedErrors]);
-
-      local okQueries = [
-        'sum by (container, namespace, pod) (kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason="Completed"} * 1)',
-        'sum by (container, namespace, pod) (kube_pod_container_status_running{cluster=~"$cluster"} * 2)',
-        'sum by (container, namespace, pod) (kube_pod_container_status_waiting_reason{cluster=~"$cluster", reason="ContainerCreating"} * 3)',
-      ];
-      local waitingErrorsQueries = ['sum by (container, namespace, pod) (kube_pod_container_status_waiting_reason{cluster=~"$cluster", reason="%(err)s"} * %(value)d)' % map for map in writingErrorsValues];
-      local terminatedErrorsQueries = ['sum by (container, namespace, pod) (kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason="%(err)s"} * %(value)d)' % map for map in terminatedErrorsValues];
-      local statusExpr = std.join(' + \n', std.flattenArrays([okQueries, waitingErrorsQueries, terminatedErrorsQueries]));
-
-      local containersTable =
-        table.new(
-          title='Containers',
-          datasource='$datasource',
-          sort={ col: 4, desc: true },
-          styles=[
-            { pattern: 'Time', type: 'hidden' },
-            { alias: 'Status', pattern: 'Value #A', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [4, 4], colorMode: 'cell', colors: colors },
-            { alias: 'Restarts', pattern: 'Value #B', type: 'number', thresholds: [5, 10], colorMode: 'cell', colors: colors },
-            { alias: 'Container', pattern: 'container', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { alias: 'Namespace', pattern: 'namespace', type: 'string' },
-            { alias: 'Pod', pattern: 'pod', type: 'string' },
-          ]
-        )
-        .addTargets(
-          [
-            prometheus.target(format='table', instant=true, expr=statusExpr),
-            prometheus.target(format='table', instant=true, expr='sum by (container, namespace, pod) (kube_pod_container_status_restarts_total{cluster=~"$cluster"})'),
-          ]
-        );
+      local panels = [
+        row.new('CPU Usage') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        cpu { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
+        row.new('Memory Usage', collapse=true) { gridPos: { x: 0, y: 8, w: 24, h: 1 } }
+        .addPanel(memory { tooltip+: { sort: 2 } }, { x: 0, y: 9, w: 24, h: 7 }),
+        row.new('Network Bandwidth', collapse=true) { gridPos: { x: 0, y: 9, w: 24, h: 1 } }
+        .addPanel(bandwidth { tooltip+: { sort: 2 } }, { x: 0, y: 10, w: 24, h: 7 }),
+        row.new('Network Drops', collapse=true) { gridPos: { x: 0, y: 10, w: 24, h: 1 } }
+        .addPanel(drops { tooltip+: { sort: 2 } }, { x: 0, y: 11, w: 24, h: 7 }),
+      ] + if $._config.isLoki then logsPanels else [];
 
       dashboard.new(
-        'Container',
+        'Container Detail',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
@@ -117,12 +236,7 @@ local getNextIndex(arrays) =
         tags=$._config.dashboardCommon.tags.k8sDetail,
         uid=$._config.dashboardIDs.containerDetail,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate])
-      .addPanels(
-        [
-          row.new('Containers') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-          containersTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
-        ]
-      ),
+      .addTemplates(templates)
+      .addPanels(panels),
   },
 }

@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s pvc detail dashboard */
+/* K8s job overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'pvc-detail.json':
+    'job-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -35,7 +35,7 @@ local table = grafana.tablePanel;
         template.new(
           name='cluster',
           label='Cluster',
-          query='label_values(kube_persistentvolumeclaim_info, cluster)',
+          query='label_values(kube_job_info, cluster)',
           datasource='$datasource',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
@@ -44,49 +44,48 @@ local table = grafana.tablePanel;
 
       local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
       local valueMaps = [
-        { text: 'Bound', value: 1 },
-        { text: 'Lost', value: 2 },
-        { text: 'Pending', value: 3 },
+        { text: 'Succeeded', value: 1 },
+        { text: 'Active', value: 2 },
+        { text: 'Failed', value: 3 },
       ];
 
-      local pvcTable =
+      local jobsTable =
         table.new(
-          title='Persistent Volumes',
+          title='Jobs',
           datasource='$datasource',
-          sort={ col: 3, desc: true },
+          sort={ col: 4, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { alias: 'Capacity', pattern: 'Value #A', colors: colors, colorMode: 'cell', type: 'number', unit: 'percent', thresholds: [85, 97] },
-            { alias: 'Status', pattern: 'Value #B', colors: colors, colorMode: 'cell', type: 'string', thresholds: [2, 2], valueMaps: valueMaps, mappingType: 1 },
-            { alias: 'PVC', pattern: 'persistentvolumeclaim', type: 'string', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-volume=${__cell_2}&%s' % [$._config.dashboardIDs.persistentVolumes, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
+            { alias: 'Job name', pattern: 'job_name', type: 'string' },
+            { alias: 'Owner', pattern: 'owner_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_3}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
           ]
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (persistentvolumeclaim, namespace) (((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster"}) * 100)'),
             prometheus.target(format='table', instant=true, expr=|||
-              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"} * 1) +
-              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Lost"} * 2) +
-              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Pending"} * 3)
+              sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster"} * 1) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"} +
+              sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster"} * 2) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"} +
+              sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster"} * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"}
             |||),
           ]
         );
 
       dashboard.new(
-        'PVC',
+        'Job',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
-        uid=$._config.dashboardIDs.pvcDetail,
+        tags=$._config.dashboardCommon.tags.k8sOverview,
+        uid=$._config.dashboardIDs.jobOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(
         [
-          row.new('Persistent Volumes') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-          pvcTable { gridPos: { x: 0, y: 1, w: 24, h: 19 } },
+          row.new('Jobs') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          jobsTable { gridPos: { x: 0, y: 1, w: 24, h: 23 } },
         ]
       ),
   },
