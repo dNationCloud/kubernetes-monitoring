@@ -79,7 +79,6 @@ local polystatPanel = grafana.polystatPanel;
           title='Network per Node',
           datasource='$datasource',
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
-          default_click_through_new_tab=true,
           font_size=20,
           global_unit_format='errors',
           global_decimals=0,

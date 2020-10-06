@@ -81,7 +81,6 @@ local polystatPanel = grafana.polystatPanel;
           datasource='$datasource',
           description='The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
-          default_click_through_new_tab=true,
           font_size=20,
           global_unit_format='percent',
           global_decimals=0,
