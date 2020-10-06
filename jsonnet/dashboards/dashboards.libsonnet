@@ -30,7 +30,7 @@
 (import 'k8s/network-namespace-overview.libsonnet') +
 (import 'k8s/cpu-overview.libsonnet') +
 (import 'k8s/pod-overview.libsonnet') +
-(import 'k8s/logs.libsonnet') +
+(import 'k8s/container-detail.libsonnet') +
 
 // Kube system dashboards
 (import 'k8s/controller-manager.libsonnet') +

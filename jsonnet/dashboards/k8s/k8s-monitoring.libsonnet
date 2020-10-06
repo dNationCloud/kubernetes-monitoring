@@ -32,7 +32,7 @@ local text = grafana.text;
           tags=['view'],
           title='Logs (Experimental)',
           type='link',
-          url='/d/%s' % $._config.dashboardIDs.logs,
+          url='/d/%s' % $._config.dashboardIDs.containerDetail,
         );
 
       local explorerLink =

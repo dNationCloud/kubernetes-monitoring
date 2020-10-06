@@ -57,7 +57,7 @@ local table = grafana.tablePanel;
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
-            { alias: 'Job name', pattern: 'job_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Job name', pattern: 'job_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
           ]
         )

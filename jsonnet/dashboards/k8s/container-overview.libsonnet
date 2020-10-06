@@ -96,7 +96,7 @@ local getNextIndex(arrays) =
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Status', pattern: 'Value #A', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [4, 4], colorMode: 'cell', colors: colors },
             { alias: 'Restarts', pattern: 'Value #B', type: 'number', thresholds: [5, 10], colorMode: 'cell', colors: colors },
-            { alias: 'Container', pattern: 'container', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Container', pattern: 'container', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
             { alias: 'Pod', pattern: 'pod', type: 'string' },
           ]

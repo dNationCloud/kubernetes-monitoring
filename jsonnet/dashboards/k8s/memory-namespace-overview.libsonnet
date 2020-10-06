@@ -105,7 +105,7 @@ local graphPanel = grafana.graphPanel;
             { alias: 'Memory Request %', pattern: 'Value #E', type: 'number', unit: 'percentunit', decimals: 2 },
             { alias: 'Memory Limit', pattern: 'Value #F', type: 'number', unit: 'bytes', decimals: 2 },
             { alias: 'Memory Limit %', pattern: 'Value #G', type: 'number', unit: 'percentunit', decimals: 2 },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Drill down to pods', linkUrl: './d/%s?var-namespace=$__cell&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Drill down to pods', linkUrl: './d/%s?var-namespace=$__cell&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(

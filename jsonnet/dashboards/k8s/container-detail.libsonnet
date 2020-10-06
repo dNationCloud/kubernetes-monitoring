@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s logs dashboard */
+/* K8s container detail dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -23,7 +23,7 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    'logs.json':
+    'container-detail.json':
       local cpu =
         graphPanel.new(
           title='CPU Usage',
@@ -228,13 +228,13 @@ local row = grafana.row;
       ] + if $._config.isLoki then logsPanels else [];
 
       dashboard.new(
-        'Logs (Experimental)',
+        'Container Detail',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sLogs,
-        uid=$._config.dashboardIDs.logs,
+        tags=$._config.dashboardCommon.tags.k8sDetail,
+        uid=$._config.dashboardIDs.containerDetail,
       )
       .addTemplates(templates)
       .addPanels(panels),
