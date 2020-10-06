@@ -31,15 +31,6 @@ local table = grafana.tablePanel;
           current=null,
         );
 
-      local alertManagerTemplate =
-        template.datasource(
-          name='alertmanager',
-          label='AlertManager',
-          query='camptocamp-prometheus-alertmanager-datasource',
-          current=null,
-          hide='variable',
-        );
-
       local clusterTemplate =
         template.new(
           name='cluster',
@@ -55,11 +46,11 @@ local table = grafana.tablePanel;
       local colorsInverse = [colors[2], colors[1], colors[0]];
       local thresholds = [1, 1];
       local rangeMaps = [
-        { from: '0', text: 'OK', to: '0' },
-        { from: '1', text: 'Failed', to: '10000' },
+        { from: 0, text: 'OK', to: 0 },
+        { from: 1, text: 'Failed', to: 10000 },
       ];
 
-      local containersTable =
+      local deploymentsTable =
         table.new(
           title='Deployments',
           datasource='$datasource',
@@ -69,7 +60,7 @@ local table = grafana.tablePanel;
             { alias: 'Updated', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colorsInverse },
             { alias: 'Available', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colorsInverse },
             { alias: 'Deployment', pattern: 'deployment', type: 'string' },
-            { alias: 'Namespace', pattern: 'namespace', type: 'string', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?&var-namespace=${__cell_2}&var-pod=All&var-view=pod&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?&var-namespace=${__cell_2}&var-pod=All&var-view=pod&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
@@ -88,11 +79,11 @@ local table = grafana.tablePanel;
         tags=$._config.dashboardCommon.tags.k8sDetail,
         uid=$._config.dashboardIDs.deploymentDetail,
       )
-      .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(
         [
           row.new('Deployments') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-          containersTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
+          deploymentsTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
         ]
       ),
   },

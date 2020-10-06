@@ -17,7 +17,6 @@ local dashboards = (import 'dashboards/dashboards.libsonnet').grafanaDashboards;
 local config = (import 'dashboards/dashboards.libsonnet')._config;
 local kube = import 'kube-libsonnet/kube.libsonnet';
 
-
 local dashboardToString(dashboard) =
   /**
    * Parse grafana dashboard and replace {{.*}} by {{`{{`}}.*{{`}}`}}
@@ -37,7 +36,6 @@ local dashboardToString(dashboard) =
     ), '}}`}}', '{{`}}`}}'
   );
 
-
 local dashboardConfigMapName(filename) =
   /**
    * Parse k8s configmap name from the dashboard filename
@@ -46,7 +44,6 @@ local dashboardConfigMapName(filename) =
    * @return k8s configmap name.
    */
   '{{ $.Release.Name }}-%(name)s' % std.strReplace(filename, '.json', '');
-
 
 local dashboardConfigMapFileName(filename) =
   /**
@@ -71,7 +68,7 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
           },
           namespace: '{{ $.Release.Namespace }}',
           annotations+:
-             if config.dashboardDirs.enable then {'k8s-sidecar-target-directory': config.dashboardDirs[filename]} else {},
+            if config.dashboardDirs.enable then { 'k8s-sidecar-target-directory': config.dashboardDirs[filename] } else {},
         },
         data: {
           [filename]: dashboardToString(dashboards[filename]),

@@ -81,8 +81,8 @@ local polystatPanel = grafana.polystatPanel;
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
           default_click_through_new_tab=true,
           font_size=20,
-          global_unit_format='pps',
-          global_decimals=2,
+          global_unit_format='errors',
+          global_decimals=0,
           global_operator_name='current',
           global_thresholds=polystatThresholds,
           hexagon_sort_by_direction=4,
@@ -110,8 +110,12 @@ local polystatPanel = grafana.polystatPanel;
         )
         .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
-        .addTarget(prometheus.target(legendFormat='Tx_{{device}}', expr='rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
-        .addTarget(prometheus.target(legendFormat='Rx_{{device}}', expr='rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
+        .addTargets(
+          [
+            prometheus.target(legendFormat='Tx_{{device}}', expr='rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='Rx_{{device}}', expr='rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+          ]
+        );
 
       local netRecGraphPanel =
         graphPanel.new(

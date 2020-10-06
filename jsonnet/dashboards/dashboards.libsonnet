@@ -28,6 +28,7 @@
 (import 'k8s/memory-namespace-detail.libsonnet') +
 (import 'k8s/network-detail.libsonnet') +
 (import 'k8s/network-namespace-detail.libsonnet') +
+(import 'k8s/cpu-detail.libsonnet') +
 (import 'k8s/pod-detail.libsonnet') +
 (import 'k8s/logs.libsonnet') +
 

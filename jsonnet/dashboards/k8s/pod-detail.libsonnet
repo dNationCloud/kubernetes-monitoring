@@ -55,11 +55,11 @@ local row = grafana.row;
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
             { alias: 'Pod', pattern: 'pod', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { alias: 'Running', pattern: 'Value #A', type: 'string', colors: colors, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'OK', value: '1' }], mappingType: 1 },
-            { alias: 'Succeeded', pattern: 'Value #B', type: 'string', colors: colors, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'OK', value: '1' }], mappingType: 1 },
-            { alias: 'Failed', pattern: 'Value #C', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Unknown', value: '1' }], mappingType: 1 },
-            { alias: 'Failed', pattern: 'Value #D', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Failed', value: '1' }], mappingType: 1 },
-            { alias: 'Failed', pattern: 'Value #E', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Pending', value: '1' }], mappingType: 1 },
+            { alias: 'Running', pattern: 'Value #A', type: 'string', colors: colors, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'OK', value: 1 }], mappingType: 1 },
+            { alias: 'Succeeded', pattern: 'Value #B', type: 'string', colors: colors, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'OK', value: 1 }], mappingType: 1 },
+            { alias: 'Failed', pattern: 'Value #C', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Unknown', value: 1 }], mappingType: 1 },
+            { alias: 'Failed', pattern: 'Value #D', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Failed', value: 1 }], mappingType: 1 },
+            { alias: 'Failed', pattern: 'Value #E', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Pending', value: 1 }], mappingType: 1 },
           ]
         )
         .addTargets(

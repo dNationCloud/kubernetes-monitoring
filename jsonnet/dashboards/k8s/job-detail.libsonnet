@@ -31,15 +31,6 @@ local table = grafana.tablePanel;
           current=null,
         );
 
-      local alertmanagerTemplate =
-        template.datasource(
-          name='alertmanager',
-          label='AlertManager',
-          query='camptocamp-prometheus-alertmanager-datasource',
-          current=null,
-          hide='variable',
-        );
-
       local clusterTemplate =
         template.new(
           name='cluster',
@@ -66,8 +57,8 @@ local table = grafana.tablePanel;
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
-            { alias: 'Job name', pattern: 'job_name', type: 'string', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s/kubernetes-compute-resources-detail?&var-container=${__cell_1}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { alias: 'Namespace', pattern: 'namespace', type: 'number' },
+            { alias: 'Job name', pattern: 'job_name', link: true, linkTargetBlank: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', type: 'string' },
           ]
         )
         .addTargets(
@@ -89,7 +80,7 @@ local table = grafana.tablePanel;
         tags=$._config.dashboardCommon.tags.k8sDetail,
         uid=$._config.dashboardIDs.jobDetail,
       )
-      .addTemplates([datasourceTemplate, alertmanagerTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(
         [
           row.new('Jobs') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

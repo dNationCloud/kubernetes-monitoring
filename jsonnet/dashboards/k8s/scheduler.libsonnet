@@ -29,8 +29,12 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           graphMode='none',
         )
-        .addThreshold({ color: $._config.dashboardCommon.color.red, value: null })
-        .addThreshold({ color: $._config.dashboardCommon.color.green, value: 1 })
+        .addThresholds(
+          [
+            { color: $._config.dashboardCommon.color.red, value: null },
+            { color: $._config.dashboardCommon.color.green, value: 1 },
+          ]
+        )
         .addTarget(prometheus.target('sum(up{cluster=~"$cluster", %(scheduler)s})' % $._config.dashboardSelectors));
 
       local schedulingRate =
@@ -44,11 +48,14 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('sum(rate(scheduler_e2e_scheduling_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} e2e'))
-        .addTarget(prometheus.target('sum(rate(scheduler_binding_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} binding'))
-        .addTarget(prometheus.target('sum(rate(scheduler_scheduling_algorithm_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} scheduling algorithm'))
-        .addTarget(prometheus.target('sum(rate(scheduler_volume_scheduling_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} volume'));
-
+        .addTargets(
+          [
+            prometheus.target('sum(rate(scheduler_e2e_scheduling_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} e2e'),
+            prometheus.target('sum(rate(scheduler_binding_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} binding'),
+            prometheus.target('sum(rate(scheduler_scheduling_algorithm_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} scheduling algorithm'),
+            prometheus.target('sum(rate(scheduler_volume_scheduling_duration_seconds_count{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance)' % $._config.dashboardSelectors, legendFormat='{{instance}} volume'),
+          ]
+        );
 
       local schedulingLatency =
         graphPanel.new(
@@ -61,10 +68,14 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(scheduler_e2e_scheduling_duration_seconds_bucket{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} e2e'))
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(scheduler_binding_duration_seconds_bucket{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} binding'))
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(scheduler_scheduling_algorithm_duration_seconds_bucket{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} scheduling algorithm'))
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(scheduler_volume_scheduling_duration_seconds_bucket{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} volume'));
+        .addTargets(
+          [
+            prometheus.target('histogram_quantile(0.99, sum(rate(scheduler_e2e_scheduling_duration_seconds_bucket{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} e2e'),
+            prometheus.target('histogram_quantile(0.99, sum(rate(scheduler_binding_duration_seconds_bucket{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} binding'),
+            prometheus.target('histogram_quantile(0.99, sum(rate(scheduler_scheduling_algorithm_duration_seconds_bucket{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} scheduling algorithm'),
+            prometheus.target('histogram_quantile(0.99, sum(rate(scheduler_volume_scheduling_duration_seconds_bucket{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} volume'),
+          ]
+        );
 
       local rpcRate =
         graphPanel.new(
@@ -73,10 +84,14 @@ local statPanel = grafana.statPanel;
           format='ops',
           min=0,
         )
-        .addTarget(prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance",code=~"2.."}[5m]))' % $._config.dashboardSelectors, legendFormat='2xx'))
-        .addTarget(prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance",code=~"3.."}[5m]))' % $._config.dashboardSelectors, legendFormat='3xx'))
-        .addTarget(prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance",code=~"4.."}[5m]))' % $._config.dashboardSelectors, legendFormat='4xx'))
-        .addTarget(prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance",code=~"5.."}[5m]))' % $._config.dashboardSelectors, legendFormat='5xx'));
+        .addTargets(
+          [
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance", code=~"2.."}[5m]))' % $._config.dashboardSelectors, legendFormat='2xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance", code=~"3.."}[5m]))' % $._config.dashboardSelectors, legendFormat='3xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance", code=~"4.."}[5m]))' % $._config.dashboardSelectors, legendFormat='4xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance", code=~"5.."}[5m]))' % $._config.dashboardSelectors, legendFormat='5xx'),
+          ]
+        );
 
       local postRequestLatency =
         graphPanel.new(
@@ -161,7 +176,8 @@ local statPanel = grafana.statPanel;
         tags=$._config.dashboardCommon.tags.k8sSystem,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
-      ).addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate])
+      )
+      .addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate])
       .addPanels(
         [
           upCount { gridPos: { x: 0, y: 0, w: 4, h: 7 } },
