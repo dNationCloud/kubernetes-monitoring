@@ -46,8 +46,8 @@ local table = grafana.tablePanel;
       local colorsInverse = [colors[2], colors[1], colors[0]];
       local thresholds = [1, 1];
       local rangeMaps = [
-        { from: '0', text: 'OK', to: '0' },
-        { from: '1', text: 'Failed', to: '10000' },
+        { from: 0, text: 'OK', to: 0 },
+        { from: 1, text: 'Failed', to: 10000 },
       ];
 
       local deploymentsTable =

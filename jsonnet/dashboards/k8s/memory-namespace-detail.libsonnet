@@ -92,8 +92,8 @@ local graphPanel = grafana.graphPanel;
 
       local memReqTable =
         table.new(
-          title='Requests by Namespace',
-          description='* `Memory Usage` defines memory consumption of all pods living in selected namespace\n* `Memory Requests` defines sum of all memory requests\n* `Memory Requests %` defines ratio between consumed memory and requests by containers which have defined memory requests\n* `Memory Limits` defines sum of all memory limits\n* `Memory Limits %` defines ratio between consumed memory and limits by containers which have defined memory limits',
+          title='Memory Request/Limit',
+          description='* `Memory Usage` defines memory consumption of all pods living in selected namespace\n* `Memory Request` defines sum of container memory request in selected namespace\n* `Memory Request %` defines ratio between consumed memory and defined container memory request\n* `Memory Limit` defines sum of container memory limit in selected namespace\n* `Memory Limit %` defines ratio between consumed memory and defined container memory limit',
           datasource='$datasource',
           sort={ col: 4, desc: true },
           styles=[
@@ -101,10 +101,10 @@ local graphPanel = grafana.graphPanel;
             { alias: 'Pods', pattern: 'Value #A', type: 'number' },
             { alias: 'Workloads', pattern: 'Value #B', type: 'number' },
             { alias: 'Memory Usage', pattern: 'Value #C', type: 'number', unit: 'bytes', decimals: 2 },
-            { alias: 'Memory Requests', pattern: 'Value #D', type: 'number', unit: 'bytes', decimals: 2 },
-            { alias: 'Memory Requests %', pattern: 'Value #E', type: 'number', unit: 'percentunit', decimals: 2 },
-            { alias: 'Memory Limits', pattern: 'Value #F', type: 'number', unit: 'bytes', decimals: 2 },
-            { alias: 'Memory Limits %', pattern: 'Value #G', type: 'number', unit: 'percentunit', decimals: 2 },
+            { alias: 'Memory Request', pattern: 'Value #D', type: 'number', unit: 'bytes', decimals: 2 },
+            { alias: 'Memory Request %', pattern: 'Value #E', type: 'number', unit: 'percentunit', decimals: 2 },
+            { alias: 'Memory Limit', pattern: 'Value #F', type: 'number', unit: 'bytes', decimals: 2 },
+            { alias: 'Memory Limit %', pattern: 'Value #G', type: 'number', unit: 'percentunit', decimals: 2 },
             { alias: 'Namespace', pattern: 'namespace', link: true, linkTargetBlank: true, linkTooltip: 'Drill down to pods', linkUrl: './d/%s?var-namespace=$__cell&%s' % [$._config.dashboardIDs.logs, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
@@ -132,9 +132,9 @@ local graphPanel = grafana.graphPanel;
       .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, workloadTemplate, workloadTypeTemplate])
       .addPanels(
         [
-          row.new('Memory') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          row.new('Memory Usage') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
           memUsageGraphPanel { gridPos: { x: 0, y: 1, w: 24, h: 8 }, tooltip+: { sort: 2 } },
-          row.new('Memory Requests') { gridPos: { x: 0, y: 9, w: 24, h: 9 } },
+          row.new('Memory Request/Limit') { gridPos: { x: 0, y: 9, w: 24, h: 9 } },
           memReqTable { gridPos: { x: 0, y: 10, w: 24, h: 12 } },
         ]
       ),
