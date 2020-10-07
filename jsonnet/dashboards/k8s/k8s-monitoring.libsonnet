@@ -262,7 +262,7 @@ local text = grafana.text;
         .addDataLinks(
           [
             { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/bEN1iiMGz?%s' % [$._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.cpuNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 
@@ -275,7 +275,7 @@ local text = grafana.text;
         .addDataLinks(
           [
             { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/bEN1iiMGz?%s' % [$._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.cpuNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 

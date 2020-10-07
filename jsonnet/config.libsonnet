@@ -36,6 +36,7 @@
       networkOverview: 'networkoverview',
       networkNamespaceOverview: 'networknamespaceoverview',
       cpuOverview: 'cpuoverview',
+      cpuNamespaceOverview: 'cpunamespaceoverview',
 
       // Kube system dashboards
       controllerManager: 'controllermanager',
@@ -59,6 +60,49 @@
       kubelet: 'job="kubelet"',
       scheduler: 'job="kube-scheduler"',
       proxy: 'job="kube-proxy"',
+    },
+
+    dashboardDirs: {
+      enable: false,
+      basePath: '/var/lib/grafana/dashboards/',
+
+      // K8s dashboards
+      k8sPath: self.basePath + 'k8s',
+      'k8s-monitoring.json': self.k8sPath,
+      'alert-overview.json': self.k8sPath,
+      'node-overview.json': self.k8sPath,
+      'job-overview.json': self.k8sPath,
+      'statefulset-overview.json': self.k8sPath,
+      'pvc-overview.json': self.k8sPath,
+      'node-exporter.json': self.k8sPath,
+      'container-overview.json': self.k8sPath,
+      'deployment-overview.json': self.k8sPath,
+      'disk-overview.json': self.k8sPath,
+      'memory-overview.json': self.k8sPath,
+      'memory-namespace-overview.json': self.k8sPath,
+      'network-overview.json': self.k8sPath,
+      'network-namespace-overview.json': self.k8sPath,
+      'cpu-overview.json': self.k8sPath,
+      'pod-overview.json': self.k8sPath,
+      'container-detail.json': self.k8sPath,
+      'cpu-namespace-overview.json': self.k8sPath,
+
+      // Kube system dashboards
+      kubeSystemPath: self.basePath + 'kube_system',
+      'controller-manager.json': self.kubeSystemPath,
+      'scheduler.json': self.kubeSystemPath,
+      'kubelet.json': self.kubeSystemPath,
+      'api-server.json': self.kubeSystemPath,
+      'proxy.json': self.kubeSystemPath,
+      'etcd.json': self.kubeSystemPath,
+
+      // Kube compute dashboards
+      kubeComputePath: self.basePath + 'kube_compute',
+      'statefulset.json': self.kubeComputePath,
+
+      // Kube pvc dashboards
+      pvcPath: self.basePath + 'kube_pvc',
+      'pvc.json': self.pvcPath,
     },
 
     dashboardCommon: {
