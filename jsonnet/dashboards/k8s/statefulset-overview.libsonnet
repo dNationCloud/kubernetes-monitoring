@@ -49,20 +49,20 @@ local table = grafana.tablePanel;
           sort={ col: 6, desc: false },
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { alias: 'Desired', pattern: 'Value #A', type: 'number' },
-            { alias: 'Current', pattern: 'Value #B', type: 'number' },
-            { alias: 'Ready', pattern: 'Value #C', type: 'number' },
-            { alias: 'Desired/Ready', pattern: 'Value #D', type: 'number', unit: 'percent', thresholds: [95, 99], colorMode: 'cell', colors: [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green] },
+            { alias: 'Ready', pattern: 'Value #A', type: 'number', decimals: 0 },
+            { alias: 'Updated', pattern: 'Value #B', type: 'number', decimals: 0 },
+            { alias: 'Desired', pattern: 'Value #C', type: 'number', decimals: 0 },
+            { alias: 'Ready/Desired', pattern: 'Value #D', type: 'number', decimals: 0, unit: 'percent', thresholds: [95, 99], colorMode: 'cell', colors: [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
             { alias: 'Stateful Set', pattern: 'statefulset', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&var-view=statefulset&%s' % [$._config.dashboardIDs.statefulSet, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
             prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
-            prometheus.target(format='table', instant=true, expr='(sum by (statefulset, namespace) (kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s})) / (sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s}) ) * 100' % $._config.dashboardSelectors),
+            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_updated{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
+            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
+            prometheus.target(format='table', instant=true, expr='(sum by (statefulset, namespace) (kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s})) / (sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s}) ) * 100' % $._config.dashboardSelectors),
           ]
         );
 

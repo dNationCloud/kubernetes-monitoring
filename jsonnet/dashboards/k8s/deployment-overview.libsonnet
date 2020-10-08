@@ -43,30 +43,29 @@ local table = grafana.tablePanel;
         );
 
       local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
-      local colorsInverse = [colors[2], colors[1], colors[0]];
       local thresholds = [1, 1];
       local rangeMaps = [
-        { from: 0, text: 'OK', to: 0 },
-        { from: 1, text: 'Failed', to: 10000 },
+        { from: '1', text: 'OK', to: '1' },
+        { from: '0', text: 'Failed', to: '1' },
       ];
 
       local deploymentsTable =
         table.new(
           title='Deployments',
           datasource='$datasource',
-          sort={ col: 4, desc: true },
+          sort={ col: 3 },
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { alias: 'Updated', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colorsInverse },
-            { alias: 'Available', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colorsInverse },
+            { alias: 'Available', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
+            { alias: 'Updated', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
             { alias: 'Deployment', pattern: 'deployment', type: 'string' },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?&var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas_unavailable{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas_updated - kube_deployment_status_replicas{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas_available{cluster=~"$cluster"}) / sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas_updated{cluster=~"$cluster"}) / sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster"})'),
           ]
         );
 
