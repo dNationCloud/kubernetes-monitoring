@@ -1,0 +1,20 @@
+k8s-m8g:
+  enabled: false
+
+kube-prometheus-stack:
+  kubeEtcd:
+    service:
+      port: 2381
+      targetPort: 2381
+  prometheus:
+    service:
+      type: NodePort
+      nodePort: 30090
+  grafana:
+    service:
+      type: NodePort
+      nodePort: 30001
+  alertmanager:
+    service:
+      type: NodePort
+      nodePort: 30903

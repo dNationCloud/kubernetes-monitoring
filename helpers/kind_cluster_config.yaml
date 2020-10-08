@@ -6,10 +6,6 @@ networking:
 nodes:
 - role: worker
 - role: control-plane
-  # Add a mount from Prometheus./snapshot directory on the host to /snapshot directory on cluster node
-  extraMounts:
-  - hostPath: ./snapshot/
-    containerPath: /snapshot
   extraPortMappings:
   # Grafana UI port forward 5000 on the host to 30001 on cluster node
   - containerPort: 30001
