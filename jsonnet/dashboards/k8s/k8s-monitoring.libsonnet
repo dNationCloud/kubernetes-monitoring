@@ -129,6 +129,14 @@ local text = grafana.text;
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
 
+      local daemonSetsHealthPanel =
+        percentStatPanel(
+          title='DaemonSets Health',
+          expr='(sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})) * 100' % $._config.dashboardSelectors,
+        )
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.daemonSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addThresholds(overviewThresholds);
+
       local pvcBoundPanel =
         percentStatPanel(
           title='PVC Bound',
@@ -450,13 +458,14 @@ local text = grafana.text;
           warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
           row.new('Overview') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
           nodesHealthPanel { gridPos: { x: 0, y: 5, w: 6, h: 3 } },
-          runningPodsPanel { gridPos: { x: 6, y: 5, w: 6, h: 3 } },
-          runningStatefulSetsPanel { gridPos: { x: 12, y: 5, w: 6, h: 3 } },
-          pvcBoundPanel { gridPos: { x: 18, y: 5, w: 6, h: 3 } },
+          succeededJobsPanel { gridPos: { x: 6, y: 5, w: 6, h: 3 } },
+          runningPodsPanel { gridPos: { x: 12, y: 5, w: 6, h: 3 } },
+          runningContainersPanel { gridPos: { x: 18, y: 5, w: 6, h: 3 } },
           deploymentsHealthPanel { gridPos: { x: 0, y: 8, w: 6, h: 3 } },
-          runningContainersPanel { gridPos: { x: 6, y: 8, w: 6, h: 3 } },
-          succeededJobsPanel { gridPos: { x: 12, y: 8, w: 6, h: 3 } },
-          mostUtilizedPVCPanel { gridPos: { x: 18, y: 8, w: 6, h: 3 } },
+          daemonSetsHealthPanel { gridPos: { x: 6, y: 8, w: 6, h: 3 } },
+          runningStatefulSetsPanel { gridPos: { x: 12, y: 8, w: 6, h: 3 } },
+          pvcBoundPanel { gridPos: { x: 18, y: 8, w: 3, h: 3 } },
+          mostUtilizedPVCPanel { gridPos: { x: 21, y: 8, w: 3, h: 3 } },
           row.new('Control Plane Components') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
           apiServerPanel { gridPos: { x: 0, y: 12, w: 4, h: 3 } },
           controllerManagerPanel { gridPos: { x: 4, y: 12, w: 4, h: 3 } },

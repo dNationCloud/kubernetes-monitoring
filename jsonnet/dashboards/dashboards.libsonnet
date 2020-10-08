@@ -23,6 +23,7 @@
 (import 'k8s/node-exporter.libsonnet') +
 (import 'k8s/container-overview.libsonnet') +
 (import 'k8s/deployment-overview.libsonnet') +
+(import 'k8s/daemonset-overview.libsonnet') +
 (import 'k8s/disk-overview.libsonnet') +
 (import 'k8s/memory-overview.libsonnet') +
 (import 'k8s/memory-namespace-overview.libsonnet') +

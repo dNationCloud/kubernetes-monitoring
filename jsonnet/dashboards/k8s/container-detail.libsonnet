@@ -199,16 +199,17 @@ local row = grafana.row;
         );
 
       local templates = [
-        datasourceTemplate,
-      ]
-      + ( if $._config.isLoki then [datasourceLogsTemplate] else [] )
-      + [
-        viewByTemplate,
-        namespaceTemplate,
-        podTemplate,
-        containerTemplate,
-        clusterTemplate,
-      ] + if $._config.isLoki then [searchTemplate] else [];
+                          datasourceTemplate,
+                        ]
+                        + (if $._config.isLoki then [datasourceLogsTemplate] else [])
+                        + [
+                          viewByTemplate,
+                          namespaceTemplate,
+                          podTemplate,
+                          containerTemplate,
+                          clusterTemplate,
+                        ]
+                        + if $._config.isLoki then [searchTemplate] else [];
 
       local logsPanels = [
         row.new('Logs') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
