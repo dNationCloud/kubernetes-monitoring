@@ -42,9 +42,14 @@ local row = grafana.row;
           hide='variable',
         );
 
-      local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
-      local colorsInverse = [colors[2], colors[1], colors[0]];
-      local thresholds = [1, 1];
+      local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
+      local valueMaps = [
+        { text: 'Running', value: 1 },
+        { text: 'Succeeded', value: 2 },
+        { text: 'Unknow', value: 3 },
+        { text: 'Failed', value: 4 },
+        { text: 'Pending', value: 5 },
+      ];
 
       local podsTable =
         table.new(
@@ -53,23 +58,19 @@ local row = grafana.row;
           sort={ col: 3, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
+            { alias: 'Status', pattern: 'Value', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [3, 3], colorMode: 'cell', colors: colors },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
             { alias: 'Pod', pattern: 'pod', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=All&var-view=pod&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { alias: 'Running', pattern: 'Value #A', type: 'string', colors: colors, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'OK', value: 1 }], mappingType: 1 },
-            { alias: 'Succeeded', pattern: 'Value #B', type: 'string', colors: colors, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'OK', value: 1 }], mappingType: 1 },
-            { alias: 'Failed', pattern: 'Value #C', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Unknown', value: 1 }], mappingType: 1 },
-            { alias: 'Failed', pattern: 'Value #D', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Failed', value: 1 }], mappingType: 1 },
-            { alias: 'Failed', pattern: 'Value #E', type: 'string', colors: colorsInverse, colorMode: 'cell', thresholds: thresholds, valueMaps: [{ text: 'Pending', value: 1 }], mappingType: 1 },
           ]
         )
-        .addTargets(
-          [
-            prometheus.target(format='table', instant=true, expr='sum by (pod, namespace) (kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) > 0'),
-            prometheus.target(format='table', instant=true, expr='sum by (pod, namespace) (kube_pod_status_phase{cluster=~"$cluster", phase="Succeeded"}) > 0'),
-            prometheus.target(format='table', instant=true, expr='sum by (pod, namespace) (kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"}) > 0'),
-            prometheus.target(format='table', instant=true, expr='sum by (pod, namespace) (kube_pod_status_phase{cluster=~"$cluster", phase="Failed"}) > 0'),
-            prometheus.target(format='table', instant=true, expr='sum by (pod, namespace) (kube_pod_status_phase{cluster=~"$cluster", phase="Pending"}) > 0'),
-          ]
+        .addTarget(
+            prometheus.target(format='table', instant=true, expr=|||
+                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Running"} * 1) +
+                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Succeeded"} * 2) +
+                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"} * 3) +
+                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Failed"} * 4) +
+                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Pending"} * 5)
+            |||)
         );
 
       dashboard.new(
