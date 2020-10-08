@@ -59,28 +59,28 @@ local template = grafana.template;
       local desiredReplicasPanel =
         panel(
           title='Desired Replicas',
-          expr='sum(kube_statefulset_replicas{%(stateMetrics)s, cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
+          expr='sum(kube_statefulset_replicas{cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
         )
         .addThreshold(redStep);
 
       local currentReplicasPanel =
         panel(
           title='Replicas of current version',
-          expr='sum(kube_statefulset_status_replicas_current{%(stateMetrics)s, cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
+          expr='sum(kube_statefulset_status_replicas_current{cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
         )
         .addThreshold(redStep);
 
       local observedGenerationPanel =
         panel(
           title='Observed Generation',
-          expr='sum(kube_statefulset_status_observed_generation{%(stateMetrics)s, cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
+          expr='sum(kube_statefulset_status_observed_generation{cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
         )
         .addThreshold(redStep);
 
       local metadataGenerationPanel =
         panel(
           title='Metadata Generation',
-          expr='sum(kube_statefulset_metadata_generation{%(stateMetrics)s, statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"})',
+          expr='sum(kube_statefulset_metadata_generation{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"})',
         )
         .addThreshold(redStep);
 
@@ -91,11 +91,11 @@ local template = grafana.template;
         )
         .addTargets(
           [
-            prometheus.target(legendFormat='replicas specified {{statefulset}}', expr='sum(kube_statefulset_replicas{%(stateMetrics)s, statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)' % $._config.dashboardSelectors),
-            prometheus.target(legendFormat='replicas created {{statefulset}}', expr='sum(kube_statefulset_status_replicas{%(stateMetrics)s, statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)' % $._config.dashboardSelectors),
-            prometheus.target(legendFormat='ready {{statefulset}}', expr='sum(kube_statefulset_status_replicas_ready{%(stateMetrics)s, statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)' % $._config.dashboardSelectors),
-            prometheus.target(legendFormat='replicas of current version {{statefulset}}', expr='sum(kube_statefulset_status_replicas_current{%(stateMetrics)s, statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)' % $._config.dashboardSelectors),
-            prometheus.target(legendFormat='updated {{statefulset}}', expr='sum(kube_statefulset_status_replicas_updated{%(stateMetrics)s, statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)' % $._config.dashboardSelectors),
+            prometheus.target(legendFormat='replicas specified {{statefulset}}', expr='sum(kube_statefulset_replicas{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='replicas created {{statefulset}}', expr='sum(kube_statefulset_status_replicas{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='ready {{statefulset}}', expr='sum(kube_statefulset_status_replicas_ready{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='replicas of current version {{statefulset}}', expr='sum(kube_statefulset_status_replicas_current{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='updated {{statefulset}}', expr='sum(kube_statefulset_status_replicas_updated{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
           ]
         );
 
@@ -121,7 +121,7 @@ local template = grafana.template;
       local namespaceTemplate =
         template.new(
           name='namespace',
-          query='label_values(kube_statefulset_metadata_generation{%(stateMetrics)s, cluster=~"$cluster"}, namespace)' % $._config.dashboardSelectors,
+          query='label_values(kube_statefulset_metadata_generation{cluster=~"$cluster"}, namespace)',
           label='Namespace',
           datasource='$datasource',
           sort=$._config.dashboardCommon.templateSort,
@@ -133,7 +133,7 @@ local template = grafana.template;
       local statefulsetTemplate =
         template.new(
           name='statefulset',
-          query='label_values(kube_statefulset_metadata_generation{%(stateMetrics)s, cluster=~"$cluster", namespace=~"$namespace"}, statefulset)' % $._config.dashboardSelectors,
+          query='label_values(kube_statefulset_metadata_generation{cluster=~"$cluster", namespace=~"$namespace"}, statefulset)',
           label='StatefulSet',
           datasource='$datasource',
           sort=$._config.dashboardCommon.templateSort,
