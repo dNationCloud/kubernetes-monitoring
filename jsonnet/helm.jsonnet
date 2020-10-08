@@ -14,7 +14,6 @@
 /* Module comprises the logic to encapsulate grafana dashboards writted in jsonnet into k8s configmaps */
 
 local dashboards = (import 'dashboards/dashboards.libsonnet').grafanaDashboards;
-local config = (import 'dashboards/dashboards.libsonnet')._config;
 local kube = import 'kube-libsonnet/kube.libsonnet';
 
 local dashboardToString(dashboard) =
@@ -67,8 +66,6 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
             app: '{{ $.Release.Name }}-grafana',
           },
           namespace: '{{ $.Release.Namespace }}',
-          annotations+:
-            if config.dashboardDirs.enable then { 'k8s-sidecar-target-directory': config.dashboardDirs[filename] } else {},
         },
         data: {
           [filename]: dashboardToString(dashboards[filename]),
