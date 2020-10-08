@@ -124,7 +124,7 @@ local text = grafana.text;
       local runningStatefulSetsPanel =
         percentStatPanel(
           title='Running Stateful Sets',
-          expr='sum(kube_statefulset_status_replicas_current{cluster=~"$cluster", %(stateMetrics)s}) / sum(kube_statefulset_replicas{cluster=~"$cluster", %(stateMetrics)s}) * 100' % $._config.dashboardSelectors,
+          expr='sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s}) / sum(kube_statefulset_status_replicas{%(stateMetrics)s}) * 100' % $._config.dashboardSelectors,
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
@@ -142,7 +142,7 @@ local text = grafana.text;
       local deploymentsHealthPanel =
         percentStatPanel(
           title='Deployments Health',
-          expr='sum(kube_deployment_status_replicas_updated{cluster=~"$cluster"}) / (sum(kube_deployment_status_replicas{cluster=~"$cluster"}) + sum(kube_deployment_status_replicas_unavailable{cluster=~"$cluster"})) * 100',
+          expr='(sum(kube_deployment_status_replicas_updated{cluster=~"$cluster"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster"})) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.deploymentOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
