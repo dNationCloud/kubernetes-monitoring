@@ -24,7 +24,7 @@ local polystatPanel = grafana.polystatPanel;
 
 {
   grafanaDashboards+:: {
-    'disk-overview.json':
+    'disk-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

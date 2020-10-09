@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'deployment-overview.json':
+    'deployment-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

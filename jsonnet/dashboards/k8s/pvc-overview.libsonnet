@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'pvc-overview.json':
+    'pvc-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

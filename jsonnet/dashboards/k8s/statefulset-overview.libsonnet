@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'statefulset-overview.json':
+    'statefulset-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

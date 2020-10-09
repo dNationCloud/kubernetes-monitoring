@@ -22,7 +22,7 @@ local statPanel = grafana.statPanel;
 
 {
   grafanaDashboards+:: {
-    'kubelet.json':
+    'kubelet':
       local upCount =
         statPanel.new(
           title='Up',

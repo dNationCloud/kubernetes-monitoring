@@ -22,7 +22,7 @@ local statPanel = grafana.statPanel;
 
 {
   grafanaDashboards+:: {
-    'etcd.json':
+    'etcd':
       local upCount =
         statPanel.new(
           title='Up',

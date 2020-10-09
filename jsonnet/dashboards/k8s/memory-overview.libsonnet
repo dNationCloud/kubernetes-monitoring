@@ -25,7 +25,7 @@ local polystatPanel = grafana.polystatPanel;
 
 {
   grafanaDashboards+:: {
-    'memory-overview.json':
+    'memory-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

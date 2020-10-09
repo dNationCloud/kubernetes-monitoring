@@ -22,7 +22,7 @@ local graphPanel = grafana.graphPanel;
 
 {
   grafanaDashboards+:: {
-    'network-namespace-overview.json':
+    'network-namespace-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

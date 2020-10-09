@@ -23,7 +23,7 @@ local graphPanel = grafana.graphPanel;
 
 {
   grafanaDashboards+:: {
-    'memory-namespace-overview.json':
+    'memory-namespace-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

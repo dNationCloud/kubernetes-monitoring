@@ -21,7 +21,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'alert-overview.json':
+    'alert-overview':
       local datasourceTemplate =
         template.datasource(
           query='prometheus',
