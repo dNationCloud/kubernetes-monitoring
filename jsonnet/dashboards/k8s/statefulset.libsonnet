@@ -134,7 +134,7 @@ local template = grafana.template;
         template.new(
           name='statefulset',
           query='label_values(kube_statefulset_metadata_generation{%(stateMetrics)s, cluster=~"$cluster", namespace=~"$namespace"}, statefulset)' % $._config.dashboardSelectors,
-          label='Statefulset',
+          label='StatefulSet',
           datasource='$datasource',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
@@ -143,7 +143,7 @@ local template = grafana.template;
         );
 
       dashboard.new(
-        'Stateful Sets',
+        'StatefulSet Detail',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,

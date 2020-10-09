@@ -74,7 +74,7 @@ local row = grafana.row;
         );
 
       dashboard.new(
-        title='Pod',
+        'Pod',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,

@@ -25,33 +25,30 @@ local text = grafana.text;
 {
   grafanaDashboards+:: {
     'k8s-monitoring.json':
-      local experimentalLink =
+      local containerLink =
         link.dashboards(
-          asDropdown=false,
-          icon='external link',
+          title='Logs Container',
           tags=['view'],
-          title='Logs (Experimental)',
-          type='link',
           url='/d/%s' % $._config.dashboardIDs.containerDetail,
+          type='link',
         );
 
       local explorerLink =
         link.dashboards(
-          icon='external link',
-          tags=[],
           title='Logs Explorer',
-          type='link',
+          tags=[],
           url='/explore?orgId=1&left=%5B%22now-7d%22,%22now%22,%22k8s-h-01-logs%22,%7B%22expr%22:%22%7Bnamespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
+          type='link',
         );
 
       local dNationLink =
         link.dashboards(
-          icon='cloud',
-          targetBlank=true,
-          tags=[],
           title='dNation - Making Cloud Easy',
-          type='link',
+          tags=[],
+          icon='cloud',
           url='https://www.dnation.tech/',
+          type='link',
+          targetBlank=true,
         );
 
       local alertPanel(title, expr) =
@@ -123,10 +120,18 @@ local text = grafana.text;
 
       local runningStatefulSetsPanel =
         percentStatPanel(
-          title='Running Stateful Sets',
+          title='Running StatefulSets',
           expr='sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s}) / sum(kube_statefulset_status_replicas{%(stateMetrics)s}) * 100' % $._config.dashboardSelectors,
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addThresholds(overviewThresholds);
+
+      local daemonSetsHealthPanel =
+        percentStatPanel(
+          title='DaemonSets Health',
+          expr='(sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})) * 100' % $._config.dashboardSelectors,
+        )
+        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.daemonSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
 
       local pvcBoundPanel =
@@ -325,7 +330,7 @@ local text = grafana.text;
           title='Errors',
           expr='sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]))',
         )
-        { fieldConfig: { defaults: { unit: 'none' } } }
+        { fieldConfig: { defaults: { unit: 'pps' } } }
         .addThresholds(
           [
             { color: $._config.dashboardCommon.color.green, value: null },
@@ -431,7 +436,6 @@ local text = grafana.text;
 
       dashboard.new(
         'Kubernetes Green/Red Monitoring',
-        description='Green/Red Kubernetes Monitoring',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
@@ -439,7 +443,7 @@ local text = grafana.text;
         tags=$._config.dashboardCommon.tags.k8sMonitoring,
         uid=$._config.dashboardIDs.k8sMonitoring,
       )
-      .addLink(experimentalLink)
+      .addLink(containerLink)
       .addLink(explorerLink)
       .addLink(dNationLink)
       .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate, jobTemplate])
@@ -450,13 +454,14 @@ local text = grafana.text;
           warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
           row.new('Overview') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
           nodesHealthPanel { gridPos: { x: 0, y: 5, w: 6, h: 3 } },
-          runningPodsPanel { gridPos: { x: 6, y: 5, w: 6, h: 3 } },
-          runningStatefulSetsPanel { gridPos: { x: 12, y: 5, w: 6, h: 3 } },
-          pvcBoundPanel { gridPos: { x: 18, y: 5, w: 6, h: 3 } },
+          succeededJobsPanel { gridPos: { x: 6, y: 5, w: 6, h: 3 } },
+          runningPodsPanel { gridPos: { x: 12, y: 5, w: 6, h: 3 } },
+          runningContainersPanel { gridPos: { x: 18, y: 5, w: 6, h: 3 } },
           deploymentsHealthPanel { gridPos: { x: 0, y: 8, w: 6, h: 3 } },
-          runningContainersPanel { gridPos: { x: 6, y: 8, w: 6, h: 3 } },
-          succeededJobsPanel { gridPos: { x: 12, y: 8, w: 6, h: 3 } },
-          mostUtilizedPVCPanel { gridPos: { x: 18, y: 8, w: 6, h: 3 } },
+          daemonSetsHealthPanel { gridPos: { x: 6, y: 8, w: 6, h: 3 } },
+          runningStatefulSetsPanel { gridPos: { x: 12, y: 8, w: 6, h: 3 } },
+          pvcBoundPanel { gridPos: { x: 18, y: 8, w: 3, h: 3 } },
+          mostUtilizedPVCPanel { gridPos: { x: 21, y: 8, w: 3, h: 3 } },
           row.new('Control Plane Components') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
           apiServerPanel { gridPos: { x: 0, y: 12, w: 4, h: 3 } },
           controllerManagerPanel { gridPos: { x: 4, y: 12, w: 4, h: 3 } },

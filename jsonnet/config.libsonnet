@@ -28,6 +28,7 @@
       nodeExporter: 'nodeexporter',
       containerOverview: 'containeroverview',
       deploymentOverview: 'deploymentoverview',
+      daemonSetOverview: 'daemonsetoverview',
       containerDetail: 'containerdetail',
       diskOverview: 'diskoverview',
       memoryOverview: 'memoryoverview',

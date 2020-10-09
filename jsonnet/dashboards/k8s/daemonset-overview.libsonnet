@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s deployment overview dashboard */
+/* K8s daemonset overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'deployment-overview.json':
+    'daemonset-overview.json':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -35,8 +35,8 @@ local table = grafana.tablePanel;
         template.new(
           name='cluster',
           label='Cluster',
-          query='label_values(kube_deployment_status_replicas, cluster)',
           datasource='$datasource',
+          query='label_values(kube_daemonset_status_desired_number_scheduled, cluster)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           hide='variable',
@@ -49,40 +49,44 @@ local table = grafana.tablePanel;
         { from: 1, text: 'Failed', to: 300000 },
       ];
 
-      local deploymentsTable =
+      local daemonSetsTable =
         table.new(
-          title='Deployments',
+          title='DaemonSets',
           datasource='$datasource',
-          sort={ col: 4, desc: true },
+          sort={ col: 6, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { alias: 'Updated', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
-            { alias: 'Available', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
-            { alias: 'Deployment', pattern: 'deployment', type: 'string' },
+            { alias: 'Scheduled', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
+            { alias: 'Updated', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
+            { alias: 'Available', pattern: 'Value #C', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
+            { alias: 'Ready', pattern: 'Value #D', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
+            { alias: 'DaemonSet', pattern: 'daemonset', type: 'string' },
             { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster"}) - sum by (deployment, namespace) (kube_deployment_status_replicas_updated{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster"}) - sum by (deployment, namespace) (kube_deployment_status_replicas_available{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_number_misscheduled{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_updated_number_scheduled{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_status_number_available{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_status_number_ready{cluster=~"$cluster"})'),
           ]
         );
 
       dashboard.new(
-        'Deployment',
+        'DaemonSet',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sOverview,
-        uid=$._config.dashboardIDs.deploymentOverview,
+        tags=$._config.dashboardCommon.tags.k8sDetail,
+        uid=$._config.dashboardIDs.daemonSetOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(
         [
-          row.new('Deployments') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-          deploymentsTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
+          row.new('DaemonSets') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          daemonSetsTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
         ]
       ),
   },

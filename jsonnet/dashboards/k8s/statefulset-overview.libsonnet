@@ -42,32 +42,35 @@ local table = grafana.tablePanel;
           hide='variable',
         );
 
+      local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
+      local thresholds = [1, 1];
+      local rangeMaps = [
+        { from: 0, text: 'OK', to: 0 },
+        { from: 1, text: 'Failed', to: 300000 },
+      ];
+
       local statefulSetsTable =
         table.new(
-          title='Stateful Sets',
+          title='StatefulSets',
           datasource='$datasource',
-          sort={ col: 6, desc: false },
+          sort={ col: 4, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { alias: 'Ready', pattern: 'Value #A', type: 'number', decimals: 0 },
-            { alias: 'Updated', pattern: 'Value #B', type: 'number', decimals: 0 },
-            { alias: 'Desired', pattern: 'Value #C', type: 'number', decimals: 0 },
-            { alias: 'Ready/Desired', pattern: 'Value #D', type: 'number', decimals: 0, unit: 'percent', thresholds: [95, 99], colorMode: 'cell', colors: [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green] },
+            { alias: 'Updated', pattern: 'Value #A', type: 'number' },
+            { alias: 'Ready', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
+            { alias: 'StatefulSet', pattern: 'statefulset', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-statefulset=${__cell_1}&var-namespace=${__cell_2}&var-view=statefulset&%s' % [$._config.dashboardIDs.statefulSet, $._config.dashboardCommon.dataLinkCommonArgs] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
-            { alias: 'Stateful Set', pattern: 'statefulset', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&var-view=statefulset&%s' % [$._config.dashboardIDs.statefulSet, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
-            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_updated{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
-            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s})' % $._config.dashboardSelectors),
-            prometheus.target(format='table', instant=true, expr='(sum by (statefulset, namespace) (kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s})) / (sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster", %(stateMetrics)s}) ) * 100' % $._config.dashboardSelectors),
+            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas_updated{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~"$cluster"}) - sum by (statefulset, namespace) (kube_statefulset_status_replicas_ready{cluster=~"$cluster"})'),
           ]
         );
 
       dashboard.new(
-        'Stateful Set',
+        'StatefulSet',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
@@ -78,7 +81,7 @@ local table = grafana.tablePanel;
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(
         [
-          row.new('Stateful Sets') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          row.new('StatefulSets') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
           statefulSetsTable { gridPos: { x: 0, y: 1, w: 24, h: 26 } },
         ]
       ),

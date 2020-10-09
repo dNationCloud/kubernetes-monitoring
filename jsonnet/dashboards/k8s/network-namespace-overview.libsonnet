@@ -142,16 +142,16 @@ local graphPanel = grafana.graphPanel;
       .addTemplates([datasourceTemplate, resolutionTemplate, intervalTemplate, clusterTemplate])
       .addPanels(
         [
-          row.new('Errors', collapse=true) { gridPos: { x: 0, y: 0, w: 24, h: 1 } }
-          .addPanel(recPackErrGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 1, w: 24, h: 9 })
-          .addPanel(transPackErrGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 10, w: 24, h: 9 }),
-          row.new('Drops', collapse=true) { gridPos: { x: 0, y: 1, w: 24, h: 1 } }
+          row.new('Errors') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          recPackErrGraphPanel { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 9 } },
+          transPackErrGraphPanel { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 10, w: 24, h: 9 } },
+          row.new('Drops', collapse=true) { gridPos: { x: 0, y: 19, w: 24, h: 1 } }
           .addPanel(recPackDropGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 2, w: 24, h: 9 })
           .addPanel(transPackDropGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 11, w: 24, h: 9 }),
-          row.new('Bandwidth', collapse=true) { gridPos: { x: 0, y: 2, w: 24, h: 1 } }
+          row.new('Bandwidth', collapse=true) { gridPos: { x: 0, y: 20, w: 24, h: 1 } }
           .addPanel(recBandGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 3, w: 24, h: 9 })
           .addPanel(transBandGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 12, w: 24, h: 9 }),
-          row.new('Packets', collapse=true) { gridPos: { x: 0, y: 3, w: 24, h: 1 } }
+          row.new('Packets', collapse=true) { gridPos: { x: 0, y: 21, w: 24, h: 1 } }
           .addPanel(recPackGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 4, w: 24, h: 9 })
           .addPanel(transPackGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 13, w: 24, h: 9 }),
         ]
