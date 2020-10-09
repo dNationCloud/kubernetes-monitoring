@@ -84,29 +84,31 @@ local graphPanel = grafana.graphPanel;
           title='CPU Usage',
           datasource='$datasource',
           stack=true,
+          min=0,
         )
         .addTarget(
           prometheus.target(
-            expr='sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster"}) by (namespace)',
-            legendFormat='{{namespace}}'
+            expr='sum(container_cpu_usage_seconds_total{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}* on(namespace, pod)group_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$type"}) by (pod) or on() sum(container_cpu_usage_seconds_total{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}) by (pod)',
+            legendFormat='{{pod}}'
           ),
         );
 
       local cpuQuotaTable =
         table.new(
-          title='CPU Quota',
+          title='CPU Request/Limit',
+          description='* `CPU Usage` defines cpu consumption of all pods living in selected namespace\n* `CPU Request` defines sum of container cpu request in selected namespace\n* `CPU Request %` defines ratio between consumed cpu and defined container cpu request\n* `CPU Limit` defines sum of container cpu limit in selected namespace\n* `CPU Limit %` defines ratio between consumed cpu and defined container cpu limit',
           datasource='$datasource',
-          sort={ col: 0, desc: true },
+          sort={ col: 4, desc: true },
           styles=[
-            { alias: 'Time', pattern: 'Time', type: 'hidden' },
-            { alias: 'PODs', pattern: 'Value #A', type: 'number' },
+            { pattern: 'Time', type: 'hidden' },
+            { alias: 'Pods', pattern: 'Value #A', type: 'number' },
             { alias: 'Workloads', pattern: 'Value #B', type: 'number' },
             { alias: 'CPU Usage', pattern: 'Value #C', type: 'number', decimals: 2 },
-            { alias: 'CPU Requests', pattern: 'Value #D', type: 'number', decimals: 2 },
-            { alias: 'CPU Requests %', pattern: 'Value #E', type: 'number', unit: 'percentunit', decimals: 2 },
-            { alias: 'CPU Limits', pattern: 'Value #F', type: 'number', decimals: 2 },
-            { alias: 'CPU Limits %', pattern: 'Value #G', type: 'number', unit: 'percentunit', decimals: 2 },
-            { alias: 'Namespace', pattern: 'namespace', type: 'number', link: true, linkTargetBlank: true, linkTooltip: 'Drill down to pods', linkUrl: './d/%s?var-namespace=$__cell&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'CPU Request', pattern: 'Value #D', type: 'number', decimals: 2 },
+            { alias: 'CPU Request %', pattern: 'Value #E', type: 'number', unit: 'percentunit', decimals: 2 },
+            { alias: 'CPU Limit', pattern: 'Value #F', type: 'number', decimals: 2 },
+            { alias: 'CPU Limit %', pattern: 'Value #G', type: 'number', unit: 'percentunit', decimals: 2 },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Drill down to pods', linkUrl: './d/%s?var-namespace=$__cell&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
