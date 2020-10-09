@@ -42,21 +42,21 @@ local table = grafana.tablePanel;
           hide='variable',
         );
 
-      local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
+      local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
       local thresholds = [1, 1];
       local rangeMaps = [
-        { from: 1, text: 'OK', to: 1 },
-        { from: 0, text: 'Failed', to: 1 },
+        { from: 0, text: 'OK', to: 0 },
+        { from: 1, text: 'Failed', to: 300000 },
       ];
 
       local daemonSetsTable =
         table.new(
           title='DaemonSets',
           datasource='$datasource',
-          sort={ col: 4, desc: true },
+          sort={ col: 6, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { alias: 'Misscheduled', pattern: 'Value #A', type: 'number' },
+            { alias: 'Scheduled', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
             { alias: 'Updated', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
             { alias: 'Available', pattern: 'Value #C', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
             { alias: 'Ready', pattern: 'Value #D', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
@@ -67,9 +67,9 @@ local table = grafana.tablePanel;
         .addTargets(
           [
             prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_number_misscheduled{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) / sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_number_available{cluster=~"$cluster"}) / sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_number_ready{cluster=~"$cluster"}) / sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_updated_number_scheduled{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_status_number_available{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_status_number_ready{cluster=~"$cluster"})'),
           ]
         );
 

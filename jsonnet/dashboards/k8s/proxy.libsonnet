@@ -166,7 +166,7 @@ local statPanel = grafana.statPanel;
         );
 
       dashboard.new(
-        title='Proxy',
+        'Proxy',
         uid=$._config.dashboardIDs.proxy,
         editable=$._config.dashboardCommon.editable,
         tags=$._config.dashboardCommon.tags.k8sSystem,
