@@ -112,7 +112,7 @@ local text = grafana.text;
 
       local runningPodsPanel =
         percentStatPanel(
-          title='Running PODs',
+          title='Running Pods',
           expr='sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"})) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.podOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
