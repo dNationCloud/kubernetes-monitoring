@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'daemonset-overview.json':
+    'daemonset-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',

@@ -23,7 +23,7 @@ local graphPanel = grafana.graphPanel;
 
 {
   grafanaDashboards+:: {
-    'cpu-namespace-overview.json':
+    'cpu-namespace-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
