@@ -33,26 +33,26 @@ local template = grafana.template;
           unit=unit,
         )
         .addThreshold(greenStep)
-        .addTarget(prometheus.target(expr=expr % $._config.dashboardSelectors));
+        .addTarget(prometheus.target(expr=expr));
 
       local cpuPanel =
         panel(
           title='CPU',
-          expr='sum(rate(container_cpu_usage_seconds_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m]))',
+          expr='sum(rate(container_cpu_usage_seconds_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m]))' % $._config.dashboardSelectors,
           unit='cores',
         );
 
       local memoryPanel =
         panel(
           title='Memory',
-          expr='sum(container_memory_usage_bytes{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*", container!="POD", id!="", container!=""})',
+          expr='sum(container_memory_usage_bytes{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*", container!="POD", id!="", container!=""})' % $._config.dashboardSelectors,
           unit='bytes',
         );
 
       local networkPanel =
         panel(
           title='Network',
-          expr='sum(rate(container_network_transmit_bytes_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m])) + sum(rate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m]))',
+          expr='sum(rate(container_network_transmit_bytes_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m])) + sum(rate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m]))' % $._config.dashboardSelectors,
           unit='Bps',
         );
 

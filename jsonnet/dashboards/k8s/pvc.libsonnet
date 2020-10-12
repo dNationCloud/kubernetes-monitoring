@@ -52,7 +52,7 @@ local graphPanel = grafana.graphPanel;
             { color: $._config.dashboardCommon.color.red, value: 97 },
           ]
         )
-        .addTarget(prometheus.target(expr=expr % $._config.dashboardSelectors));
+        .addTarget(prometheus.target(expr=expr));
 
       local volSpaceUsageGraphPanel =
         usageGraphPanel(title='Volume Space Usage', format='bytes')
@@ -64,7 +64,7 @@ local graphPanel = grafana.graphPanel;
         );
 
       local volSpaceUsageGaugePanel =
-        usageGaugePanel(title='Volume Space Usage', expr='(\n  sum(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n  -\n  sum(kubelet_volume_stats_available_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n)\n/\nsum(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n* 100');
+        usageGaugePanel(title='Volume Space Usage', expr='(\n  sum(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n  -\n  sum(kubelet_volume_stats_available_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n)\n/\nsum(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n* 100' % $._config.dashboardSelectors);
 
       local volInodesUsageGraphPanel =
         usageGraphPanel(title='Volume inodes Usage', format='none')
@@ -76,7 +76,7 @@ local graphPanel = grafana.graphPanel;
         );
 
       local volInodesUsageGaugePanel =
-        usageGaugePanel(title='Volume inodes Usage', expr='sum(kubelet_volume_stats_inodes_used{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n/\nsum(kubelet_volume_stats_inodes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n* 100');
+        usageGaugePanel(title='Volume inodes Usage', expr='sum(kubelet_volume_stats_inodes_used{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n/\nsum(kubelet_volume_stats_inodes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n* 100' % $._config.dashboardSelectors);
 
       local datasourceTemplate =
         template.datasource(
