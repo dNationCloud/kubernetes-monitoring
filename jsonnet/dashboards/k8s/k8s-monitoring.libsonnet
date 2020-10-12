@@ -100,7 +100,7 @@ local text = grafana.text;
           colorMode='background',
           unit='percent',
         )
-        .addTarget(prometheus.target(expr=expr));
+        .addTarget(prometheus.target(expr));
 
       local nodesHealthPanel =
         percentStatPanel(
@@ -352,7 +352,7 @@ local text = grafana.text;
           graphMode='none',
           unit=unit,
         )
-        .addTarget(prometheus.target(expr=expr))
+        .addTarget(prometheus.target(expr))
         .addThreshold({ color: $._config.dashboardCommon.color.white, value: null });
 
       local usedCoresPanel =
@@ -454,12 +454,12 @@ local text = grafana.text;
           warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
           row.new('Overview') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
           nodesHealthPanel { gridPos: { x: 0, y: 5, w: 6, h: 3 } },
-          succeededJobsPanel { gridPos: { x: 6, y: 5, w: 6, h: 3 } },
+          runningStatefulSetsPanel { gridPos: { x: 6, y: 5, w: 6, h: 3 } },
           runningPodsPanel { gridPos: { x: 12, y: 5, w: 6, h: 3 } },
-          runningContainersPanel { gridPos: { x: 18, y: 5, w: 6, h: 3 } },
+          succeededJobsPanel { gridPos: { x: 18, y: 5, w: 6, h: 3 } },
           deploymentsHealthPanel { gridPos: { x: 0, y: 8, w: 6, h: 3 } },
           daemonSetsHealthPanel { gridPos: { x: 6, y: 8, w: 6, h: 3 } },
-          runningStatefulSetsPanel { gridPos: { x: 12, y: 8, w: 6, h: 3 } },
+          runningContainersPanel { gridPos: { x: 12, y: 8, w: 6, h: 3 } },
           pvcBoundPanel { gridPos: { x: 18, y: 8, w: 3, h: 3 } },
           mostUtilizedPVCPanel { gridPos: { x: 21, y: 8, w: 3, h: 3 } },
           row.new('Control Plane Components') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },

@@ -33,7 +33,7 @@ local template = grafana.template;
           unit=unit,
         )
         .addThreshold(greenStep)
-        .addTarget(prometheus.target(expr=expr));
+        .addTarget(prometheus.target(expr));
 
       local cpuPanel =
         panel(
