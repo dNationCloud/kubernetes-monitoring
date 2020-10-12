@@ -52,7 +52,7 @@ local graphPanel = grafana.graphPanel;
             { color: $._config.dashboardCommon.color.red, value: 97 },
           ]
         )
-        .addTarget(prometheus.target(expr=expr));
+        .addTarget(prometheus.target(expr));
 
       local volSpaceUsageGraphPanel =
         usageGraphPanel(title='Volume Space Usage', format='bytes')
