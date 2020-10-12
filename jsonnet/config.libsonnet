@@ -137,8 +137,8 @@
       appName: 'prom-op',
       alertNamePrefix: 'K8sM8g',
       thresholds: {
-        critical: 99,
-        warning: 95,
+        critical: 95,
+        warning: 99,
       }
     }
 
