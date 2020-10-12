@@ -53,7 +53,6 @@
     },
 
     dashboardSelectors: {
-      stateMetrics: 'job="kube-state-metrics"',
       apiServer: 'job="apiserver"',
       controllerManager: 'job="kube-controller-manager"',
       etcd: 'job="kube-etcd"',

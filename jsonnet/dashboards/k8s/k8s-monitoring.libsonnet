@@ -121,7 +121,7 @@ local text = grafana.text;
       local runningStatefulSetsPanel =
         percentStatPanel(
           title='Running StatefulSets',
-          expr='sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster", %(stateMetrics)s}) / sum(kube_statefulset_status_replicas{%(stateMetrics)s}) * 100' % $._config.dashboardSelectors,
+          expr='sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster"}) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
@@ -129,7 +129,7 @@ local text = grafana.text;
       local daemonSetsHealthPanel =
         percentStatPanel(
           title='DaemonSets Health',
-          expr='(sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})) * 100' % $._config.dashboardSelectors,
+          expr='(sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.daemonSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds(overviewThresholds);
