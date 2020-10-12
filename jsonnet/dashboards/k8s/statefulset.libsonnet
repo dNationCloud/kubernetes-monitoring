@@ -59,7 +59,7 @@ local template = grafana.template;
       local desiredReplicasPanel =
         panel(
           title='Desired Replicas',
-          expr='sum(kube_statefulset_replicas{cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
+          expr='sum(kube_statefulset_status_replicas{cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
         )
         .addThreshold(redStep);
 
@@ -91,7 +91,7 @@ local template = grafana.template;
         )
         .addTargets(
           [
-            prometheus.target(legendFormat='replicas specified {{statefulset}}', expr='sum(kube_statefulset_replicas{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='replicas specified {{statefulset}}', expr='sum(kube_statefulset_status_replicas{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
             prometheus.target(legendFormat='replicas created {{statefulset}}', expr='sum(kube_statefulset_status_replicas{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
             prometheus.target(legendFormat='ready {{statefulset}}', expr='sum(kube_statefulset_status_replicas_ready{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
             prometheus.target(legendFormat='replicas of current version {{statefulset}}', expr='sum(kube_statefulset_status_replicas_current{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),

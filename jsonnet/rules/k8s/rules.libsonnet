@@ -31,7 +31,7 @@
         .addAlertPair(
           name='RunningStatefulSetsHealthLow',
           message='StatefulSets Health Low {{ $value }}%',
-          expr='sum(kube_statefulset_status_replicas_current{job="kube-state-metrics"}) / sum(kube_statefulset_replicas{job="kube-state-metrics"}) * 100',
+          expr='sum(kube_statefulset_status_replicas_current{job="kube-state-metrics"}) / sum(kube_statefulset_status_replicas{job="kube-state-metrics"}) * 100',
         )
         .addAlertPair(
           name='PVCBoundRateLow',
