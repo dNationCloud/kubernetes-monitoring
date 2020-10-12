@@ -41,7 +41,7 @@ local getNextIndex(arrays) =
 
 {
   grafanaDashboards+:: {
-    'container-overview.json':
+    'container-overview':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
