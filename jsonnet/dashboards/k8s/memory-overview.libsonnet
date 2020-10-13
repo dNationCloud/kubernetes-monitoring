@@ -117,13 +117,6 @@ local polystatPanel = grafana.polystatPanel;
           ]
         );
 
-      local utilThresholds =
-        [
-          { color: $._config.dashboardCommon.color.green, value: null },
-          { color: $._config.dashboardCommon.color.orange, value: 75 },
-          { color: $._config.dashboardCommon.color.red, value: 90 },
-        ];
-
       local memUtilGaugePanel =
         gaugePanel.new(
           title='Memory Utilization',
@@ -132,7 +125,7 @@ local polystatPanel = grafana.polystatPanel;
           min=0,
           max=100,
         )
-        .addThresholds(utilThresholds)
+        .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'));
 
       dashboard.new(

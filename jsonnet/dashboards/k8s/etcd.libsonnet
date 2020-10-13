@@ -28,6 +28,7 @@ local statPanel = grafana.statPanel;
           title='Up',
           datasource='$datasource',
         )
+        .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
         .addTarget(prometheus.target('sum(etcd_server_has_leader{cluster=~"$cluster", %(etcd)s})' % $._config.dashboardSelectors));
 
       local rpcRate =

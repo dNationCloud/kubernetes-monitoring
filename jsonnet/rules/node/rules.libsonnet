@@ -25,47 +25,43 @@
           name='CPUAvgHigh',
           message='High Avg CPU Cluster Utilization {{ $value }}%',
           expr='round((1 - (avg(irate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m])))) * 100)',
-          thresholds=$._config.ruleCommon.thresholds.node,
+          thresholds=$._config.thresholds.node,
         )
         .addAlertPair(
           name='CPUOverallHigh',
           message='"{{ $labels.nodename }}": High CPU Utilization {{ $value }}%',
           expr='round((1 - (avg(irate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
-          thresholds=$._config.ruleCommon.thresholds.node,
+          thresholds=$._config.thresholds.node,
         )
         .addAlertPair(
           name='RAMAvgHigh',
           message='High Avg RAM Cluster Utilization {{ $value }}%',
           expr='round((1 - sum(node_memory_MemAvailable_bytes{job="node-exporter"}) / sum(node_memory_MemTotal_bytes{job="node-exporter"})) * 100)',
-          thresholds=$._config.ruleCommon.thresholds.node,
+          thresholds=$._config.thresholds.node,
         )
         .addAlertPair(
           name='RAMOverallHigh',
           message='"{{ $labels.nodename }}": High RAM Utilization {{ $value }}%',
           expr='round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{job="node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{job="node-exporter"} * on(instance) group_left(nodename) (node_uname_info))) * 100)',
-          thresholds=$._config.ruleCommon.thresholds.node,
+          thresholds=$._config.thresholds.node,
         )
         .addAlertPair(
           name='DiskAvgHigh',
           message='High Avg Disk Cluster Utilization {{ $value }}%',
           expr='round(avg((sum(node_filesystem_size_bytes{job="node-exporter", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{job="node-exporter", device!="rootfs"}) by (device)) / (sum(node_filesystem_size_bytes{job="node-exporter", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{job="node-exporter", device!="rootfs"}) by (device) + sum(node_filesystem_avail_bytes{job="node-exporter", device!="rootfs"}) by (device)) * 100))',
-          thresholds=$._config.ruleCommon.thresholds.node,
+          thresholds=$._config.thresholds.node,
         )
         .addAlertPair(
           name='DiskOverallHigh',
           message='"{{ $labels.nodename }}": High Disk Utilization {{ $value }}%',
           expr='round(%s / (%s + %s) * 100)' % [diskUsed, diskUsed, diskExpr('avail')],
-          thresholds=$._config.ruleCommon.thresholds.node,
+          thresholds=$._config.thresholds.node,
         )
         .addAlertPair(
           name='NetworkErrorsHigh',
           message='"{{ $labels.nodename }}": High Network Errors Count {{ $value }}',
           expr='sum(rate(node_network_transmit_errs_total{job="node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{job="node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)',
-          thresholds={
-            critical: 15,
-            warning: 10,
-            operator: '>=',
-          },
+          thresholds=$._config.thresholds.networkErrors,
         ),
       ],
     },

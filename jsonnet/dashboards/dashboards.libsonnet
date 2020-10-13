@@ -12,6 +12,7 @@
 */
 
 (import '../config.libsonnet') +
+(import '../util.libsonnet') +
 
 // dNation dashboards
 (import 'k8s/k8s-monitoring.libsonnet') +

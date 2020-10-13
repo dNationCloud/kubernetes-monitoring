@@ -136,17 +136,40 @@
     ruleCommon: {
       appName: 'prom-op',
       alertNamePrefix: 'K8sM8g',
-      thresholds: {
-        k8s: {
-          critical: 95,
-          warning: 99,
-          operator: '<',
-        },
-        node: {
-          critical: 90,
-          warning: 75,
-          operator: '>=',
-        },
+    },
+
+    thresholds: {
+      criticalPanel: {
+        operator: '>=',
+        critical: 1,
+      },
+      warningPanel: {
+        operator: '>=',
+        warning: 1,
+      },
+      k8s: {
+        operator: '<',
+        warning: 99,
+        critical: 95,
+      },
+      pvc: {
+        operator: '>=',
+        warning: 85,
+        critical: 97,
+      },
+      controlPlane: {
+        operator: '<',
+        critical: 1,
+      },
+      node: {
+        operator: '>=',
+        critical: 90,
+        warning: 75,
+      },
+      networkErrors: {
+        operator: '>=',
+        critical: 15,
+        warning: 10,
       },
     },
 

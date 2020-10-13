@@ -28,12 +28,7 @@ local statPanel = grafana.statPanel;
           title='Up',
           datasource='$datasource',
         )
-        .addThresholds(
-          [
-            { color: $._config.dashboardCommon.color.red, value: null },
-            { color: $._config.dashboardCommon.color.green, value: 1 },
-          ]
-        )
+        .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
         .addTarget(prometheus.target('sum(up{cluster=~"$cluster", %(controllerManager)s})' % $._config.dashboardSelectors));
 
       local workQueueAddRate =
