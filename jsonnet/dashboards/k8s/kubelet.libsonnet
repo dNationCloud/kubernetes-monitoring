@@ -253,7 +253,7 @@ local statPanel = grafana.statPanel;
 
       local cpu =
         graphPanel.new(
-          title='CPU usage',
+          title='CPU Usage',
           datasource='$datasource',
           min=0,
         )

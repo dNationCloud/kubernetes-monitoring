@@ -8,7 +8,7 @@ keywords:
 home: https://git.ifne.eu/dnation/k8s-m8g
 sources:
 - https://git.ifne.eu/dnation/k8s-m8g
-icon: https://storage.googleapis.com/ifne.eu/public/dNation_k8s_m8g_logo.png
+icon: https://storage.googleapis.com/ifne.eu/public/icons/dnation_k8sm8g.png
 maintainers:
 - name: dNation
   email: admin@dNation.tech

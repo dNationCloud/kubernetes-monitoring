@@ -46,7 +46,7 @@ local row = grafana.row;
       local valueMaps = [
         { text: 'Running', value: 1 },
         { text: 'Succeeded', value: 2 },
-        { text: 'Unknow', value: 3 },
+        { text: 'Unknown', value: 3 },
         { text: 'Failed', value: 4 },
         { text: 'Pending', value: 5 },
       ];

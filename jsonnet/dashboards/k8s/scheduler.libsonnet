@@ -80,7 +80,7 @@ local statPanel = grafana.statPanel;
         graphPanel.new(
           title='Kube API Request Rate',
           datasource='$datasource',
-          format='ops',
+          format='reqps',
           min=0,
         )
         .addTargets(
@@ -124,9 +124,8 @@ local statPanel = grafana.statPanel;
 
       local cpu =
         graphPanel.new(
-          title='CPU usage',
+          title='CPU Usage',
           datasource='$datasource',
-          format='bytes',
           min=0,
         )
         .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster=~"$cluster", %(scheduler)s, instance=~"$instance"}[5m])' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
@@ -165,6 +164,8 @@ local statPanel = grafana.statPanel;
           query='label_values(process_cpu_seconds_total{cluster=~"$cluster", %(scheduler)s}, instance)' % $._config.dashboardSelectors,
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
+          includeAll=true,
+          multi=true,
         );
 
       dashboard.new(

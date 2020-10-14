@@ -263,6 +263,8 @@ local row = grafana.row;
           datasource='$datasource',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
+          includeAll=true,
+          multi=true,
         );
 
       local instanceTemplate =

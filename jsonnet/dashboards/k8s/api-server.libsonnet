@@ -190,7 +190,7 @@ local errorBudgetTarget = 0.99;
 
       local cpu =
         graphPanel.new(
-          title='CPU usage',
+          title='CPU Usage',
           datasource='$datasource',
           min=0,
         )
