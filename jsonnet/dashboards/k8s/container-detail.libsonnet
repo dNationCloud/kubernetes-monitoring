@@ -16,6 +16,7 @@
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
+local loki = grafana.loki;
 local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local logPanel = grafana.logPanel;
@@ -29,7 +30,7 @@ local row = grafana.row;
           title='CPU Usage',
           datasource='$datasource',
           min=0,
-          format='core',
+          format='cores',
           stack=true,
           linewidth=2,
           fill=2,
@@ -86,7 +87,7 @@ local row = grafana.row;
         graphPanel.new(
           title='Transmit/Receive Drops',
           datasource='$datasource',
-          format='Bps',
+          format='pps',
           stack=true,
           linewidth=2,
           fill=2,
@@ -111,7 +112,7 @@ local row = grafana.row;
           legend_current=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('sum(count_over_time( ({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search" )[10s] )) by ($view)'));
+        .addTarget(loki.target('sum(count_over_time( ({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search" )[10s] )) by ($view)', legendFormat='{{$view}}'));
 
       local logs =
         logPanel.new(
@@ -119,7 +120,7 @@ local row = grafana.row;
           datasource='$datasource_logs',
           showLabels=true,
         )
-        .addTarget(prometheus.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
+        .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
 
       local datasourceTemplate =
         template.datasource(

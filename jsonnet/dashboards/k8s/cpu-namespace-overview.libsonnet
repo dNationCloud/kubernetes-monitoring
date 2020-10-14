@@ -135,9 +135,9 @@ local graphPanel = grafana.graphPanel;
       .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, workloadTemplate, workloadTypeTemplate])
       .addPanels(
         [
-          row.new('CPU') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          row.new('CPU Usage') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
           cpuUsageGraphPanel { gridPos: { x: 0, y: 1, w: 24, h: 9 }, tooltip+: { sort: 2 } },
-          row.new('CPU Quota') { gridPos: { x: 0, y: 10, w: 24, h: 1 } },
+          row.new('CPU Request/Limit') { gridPos: { x: 0, y: 10, w: 24, h: 1 } },
           cpuQuotaTable { gridPos: { x: 0, y: 11, w: 24, h: 12 } },
         ]
       ),

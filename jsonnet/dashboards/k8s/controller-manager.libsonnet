@@ -76,7 +76,7 @@ local statPanel = grafana.statPanel;
         graphPanel.new(
           title='Kube API Request Rate',
           datasource='$datasource',
-          format='ops',
+          format='reqps',
         )
         .addTargets(
           [
@@ -119,7 +119,7 @@ local statPanel = grafana.statPanel;
 
       local cpu =
         graphPanel.new(
-          title='CPU usage',
+          title='CPU Usage',
           datasource='$datasource',
           min=0,
         )
@@ -159,6 +159,8 @@ local statPanel = grafana.statPanel;
           query='label_values(process_cpu_seconds_total{cluster=~"$cluster", %(controllerManager)s}, instance)' % $._config.dashboardSelectors,
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
+          includeAll=true,
+          multi=true,
         );
 
       dashboard.new(

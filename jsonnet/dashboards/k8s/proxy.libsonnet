@@ -78,7 +78,7 @@ local statPanel = grafana.statPanel;
         graphPanel.new(
           title='Kube API Request Rate',
           datasource='$datasource',
-          format='ops',
+          format='reqps',
         )
         .addTargets(
           [
@@ -121,7 +121,7 @@ local statPanel = grafana.statPanel;
 
       local cpu =
         graphPanel.new(
-          title='CPU usage',
+          title='CPU Usage',
           datasource='$datasource',
           min=0,
         )
