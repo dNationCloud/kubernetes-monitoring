@@ -34,32 +34,32 @@ build jsonnet dashboards:
   stage: build jsonnet
   extends: .base-jsonnet
   script:
-    - mkdir templates/k8s-m8g
-    - docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -m templates/k8s-m8g -S jsonnet/helm.jsonnet
+    - mkdir chart/templates/k8s-m8g
+    - docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -m chart/templates/k8s-m8g -S jsonnet/helm.jsonnet
   artifacts:
     paths:
-    - templates/k8s-m8g
+    - chart/templates/k8s-m8g
 
 build helm package:
   stage: build helm
   extends: .base-helm
   script:
-    - helm package -u -d release .
+    - helm package -u -d chart/release chart
   artifacts:
     paths:
-    - release/
+    - chart/release/
 
 test lint:
   stage: test
   extends: .base-helm
   script:
-    - helm lint . -f values.yaml
+    - helm lint chart -f chart/values.yaml
 
 test lint jsonnet:
   stage: test
   extends: .base-jsonnet
   script:
-  - find ./jsonnet/ -name 'vendor' -prune -o -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet-lint "$f" || exit 1; done;
+  - find ./jsonnet/ -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet-lint "$f" || exit 1; done;
 
 publish:
   stage: publish
@@ -67,5 +67,5 @@ publish:
   only:
     - master
   script:
-    - curl --fail --user "$IFNE_HELM_USER":"$IFNE_HELM_PASS" "$IFNE_HELM_URL" --upload-file release/k8s-m8g-*.tgz
+    - curl --fail --user "$IFNE_HELM_USER":"$IFNE_HELM_PASS" "$IFNE_HELM_URL" --upload-file chart/release/k8s-m8g-*.tgz
   when: manual

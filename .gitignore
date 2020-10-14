@@ -7,8 +7,7 @@
 *.bak
 *.tmp
 # Helm files
-charts/*
-test/*
-release/*
-snapshot/*
-Chart.lock
+chart/charts/*
+chart/test/*
+chart/release/*
+chart/Chart.lock

@@ -59,7 +59,7 @@
           message='Succeeded Jobs Rate Low {{ $value }}%',
           expr='round(sum(kube_job_status_succeeded) / (sum(kube_job_status_succeeded) + sum(kube_job_status_failed)) * 100)',
           thresholds=$._config.ruleCommon.thresholds.k8s,
-        )
+        ),
       ],
     },
   },

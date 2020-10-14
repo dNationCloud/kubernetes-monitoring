@@ -64,13 +64,13 @@ local row = grafana.row;
           ]
         )
         .addTarget(
-            prometheus.target(format='table', instant=true, expr=|||
-                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Running"} * 1) +
-                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Succeeded"} * 2) +
-                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"} * 3) +
-                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Failed"} * 4) +
-                sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Pending"} * 5)
-            |||)
+          prometheus.target(format='table', instant=true, expr=|||
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Running"} * 1) +
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Succeeded"} * 2) +
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"} * 3) +
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Failed"} * 4) +
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Pending"} * 5)
+          |||)
         );
 
       dashboard.new(

@@ -1,4 +1,8 @@
-# <img src="images/logo.png" width="60" height="auto"> Kubernetes Monitoring (K8s-m8g)  
+<a href="https://dnation.tech/"><img width="250" alt="dNationCloud" src="https://storage.googleapis.com/ifne.eu/public/icons/dnation.png"></a>
+
+# <img src="https://storage.googleapis.com/ifne.eu/public/icons/dnation_k8sm8g.png" width="60" height="auto"> Kubernetes Monitoring (K8s-m8g)  
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 A set of Grafana dashboards and Prometheus alerts to cover Kubernetes monitoring in an easy way using a drill-down principle.
 
@@ -34,10 +38,6 @@ If you want to contribute to the K8s-m8g project, be sure to review the
 [code of conduct](CODE_OF_CONDUCT.md). When participating, you are required to abide by the code of conduct.
 
 We use GitHub issues to manage requests and bugs, please visit our discussion forum if you have any questions.
-
-# License
-
-[Apache License 2.0](LICENSE)
 
 # Project Background
 
