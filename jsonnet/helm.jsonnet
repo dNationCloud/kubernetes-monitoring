@@ -35,7 +35,7 @@ local k8sManifestFileName(name) =
    * @param filename The input name string.
    * @return k8s manifest filename.
    */
-  "%s.yaml" % name;
+  '%s.yaml' % name;
 
 local dashboardJsonFileName(name) =
   /**
@@ -44,7 +44,7 @@ local dashboardJsonFileName(name) =
    * @param filename The input name string.
    * @return dashboard json filename.
    */
-  "%s.json" % name;
+  '%s.json' % name;
 
 local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet template.\n\n';
 

@@ -17,8 +17,8 @@ Grafana dashboards and Prometheus alerts are stored in the [jsonnet](https://jso
 
 Build Jsonnet templates
 ```
-mkdir templates/k8s-m8g
-docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -m templates/k8s-m8g -S jsonnet/helm.jsonnet
+mkdir chart/templates/k8s-m8g
+docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -m chart/templates/k8s-m8g -S jsonnet/helm.jsonnet
 ```
 
 Jsonnet Formatter & Linter
@@ -47,5 +47,5 @@ helm install k8s-m8g-stack ifne/k8s-m8g-stack -f helpers/values-kind.yaml
 
 Install K8s-m8g
 ```bash
-helm install k8s-m8g . --dependency-update
+helm install k8s-m8g chart --dependency-update
 ```

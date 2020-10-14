@@ -12,11 +12,12 @@ Before sending your pull requests, make sure you followed this list.
 - Read [Contributing Guidelines](CONTRIBUTING.md)
 - Read [Code of Conduct](CODE_OF_CONDUCT.md)
 - Read [Commit Message Convention](https://chris.beams.io/posts/git-commit/)
+- Read [How To](helpers/README.md) simplify your local development
 - Set up the [Developer Certificate of Origin (DCO)](CONTRIBUTING.md#developer-certificate-of-origin-dco)
-- Include a [license](CONTRIBUTING.md#license-on-the-top-of-file) at the top of new files
-- Update the [README](README.md) with details of changes to the interface
+- Include a [License](CONTRIBUTING.md#license-on-the-top-of-file) at the top of new files
+- Update the [Readme](README.md) with details of changes to the interface
 - In case the pull request would update the version number, please edit the version number in all appropriate
-  files e.g. [Chart.yaml](Chart.yaml). The versioning scheme we use is [SemVer](http://semver.org/)
+  files e.g. [Chart.yaml](chart/Chart.yaml). The versioning scheme we use is [SemVer](http://semver.org/)
 - You may merge the Pull Request once you have the sign-off of two other developers, or if you 
   don't have the permission to do that, you may request the second reviewer to merge it for you
 
