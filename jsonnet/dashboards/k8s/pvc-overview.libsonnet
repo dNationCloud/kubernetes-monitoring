@@ -54,6 +54,7 @@ local table = grafana.tablePanel;
           title='Persistent Volumes',
           datasource='$datasource',
           sort={ col: 3, desc: true },
+          description='Capacity is available only for remote pvc.',
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Capacity', pattern: 'Value #A', colors: colors, colorMode: 'cell', type: 'number', unit: 'percent', thresholds: [85, 97] },

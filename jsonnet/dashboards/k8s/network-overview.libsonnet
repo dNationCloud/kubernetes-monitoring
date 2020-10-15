@@ -76,7 +76,7 @@ local polystatPanel = grafana.polystatPanel;
 
       local memPerNodePolystat =
         polystatPanel.new(
-          title='Network per Node',
+          title='Network Errors per Node',
           datasource='$datasource',
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
           global_unit_format='pps',
