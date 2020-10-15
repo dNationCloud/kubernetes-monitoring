@@ -45,7 +45,7 @@ local template = grafana.template;
       local memoryPanel =
         panel(
           title='Memory',
-          expr='sum(container_memory_working_set_bytes{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*", container!="POD", id!="", container!=""})' % $._config.dashboardSelectors,
+          expr='sum(container_memory_working_set_bytes{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*", container!~"POD|", id!=""})' % $._config.dashboardSelectors,
           unit='bytes',
         );
 

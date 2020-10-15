@@ -219,7 +219,7 @@ local statPanel = grafana.statPanel;
           title='RPC Rate',
           datasource='$datasource',
           min=0,
-          format='ops',
+          format='reqps',
         )
         .addTargets(
           [

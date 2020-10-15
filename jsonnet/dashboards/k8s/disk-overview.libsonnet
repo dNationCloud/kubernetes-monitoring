@@ -80,19 +80,16 @@ local polystatPanel = grafana.polystatPanel;
           datasource='$datasource',
           description='The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.',
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
-          font_size=20,
           global_unit_format='percent',
           global_thresholds=polystatThresholds,
           hexagon_sort_by_direction=4,
           hexagon_sort_by_field='value',
           polygon_border_size=0,
-          tooltip_primary_sort_direction=4,
-          tooltip_primary_sort_field='value',
-          tooltip_secondary_sort_direction=4,
           tooltip_timestamp_enabled=false,
         )
         {
           polystat+: {
+            globalDecimals: null,
             fontAutoColor: false,
             fontColor: $._config.dashboardCommon.color.white,
           },
