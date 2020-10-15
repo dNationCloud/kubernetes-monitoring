@@ -17,42 +17,15 @@ local dashboards = (import 'dashboards/dashboards.libsonnet').grafanaDashboards;
 local rules = (import 'rules/rules.libsonnet').prometheusRules;
 local config = (import 'config.libsonnet')._config;
 local kube = import 'kube-libsonnet/kube.libsonnet';
-local escapeDoubleBrackets = (import 'util.libsonnet').escapeDoubleBrackets;
-
-local k8sObjectName(name) =
-  /**
-   * Construct k8s object name from name
-   *
-   * @param filename The input name string.
-   * @return k8s object name.
-   */
-  '{{ $.Release.Name }}-%s' % name;
-
-local k8sManifestFileName(name) =
-  /**
-   * Construct k8s manifest filename from name
-   *
-   * @param filename The input name string.
-   * @return k8s manifest filename.
-   */
-  '%s.yaml' % name;
-
-local dashboardJsonFileName(name) =
-  /**
-   * Construct dashboard json filename from name
-   *
-   * @param filename The input name string.
-   * @return dashboard json filename.
-   */
-  '%s.json' % name;
+local util = import 'util.libsonnet';
 
 local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet template.\n\n';
 
 {
-  [k8sManifestFileName(filename)]:
+  [util.k8sManifestFileName(filename)]:
     doNotChangeMessage +
     std.manifestYamlDoc(
-      kube.ConfigMap(k8sObjectName(filename)) {
+      kube.ConfigMap(util.k8sObjectName(filename)) {
         metadata+: {
           namespace: '{{ $.Release.Namespace }}',
           labels: {
@@ -62,7 +35,7 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
           },
         },
         data: {
-          [dashboardJsonFileName(filename)]: escapeDoubleBrackets(std.toString(dashboards[filename])),
+          [util.dashboardJsonFileName(filename)]: util.escapeDoubleBrackets(std.toString(dashboards[filename])),
         },
       }
     )
@@ -70,14 +43,14 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
 } +
 
 {
-  [k8sManifestFileName(filename)]:
+  [util.k8sManifestFileName(filename)]:
     doNotChangeMessage +
     std.manifestYamlDoc(
       {
         apiVersion: 'monitoring.coreos.com/v1',
         kind: 'PrometheusRule',
         metadata: {
-          name: k8sObjectName(filename),
+          name: util.k8sObjectName(filename),
           namespace: '{{ $.Release.Namespace }}',
           labels: {
             app: config.ruleCommon.appName,
