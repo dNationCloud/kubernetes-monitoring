@@ -46,7 +46,6 @@ local row = grafana.row;
         statPanel.new(
           title='CPU Cores',
           datasource='$datasource',
-          decimals=0,
           unit='short',
         )
         .addThresholds(

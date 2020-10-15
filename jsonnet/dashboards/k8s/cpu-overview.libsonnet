@@ -79,19 +79,16 @@ local polystatPanel = grafana.polystatPanel;
           title='CPU per Node',
           datasource='$datasource',
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
-          font_size=20,
           global_unit_format='percent',
           global_thresholds=polystatThresholds,
           hexagon_sort_by_direction=4,
           hexagon_sort_by_field='value',
           polygon_border_size=0,
-          tooltip_primary_sort_direction=4,
-          tooltip_primary_sort_field='value',
-          tooltip_secondary_sort_direction=4,
           tooltip_timestamp_enabled=false,
         )
         {
           polystat+: {
+            globalDecimals: null,
             fontAutoColor: false,
             fontColor: $._config.dashboardCommon.color.white,
           },

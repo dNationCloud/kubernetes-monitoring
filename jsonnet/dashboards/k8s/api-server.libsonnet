@@ -132,7 +132,7 @@ local errorBudgetTarget = 0.99;
         graphPanel.new(
           title='RPC Rate',
           datasource='$datasource',
-          format='ops',
+          format='reqps',
         )
         .addTargets(
           [
