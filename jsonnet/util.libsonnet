@@ -31,4 +31,31 @@
         ), '{{`{{', '{{`{{`}}'
       ), '}}`}}', '{{`}}`}}'
     ),
+
+  k8sObjectName(name)::
+    /**
+     * Construct k8s object name from name
+     *
+     * @param filename The input name string.
+     * @return k8s object name.
+     */
+    '{{ $.Release.Name }}-%s' % name,
+
+  k8sManifestFileName(name)::
+    /**
+     * Construct k8s manifest filename from name
+     *
+     * @param filename The input name string.
+     * @return k8s manifest filename.
+     */
+    '%s.yaml' % name,
+
+  dashboardJsonFileName(name)::
+    /**
+     * Construct dashboard json filename from name
+     *
+     * @param filename The input name string.
+     * @return dashboard json filename.
+     */
+    '%s.json' % name,
 }

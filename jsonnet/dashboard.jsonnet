@@ -14,8 +14,9 @@
 /* Module comprises the logic to generate grafana dashboards writted in jsonnet to the json files */
 
 local dashboards = (import 'dashboards/dashboards.libsonnet').grafanaDashboards;
+local util = import 'util.libsonnet';
 
 {
-  [name]: dashboards[name]
+  [util.dashboardJsonFileName(name)]: dashboards[name]
   for name in std.objectFields(dashboards)
 }
