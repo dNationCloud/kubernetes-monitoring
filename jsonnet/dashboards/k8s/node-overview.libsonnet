@@ -54,20 +54,24 @@ local table = grafana.tablePanel;
         table.new(
           title='Nodes',
           datasource='$datasource',
-          sort={ col: 2, desc: true },
+          sort={ col: 6, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Schedulable', pattern: 'Value #A', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
             { alias: 'Disk Pressure', pattern: 'Value #B', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
             { alias: 'Memory Pressure', pattern: 'Value #C', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
+            { alias: 'PID Pressure', pattern: 'Value #D', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
+            { alias: 'Ready', pattern: 'Value #E', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
             { alias: 'Node', pattern: 'node', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-job=node-exporter&var-instance=$__cell&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
           [
             prometheus.target(format='table', instant=true, expr='sum by (node) (kube_node_spec_unschedulable{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="DiskPressure", status="true"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="MemoryPressure", status="true"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="DiskPressure", status=~"true|unknown"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="MemoryPressure", status=~"true|unknown"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="PIDPressure", status=~"true|unknown"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="Ready", status=~"false|unknown"})'),
           ]
         );
 
