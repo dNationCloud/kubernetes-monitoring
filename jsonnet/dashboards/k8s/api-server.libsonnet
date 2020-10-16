@@ -126,6 +126,7 @@ local errorBudgetTarget = 0.99;
           title='Up',
           datasource='$datasource',
         )
+        .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
         .addTarget(prometheus.target('sum(up{cluster=~"$cluster", %(apiServer)s})' % $._config.dashboardSelectors));
 
       local rpcRate =

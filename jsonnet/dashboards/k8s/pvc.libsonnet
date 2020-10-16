@@ -45,13 +45,7 @@ local graphPanel = grafana.graphPanel;
           min=0,
           max=100,
         )
-        .addThresholds(
-          [
-            { color: $._config.dashboardCommon.color.green, value: null },
-            { color: $._config.dashboardCommon.color.orange, value: 85 },
-            { color: $._config.dashboardCommon.color.red, value: 97 },
-          ]
-        )
+        .addThresholds($.grafanaThresholds($._config.thresholds.pvc))
         .addTarget(prometheus.target(expr));
 
       local volSpaceUsageGraphPanel =

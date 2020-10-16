@@ -21,6 +21,12 @@ mkdir chart/templates/k8s-m8g
 docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -m chart/templates/k8s-m8g -S jsonnet/helm.jsonnet
 ```
 
+Build dashboard json files
+```
+mkdir dashboards
+docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -m dashboards jsonnet/dashboard.jsonnet
+```
+
 Jsonnet Formatter & Linter
 ```
 find ./jsonnet/ -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnetfmt -i "$f" || exit 1; done;

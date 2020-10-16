@@ -66,12 +66,7 @@ local text = grafana.text;
           expr='ALERTS{alertname!="Watchdog", severity="critical"}',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s' % [$._config.dashboardIDs.alertOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(
-          [
-            { color: $._config.dashboardCommon.color.green, value: null },
-            { color: $._config.dashboardCommon.color.red, value: 1 },
-          ]
-        );
+        .addThresholds($.grafanaThresholds($._config.thresholds.criticalPanel));
 
       local warningPanel =
         alertPanel(
@@ -79,19 +74,7 @@ local text = grafana.text;
           expr='ALERTS{alertname!="Watchdog", severity="warning"}',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s' % [$._config.dashboardIDs.alertOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(
-          [
-            { color: $._config.dashboardCommon.color.green, value: null },
-            { color: $._config.dashboardCommon.color.orange, value: 1 },
-          ]
-        );
-
-      local overviewThresholds =
-        [
-          { color: $._config.dashboardCommon.color.red, value: 0 },
-          { color: $._config.dashboardCommon.color.orange, value: 95 },
-          { color: $._config.dashboardCommon.color.green, value: 99 },
-        ];
+        .addThresholds($.grafanaThresholds($._config.thresholds.warningPanel));
 
       local percentStatPanel(title, expr) =
         statPanel.new(
@@ -108,7 +91,7 @@ local text = grafana.text;
           expr='sum(kube_node_info{cluster=~"$cluster"}) / (sum(kube_node_info{cluster=~"$cluster"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="DiskPressure", status="true"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="MemoryPressure", status="true"})) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.nodeOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(overviewThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local runningPodsPanel =
         percentStatPanel(
@@ -116,7 +99,7 @@ local text = grafana.text;
           expr='sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"})) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.podOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(overviewThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local runningStatefulSetsPanel =
         percentStatPanel(
@@ -124,7 +107,7 @@ local text = grafana.text;
           expr='sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster"}) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(overviewThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local daemonSetsHealthPanel =
         percentStatPanel(
@@ -132,7 +115,7 @@ local text = grafana.text;
           expr='(sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.daemonSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(overviewThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local pvcBoundPanel =
         percentStatPanel(
@@ -142,7 +125,7 @@ local text = grafana.text;
         .addMapping({ text: '-', type: 1, value: -1 })
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThreshold({ color: $._config.dashboardCommon.color.black, value: -1 })
-        .addThresholds(overviewThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.k8s, 0));
 
       local deploymentsHealthPanel =
         percentStatPanel(
@@ -150,7 +133,7 @@ local text = grafana.text;
           expr='(sum(kube_deployment_status_replicas_updated{cluster=~"$cluster"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster"})) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.deploymentOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(overviewThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local runningContainersPanel =
         percentStatPanel(
@@ -158,7 +141,7 @@ local text = grafana.text;
           expr='sum(kube_pod_container_status_running{cluster=~"$cluster"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster"})) * 100',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.containerOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(overviewThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local succeededJobsPanel =
         percentStatPanel(
@@ -168,7 +151,7 @@ local text = grafana.text;
         .addMapping({ text: '-', type: 1, value: -1 })
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.jobOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThreshold({ color: $._config.dashboardCommon.color.black, value: -1 })
-        .addThresholds(overviewThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.k8s, 0));
 
       local mostUtilizedPVCPanel =
         percentStatPanel(
@@ -177,20 +160,8 @@ local text = grafana.text;
         )
         .addMapping({ text: '-', type: 1, value: -1 })
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
-        .addThresholds(
-          [
-            { color: $._config.dashboardCommon.color.black, value: -1 },
-            { color: $._config.dashboardCommon.color.green, value: 0 },
-            { color: $._config.dashboardCommon.color.orange, value: 85 },
-            { color: $._config.dashboardCommon.color.red, value: 97 },
-          ]
-        );
-
-      local controlPlaneComponentsThresholds =
-        [
-          { color: $._config.dashboardCommon.color.red, value: null },
-          { color: $._config.dashboardCommon.color.green, value: 1 },
-        ];
+        .addThreshold({ color: $._config.dashboardCommon.color.black, value: -1 })
+        .addThresholds($.grafanaThresholds($._config.thresholds.pvc, 0));
 
       local textMappings =
         [
@@ -202,7 +173,7 @@ local text = grafana.text;
         percentStatPanel(title=title, expr=expr)
         { fieldConfig: { defaults: { unit: 'short' } } }
         .addMappings(textMappings)
-        .addThresholds(controlPlaneComponentsThresholds);
+        .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane));
 
       local apiServerPanel =
         textStatPanel(
@@ -246,19 +217,12 @@ local text = grafana.text;
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.scheduler, $._config.dashboardCommon.dataLinkCommonArgs] });
 
-      local nodeMetricsThresholds =
-        [
-          { color: $._config.dashboardCommon.color.green, value: null },
-          { color: $._config.dashboardCommon.color.orange, value: 75 },
-          { color: $._config.dashboardCommon.color.red, value: 90 },
-        ];
-
       local overallUtilizationCPUPanel =
         percentStatPanel(
           title='Overall Utilization',
           expr='round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * 100)',
         )
-        .addThresholds(nodeMetricsThresholds)
+        .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLinks(
           [
             { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
@@ -271,7 +235,7 @@ local text = grafana.text;
           title='Most Utilized Node',
           expr='round(max((1 - (avg by (instance) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * 100))',
         )
-        .addThresholds(nodeMetricsThresholds)
+        .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLinks(
           [
             { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
@@ -285,7 +249,7 @@ local text = grafana.text;
           expr='round((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"})) * 100)',
         )
         { description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```' }
-        .addThresholds(nodeMetricsThresholds)
+        .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLinks(
           [
             { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
@@ -299,7 +263,7 @@ local text = grafana.text;
           expr='round(max((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}) by (instance) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}) by (instance)) * 100))',
         )
         { description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```' }
-        .addThresholds(nodeMetricsThresholds)
+        .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLinks(
           [
             { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
@@ -313,7 +277,7 @@ local text = grafana.text;
           expr='round(\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device))\n * 100\n))',
         )
         { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
-        .addThresholds(nodeMetricsThresholds)
+        .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskOverview, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local mostUtilizedNodeDiskPanel =
@@ -322,7 +286,7 @@ local text = grafana.text;
           expr='round(\nmax(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device))\n * 100\n))',
         )
         { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
-        .addThresholds(nodeMetricsThresholds)
+        .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskOverview, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local networkErrorsPanel =
@@ -331,13 +295,7 @@ local text = grafana.text;
           expr='sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]))',
         )
         { fieldConfig: { defaults: { unit: 'pps' } } }
-        .addThresholds(
-          [
-            { color: $._config.dashboardCommon.color.green, value: null },
-            { color: $._config.dashboardCommon.color.orange, value: 10 },
-            { color: $._config.dashboardCommon.color.red, value: 15 },
-          ]
-        )
+        .addThresholds($.grafanaThresholds($._config.thresholds.networkErrors))
         .addDataLinks(
           [
             { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.networkOverview, $._config.dashboardCommon.dataLinkCommonArgs] },

@@ -28,6 +28,7 @@ local statPanel = grafana.statPanel;
           title='Up',
           datasource='$datasource',
         )
+        .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
         .addTarget(prometheus.target('sum(up{cluster=~"$cluster", %(proxy)s})' % $._config.dashboardSelectors));
 
       local rulesSyncRate =

@@ -11,6 +11,8 @@
   limitations under the License.
 */
 
+local config = (import 'config.libsonnet')._config;
+
 {
   escapeDoubleBrackets(string)::
     /**
@@ -58,4 +60,37 @@
      * @return dashboard json filename.
      */
     '%s.json' % name,
+
+  grafanaThresholds(thresholds, lowestValue=null)::
+    /**
+     * Create grafana threshold definition from configured thresholds
+     *
+     * @param thresholds thresholds in format used in configuration.
+     * @param lowestValue value for lowest grafana threshold (default null for minus infinity).
+     * @return grafana threshold steps object.
+     */
+    std.filter(function(v) v != null,
+      if thresholds.operator == '>=' then
+        [
+          { color: config.dashboardCommon.color.green, value: lowestValue },
+          if std.objectHas(thresholds, 'warning') then { color: config.dashboardCommon.color.orange, value: thresholds.warning },
+          if std.objectHas(thresholds, 'critical') then { color: config.dashboardCommon.color.red, value: thresholds.critical },
+        ]
+      else
+        assert thresholds.operator == '<';
+        local lowerThreshold = if std.objectHas(thresholds, 'critical') then thresholds.critical else thresholds.warning;
+        local higherThreshold = if std.objectHas(thresholds, 'warning') then thresholds.warning else thresholds.critical;
+        [
+          if std.objectHas(thresholds, 'critical') && (lowerThreshold == thresholds.critical) then
+            { color: config.dashboardCommon.color.red, value: lowestValue }
+          else
+            { color: config.dashboardCommon.color.orange, value: lowestValue },
+          if higherThreshold != lowerThreshold then
+            if higherThreshold == thresholds.critical then
+              { color: config.dashboardCommon.color.red, value: lowerThreshold }
+            else
+              { color: config.dashboardCommon.color.orange, value: lowerThreshold },
+          { color: config.dashboardCommon.color.green, value: higherThreshold },
+        ],
+    ),
 }
