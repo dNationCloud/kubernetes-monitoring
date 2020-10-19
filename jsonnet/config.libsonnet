@@ -134,7 +134,6 @@
     isLoki: true,
 
     ruleCommon: {
-      appName: 'prom-op',
       alertNamePrefix: 'K8sM8g',
     },
 

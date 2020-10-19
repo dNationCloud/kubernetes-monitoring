@@ -15,7 +15,6 @@
 
 local dashboards = (import 'dashboards/dashboards.libsonnet').grafanaDashboards;
 local rules = (import 'rules/rules.libsonnet').prometheusRules;
-local config = (import 'config.libsonnet')._config;
 local kube = import 'kube-libsonnet/kube.libsonnet';
 local util = import 'util.libsonnet';
 
@@ -27,11 +26,11 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
     std.manifestYamlDoc(
       kube.ConfigMap(util.k8sObjectName(filename)) {
         metadata+: {
-          namespace: '{{ $.Release.Namespace }}',
+          namespace: '{{ include "k8s-m8g.namespace" . }}',
           labels: {
-            grafana_dashboard: '1',
-            app: '{{ $.Release.Name }}-grafana',
+            app: '{{ include "k8s-m8g.name" . }}',
             release: '{{ $.Release.Name }}',
+            '{{ .Values.dashboardLabel.name }}': '{{ .Values.dashboardLabel.value }}',
           },
         },
         data: {
@@ -51,10 +50,11 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
         kind: 'PrometheusRule',
         metadata: {
           name: util.k8sObjectName(filename),
-          namespace: '{{ $.Release.Namespace }}',
+          namespace: '{{ include "k8s-m8g.namespace" . }}',
           labels: {
-            app: config.ruleCommon.appName,
+            app: '{{ include "k8s-m8g.name" . }}',
             release: '{{ $.Release.Name }}',
+            '{{ .Values.ruleLabel.name }}': '{{ .Values.ruleLabel.value }}',
           },
         },
         spec: rules[filename],

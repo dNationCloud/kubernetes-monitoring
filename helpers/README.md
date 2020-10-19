@@ -15,10 +15,15 @@ Prerequisites
 
 Grafana dashboards and Prometheus alerts are stored in the [jsonnet](https://jsonnet.org/) templates. 
 
-Build Jsonnet templates
+Build of valid HELM templates from jsonnet templates is done by following steps:
+- generate YAML files from jsonnet templates
+- pretty print of generated YAML files - some escape characters provided by jsonnet build need to be removed to achieve valid HELM template format
+  - pretty print is not yet supported by jsonnet library, see https://github.com/google/jsonnet/issues/821
 ```
-mkdir chart/templates/k8s-m8g
-docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -m chart/templates/k8s-m8g -S jsonnet/helm.jsonnet
+# generate YAML files from jsonnet templates
+docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-m8g -S jsonnet/helm.jsonnet
+# pretty print of generated YAML files
+find ./chart/templates/k8s-m8g/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src test:yq yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
 ```
 
 Build dashboard json files
@@ -31,6 +36,11 @@ Jsonnet Formatter & Linter
 ```
 find ./jsonnet/ -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnetfmt -i "$f" || exit 1; done;
 find ./jsonnet/ -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet-lint "$f" || exit 1; done;
+```
+
+HELM Linter
+```
+helm lint chart
 ```
 
 Create KinD cluster
@@ -47,7 +57,7 @@ Install K8s-m8g-stack (without K8s-m8g dependency)
 helm repo add ifne https://nexus.ifne.eu/repository/ifne-helm-public/
 helm repo update
 
-# Install K8s-m8g-stack
+# Install K8s-m8g-stack without k8s-m8g chart
 helm install k8s-m8g-stack ifne/k8s-m8g-stack -f helpers/values-kind.yaml 
 ```
 
