@@ -1,0 +1,30 @@
+# Default values for k8s-m8g.
+# Declare variables to be passed into your templates.
+
+## Provide a name in place of k8s-m8g for `app:` labels
+##
+nameOverride: ""
+
+## Override the deployment namespace
+##
+namespaceOverride: ""
+
+## Provide a name to substitute for the full names of resources
+##
+fullnameOverride: ""
+
+## Label to apply to Grafana dashboard resources
+## Label of Grafana dashboard resource is used for target discovery.
+## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L552
+##
+dashboardLabel:
+  name: grafana_dashboard
+  value: '1'
+
+## Label to apply to Prometheus rule resources
+## Label of Prometheus rule resource is used for target discovery.
+## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L1735
+##
+ruleLabel:
+  name: prometheus_rule
+  value: '1'

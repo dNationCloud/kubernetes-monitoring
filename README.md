@@ -31,6 +31,18 @@ kubectl create namespace monitoring
 helm install k8s-m8g ifne/k8s-m8g --namespace monitoring
 ```
 
+# Configuration
+
+| Parameter | Description | Default | 
+|-----|------|---------|
+| dashboardLabel.name | Label name for grafana dashboard resources | `"grafana_dashboard"` |
+| dashboardLabel.value | Label value for grafana dashboard resources  | `"1"` |
+| ruleLabel.name | Label name for prometheus rule resources | `"prometheus_rule"` |
+| ruleLabel.value | Label value for prometheus rule resources | `"1"` |
+| fullnameOverride | Override a full name of resources | `""` |
+| nameOverride | Override a name in place of k8s-m8g for `app:` labels | `""` |
+| namespaceOverride | Override the deployment namespace | `""` |
+
 # Contribution guidelines
 
 If you want to contribute to the K8s-m8g project, be sure to review the

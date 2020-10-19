@@ -41,7 +41,7 @@ local config = (import 'config.libsonnet')._config;
      * @param filename The input name string.
      * @return k8s object name.
      */
-    '{{ $.Release.Name }}-%s' % name,
+     '{{ include "k8s-m8g.fullname" . }}-%s' % name,
 
   k8sManifestFileName(name)::
     /**

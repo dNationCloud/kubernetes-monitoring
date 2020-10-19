@@ -1,7 +1,7 @@
 apiVersion: v2
 name: k8s-m8g
-version: 1.0.11
-appVersion: 1.0.11
+version: 1.0.12
+appVersion: 1.0.12
 description: A set of Grafana dashboards and Prometheus alerts to cover Kubernetes monitoring in an easy way using a drill-down principle.
 keywords:
 - kubernetes
