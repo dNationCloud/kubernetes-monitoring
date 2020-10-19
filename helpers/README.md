@@ -15,7 +15,7 @@ Prerequisites
 
 Grafana dashboards and Prometheus alerts are stored in the [jsonnet](https://jsonnet.org/) templates. 
 
-Build a valid HELM templates from jsonnet templates is done by following steps:
+Build of valid HELM templates from jsonnet templates is done by following steps:
 - generate YAML files from jsonnet templates
 - pretty print of generated YAML files - some escape characters provided by jsonnet build need to be removed to achieve valid HELM template format
   - pretty print is not yet supported by jsonnet library, see https://github.com/google/jsonnet/issues/821

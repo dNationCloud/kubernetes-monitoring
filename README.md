@@ -40,7 +40,7 @@ helm install k8s-m8g ifne/k8s-m8g --namespace monitoring
 | ruleLabel.name | Label name for prometheus rule resources | `"prometheus_rule"` |
 | ruleLabel.value | Label value for prometheus rule resources | `"1"` |
 | fullnameOverride | Override a full name of resources | `""` |
-| nameOverride | Override a name in place of k8s-m8g for `app:` labels | `""` |
+| nameOverride | Override value of `app` label used by k8s objects | `""` |
 | namespaceOverride | Override the deployment namespace | `""` |
 
 # Contribution guidelines

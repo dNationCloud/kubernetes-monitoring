@@ -1,7 +1,7 @@
 # Jsonnet
 
 A simple Docker image includes jsonnet, jsonnetfmt, jsonnet-lint, yq and jsonnet lib like grafonnet-lib, kube-libsonnet and grafonnet-polystat-panel.    
-Docker image was build for the CI/CD purposes or to avoid having to install jsonnet tools on your computer (keep it in docker).
+Docker image was built for the CI/CD purposes or to avoid having to install jsonnet tools on your computer (keep it in docker).
 
 # Usage
 
