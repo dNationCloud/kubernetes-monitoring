@@ -21,7 +21,7 @@ Monitoring targets are:
 This project has been developed, maintained and used in production by professionals to simplify their day-to-day monitoring tasks and reduce incident reaction time.
 
 # Full Installation
-In case your current Kubernetes installation doesn't contain Prometheus, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://artifacthub.io/packages/helm/dnationcloud/dnation-kubernetes-monitoring-stack) helm chart.
+In case your current Kubernetes installation doesn't contain Prometheus, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://github.com/dNationCloud/kubernetes-monitoring-stack) helm chart.
 
 # Dashboards and Alerts only Installation
 In case your current Kubernetes installation already contains Prometheus, Grafana and Loki, please follow [here](GETTING_STARTED.md).
