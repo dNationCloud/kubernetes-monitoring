@@ -21,9 +21,9 @@ Build of valid HELM templates from jsonnet templates is done by following steps:
   - pretty print is not yet supported by jsonnet library, see https://github.com/google/jsonnet/issues/821
 ```
 # generate YAML files from jsonnet templates
-docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-m8g -S jsonnet/helm.jsonnet
+docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-monitoring -S jsonnet/helm.jsonnet
 # pretty print of generated YAML files
-find ./chart/templates/k8s-m8g/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src test:yq yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
+find ./chart/templates/k8s-monitoring/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src test:yq yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
 ```
 
 Build dashboard json files
@@ -48,20 +48,20 @@ Create KinD cluster
 kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.19.1
 ```
 
-Install K8s-m8g-stack (without K8s-m8g dependency)
+Install K8s-m8g-stack (without dNation Kubernetes Monitoring dependency)
 * Grafana UI is exposed on port `5000`, see http://localhost:5000
 * Prometheus UI is exposed on port `5001`, see http://localhost:5001
 * Prometheus Alertmanager UI is exposed on port `5002`, see http://localhost:5002
 ```bash
-# Add ifne helm repository
-helm repo add ifne https://nexus.ifne.eu/repository/ifne-helm-public/
+# Add dNation helm repository
+helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
 helm repo update
 
-# Install K8s-m8g-stack without k8s-m8g chart
-helm install k8s-m8g-stack ifne/k8s-m8g-stack -f helpers/values-kind.yaml 
+# Install dNation Kubernetes Monitoring Stack without dNation Kubernetes Monitoring chart
+helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack -f helpers/values-kind.yaml 
 ```
 
-Install K8s-m8g
+Install dNation Kubernetes Monitoring
 ```bash
-helm install k8s-m8g chart --dependency-update
+helm install dnation-kubernetes-monitoring chart --dependency-update
 ```

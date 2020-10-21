@@ -1,4 +1,4 @@
-k8s-m8g:
+dnation-kubernetes-monitoring:
   enabled: false
 
 kube-prometheus-stack:
