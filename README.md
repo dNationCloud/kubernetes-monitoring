@@ -1,58 +1,36 @@
-<a href="https://dnation.tech/"><img width="250" alt="dNationCloud" src="https://storage.googleapis.com/ifne.eu/public/icons/dnation.png"></a>
+<a href="https://dNation.cloud/"><img src="https://storage.googleapis.com/ifne.eu/public/icons/dnation.png" width="250" alt="dNationCloud"></a>
 
-# <img src="https://storage.googleapis.com/ifne.eu/public/icons/dnation_k8sm8g.png" width="60" height="auto"> Kubernetes Monitoring (K8s-m8g)  
+# dNation Kubernetes Monitoring
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-A set of Grafana dashboards and Prometheus alerts to cover Kubernetes monitoring in an easy way using a drill-down principle.
+TODO Insert video
 
-# Getting Started
+A set of Grafana dashboards and Prometheus alerts written in [Jsonnet](https://jsonnet.org/). This Monitoring following 3 basic design principles:
 
-K8s-m8g helm chart is designed to be installed on top of the existing [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
-and [loki-stack](https://github.com/grafana/loki/tree/master/production/helm/loki-stack) monitoring infrastructure.
+1. `Intuitive` - Green, orange and red colors signaling whether or not your action is needed
+1. `Drill-down` - if you want details why is something green, orange or red, just click it
+1. `Relevant information only` - provide only metrics relevant for this particular area of interest and drill-down level, side-by-side with logs (experimental feature)
 
-Use a [K8s-m8g-stack](https://git.ifne.eu/dnation/k8s-m8g-stack) helm chart as a recommended way how to deploy K8s-m8g dashboards and alerts on your Kubernetes cluster. 
+Monitoring targets are:
 
-### Installation
+| Kubernetes | Hosts (TBD) | Applications (TBD) |
+|:----------:|:-----------:|:------------------:|
+| ![Kubernetes](docs/images/kubernetes-monitoring.png) | ![Hosts](docs/images/host-monitoring.png) | ![Applications](docs/images/app-monitoring.png) |
 
-Standalone installation on top of the existing monitoring infrastructure.
+This project has been developed, maintained and used in production by professionals to simplify their day-to-day monitoring tasks and reduce incident reaction time.
 
-Prerequisites
-* [Helm3](https://helm.sh/)
+# Full Installation
+In case your current Kubernetes installation doesn't contain Prometheus, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://artifacthub.io/packages/helm/dnationcloud/dnation-kubernetes-monitoring-stack) helm chart.
 
-K8s-m8g helm chart is currently hosted in the public [ifne](https://www.ifne.eu/) helm repository.
-```bash
-# Add ifne helm repository
-helm repo add ifne https://nexus.ifne.eu/repository/ifne-helm-public/
-helm repo update
-
-# Install K8s-m8g
-kubectl create namespace monitoring
-helm install k8s-m8g ifne/k8s-m8g --namespace monitoring
-```
-
-# Configuration
-
-| Parameter | Description | Default | 
-|-----|------|---------|
-| dashboardLabel.name | Label name for grafana dashboard resources | `"grafana_dashboard"` |
-| dashboardLabel.value | Label value for grafana dashboard resources  | `"1"` |
-| ruleLabel.name | Label name for prometheus rule resources | `"prometheus_rule"` |
-| ruleLabel.value | Label value for prometheus rule resources | `"1"` |
-| fullnameOverride | Override a full name of resources | `""` |
-| nameOverride | Override value of `app` label used by k8s objects | `""` |
-| namespaceOverride | Override the deployment namespace | `""` |
+# Dashboards and Alerts only Installation
+In case your current Kubernetes installation already contains Prometheus, Grafana and Loki, please follow [here](GETTING_STARTED.md).
 
 # Contribution guidelines
 
-If you want to contribute to the K8s-m8g project, be sure to review the
-[contribution guidelines](CONTRIBUTING.md). This project adheres to K8s-m8g's
-[code of conduct](CODE_OF_CONDUCT.md). When participating, you are required to abide by the code of conduct.
+If you want to contribute, please read following:
+1. [Contribution Guidelines](CONTRIBUTING.md)
+1. [Code of Conduct](CODE_OF_CONDUCT.md)
+1. [How To](helpers/README.md) simplify your local development
 
 We use GitHub issues to manage requests and bugs, please visit our discussion forum if you have any questions.
-
-# Project Background
-
-K8s-m8g project is developed, maintained and used in production by [dNation](https://www.dnation.tech/) professionals 
-to simplify their day-to-day monitoring tasks.  
-The development of K8s-m8g was transformed to an open source project in October 2020.

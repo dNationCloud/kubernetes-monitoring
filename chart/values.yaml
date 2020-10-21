@@ -1,4 +1,4 @@
-# Default values for k8s-m8g.
+# Default values for dNation Kubernetes Monitoring.
 # Declare variables to be passed into your templates.
 
 ## Override the default value of 'app' label used by k8s objects

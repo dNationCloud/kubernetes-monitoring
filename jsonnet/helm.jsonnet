@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 The K8s-m8g Authors. All Rights Reserved.
+  Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -26,9 +26,9 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
     std.manifestYamlDoc(
       kube.ConfigMap(util.k8sObjectName(filename)) {
         metadata+: {
-          namespace: '{{ include "k8s-m8g.namespace" . }}',
+          namespace: '{{ include "k8s-monitoring.namespace" . }}',
           labels: {
-            app: '{{ include "k8s-m8g.name" . }}',
+            app: '{{ include "k8s-monitoring.name" . }}',
             release: '{{ $.Release.Name }}',
             '{{ .Values.dashboardLabel.name }}': '{{ .Values.dashboardLabel.value }}',
           },
@@ -50,9 +50,9 @@ local doNotChangeMessage = '# Do not change in-place. Generated from jsonnet tem
         kind: 'PrometheusRule',
         metadata: {
           name: util.k8sObjectName(filename),
-          namespace: '{{ include "k8s-m8g.namespace" . }}',
+          namespace: '{{ include "k8s-monitoring.namespace" . }}',
           labels: {
-            app: '{{ include "k8s-m8g.name" . }}',
+            app: '{{ include "k8s-monitoring.name" . }}',
             release: '{{ $.Release.Name }}',
             '{{ .Values.ruleLabel.name }}': '{{ .Values.ruleLabel.value }}',
           },

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 The K8s-m8g Authors. All Rights Reserved.
+  Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -46,7 +46,7 @@ local text = grafana.text;
           title='dNation - Making Cloud Easy',
           tags=[],
           icon='cloud',
-          url='https://www.dnation.tech/',
+          url='https://www.dNation.cloud/',
           type='link',
           targetBlank=true,
         );
@@ -393,7 +393,7 @@ local text = grafana.text;
         );
 
       dashboard.new(
-        'Kubernetes Green/Red Monitoring',
+        'Kubernetes Monitoring',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,

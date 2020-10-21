@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 The K8s-m8g Authors. All Rights Reserved.
+  Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -41,7 +41,7 @@ local config = (import 'config.libsonnet')._config;
      * @param filename The input name string.
      * @return k8s object name.
      */
-    '{{ include "k8s-m8g.fullname" . }}-%s' % name,
+    '{{ include "k8s-monitoring.fullname" . }}-%s' % name,
 
   k8sManifestFileName(name)::
     /**

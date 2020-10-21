@@ -1,15 +1,16 @@
 apiVersion: v2
-name: k8s-m8g
-version: 1.0.12
-appVersion: 1.0.12
+name: dnation-kubernetes-monitoring
+version: 1.0.13
+appVersion: 1.0.13
 description: A set of Grafana dashboards and Prometheus alerts to cover Kubernetes monitoring in an easy way using a drill-down principle.
 keywords:
+- dnation
 - kubernetes
 - monitoring
-home: https://git.ifne.eu/dnation/k8s-m8g
+home: https://dnation.cloud
 sources:
-- https://git.ifne.eu/dnation/k8s-m8g
+- https://github.com/dNationCloud/kubernetes-monitoring
 icon: https://storage.googleapis.com/ifne.eu/public/icons/dnation_k8sm8g.png
 maintainers:
 - name: dNation
-  email: admin@dNation.tech
+  email: cloud@dNation.cloud
