@@ -42,9 +42,10 @@
       '{{ else }}%s{{ end }}' % default +
       '{{ else }}%s{{ end }}' % default,
 
-    addAlertPair(name, message, expr, thresholds):: self
+    addAlertPair(name, message, expr, thresholds)::
+      self
       .addAlert(name, message, expr, thresholds.operator, self.thresholdExpression(name, 'critical', thresholds.critical), 'critical')
-      .addAlert(name, message, expr, thresholds.operator, self.thresholdExpression(name, 'warning', thresholds.warning), 'warning')
+      .addAlert(name, message, expr, thresholds.operator, self.thresholdExpression(name, 'warning', thresholds.warning), 'warning'),
 
   },
 } +

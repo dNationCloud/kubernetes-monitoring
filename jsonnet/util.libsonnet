@@ -69,7 +69,8 @@ local config = (import 'config.libsonnet')._config;
      * @param lowestValue value for lowest grafana threshold (default null for minus infinity).
      * @return grafana threshold steps object.
      */
-    std.filter(function(v) v != null,
+    std.filter(
+      function(v) v != null,
       if thresholds.operator == '>=' then
         [
           { color: config.dashboardCommon.color.green, value: lowestValue },

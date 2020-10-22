@@ -91,7 +91,7 @@
     isLoki: true,
 
     ruleCommon: {
-          alertNamePrefix: 'KubernetesMonitoring',
+      alertNamePrefix: 'KubernetesMonitoring',
     },
 
     thresholds: {

@@ -22,7 +22,7 @@ local graphPanel = grafana.graphPanel;
 
 {
   grafanaDashboards+:: {
-    'pvc':
+    pvc:
       local usageGraphPanel(title, format) =
         graphPanel.new(
           title=title,

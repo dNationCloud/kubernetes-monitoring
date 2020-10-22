@@ -22,7 +22,7 @@ local template = grafana.template;
 
 {
   grafanaDashboards+:: {
-    'statefulset':
+    statefulset:
       local greenStep = { color: $._config.dashboardCommon.color.green, value: null };
       local redStep = { color: $._config.dashboardCommon.color.red, value: 80 };
 
