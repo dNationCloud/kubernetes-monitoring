@@ -88,7 +88,7 @@ local text = grafana.text;
       local nodesHealthPanel =
         percentStatPanel(
           title='Nodes Health',
-          expr='sum(kube_node_info{cluster=~"$cluster"}) / (sum(kube_node_info{cluster=~"$cluster"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="DiskPressure", status="true"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="MemoryPressure", status="true"})) * 100',
+          expr='round(sum(kube_node_info{cluster=~"$cluster"}) / (sum(kube_node_info{cluster=~"$cluster"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="DiskPressure", status="true"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="MemoryPressure", status="true"})) * 100)',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.nodeOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
@@ -96,7 +96,7 @@ local text = grafana.text;
       local runningPodsPanel =
         percentStatPanel(
           title='Running Pods',
-          expr='sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"})) * 100',
+          expr='round(sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"})) * 100)',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.podOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
@@ -104,7 +104,7 @@ local text = grafana.text;
       local runningStatefulSetsPanel =
         percentStatPanel(
           title='Running StatefulSets',
-          expr='sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster"}) * 100',
+          expr='round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster"}) * 100)',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
@@ -112,7 +112,7 @@ local text = grafana.text;
       local daemonSetsHealthPanel =
         percentStatPanel(
           title='DaemonSets Health',
-          expr='(sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})) * 100',
+          expr='round((sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})) * 100)',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.daemonSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
@@ -120,7 +120,7 @@ local text = grafana.text;
       local pvcBoundPanel =
         percentStatPanel(
           title='PVC Bound',
-          expr='sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Pending"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Lost"})\n) * 100 OR on() vector(-1)',
+          expr='round(sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Pending"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Lost"})\n) * 100) OR on() vector(-1)',
         )
         .addMapping({ text: '-', type: 1, value: -1 })
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
@@ -130,7 +130,7 @@ local text = grafana.text;
       local deploymentsHealthPanel =
         percentStatPanel(
           title='Deployments Health',
-          expr='(sum(kube_deployment_status_replicas_updated{cluster=~"$cluster"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster"})) * 100',
+          expr='round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster"})) * 100)',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.deploymentOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
@@ -138,7 +138,7 @@ local text = grafana.text;
       local runningContainersPanel =
         percentStatPanel(
           title='Running Containers',
-          expr='sum(kube_pod_container_status_running{cluster=~"$cluster"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster"})) * 100',
+          expr='round(sum(kube_pod_container_status_running{cluster=~"$cluster"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster"})) * 100)',
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.containerOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
@@ -146,7 +146,7 @@ local text = grafana.text;
       local succeededJobsPanel =
         percentStatPanel(
           title='Succeeded Jobs',
-          expr='sum(kube_job_status_succeeded{cluster=~"$cluster"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster"}) + sum(kube_job_status_failed{cluster=~"$cluster"})) * 100 OR on() vector(-1)',
+          expr='round(sum(kube_job_status_succeeded{cluster=~"$cluster"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster"}) + sum(kube_job_status_failed{cluster=~"$cluster"})) * 100) OR on() vector(-1)',
         )
         .addMapping({ text: '-', type: 1, value: -1 })
         .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.jobOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
