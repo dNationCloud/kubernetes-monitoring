@@ -21,7 +21,7 @@
         .addAlertPair(
           name='NodesHealthLow',
           message='"{{ $labels.node }}": Node Health Low {{ $value }}%',
-          expr='round(sum(kube_node_info) by (job, node) / (sum(kube_node_info) by (job, node) + sum(kube_node_spec_unschedulable)  by (job, node) + sum(kube_node_status_condition{condition="DiskPressure",status="true"}) by (job, node) + sum(kube_node_status_condition{condition="MemoryPressure",status="true"}) by (job, node) ) * 100)',
+          expr='round(sum(kube_node_info) by (job, node) / (sum(kube_node_info) by (job, node) + sum(kube_node_spec_unschedulable) by (job, node) + sum(kube_node_status_condition{condition="DiskPressure", status="true"}) by (job, node) + sum(kube_node_status_condition{condition="MemoryPressure", status="true"}) by (job, node) ) * 100)',
           thresholds=$._config.thresholds.k8s,
         )
         .addAlertPair(
@@ -33,7 +33,13 @@
         .addAlertPair(
           name='RunningStatefulSetsHealthLow',
           message='StatefulSets Health Low {{ $value }}%',
-          expr='round(sum(kube_statefulset_status_replicas_current{job="kube-state-metrics"}) / sum(kube_statefulset_status_replicas{job="kube-state-metrics"}) * 100)',
+          expr='round(sum(kube_statefulset_status_replicas_ready) / sum(kube_statefulset_status_replicas) * 100)',
+          thresholds=$._config.thresholds.k8s,
+        )
+        .addAlertPair(
+          name='RunningDaemonSetsHealthLow',
+          message='DaemonSets Health Low {{ $value }}%',
+          expr='round((sum(kube_daemonset_updated_number_scheduled) + sum(kube_daemonset_status_number_available)) / (2 * sum(kube_daemonset_status_desired_number_scheduled)) * 100)',
           thresholds=$._config.thresholds.k8s,
         )
         .addAlertPair(
@@ -45,13 +51,13 @@
         .addAlertPair(
           name='RunningDeploymentsHealthLow',
           message='Running Deployments Health Low {{ $value }}%',
-          expr='round(sum(kube_deployment_status_replicas_updated) / (sum(kube_deployment_status_replicas) + sum(kube_deployment_status_replicas_unavailable)) * 100)',
+          expr='round((sum(kube_deployment_status_replicas_updated) + sum(kube_deployment_status_replicas_available)) / (2 * sum(kube_deployment_status_replicas)) * 100)',
           thresholds=$._config.thresholds.k8s,
         )
         .addAlertPair(
           name='RunningContainersHealthLow',
           message='Running Containers Health Low {{ $value }}%',
-          expr='round(sum(kube_pod_container_status_running) / (sum(kube_pod_container_status_running) +  sum(kube_pod_container_status_terminated_reason{reason!="Completed"}) + sum(kube_pod_container_status_waiting)) * 100)',
+          expr='round(sum(kube_pod_container_status_running) / (sum(kube_pod_container_status_running) + sum(kube_pod_container_status_terminated_reason{reason!="Completed"}) + sum(kube_pod_container_status_waiting)) * 100)',
           thresholds=$._config.thresholds.k8s,
         )
         .addAlertPair(
