@@ -22,7 +22,7 @@ local statPanel = grafana.statPanel;
 
 {
   grafanaDashboards+:: {
-    'scheduler':
+    scheduler:
       local upCount =
         statPanel.new(
           title='Up',

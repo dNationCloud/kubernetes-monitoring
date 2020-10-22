@@ -22,7 +22,7 @@ local statPanel = grafana.statPanel;
 
 {
   grafanaDashboards+:: {
-    'proxy':
+    proxy:
       local upCount =
         statPanel.new(
           title='Up',
