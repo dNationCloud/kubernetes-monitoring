@@ -4,8 +4,6 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-TODO Insert video
-
 A set of Grafana dashboards and Prometheus alerts written in [Jsonnet](https://jsonnet.org/). This Monitoring following 3 basic design principles:
 
 1. `Intuitive` - Green, orange and red colors signaling whether or not your action is needed
