@@ -1,0 +1,52 @@
+name: Release Chart
+
+on:
+  push:
+    branches:
+    - main
+    # Only if there are chart changes to release.
+    paths:
+    - 'chart/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Fetch history
+      run: git fetch --prune --unshallow
+
+    - name: Get helm chart version
+      id: version
+      run: |
+        chart=$(grep "version" chart/Chart.yaml | head -1 | awk '{print $2}')
+        echo "::set-output name=chart::$chart"
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "$GITHUB_ACTOR"
+        git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.6
+
+    - name: Install Chartpress
+      run: |
+        python -m pip install --upgrade pip
+        pip install chartpress
+
+    - name: Publish Chart to the remote dNationCloud helm repository
+      run: chartpress --publish-chart --tag ${{ steps.version.outputs.chart }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
+
+    - name: Tag branch
+      uses: anothrNick/github-tag-action@1.26.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
+        CUSTOM_TAG: 'v${{ steps.version.outputs.chart }}'
+        RELEASE_BRANCHES: main
