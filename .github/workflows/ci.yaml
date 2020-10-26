@@ -2,9 +2,10 @@ name: Lint and Test Chart
 
 on:
   pull_request:
-    # Only if there are chart changes to test.
+    # Only if there are chart or jsonnet changes to test.
     paths:
     - 'chart/**'
+    - 'jsonnet/**'
 
 jobs:
   lint-chart:
@@ -15,6 +16,17 @@ jobs:
 
     - name: Fetch history
       run: git fetch --prune --unshallow
+
+    - name: Build jsonnet dashboards
+      run: |
+        # Generate YAML files from jsonnet templates
+        docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-monitoring -S jsonnet/helm.jsonnet
+        # Pretty print of generated YAML files - some escape characters provided by jsonnet build need to be removed to achieve valid HELM template format.
+        # Pretty print is not yet supported by jsonnet library, see https://github.com/google/jsonnet/issues/821
+        find ./chart/templates/k8s-monitoring/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
+
+    - name: Run jsonnet-testing (lint)
+      run: find ./jsonnet/ -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet-lint "$f" || exit 1; done;
 
     - name: Run chart-testing (lint)
       uses: helm/chart-testing-action@v1.0.0
@@ -39,10 +51,21 @@ jobs:
     - name: Fetch history
       run: git fetch --prune --unshallow
 
+    - name: Build jsonnet dashboards
+      run: |
+        # Generate YAML files from jsonnet templates
+        docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-monitoring -S jsonnet/helm.jsonnet
+        # Pretty print of generated YAML files - some escape characters provided by jsonnet build need to be removed to achieve valid HELM template format.
+        # Pretty print is not yet supported by jsonnet library, see https://github.com/google/jsonnet/issues/821
+        find ./chart/templates/k8s-monitoring/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
+
     - name: Create kind ${{ matrix.k8s }} cluster
       uses: helm/kind-action@v1.0.0
       with:
         node_image: kindest/node:${{ matrix.k8s }}
+
+    - name: Install prometheusrules crd
+      run: kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/release-0.42/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
 
     - name: Run chart-testing (install)
       uses: helm/chart-testing-action@v1.0.0
