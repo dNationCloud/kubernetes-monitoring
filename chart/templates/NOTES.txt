@@ -1,6 +1,4 @@
 dNation Kubernetes Monitoring has been installed.
-Check its status by running:
-    kubectl --namespace {{ .Release.Namespace }} get configmaps
      _ _   _       _   _                __  __             _ _             _
     | | \ | |     | | (_)              |  \/  |           (_) |           (_)
   __| |  \| | __ _| |_ _  ___  _ __    | \  / | ___  _ __  _| |_ ___  _ __ _ _ __   __ _
@@ -8,4 +6,13 @@ Check its status by running:
 | (_| | |\  | (_| | |_| | (_) | | | |  | |  | | (_) | | | | | || (_) | |  | | | | | (_| |
  \__,_|_| \_|\__,_|\__|_|\___/|_| |_|  |_|  |_|\___/|_| |_|_|\__\___/|_|  |_|_| |_|\__, |
                                                                                     __/ |
-Visit https://www.dNation.cloud for detailed information                           |___/
+Visit https://www.dNation.cloud for detailed information.                          |___/
+If you're experiencing issues please read [FAQ](https://github.com/dNationCloud/kubernetes-monitoring/blob/main/helpers/FAQ.md).
+
+Check its status by running:
+
+    Grafana dashboards:
+    kubectl --namespace {{ template "k8s-monitoring.namespace" . }} get configmaps -l "release={{ $.Release.Name }},{{ .Values.dashboardLabel.name }}={{ .Values.dashboardLabel.value }}"
+
+    Prometheus rules:
+    kubectl --namespace {{ template "k8s-monitoring.namespace" . }} get prometheusrules -l "release={{ $.Release.Name }},{{ .Values.ruleLabel.name }}={{ .Values.ruleLabel.value }}"
