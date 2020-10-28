@@ -1,3 +1,3 @@
-<a href="https://dNation.cloud/"><img src="https://cdn.ifne.eu/public/icons/dnation.png" width="250" alt="dNationCloud"></a>
+# dNation Kubernetes Monitoring
 
-# [dNation Kubernetes Monitoring](https://github.com/dNationCloud/kubernetes-monitoring)
+Please follow instructions described in [dNation Kubernetes Monitoring](https://github.com/dNationCloud/kubernetes-monitoring) project.

@@ -23,7 +23,7 @@ Build of valid HELM templates from jsonnet templates is done by following steps:
 # generate YAML files from jsonnet templates
 docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-monitoring -S jsonnet/helm.jsonnet
 # pretty print of generated YAML files
-find ./chart/templates/k8s-monitoring/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src test:yq yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
+find ./chart/templates/k8s-monitoring/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
 ```
 
 Build dashboard json files
