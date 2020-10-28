@@ -2,13 +2,12 @@
 
 ## Kubernetes Monitoring shows `DOWN` state for some control plane components. Are control plane components working correctly?
 
-You have to check control plane components metrics addresses binding as follows:
+You have to check address bindings of control plane components' metrics as follows:
 
-The metrics bind addresses of `etcd` and `kube-proxy` control plane components are
-by default bind to the localhost that prometheus instances **cannot** access.
-Also `scheduler` and `controller-manager` control plane components could have the
-same metrics addresses binding.
-You should expose metrics by changing bind addresses if you want to collect them.
+The metrics of `etcd` and `kube-proxy` control plane components are by default
+bound to the localhost that prometheus instances **cannot** access.
+Also make sure metrics of `scheduler` and `controller-manager` control plane
+components don't have the same address binding if you want to collect them.
 
 Edit and use `kubeadm_init.yaml` file to configure `kubeadm init` in case of fresh K8s deployment.
 
