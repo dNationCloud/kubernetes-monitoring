@@ -11,7 +11,7 @@ variables:
     - privileged
   only:
     - merge_requests
-    - master
+    - main
 
 .base-jsonnet:
   image: docker:18.09
@@ -20,7 +20,7 @@ variables:
     - privileged
   only:
     - merge_requests
-    - master
+    - main
   services:
     - docker:18.09-dind
 
@@ -28,7 +28,6 @@ stages:
   - build jsonnet
   - build helm
   - test
-  - publish
 
 build jsonnet dashboards:
   stage: build jsonnet
@@ -63,12 +62,3 @@ test lint jsonnet:
   extends: .base-jsonnet
   script:
   - find ./jsonnet/ -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet-lint "$f" || exit 1; done;
-
-publish:
-  stage: publish
-  image: cfmanteiga/alpine-bash-curl-jq
-  only:
-    - master
-  script:
-    - curl --fail --user "$IFNE_HELM_USER":"$IFNE_HELM_PASS" "$IFNE_HELM_URL" --upload-file chart/release/dnation-kubernetes-monitoring-*.tgz
-  when: manual
