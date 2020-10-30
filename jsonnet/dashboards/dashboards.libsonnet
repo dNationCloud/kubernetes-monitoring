@@ -50,4 +50,4 @@
 (import 'k8s/pvc.libsonnet') +
 
 // Apps and host dashboards
-(import 'apps/python-flask.libsonnet') 
+(import 'apps/python-flask.libsonnet')
