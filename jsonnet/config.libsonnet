@@ -51,6 +51,9 @@
 
       // Kube pvc dashboard
       persistentVolumes: 'persistentvolumes',
+
+      // Apps and host dashboards
+      pythonFlask: 'pythonflask',
     },
 
     dashboardSelectors: {
@@ -82,6 +85,9 @@
         green: '#56a64b',  // semi-dark-green
         white: '#ffffff',  // white
         black: '#000000',  // black
+        pink: '#fce2de',  //pink
+        purple: '#511749', //semi-dark-purple
+        yellow: '#eab839', //yellow
       },
       dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
