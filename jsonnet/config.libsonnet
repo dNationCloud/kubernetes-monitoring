@@ -52,7 +52,7 @@
       // Kube pvc dashboard
       persistentVolumes: 'persistentvolumes',
 
-      // Apps and host dashboards
+      // Apps and hosts dashboards
       pythonFlask: 'pythonflask',
     },
 
@@ -72,8 +72,9 @@
         k8sSystem: ['k8s', 'system', 'L2'],
         k8sNodeExporter: ['k8s', 'nodeexporter', 'L3'],
         k8sPVC: ['k8s', 'pvc', 'L3'],
-        k8sStatefulSet: ['k8s', 'statefulset', 'L3'],
-        k8sContainer: ['k8s', 'container', 'L3'],
+        k8sStateful: ['k8s', 'statefulset', 'L3'],
+        k8sDetail: ['k8s', 'detail', 'view', 'L3'],
+        k8sApps: ['k8s', 'app'],
       },
       tooltip: 'shared_crosshair',
       editable: true,
@@ -86,8 +87,8 @@
         white: '#ffffff',  // white
         black: '#000000',  // black
         pink: '#fce2de',  //pink
-        purple: '#511749', //semi-dark-purple
-        yellow: '#eab839', //yellow
+        purple: '#511749',  //semi-dark-purple
+        yellow: '#eab839',  //yellow
       },
       dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
