@@ -49,5 +49,5 @@
 // Kube pvc dashboards
 (import 'k8s/pvc.libsonnet') +
 
-// Apps and host dashboards
+// Apps and hosts dashboards
 (import 'apps/python-flask.libsonnet')

@@ -40,15 +40,27 @@ local row = grafana.row;
           current=null,
         );
 
+      local clusterTemplate =
+        template.new(
+          name='cluster',
+          label='Cluster',
+          datasource='$datasource',
+          query='label_values(node_uname_info, cluster)',
+          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.dashboardCommon.templateRefresh,
+          hide='variable',
+        );
+
       local jobTemplate =
         template.new(
           name='job',
           label='Job',
           datasource='$datasource',
-          query='label_values(flask_exporter_info, job)',
-          current=null,
+          query='label_values(flask_exporter_info{cluster=~"$cluster"}, job)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
+          includeAll=true,
+          multi=true,
         );
 
       local viewByTemplate =
@@ -64,7 +76,7 @@ local row = grafana.row;
           name='namespace',
           label='Namespace',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{job="$job"}, namespace)',
+          query='label_values(flask_exporter_info{cluster=~"$cluster", job="$job"}, namespace)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -76,7 +88,7 @@ local row = grafana.row;
           name='pod',
           label='Pod',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{job="$job", namespace=~"$namespace"}, pod)',
+          query='label_values(flask_exporter_info{cluster=~"$cluster", job="$job", namespace=~"$namespace"}, pod)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -88,7 +100,7 @@ local row = grafana.row;
           name='container',
           label='Container',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{job="$job", namespace=~"$namespace"}, container)',
+          query='label_values(flask_exporter_info{cluster=~"$cluster", job="$job", namespace=~"$namespace"}, container)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -115,9 +127,9 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
         .addTargets(
           [
-            prometheus.target(expr='sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target(expr='sum(\nkube_pod_container_resource_requests_cpu_cores{namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target(expr='sum(\nkube_pod_container_resource_limits_cpu_cores{namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
           ],
         );
 
@@ -135,9 +147,9 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/PodLimits/', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
         .addTargets(
           [
-            prometheus.target(expr='sum(container_memory_working_set_bytes{namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target(expr='sum(\nkube_pod_container_resource_requests_memory_bytes{namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target(expr='sum(\nkube_pod_container_resource_limits_memory_bytes{namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
           ],
         );
 
@@ -154,8 +166,8 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target(expr='sum(irate(container_network_transmit_bytes_total{namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target(expr='sum(irate(container_network_receive_bytes_total{namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
           ],
         );
 
@@ -163,7 +175,7 @@ local row = grafana.row;
         graphPanel.new(
           title='Transmit/Receive Drops',
           datasource='$datasource',
-          format='Bps',
+          format='pps',
           stack=true,
           linewidth=2,
           fill=2,
@@ -172,8 +184,8 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target(expr='sum(irate(container_network_transmit_packets_dropped_total{namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target(expr='sum(irate(container_network_receive_packets_dropped_total{namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
           ],
         );
 
@@ -189,9 +201,7 @@ local row = grafana.row;
           legend_rightSide=true,
         )
         .addSeriesOverride({ alias: 'Value #A', legend: false, hiddenSeries: true })
-        .addTarget(
-          prometheus.target(expr='sum(count_over_time( ({namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search" )[10s] )) by ($view)'),
-        );
+        .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
 
       local logs =
         logPanel.new(
@@ -199,7 +209,7 @@ local row = grafana.row;
           datasource='$datasource_logs',
           showLabels=true,
         )
-        .addTarget(loki.target('{namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
+        .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
 
       local requestPerMinute =
         graphPanel.new(
@@ -214,9 +224,10 @@ local row = grafana.row;
           legend_max=true,
           legend_values=true,
         )
+        .addSeriesOverride({ alias: 'HTTP 500', color: $._config.dashboardCommon.color.red })
         .addTarget(
           prometheus.target(
-            expr='sum(increase(\n  flask_http_request_total{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m]\n) / 2) by (status, $view)',
+            'sum(increase(\n  flask_http_request_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m]\n) / 2) by (status, $view)',
             legendFormat='HTTP {{status}} - {{$view}}',
           ),
         );
@@ -236,7 +247,7 @@ local row = grafana.row;
         .addSeriesOverride({ alias: 'errors', color: $._config.dashboardCommon.color.orange })
         .addTarget(
           prometheus.target(
-            expr='sum(\n  rate(\n    flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status!="200"}[1m]\n)\n) by (status, $view)',
+            'sum(\n  rate(\n    flask_http_request_duration_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status!="200"}[1m]\n)\n) by (status, $view)',
             legendFormat='HTTP {{status}} - {{$view}}',
           ),
         );
@@ -259,7 +270,7 @@ local row = grafana.row;
         )
         .addTarget(
           prometheus.target(
-            expr='avg(rate(\n  flask_http_request_duration_seconds_sum{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n)\n /\nrate(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0)  by (status, $view)',
+            'avg(rate(\n  flask_http_request_duration_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n)\n /\nrate(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0)  by (status, $view)',
             legendFormat='HTTP 200 - {{$view}}',
           ),
         );
@@ -282,7 +293,7 @@ local row = grafana.row;
         )
         .addTarget(
           prometheus.target(
-            expr='sum(increase(\n  flask_http_request_duration_seconds_bucket{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200",le="0.25"}[1m]\n)\n / ignoring (le)\nincrease(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0) by (status, $view)',
+            'sum(increase(\n  flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200",le="0.25"}[1m]\n)\n / ignoring (le)\nincrease(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0) by (status, $view)',
             legendFormat='HTTP 200 - {{$view}}',
           ),
         );
@@ -305,7 +316,7 @@ local row = grafana.row;
         )
         .addTarget(
           prometheus.target(
-            expr='avg(histogram_quantile(\n  0.5,\n  rate(\n    flask_http_request_duration_seconds_bucket{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)',
+            'avg(histogram_quantile(\n  0.5,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)',
             legendFormat='HTTP 200 - {{$view}}',
           ),
         );
@@ -328,7 +339,7 @@ local row = grafana.row;
         )
         .addTarget(
           prometheus.target(
-            expr='avg(histogram_quantile(\n  0.9,\n  rate(\n    flask_http_request_duration_seconds_bucket{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)',
+            'avg(histogram_quantile(\n  0.9,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)',
             legendFormat='HTTP 200 - {{$view}}',
           ),
         );
@@ -338,6 +349,7 @@ local row = grafana.row;
                         ]
                         + (if $._config.isLoki then [datasourceLogsTemplate] else [])
                         + [
+                          clusterTemplate,
                           jobTemplate,
                           viewByTemplate,
                           namespaceTemplate,
@@ -349,7 +361,7 @@ local row = grafana.row;
       local logsPanels = [
         row.new('Logs', collapse=true) { gridPos: { x: 0, y: 4, w: 24, h: 1 } }
         .addPanel(count { tooltip+: { sort: 2 } }, { x: 0, y: 5, w: 24, h: 5 })
-        .addPanel(logs { tooltip+: { sort: 2 } }, { x: 0, y: 10, w: 24, h: 13 }),
+        .addPanel(logs, { x: 0, y: 10, w: 24, h: 13 }),
       ];
 
       local panels = [
@@ -376,6 +388,7 @@ local row = grafana.row;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
+        tags=$._config.dashboardCommon.tags.k8sApps,
         uid=$._config.dashboardIDs.pythonFlask,
       )
       .addTemplates(templates)
