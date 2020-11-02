@@ -52,3 +52,27 @@ Manual setup in case of already running K8s deployment.
     ```bash
     kubectl -n kube-system delete po -l k8s-app=kube-proxy
     ```
+
+* Setup `scheduler` metrics bind address
+    ```bash
+    # On k8s master node
+    cd /etc/kubernetes/manifests/
+    sudo vim kube-scheduler.yaml
+    # Edit bind-address and port command options
+    ...
+    - --bind-address=0.0.0.0
+    - --port=10251
+    ...
+    ```
+
+* Setup `controller-manager` metrics bind address
+    ```bash
+    # On k8s master node
+    cd /etc/kubernetes/manifests/
+    sudo vim kube-controller-manager.yaml
+    # Edit bind-address and port command options
+    ...
+    - --bind-address=0.0.0.0
+    - --port=10252
+    ...
+    ```
