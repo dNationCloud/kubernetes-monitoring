@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 The K8s-m8g Authors. All Rights Reserved.
+  Copyright 2020 The dNation Kubernetes Monitoring. All Rights Reserved.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -78,7 +78,7 @@ local row = grafana.row;
           name='namespace',
           label='Namespace',
           datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job="$job"}, namespace)',
+          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job"}, namespace)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -90,7 +90,7 @@ local row = grafana.row;
           name='pod',
           label='Pod',
           datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job="$job", namespace=~"$namespace"}, pod)',
+          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -102,7 +102,7 @@ local row = grafana.row;
           name='container',
           label='Container',
           datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job="$job", namespace=~"$namespace"}, container)',
+          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -120,7 +120,7 @@ local row = grafana.row;
           name='jvm_memory_pool_heap',
           label='JVM Memory Pools Heap',
           datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job="$job", namespace=~"$namespace", area="heap"},id)',
+          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", area="heap"},id)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -132,7 +132,7 @@ local row = grafana.row;
           name='jvm_memory_pool_nonheap',
           label='JVM Memory Pools Non-Heap',
           datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job="$job", namespace=~"$namespace", area="nonheap"},id)',
+          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", area="nonheap"},id)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -404,16 +404,16 @@ local row = grafana.row;
           legend_values=true,
           legend_max=true,
           aliasColors={
-            blocked: $._config.dashboardCommon.color.red,
-            new: $._config.dashboardCommon.color.pink,
-            runnable: $._config.dashboardCommon.color.green,
-            terminated: $._config.dashboardCommon.color.purple,
+            'blocked': $._config.dashboardCommon.color.red,
+            'new': $._config.dashboardCommon.color.pink,
+            'runnable': $._config.dashboardCommon.color.green,
+            'terminated': $._config.dashboardCommon.color.purple,
             'timed-waiting': $._config.dashboardCommon.color.orange,
-            waiting: $._config.dashboardCommon.color.yellow,
+            'waiting': $._config.dashboardCommon.color.yellow,
           },
         )
         .addTarget(
-          prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{`{{`}}state{{`}}`}} - {{$view}}'),
+          prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}}'),
         );
 
       local fileDescriptions =
@@ -446,17 +446,17 @@ local row = grafana.row;
           legend_values=true,
           legend_max=true,
           aliasColors={
-            debug: $._config.dashboardCommon.color.blue,
+            'debug': $._config.dashboardCommon.color.blue,
             'error': $._config.dashboardCommon.color.red,
-            info: $._config.dashboardCommon.color.green,
-            trace: $._config.dashboardCommon.color.lightblue,
-            warn: $._config.dashboardCommon.color.yellow,
+            'info': $._config.dashboardCommon.color.green,
+            'trace': $._config.dashboardCommon.color.lightblue,
+            'warn': $._config.dashboardCommon.color.yellow,
           },
         )
         .addSeriesOverride({ alias: 'error', yaxis: 1 })
         .addSeriesOverride({ alias: 'warn', yaxis: 1 })
         .addTarget(
-          prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{`{{`}}level{{`}}`}} - {{$view}}'),
+          prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}}'),
         );
 
       local edenSpace =
@@ -589,7 +589,7 @@ local row = grafana.row;
           format='ops',
         )
         .addTarget(
-          prometheus.target('sum(rate(jvm_gc_pause_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='{{`{{`}}action{{`}}`}} ({{`{{`}}cause{{`}}`}}) - {{$view}}'),
+          prometheus.target('sum(rate(jvm_gc_pause_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='{{action}} ({{cause}}) - {{$view}}'),
         );
 
       local pauseDurations =
@@ -602,8 +602,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(jvm_gc_pause_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view) /sum(rate(jvm_gc_pause_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='avg {{`{{`}}action{{`}}`}} ({{`{{`}}cause{{`}}`}}) - {{$view}}'),
-            prometheus.target('sum(jvm_gc_pause_seconds_max{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by (action, cause, $view)', legendFormat='max {{`{{`}}action{{`}}`}} ({{`{{`}}cause{{`}}`}}) - {{$view}}'),
+            prometheus.target('sum(rate(jvm_gc_pause_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view) /sum(rate(jvm_gc_pause_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='avg {{action}} ({{cause}}) - {{$view}}'),
+            prometheus.target('sum(jvm_gc_pause_seconds_max{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by (action, cause, $view)', legendFormat='max {{action}} ({{cause}}) - {{$view}}'),
           ],
         );
 
