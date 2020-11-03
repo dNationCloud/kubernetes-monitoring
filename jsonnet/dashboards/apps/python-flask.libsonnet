@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 The K8s-m8g Authors. All Rights Reserved.
+  Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -76,7 +76,7 @@ local row = grafana.row;
           name='namespace',
           label='Namespace',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job="$job"}, namespace)',
+          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job"}, namespace)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -88,7 +88,7 @@ local row = grafana.row;
           name='pod',
           label='Pod',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job="$job", namespace=~"$namespace"}, pod)',
+          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -100,7 +100,7 @@ local row = grafana.row;
           name='container',
           label='Container',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job="$job", namespace=~"$namespace"}, container)',
+          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
