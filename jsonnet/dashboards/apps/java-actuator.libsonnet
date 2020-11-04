@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 The dNation Kubernetes Monitoring. All Rights Reserved.
+  Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -58,7 +58,6 @@ local row = grafana.row;
           label='Job',
           datasource='$datasource',
           query='label_values(jvm_memory_used_bytes{cluster=~"$cluster"}, job)',
-          current=null,
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           includeAll=true,
@@ -244,6 +243,7 @@ local row = grafana.row;
           format='ops',
           linewidth=2,
           fill=2,
+          min=0,
           legend_current=true,
           legend_values=true,
         )
@@ -259,6 +259,7 @@ local row = grafana.row;
           format='ops',
           linewidth=2,
           fill=2,
+          min=0,
           legend_current=true,
           legend_values=true,
         )
@@ -274,6 +275,7 @@ local row = grafana.row;
           format='s',
           linewidth=2,
           fill=2,
+          min=0,
           legend_current=true,
           legend_values=true,
         )
@@ -298,7 +300,7 @@ local row = grafana.row;
 
       local NonHeapUsed =
         statPanel.new(
-          title='Heap used',
+          title='Non-Heap used',
           datasource='$datasource',
           unit='percent',
           decimals=2,
@@ -315,15 +317,15 @@ local row = grafana.row;
           format='bytes',
           linewidth=2,
           fill=2,
+          min=0,
           legend_max=true,
           legend_current=true,
           legend_values=true,
-          value_type='cumulative',
         )
         .addTargets(
           [
             prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{jcluster=~"$cluster", ob=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='committed - {{$view}}'),
+            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='committed - {{$view}}'),
             prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='max - {{$view}}'),
           ],
         );
@@ -335,10 +337,10 @@ local row = grafana.row;
           format='bytes',
           linewidth=2,
           fill=2,
+          min=0,
           legend_max=true,
           legend_current=true,
           legend_values=true,
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -358,7 +360,6 @@ local row = grafana.row;
           legend_max=true,
           legend_current=true,
           legend_values=true,
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -380,10 +381,10 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
           legend_current=true,
           legend_values=true,
           legend_max=true,
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -396,24 +397,22 @@ local row = grafana.row;
 
       local threadsStates =
         graphPanel.new(
-          title='Threads States',
+          title='Thread States',
           datasource='$datasource',
           linewidth=2,
           fill=2,
           legend_current=true,
           legend_values=true,
           legend_max=true,
-          aliasColors={
-            'blocked': $._config.dashboardCommon.color.red,
-            'new': $._config.dashboardCommon.color.pink,
-            'runnable': $._config.dashboardCommon.color.green,
-            'terminated': $._config.dashboardCommon.color.purple,
-            'timed-waiting': $._config.dashboardCommon.color.orange,
-            'waiting': $._config.dashboardCommon.color.yellow,
-          },
         )
+        .addSeriesOverride({ alias: '/blocked/', color: $._config.dashboardCommon.color.red })
+        .addSeriesOverride({ alias: '/waiting/', color: $._config.dashboardCommon.color.yellow })
+        .addSeriesOverride({ alias: '/new/', color: $._config.dashboardCommon.color.pink })
+        .addSeriesOverride({ alias: '/runnable/', color: $._config.dashboardCommon.color.green })
+        .addSeriesOverride({ alias: '/terminated/', color: $._config.dashboardCommon.color.purple })
+        .addSeriesOverride({ alias: '/timed-waiting/', color: $._config.dashboardCommon.color.orange })
         .addTarget(
-          prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}}'),
+          prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}} - {{$view}}'),
         );
 
       local fileDescriptions =
@@ -422,10 +421,11 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
+          logBase1Y=10,
           legend_current=true,
           legend_values=true,
           legend_max=true,
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -442,35 +442,32 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
           legend_current=true,
           legend_values=true,
           legend_max=true,
-          aliasColors={
-            'debug': $._config.dashboardCommon.color.blue,
-            'error': $._config.dashboardCommon.color.red,
-            'info': $._config.dashboardCommon.color.green,
-            'trace': $._config.dashboardCommon.color.lightblue,
-            'warn': $._config.dashboardCommon.color.yellow,
-          },
         )
-        .addSeriesOverride({ alias: 'error', yaxis: 1 })
-        .addSeriesOverride({ alias: 'warn', yaxis: 1 })
+        .addSeriesOverride({ alias: '/error/', color: $._config.dashboardCommon.color.red, yaxis: 1 })
+        .addSeriesOverride({ alias: '/warn/', color: $._config.dashboardCommon.color.yellow, yaxis: 1 })
+        .addSeriesOverride({ alias: '/trace/', color: $._config.dashboardCommon.color.lightblue })
+        .addSeriesOverride({ alias: '/info/', color: $._config.dashboardCommon.color.green })
+        .addSeriesOverride({ alias: '/debug/', color: $._config.dashboardCommon.color.blue })
         .addTarget(
-          prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}}'),
+          prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}} - {{$view}}'),
         );
 
       local edenSpace =
         graphPanel.new(
-          title='G1 Eden Space',
+          title='$jvm_memory_pool_heap',
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
           format='bytes',
           repeat='jvm_memory_pool_heap',
           legend_current=true,
           legend_max=true,
           legend_values=true,
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -480,103 +477,24 @@ local row = grafana.row;
           ],
         );
 
-      local metaspace =
+      local jvmMemoryPoolNonHeap =
         graphPanel.new(
-          title='Metaspace',
+          title='$jvm_memory_pool_nonheap',
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
           format='bytes',
+          repeat='jvm_memory_pool_nonheap',
           legend_current=true,
           legend_max=true,
           legend_values=true,
-          value_type='cumulative',
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="Metaspace"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="Metaspace"})  by ($view)', legendFormat='commited - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="Metaspace"}) by ($view)', legendFormat='max - {{$view}}'),
-          ],
-        );
-
-      local codeHeapProfiledNmethods =
-        graphPanel.new(
-          title="CodeHeap 'profiled nmethods'",
-          datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          format='bytes',
-          legend_current=true,
-          legend_max=true,
-          legend_values=true,
-          value_type='cumulative',
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'profiled nmethods\'"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'profiled nmethods\'"}) by ($view)', legendFormat='commited - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'profiled nmethods\'"}) by ($view)', legendFormat='max - {{$view}}'),
-          ],
-        );
-
-      local codeHeapNonNmethods =
-        graphPanel.new(
-          title="CodeHeap 'non-nmethods'",
-          datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          format='bytes',
-          legend_current=true,
-          legend_values=true,
-          legend_max=true,
-          value_type='cumulative',
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'non-nmethods\'"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'non-nmethods\'"}) by ($view)', legendFormat='commited - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'non-nmethods\'"}) by ($view)', legendFormat='max - {{$view}}'),
-          ],
-        );
-
-      local compressedClassSpace =
-        graphPanel.new(
-          title='Compressed Class Space',
-          datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          format='bytes',
-          legend_current=true,
-          legend_values=true,
-          legend_max=true,
-          value_type='cumulative',
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="Compressed Class Space"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="Compressed Class Space"}) by ($view)', legendFormat='commited - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="Compressed Class Space"}) by ($view)', legendFormat='max - {{$view}}'),
-          ],
-        );
-
-      local codeHeapNonProfiledNmethods =
-        graphPanel.new(
-          title="CodeHeap 'non-profiled nmethods'",
-          datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          format='bytes',
-          legend_current=true,
-          legend_values=true,
-          legend_max=true,
-          value_type='cumulative',
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'non-profiled nmethods\'"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'non-profiled nmethods\'"}) by ($view)', legendFormat='commited - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="CodeHeap \'non-profiled nmethods\'"}) by ($view)', legendFormat='max - {{$view}}'),
+            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='used - {{$view}}'),
+            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='commited - {{$view}}'),
+            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='max - {{$view}}'),
           ],
         );
 
@@ -586,6 +504,7 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
           format='ops',
         )
         .addTarget(
@@ -598,6 +517,7 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
           format='s',
         )
         .addTargets(
@@ -613,6 +533,7 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
           format='bytes',
         )
         .addTargets(
@@ -628,7 +549,7 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
-          value_type='cumulative',
+          min=0,
         )
         .addTarget(
           prometheus.target('sum(jvm_classes_loaded{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='loaded - {{$view}}'),
@@ -640,7 +561,6 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
-          value_type='cumulative',
         )
         .addTarget(
           prometheus.target('sum(delta(jvm_classes_loaded{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view) or sum(delta(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view)', legendFormat='delta - {{$view}}'),
@@ -652,8 +572,8 @@ local row = grafana.row;
           datasource='$datasource',
           linewidth=2,
           fill=2,
+          min=0,
           format='bytes',
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -669,7 +589,6 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
           min=0,
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -685,7 +604,6 @@ local row = grafana.row;
           fill=2,
           format='bytes',
           min=0,
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -701,7 +619,6 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
           min=0,
-          value_type='cumulative',
         )
         .addTargets(
           [
@@ -759,11 +676,7 @@ local row = grafana.row;
         row.new('JVM Memory Pools(Heap)', collapse=true) { gridPos: { x: 0, y: 19, w: 24, h: 1 } }
         .addPanel(edenSpace { tooltip+: { sort: 2 } }, { x: 0, y: 20, w: 8, h: 7 }),
         row.new('JVM Memory Pools(Non-Heap)', collapse=true) { gridPos: { x: 0, y: 20, w: 24, h: 1 } }
-        .addPanel(metaspace { tooltip+: { sort: 2 } }, { x: 0, y: 21, w: 8, h: 7 })
-        .addPanel(codeHeapProfiledNmethods { tooltip+: { sort: 2 } }, { x: 8, y: 21, w: 8, h: 7 })
-        .addPanel(codeHeapNonNmethods { tooltip+: { sort: 2 } }, { x: 16, y: 21, w: 8, h: 7 })
-        .addPanel(compressedClassSpace { tooltip+: { sort: 2 } }, { x: 0, y: 28, w: 8, h: 7 })
-        .addPanel(codeHeapNonProfiledNmethods { tooltip+: { sort: 2 } }, { x: 8, y: 28, w: 8, h: 7 }),
+        .addPanel(jvmMemoryPoolNonHeap { maxPerRow: 3, tooltip+: { sort: 2 } }, { x: 0, y: 21, w: 8, h: 7 }),
         row.new('Garbage Collection', collapse=true) { gridPos: { x: 0, y: 21, w: 24, h: 1 } }
         .addPanel(collections { tooltip+: { sort: 2 } }, { x: 0, y: 22, w: 8, h: 7 })
         .addPanel(pauseDurations { tooltip+: { sort: 2 } }, { x: 8, y: 22, w: 8, h: 7 })
