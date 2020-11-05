@@ -69,29 +69,31 @@ local config = (import 'config.libsonnet')._config;
      * @param lowestValue value for lowest grafana threshold (default null for minus infinity).
      * @return grafana threshold steps object.
      */
-    std.filter(
-      function(v) v != null,
-      if thresholds.operator == '>=' then
-        [
-          { color: config.dashboardCommon.color.green, value: lowestValue },
-          if std.objectHas(thresholds, 'warning') then { color: config.dashboardCommon.color.orange, value: thresholds.warning },
-          if std.objectHas(thresholds, 'critical') then { color: config.dashboardCommon.color.red, value: thresholds.critical },
-        ]
-      else
-        assert thresholds.operator == '<';
-        local lowerThreshold = if std.objectHas(thresholds, 'critical') then thresholds.critical else thresholds.warning;
-        local higherThreshold = if std.objectHas(thresholds, 'warning') then thresholds.warning else thresholds.critical;
-        [
-          if std.objectHas(thresholds, 'critical') && (lowerThreshold == thresholds.critical) then
-            { color: config.dashboardCommon.color.red, value: lowestValue }
-          else
-            { color: config.dashboardCommon.color.orange, value: lowestValue },
-          if higherThreshold != lowerThreshold then
-            if higherThreshold == thresholds.critical then
-              { color: config.dashboardCommon.color.red, value: lowerThreshold }
-            else
-              { color: config.dashboardCommon.color.orange, value: lowerThreshold },
-          { color: config.dashboardCommon.color.green, value: higherThreshold },
-        ],
-    ),
+    if thresholds.operator == '>=' then
+      [{ color: config.dashboardCommon.color.green, value: lowestValue }] + (
+        if std.objectHas(thresholds, 'warning') then [
+          { color: config.dashboardCommon.color.orange, value: thresholds.warning },
+        ] else []
+      ) + (
+        if std.objectHas(thresholds, 'critical') then [
+          { color: config.dashboardCommon.color.red, value: thresholds.critical },
+        ] else []
+      )
+    else
+      assert thresholds.operator == '<';
+      local a0 = {
+        list: [],
+        lastThreshold: lowestValue,
+      };
+      local a1 =
+        if std.objectHas(thresholds, 'critical') then {
+          list: a0.list + [{ color: config.dashboardCommon.color.red, value: a0.lastThreshold }],
+          lastThreshold: thresholds.critical,
+        } else a0;
+      local a2 =
+        if std.objectHas(thresholds, 'warning') then {
+          list: a1.list + [{ color: config.dashboardCommon.color.orange, value: a1.lastThreshold }],
+          lastThreshold: thresholds.warning,
+        } else a1;
+      a2.list + [{ color: config.dashboardCommon.color.green, value: a2.lastThreshold }],
 }

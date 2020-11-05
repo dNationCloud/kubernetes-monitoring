@@ -129,13 +129,13 @@
       },
       node: {
         operator: '>=',
-        critical: 90,
         warning: 75,
+        critical: 90,
       },
       networkErrors: {
         operator: '>=',
-        critical: 15,
         warning: 10,
+        critical: 15,
       },
     },
 
