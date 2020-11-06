@@ -148,8 +148,8 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
             prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
@@ -168,8 +168,8 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/PodRequests/', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
-        .addSeriesOverride({ alias: '/PodLimits/', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
             prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
@@ -447,8 +447,8 @@ local row = grafana.row;
           legend_values=true,
           legend_max=true,
         )
-        .addSeriesOverride({ alias: '/error/', color: $._config.dashboardCommon.color.red, yaxis: 1 })
-        .addSeriesOverride({ alias: '/warn/', color: $._config.dashboardCommon.color.yellow, yaxis: 1 })
+        .addSeriesOverride({ alias: '/error/', color: $._config.dashboardCommon.color.red })
+        .addSeriesOverride({ alias: '/warn/', color: $._config.dashboardCommon.color.yellow })
         .addSeriesOverride({ alias: '/trace/', color: $._config.dashboardCommon.color.lightblue })
         .addSeriesOverride({ alias: '/info/', color: $._config.dashboardCommon.color.green })
         .addSeriesOverride({ alias: '/debug/', color: $._config.dashboardCommon.color.blue })
@@ -456,7 +456,7 @@ local row = grafana.row;
           prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}} - {{$view}}'),
         );
 
-      local edenSpace =
+      local jvmMemoryPoolHeap =
         graphPanel.new(
           title='$jvm_memory_pool_heap',
           datasource='$datasource',
@@ -674,7 +674,7 @@ local row = grafana.row;
         .addPanel(fileDescriptions { tooltip+: { sort: 2 } }, { x: 16, y: 19, w: 8, h: 8 })
         .addPanel(logEvents { tooltip+: { sort: 2 } }, { x: 0, y: 27, w: 24, h: 7 }),
         row.new('JVM Memory Pools(Heap)', collapse=true) { gridPos: { x: 0, y: 19, w: 24, h: 1 } }
-        .addPanel(edenSpace { tooltip+: { sort: 2 } }, { x: 0, y: 20, w: 8, h: 7 }),
+        .addPanel(jvmMemoryPoolHeap { maxPerRow: 3, tooltip+: { sort: 2 } }, { x: 0, y: 20, w: 8, h: 7 }),
         row.new('JVM Memory Pools(Non-Heap)', collapse=true) { gridPos: { x: 0, y: 20, w: 24, h: 1 } }
         .addPanel(jvmMemoryPoolNonHeap { maxPerRow: 3, tooltip+: { sort: 2 } }, { x: 0, y: 21, w: 8, h: 7 }),
         row.new('Garbage Collection', collapse=true) { gridPos: { x: 0, y: 21, w: 24, h: 1 } }
