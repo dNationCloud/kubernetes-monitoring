@@ -42,8 +42,8 @@ local row = grafana.row;
             prometheus.target('sum(kube_pod_container_resource_limits_cpu_cores{namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
           ]
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: '#F2495C', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
-        .addSeriesOverride({ alias: '/PodLimits/', color: '#FF9830', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false });
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true });
 
       local memory =
         graphPanel.new(
@@ -62,8 +62,8 @@ local row = grafana.row;
             prometheus.target('sum(kube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
           ]
         )
-        .addSeriesOverride({ alias: '/PodRequests/', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false })
-        .addSeriesOverride({ alias: '/PodLimits/', dashes: true, fill: 0, legend: true, linewidth: 2, stack: false });
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true });
 
       local bandwidth =
         graphPanel.new(
