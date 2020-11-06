@@ -87,11 +87,11 @@
         green: '#56a64b',  // semi-dark-green
         white: '#ffffff',  // white
         black: '#000000',  // black
-        pink: '#fce2de',  //pink
-        purple: '#511749',  //semi-dark-purple
-        yellow: '#eab839',  //yellow
-        blue: '#1F78C1',  //blue
-        lightblue: '#6ED0E0',  //light-blue
+        pink: '#fce2de',  // pink
+        purple: '#511749',  // semi-dark-purple
+        yellow: '#eab839',  // yellow
+        blue: '#1F78C1',  // blue
+        lightblue: '#6ED0E0',  // light-blue
       },
       dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
