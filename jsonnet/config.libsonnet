@@ -53,6 +53,8 @@
       persistentVolumes: 'persistentvolumes',
 
       // Apps and hosts dashboards
+      pythonFlask: 'pythonflask',
+      javaActuator: 'javaactuator',
       cadvisor: 'cadvisor',
     },
 
