@@ -1,0 +1,37 @@
+name: Tag CI/CD jsonnet docker code for release
+
+on:
+  push:
+    branches:
+    - main
+    # Only if there are changes to release.
+    paths:
+    - 'helpers/ci_cd_image/Dockerfile'
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Fetch history
+      run: git fetch --prune --unshallow
+
+    - name: Get CI/CD docker code version
+      id: version
+      run: |
+        version=$(grep 'LABEL Version=' helpers/ci_cd_image/Dockerfile | sed 's/LABEL Version="\(.*\)".*/\1/')
+        echo "::set-output name=version::$version"
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "$GITHUB_ACTOR"
+        git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+    - name: Tag branch
+      uses: anothrNick/github-tag-action@1.26.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
+        CUSTOM_TAG: 'cicd-jsonnet-v${{ steps.version.outputs.version }}'
+        RELEASE_BRANCHES: main
