@@ -124,9 +124,7 @@ local table = grafana.tablePanel;
           fill=2,
           min=0,
         )
-        .addTargets([
-          prometheus.target('container_fs_usage_bytes{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}', legendFormat='{{name}}'),
-        ],);
+        .addTarget(prometheus.target('container_fs_usage_bytes{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}', legendFormat='{{name}}'));
 
       local DiskIO =
         graphPanel.new(
