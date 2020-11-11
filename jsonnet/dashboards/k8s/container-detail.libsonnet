@@ -147,12 +147,35 @@ local row = grafana.row;
           current='container',
         );
 
+      local clusterTemplate =
+        template.new(
+          name='cluster',
+          label='Cluster',
+          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes, cluster)',
+          datasource='$datasource',
+          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.dashboardCommon.templateRefresh,
+          hide='variable',
+        );
+
+      local instanceTemplate =
+        template.new(
+          name='instance',
+          label='Node',
+          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster"}, node)',
+          datasource='$datasource',
+          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.dashboardCommon.templateRefresh,
+          multi=true,
+          includeAll=true,
+        );
+
       local namespaceTemplate =
         template.new(
           name='namespace',
           label='Namespace',
           datasource='$datasource',
-          query='label_values(kube_pod_container_info{cluster=~"$cluster"}, namespace)',
+          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance"}, namespace)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -164,7 +187,7 @@ local row = grafana.row;
           name='pod',
           label='Pod',
           datasource='$datasource',
-          query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace"}, pod)',
+          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -176,7 +199,7 @@ local row = grafana.row;
           name='container',
           label='Container',
           datasource='$datasource',
-          query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, container)',
+          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", pod=~"$pod"}, container)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -189,27 +212,17 @@ local row = grafana.row;
           label='Logs Search',
         );
 
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          query='label_values(kube_pod_container_info, cluster)',
-          datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
-          hide='variable',
-        );
-
       local templates = [
                           datasourceTemplate,
                         ]
                         + (if $._config.isLoki then [datasourceLogsTemplate] else [])
                         + [
                           viewByTemplate,
+                          clusterTemplate,
+                          instanceTemplate,
                           namespaceTemplate,
                           podTemplate,
                           containerTemplate,
-                          clusterTemplate,
                         ]
                         + if $._config.isLoki then [searchTemplate] else [];
 
@@ -236,7 +249,7 @@ local row = grafana.row;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sDetail,
+        tags=$._config.dashboardCommon.tags.k8sContainer,
         uid=$._config.dashboardIDs.containerDetail,
       )
       .addTemplates(templates)

@@ -38,7 +38,7 @@ local template = grafana.template;
       local cpuPanel =
         panel(
           title='CPU',
-          expr='sum(rate(container_cpu_usage_seconds_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m]))' % $._config.dashboardSelectors,
+          expr='sum(rate(container_cpu_usage_seconds_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.dashboardSelectors,
           unit='cores',
         );
 
@@ -52,7 +52,7 @@ local template = grafana.template;
       local networkPanel =
         panel(
           title='Network',
-          expr='sum(rate(container_network_transmit_bytes_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m])) + sum(rate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[3m]))' % $._config.dashboardSelectors,
+          expr='sum(rate(container_network_transmit_bytes_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m])) + sum(rate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.dashboardSelectors,
           unit='Bps',
         );
 
@@ -148,7 +148,7 @@ local template = grafana.template;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sStateful,
+        tags=$._config.dashboardCommon.tags.k8sStatefulSet,
         uid=$._config.dashboardIDs.statefulSet,
       )
       .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, statefulsetTemplate])

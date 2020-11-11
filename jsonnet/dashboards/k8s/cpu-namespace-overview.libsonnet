@@ -37,9 +37,21 @@ local graphPanel = grafana.graphPanel;
           name='cluster',
           label='Cluster',
           datasource='$datasource',
-          query='label_values(node_cpu_seconds_total, cluster)',
+          query='label_values(kube_pod_info, cluster)',
           refresh=$._config.dashboardCommon.templateRefresh,
           hide='variable',
+        );
+
+      local instanceTemplate =
+        template.new(
+          name='instance',
+          label='Node',
+          query='label_values(kube_pod_info{cluster=~"$cluster"}, node)',
+          datasource='$datasource',
+          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.dashboardCommon.templateRefresh,
+          multi=true,
+          includeAll=true,
         );
 
       local namespaceTemplate =
@@ -47,7 +59,7 @@ local graphPanel = grafana.graphPanel;
           name='namespace',
           label='Namespace',
           datasource='$datasource',
-          query='label_values(kube_pod_info{cluster=~"$cluster"}, namespace)',
+          query='label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance"}, namespace)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           multi=true,
@@ -59,24 +71,37 @@ local graphPanel = grafana.graphPanel;
           name='workload',
           label='Workload',
           datasource='$datasource',
-          query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace"}, workload)',
+          query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           multi=true,
           includeAll=true,
-          allValues='workaround',  // workaround for pods without workload
         );
 
       local workloadTypeTemplate =
         template.new(
-          name='type',
-          label='Type',
+          name='workload_type',
+          label='Workload Type',
           datasource='$datasource',
-          query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", workload=~"$workload"}, workload_type)',
+          query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, workload_type)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           multi=true,
           includeAll=true,
+          allValues='workaround',  // workaround for pods without workload type
+        );
+
+      local podTemplate =
+        template.new(
+          name='pod',
+          label='Pod',
+          datasource='$datasource',
+          query='label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)',
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
+          includeAll=true,
+          multi=true,
+          hide='variable',
         );
 
       local cpuUsageGraphPanel =
@@ -88,7 +113,7 @@ local graphPanel = grafana.graphPanel;
         )
         .addTarget(
           prometheus.target(
-            expr='sum(rate(\ncontainer_cpu_usage_seconds_total{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}[5m])\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$type"})\nby (pod) or on() sum(rate(container_cpu_usage_seconds_total{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}[5m])) by (pod)',
+            expr='sum(rate(\ncontainer_cpu_usage_seconds_total{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}[5m])\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$workload_type"})\nby (pod) or on() sum(rate(container_cpu_usage_seconds_total{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}[5m])) by (pod)',
             legendFormat='{{pod}}'
           ),
         );
@@ -96,30 +121,31 @@ local graphPanel = grafana.graphPanel;
       local cpuQuotaTable =
         table.new(
           title='CPU Request/Limit',
-          description='* `CPU Usage` defines cpu consumption of all pods living in selected namespace\n* `CPU Request` defines sum of container cpu request in selected namespace\n* `CPU Request %` defines ratio between consumed cpu and defined container cpu request\n* `CPU Limit` defines sum of container cpu limit in selected namespace\n* `CPU Limit %` defines ratio between consumed cpu and defined container cpu limit',
+          description='* `CPU Request` defines sum of container cpu request in selected namespace for selected node\n* `CPU Usage (only defined request)` defines cpu consumption of containers with defined cpu requests\n* `CPU Limit` defines sum of container cpu limit in selected namespace for selected node\n* `CPU Usage (only defined limit)` defines cpu consumption of containers with defined cpu limits\n* `CPU Usage (total)` defines cpu consumption of all pods living in selected namespace for selected node',
           datasource='$datasource',
-          sort={ col: 4, desc: true },
+          sort={ col: 8, desc: true },
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Pods', pattern: 'Value #A', type: 'number' },
             { alias: 'Workloads', pattern: 'Value #B', type: 'number' },
-            { alias: 'CPU Usage', pattern: 'Value #C', type: 'number', decimals: 2 },
-            { alias: 'CPU Request', pattern: 'Value #D', type: 'number', decimals: 2 },
-            { alias: 'CPU Request %', pattern: 'Value #E', type: 'number', unit: 'percentunit', decimals: 2 },
-            { alias: 'CPU Limit', pattern: 'Value #F', type: 'number', decimals: 2 },
-            { alias: 'CPU Limit %', pattern: 'Value #G', type: 'number', unit: 'percentunit', decimals: 2 },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Drill down to pods', linkUrl: './d/%s?var-namespace=$__cell&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'CPU Request', pattern: 'Value #C', type: 'number', decimals: 2 },
+            { alias: 'CPU Usage (only defined request)', pattern: 'Value #D', type: 'number', decimals: 2 },
+            { alias: 'CPU Limit', pattern: 'Value #E', type: 'number', decimals: 2 },
+            { alias: 'CPU Usage (only defined limit)', pattern: 'Value #F', type: 'number', decimals: 2 },
+            { alias: 'CPU Usage (total)', pattern: 'Value #G', type: 'number', decimals: 2 },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: './d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='count(sum(container_cpu_usage_seconds_total{cluster=~"$cluster", namespace=~"$namespace", container!~"POD|", id!=""}) by (namespace, pod)) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace"}) by (workload, namespace)) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", namespace=~"$namespace"}[5m])) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='avg by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="",namespace=~"$namespace"}[5m])) by (namespace, pod, container) / sum(kube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace, pod, container))'),
-            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='avg by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", namespace=~"$namespace"}[5m])) by (namespace, pod, container) / sum(kube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", namespace=~"$namespace"}) by (namespace, pod, container))'),
+            prometheus.target(format='table', instant=true, expr='count(sum(container_cpu_usage_seconds_total{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}) by (namespace, pod)) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace"} * on(pod) group_left(node) node_namespace_pod:kube_pod_info:{cluster=~"$cluster", namespace=~"$namespace", node=~"$instance"}) by (workload, namespace)) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace, pod, container) * group(kube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
+            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace, pod, container) * group(kube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
+            prometheus.target(format='table', instant=true, expr='sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace)'),
+
           ],
         );
 
@@ -132,7 +158,7 @@ local graphPanel = grafana.graphPanel;
         tags=$._config.dashboardCommon.tags.k8sOverview,
         uid=$._config.dashboardIDs.cpuNamespaceOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, workloadTemplate, workloadTypeTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate, namespaceTemplate, workloadTypeTemplate, workloadTemplate, podTemplate])
       .addPanels(
         [
           row.new('CPU Usage') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
