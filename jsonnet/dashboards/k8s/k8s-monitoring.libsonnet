@@ -27,8 +27,9 @@ local text = grafana.text;
     'k8s-monitoring':
       local containerLink =
         link.dashboards(
-          title='Logs Container',
-          tags=['view'],
+          title=if $._config.isLoki then 'Logs Container' else 'Container Detail',
+          tags=[],
+          icon='dashboard',
           url='/d/%s' % $._config.dashboardIDs.containerDetail,
           type='link',
         );
@@ -37,7 +38,8 @@ local text = grafana.text;
         link.dashboards(
           title='Logs Explorer',
           tags=[],
-          url='/explore?orgId=1&left=%5B%22now-7d%22,%22now%22,%22k8s-h-01-logs%22,%7B%22expr%22:%22%7Bnamespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
+          icon='doc',
+          url='/explore?orgId=1&left=%5B%22now-7d%22,%22now%22,%22$datasource_logs%22,%7B%22expr%22:%22%7Bnamespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
           type='link',
         );
 
@@ -50,6 +52,14 @@ local text = grafana.text;
           type='link',
           targetBlank=true,
         );
+
+      local links = [
+                      containerLink,
+                    ]
+                    + (if $._config.isLoki then [explorerLink] else [])
+                    + [
+                      dNationLink,
+                    ];
 
       local alertPanel(title, expr) =
         statPanel.new(
@@ -65,7 +75,7 @@ local text = grafana.text;
           title='Critical',
           expr='ALERTS{alertname!="Watchdog", severity="critical"}',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s' % [$._config.dashboardIDs.alertOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s' % [$._config.dashboardIDs.alertOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.criticalPanel));
 
       local warningPanel =
@@ -73,7 +83,7 @@ local text = grafana.text;
           title='Warning',
           expr='ALERTS{alertname!="Watchdog", severity="warning"}',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s' % [$._config.dashboardIDs.alertOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s' % [$._config.dashboardIDs.alertOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.warningPanel));
 
       local percentStatPanel(title, expr) =
@@ -90,7 +100,7 @@ local text = grafana.text;
           title='Nodes Health',
           expr='round(sum(kube_node_info{cluster=~"$cluster"}) / (sum(kube_node_info{cluster=~"$cluster"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="DiskPressure", status="true"}) + sum(kube_node_status_condition{cluster=~"$cluster", condition="MemoryPressure", status="true"})) * 100)',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.nodeOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.nodeOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local runningPodsPanel =
@@ -98,7 +108,7 @@ local text = grafana.text;
           title='Running Pods',
           expr='round(sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"})) * 100)',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.podOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.podOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local runningStatefulSetsPanel =
@@ -106,7 +116,7 @@ local text = grafana.text;
           title='Running StatefulSets',
           expr='round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster"}) * 100)',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.statefulSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local daemonSetsHealthPanel =
@@ -114,7 +124,7 @@ local text = grafana.text;
           title='DaemonSets Health',
           expr='round((sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"})) * 100)',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.daemonSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.daemonSetOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local pvcBoundPanel =
@@ -123,7 +133,7 @@ local text = grafana.text;
           expr='round(sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Pending"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Lost"})\n) * 100) OR on() vector(-1)',
         )
         .addMapping({ text: '-', type: 1, value: -1 })
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThreshold({ color: $._config.dashboardCommon.color.black, value: -1 })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s, 0));
 
@@ -132,7 +142,7 @@ local text = grafana.text;
           title='Deployments Health',
           expr='round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster"})) * 100)',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.deploymentOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.deploymentOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local runningContainersPanel =
@@ -140,7 +150,7 @@ local text = grafana.text;
           title='Running Containers',
           expr='round(sum(kube_pod_container_status_running{cluster=~"$cluster"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster"})) * 100)',
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.containerOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.containerOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s));
 
       local succeededJobsPanel =
@@ -149,7 +159,7 @@ local text = grafana.text;
           expr='round(sum(kube_job_status_succeeded{cluster=~"$cluster"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster"}) + sum(kube_job_status_failed{cluster=~"$cluster"})) * 100) OR on() vector(-1)',
         )
         .addMapping({ text: '-', type: 1, value: -1 })
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.jobOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.jobOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThreshold({ color: $._config.dashboardCommon.color.black, value: -1 })
         .addThresholds($.grafanaThresholds($._config.thresholds.k8s, 0));
 
@@ -159,7 +169,7 @@ local text = grafana.text;
           expr='max(sum(\n  ((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster"}) / \n  kubelet_volume_stats_capacity_bytes{cluster=~"$cluster"}) * 100\n) by (persistentvolumeclaim)) OR on() vector(-1)',
         )
         .addMapping({ text: '-', type: 1, value: -1 })
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.pvcOverview, $._config.dashboardCommon.dataLinkCommonArgs] })
         .addThreshold({ color: $._config.dashboardCommon.color.black, value: -1 })
         .addThresholds($.grafanaThresholds($._config.thresholds.pvc, 0));
 
@@ -180,42 +190,42 @@ local text = grafana.text;
           title='API Server',
           expr='sum(up{cluster=~"$cluster", %(apiServer)s}) / count(up{cluster=~"$cluster", %(apiServer)s})' % $._config.dashboardSelectors,
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.apiServer, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.apiServer, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local controllerManagerPanel =
         textStatPanel(
           title='Controller Manager',
           expr='sum(up{cluster=~"$cluster", %(controllerManager)s}) / count(up{cluster=~"$cluster", %(controllerManager)s})' % $._config.dashboardSelectors,
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.controllerManager, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.controllerManager, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local etcdPanel =
         textStatPanel(
           title='Etcd',
           expr='sum(up{cluster=~"$cluster", %(etcd)s}) / count(up{cluster=~"$cluster", %(etcd)s})' % $._config.dashboardSelectors,
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.etcd, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.etcd, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local kubeletPanel =
         textStatPanel(
           title='Kubelet',
           expr='sum(up{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics"}) / count(up{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics"})' % $._config.dashboardSelectors,
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.kubelet, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.kubelet, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local proxyPanel =
         textStatPanel(
           title='Proxy',
           expr='sum(up{cluster=~"$cluster", %(proxy)s}) / count(up{cluster=~"$cluster", %(proxy)s})' % $._config.dashboardSelectors,
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.proxy, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.proxy, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local schedulerPanel =
         textStatPanel(
           title='Scheduler',
           expr='sum(up{cluster=~"$cluster", %(scheduler)s}) / count(up{cluster=~"$cluster", %(scheduler)s})' % $._config.dashboardSelectors,
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?%s' % [$._config.dashboardIDs.scheduler, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.scheduler, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local overallUtilizationCPUPanel =
         percentStatPanel(
@@ -225,8 +235,8 @@ local text = grafana.text;
         .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.cpuNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.cpuNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 
@@ -238,8 +248,8 @@ local text = grafana.text;
         .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.cpuNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.cpuOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.cpuNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 
@@ -252,8 +262,8 @@ local text = grafana.text;
         .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.memoryNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.memoryNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 
@@ -266,8 +276,8 @@ local text = grafana.text;
         .addThresholds($.grafanaThresholds($._config.thresholds.node))
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.memoryNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.memoryOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.memoryNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 
@@ -278,7 +288,7 @@ local text = grafana.text;
         )
         { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
         .addThresholds($.grafanaThresholds($._config.thresholds.node))
-        .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskOverview, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskOverview, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local mostUtilizedNodeDiskPanel =
         percentStatPanel(
@@ -287,7 +297,7 @@ local text = grafana.text;
         )
         { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
         .addThresholds($.grafanaThresholds($._config.thresholds.node))
-        .addDataLink({ title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskOverview, $._config.dashboardCommon.dataLinkCommonArgs] });
+        .addDataLink({ title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.diskOverview, $._config.dashboardCommon.dataLinkCommonArgs] });
 
       local networkErrorsPanel =
         percentStatPanel(
@@ -298,8 +308,8 @@ local text = grafana.text;
         .addThresholds($.grafanaThresholds($._config.thresholds.networkErrors))
         .addDataLinks(
           [
-            { title: 'per Node', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.networkOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
-            { title: 'per Namespace', url: '/d/%s?%s' % [$._config.dashboardIDs.networkNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$._config.dashboardIDs.networkOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { title: 'K8s Overview', url: '/d/%s?%s' % [$._config.dashboardIDs.networkNamespaceOverview, $._config.dashboardCommon.dataLinkCommonArgs] },
           ]
         );
 
@@ -392,6 +402,23 @@ local text = grafana.text;
           hide='variable',
         );
 
+      local datasourceLogsTemplate =
+        template.datasource(
+          name='datasource_logs',
+          label='Logs datasource',
+          query='loki',
+          current=null,
+          hide='variable',
+        );
+
+      local templates = [
+                          datasourceTemplate,
+                          alertManagerTemplate,
+                          clusterTemplate,
+                          jobTemplate,
+                        ]
+                        + if $._config.isLoki then [datasourceLogsTemplate] else [];
+
       dashboard.new(
         'Kubernetes Monitoring',
         editable=$._config.dashboardCommon.editable,
@@ -401,10 +428,8 @@ local text = grafana.text;
         tags=$._config.dashboardCommon.tags.k8sMonitoring,
         uid=$._config.dashboardIDs.k8sMonitoring,
       )
-      .addLink(containerLink)
-      .addLink(explorerLink)
-      .addLink(dNationLink)
-      .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate, jobTemplate])
+      .addLinks(links)
+      .addTemplates(templates)
       .addPanels(
         [
           row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
