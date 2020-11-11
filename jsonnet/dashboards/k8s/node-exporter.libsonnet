@@ -201,7 +201,7 @@ local row = grafana.row;
         graphPanel.new(
           title='Transmit/Receive Errors',
           datasource='$datasource',
-          format='bytes',
+          format='pps',
           fill=0,
         )
         .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
