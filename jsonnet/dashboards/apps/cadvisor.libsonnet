@@ -73,7 +73,7 @@ local table = grafana.tablePanel;
         )
         .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
         .addTarget(
-          prometheus.target(expr='count(rate(container_last_seen{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]))')
+          prometheus.target('count(rate(container_last_seen{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]))')
         );
 
       local imageTable =
@@ -84,7 +84,7 @@ local table = grafana.tablePanel;
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Name', pattern: 'name', type: 'string' },
             { alias: 'Image', pattern: 'image', type: 'string' },
-            { alias: 'Value', pattern: 'Value', type: 'hidden' },
+            { pattern: 'Value', type: 'hidden' },
           ]
         )
         .addTarget(
@@ -97,11 +97,12 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           format='percent',
           min=0,
+          max=100,
           stack=true,
           linewidth=2,
           fill=2,
         )
-        .addTarget(prometheus.target(expr='rate(container_cpu_user_seconds_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]) * 100', legendFormat='{{name}}'));
+        .addTarget(prometheus.target('rate(container_cpu_user_seconds_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]) * 100', legendFormat='{{name}}'));
 
       local memory =
         graphPanel.new(
@@ -112,8 +113,7 @@ local table = grafana.tablePanel;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/total/', fill: 0, stack: false, color: $._config.dashboardCommon.color.red })
-        .addTarget(prometheus.target(expr='container_memory_usage_bytes{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}', legendFormat='{{name}}'));
+        .addTarget(prometheus.target('container_memory_usage_bytes{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}', legendFormat='{{name}}'));
 
       local containerDiskUsage =
         graphPanel.new(
@@ -124,27 +124,25 @@ local table = grafana.tablePanel;
           fill=2,
           min=0,
         )
-        .addSeriesOverride({ alias: 'used', color: $._config.dashboardCommon.color.yellow })
-        .addSeriesOverride({ alias: '/available/', fill: 0 })
         .addTargets([
-          prometheus.target(expr='container_fs_usage_bytes{job=~"$job", image!="", name=~"$container"}', legendFormat='{{name}}'),
+          prometheus.target('container_fs_usage_bytes{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}', legendFormat='{{name}}'),
         ],);
 
       local DiskIO =
         graphPanel.new(
           title='Disk I/O',
           datasource='$datasource',
-          format='bytes',
-          linewidth=2,
-          fill=2,
+          formatY1='bytes',
+          formatY2='s',
+          fill=0,
         )
-        .addSeriesOverride({ alias: '/read*|written*/' })
+        .addSeriesOverride({ alias: '/read*|written*/', yaxis: 1 })
         .addSeriesOverride({ alias: '/io time*/', yaxis: 2 })
         .addTargets(
           [
-            prometheus.target(expr='sum(rate(container_fs_reads_bytes_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='read {{name}}'),
-            prometheus.target(expr='sum(rate(container_fs_writes_bytes_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='written {{name}}'),
-            prometheus.target(expr='sum(rate(container_fs_io_time_seconds_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='io time {{name}}'),
+            prometheus.target('sum(rate(container_fs_reads_bytes_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='read {{name}}'),
+            prometheus.target('sum(rate(container_fs_writes_bytes_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='written {{name}}'),
+            prometheus.target('sum(rate(container_fs_io_time_seconds_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='io time {{name}}'),
           ],
         );
 
@@ -161,8 +159,8 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target(expr='irate(container_network_transmit_bytes_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
-            prometheus.target(expr='irate(container_network_receive_bytes_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
+            prometheus.target('irate(container_network_transmit_bytes_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
+            prometheus.target('irate(container_network_receive_bytes_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
           ],
         );
 
@@ -179,8 +177,8 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target(expr='irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
-            prometheus.target(expr='irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
+            prometheus.target('irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
+            prometheus.target('irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
           ],
         );
 
@@ -188,7 +186,7 @@ local table = grafana.tablePanel;
         graphPanel.new(
           title='Transmit/Receive Errors',
           datasource='$datasource',
-          format='Bps',
+          format='pps',
           stack=true,
           linewidth=2,
           fill=2,
@@ -197,8 +195,8 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target(expr='irate(container_network_transmit_errors_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
-            prometheus.target(expr='irate(container_network_receive_errors_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
+            prometheus.target('irate(container_network_transmit_errors_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
+            prometheus.target('irate(container_network_receive_errors_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
           ],
         );
 
