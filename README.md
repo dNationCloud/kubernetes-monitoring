@@ -5,6 +5,8 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/dnationcloud)](https://artifacthub.io/packages/search?repo=dnationcloud)
 
+[![Watch the video](https://cdn.ifne.eu/public/icons/dnation_k8sm8g_screenshot.png)](https://www.youtube.com/watch?v=nrXvRKlsLgs)
+
 A set of Grafana dashboards and Prometheus alerts written in [Jsonnet](https://jsonnet.org/). This Monitoring following 3 basic design principles:
 
 1. `Intuitive` - Green, orange and red colors signaling whether or not your action is needed
