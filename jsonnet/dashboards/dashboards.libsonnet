@@ -52,4 +52,9 @@
 // Apps and hosts dashboards
 (import 'apps/python-flask.libsonnet') +
 (import 'apps/java-actuator.libsonnet') +
-(import 'apps/cadvisor.libsonnet')
+(import 'apps/php-fpm.libsonnet') +
+(import 'apps/cadvisor.libsonnet') +
+(import 'apps/rabbitmq.libsonnet') +
+(import 'apps/postfix.libsonnet') +
+(import 'apps/autoscaler.libsonnet') +
+(import 'apps/apache.libsonnet')

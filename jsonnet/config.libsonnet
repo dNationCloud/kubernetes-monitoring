@@ -55,7 +55,12 @@
       // Apps and hosts dashboards
       pythonFlask: 'pythonflask',
       javaActuator: 'javaactuator',
+      phpFpm: 'phpfpm',
       cadvisor: 'cadvisor',
+      rabbitmq: 'rabbitmq',
+      postfix: 'postfix',
+      autoscaler: 'autoscaler',
+      apache: 'apache',
     },
 
     dashboardSelectors: {

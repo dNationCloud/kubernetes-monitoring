@@ -225,12 +225,7 @@ local row = grafana.row;
           legend_values=true,
         )
         .addSeriesOverride({ alias: 'HTTP 500', color: $._config.dashboardCommon.color.red })
-        .addTarget(
-          prometheus.target(
-            'sum(increase(\n  flask_http_request_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m]\n) / 2) by (status, $view)',
-            legendFormat='HTTP {{status}} - {{$view}}',
-          ),
-        );
+        .addTarget(prometheus.target('sum(increase(\n  flask_http_request_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m]\n) / 2) by (status, $view)', legendFormat='HTTP {{status}} - {{$view}}'));
 
       local errorsPerMinute =
         graphPanel.new(
@@ -245,12 +240,7 @@ local row = grafana.row;
           legend_values=true,
         )
         .addSeriesOverride({ alias: 'errors', color: $._config.dashboardCommon.color.orange })
-        .addTarget(
-          prometheus.target(
-            'sum(\n  rate(\n    flask_http_request_duration_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status!="200"}[1m]\n)\n) by (status, $view)',
-            legendFormat='HTTP {{status}} - {{$view}}',
-          ),
-        );
+        .addTarget(prometheus.target('sum(\n  rate(\n    flask_http_request_duration_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status!="200"}[1m]\n)\n) by (status, $view)', legendFormat='HTTP {{status}} - {{$view}}'));
 
       local averageResponseTime =
         graphPanel.new(
@@ -268,12 +258,7 @@ local row = grafana.row;
           legend_sort='avg',
           legend_sortDesc=true,
         )
-        .addTarget(
-          prometheus.target(
-            'avg(rate(\n  flask_http_request_duration_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n)\n /\nrate(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0)  by (status, $view)',
-            legendFormat='HTTP 200 - {{$view}}',
-          ),
-        );
+        .addTarget(prometheus.target('avg(rate(\n  flask_http_request_duration_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n)\n /\nrate(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0)  by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
 
       local requestUnder =
         graphPanel.new(
@@ -291,12 +276,7 @@ local row = grafana.row;
           legend_sort='avg',
           legend_sortDesc=true,
         )
-        .addTarget(
-          prometheus.target(
-            'sum(increase(\n  flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200",le="0.25"}[1m]\n)\n / ignoring (le)\nincrease(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0) by (status, $view)',
-            legendFormat='HTTP 200 - {{$view}}',
-          ),
-        );
+        .addTarget(prometheus.target('sum(increase(\n  flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200",le="0.25"}[1m]\n)\n / ignoring (le)\nincrease(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
 
       local requestDurationP50 =
         graphPanel.new(
@@ -314,12 +294,7 @@ local row = grafana.row;
           legend_sort='avg',
           legend_sortDesc=true,
         )
-        .addTarget(
-          prometheus.target(
-            'avg(histogram_quantile(\n  0.5,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)',
-            legendFormat='HTTP 200 - {{$view}}',
-          ),
-        );
+        .addTarget(prometheus.target('avg(histogram_quantile(\n  0.5,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
 
       local requestDurationP90 =
         graphPanel.new(
@@ -337,12 +312,7 @@ local row = grafana.row;
           legend_sort='avg',
           legend_sortDesc=true,
         )
-        .addTarget(
-          prometheus.target(
-            'avg(histogram_quantile(\n  0.9,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)',
-            legendFormat='HTTP 200 - {{$view}}',
-          ),
-        );
+        .addTarget(prometheus.target('avg(histogram_quantile(\n  0.9,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
 
       local templates = [
                           datasourceTemplate,
