@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s java-actuator dashboard */
+/* K8s java actuator dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
@@ -247,10 +247,7 @@ local row = grafana.row;
           legend_current=true,
           legend_values=true,
         )
-        .addTarget(
-          prometheus.target('sum(rate(http_server_requests_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}[1m]))',
-                            legendFormat='HTTP'),
-        );
+        .addTarget(prometheus.target('sum(rate(http_server_requests_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}[1m]))', legendFormat='HTTP'));
 
       local successRate =
         graphPanel.new(
@@ -263,10 +260,7 @@ local row = grafana.row;
           legend_current=true,
           legend_values=true,
         )
-        .addTarget(
-          prometheus.target('sum(rate(http_server_requests_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"[4-5].*"}[1m]))',
-                            legendFormat='HTTP - 5xx|4xx'),
-        );
+        .addTarget(prometheus.target('sum(rate(http_server_requests_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"[4-5].*"}[1m]))', legendFormat='HTTP - 5xx|4xx'));
 
       local duration =
         graphPanel.new(
@@ -294,9 +288,7 @@ local row = grafana.row;
           decimals=2,
         )
         .addThresholds($.grafanaThresholds($._config.thresholds.node))
-        .addTarget(
-          prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})'),
-        );
+        .addTarget(prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})'));
 
       local NonHeapUsed =
         statPanel.new(
@@ -306,9 +298,7 @@ local row = grafana.row;
           decimals=2,
         )
         .addThresholds($.grafanaThresholds($._config.thresholds.node))
-        .addTarget(
-          prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})'),
-        );
+        .addTarget(prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})'));
 
       local JvmHeap =
         graphPanel.new(
@@ -411,9 +401,7 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/runnable/', color: $._config.dashboardCommon.color.green })
         .addSeriesOverride({ alias: '/terminated/', color: $._config.dashboardCommon.color.purple })
         .addSeriesOverride({ alias: '/timed-waiting/', color: $._config.dashboardCommon.color.orange })
-        .addTarget(
-          prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}} - {{$view}}'),
-        );
+        .addTarget(prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}} - {{$view}}'));
 
       local fileDescriptions =
         graphPanel.new(
@@ -452,9 +440,7 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/trace/', color: $._config.dashboardCommon.color.lightblue })
         .addSeriesOverride({ alias: '/info/', color: $._config.dashboardCommon.color.green })
         .addSeriesOverride({ alias: '/debug/', color: $._config.dashboardCommon.color.blue })
-        .addTarget(
-          prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}} - {{$view}}'),
-        );
+        .addTarget(prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}} - {{$view}}'));
 
       local jvmMemoryPoolHeap =
         graphPanel.new(
@@ -507,9 +493,7 @@ local row = grafana.row;
           min=0,
           format='ops',
         )
-        .addTarget(
-          prometheus.target('sum(rate(jvm_gc_pause_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='{{action}} ({{cause}}) - {{$view}}'),
-        );
+        .addTarget(prometheus.target('sum(rate(jvm_gc_pause_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='{{action}} ({{cause}}) - {{$view}}'));
 
       local pauseDurations =
         graphPanel.new(
@@ -551,9 +535,7 @@ local row = grafana.row;
           fill=2,
           min=0,
         )
-        .addTarget(
-          prometheus.target('sum(jvm_classes_loaded{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='loaded - {{$view}}'),
-        );
+        .addTarget(prometheus.target('sum(jvm_classes_loaded{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='loaded - {{$view}}'));
 
       local classDelta =
         graphPanel.new(
@@ -562,9 +544,7 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
         )
-        .addTarget(
-          prometheus.target('sum(delta(jvm_classes_loaded{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view) or sum(delta(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view)', legendFormat='delta - {{$view}}'),
-        );
+        .addTarget(prometheus.target('sum(delta(jvm_classes_loaded{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view) or sum(delta(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view)', legendFormat='delta - {{$view}}'));
 
       local directBuffersMemoryUsedBytes =
         graphPanel.new(
@@ -590,11 +570,7 @@ local row = grafana.row;
           fill=2,
           min=0,
         )
-        .addTargets(
-          [
-            prometheus.target('sum(jvm_buffer_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view)', legendFormat='count - {{$view}}'),
-          ],
-        );
+        .addTarget(prometheus.target('sum(jvm_buffer_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view)', legendFormat='count - {{$view}}'));
 
       local mappedBuffersMemoryUsedBytes =
         graphPanel.new(
@@ -620,11 +596,7 @@ local row = grafana.row;
           fill=2,
           min=0,
         )
-        .addTargets(
-          [
-            prometheus.target('sum(jvm_buffer_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='count - {{$view}}'),
-          ],
-        );
+        .addTarget(prometheus.target('sum(jvm_buffer_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='count - {{$view}}'));
 
       local templates = [
                           datasourceTemplate,

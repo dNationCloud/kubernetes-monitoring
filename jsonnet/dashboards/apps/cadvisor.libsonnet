@@ -51,6 +51,8 @@ local table = grafana.tablePanel;
           query='label_values(container_cpu_user_seconds_total{cluster=~"$cluster"}, job)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
+          includeAll=true,
+          multi=true,
         );
 
       local containerTemplate =
@@ -72,9 +74,7 @@ local table = grafana.tablePanel;
           graphMode='none',
         )
         .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
-        .addTarget(
-          prometheus.target('count(rate(container_last_seen{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]))')
-        );
+        .addTarget(prometheus.target('count(rate(container_last_seen{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]))'));
 
       local imageTable =
         table.new(
@@ -87,9 +87,7 @@ local table = grafana.tablePanel;
             { pattern: 'Value', type: 'hidden' },
           ]
         )
-        .addTarget(
-          prometheus.target(format='table', instant=true, expr='sum(container_cpu_user_seconds_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}) by (name,image)')
-        );
+        .addTarget(prometheus.target(format='table', instant=true, expr='sum(container_cpu_user_seconds_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}) by (name,image)'));
 
       local cpu =
         graphPanel.new(
