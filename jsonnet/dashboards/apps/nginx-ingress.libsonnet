@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s python flask dashboard */
+/* K8s nginx ingress dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
@@ -19,11 +19,13 @@ local loki = grafana.loki;
 local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local logPanel = grafana.logPanel;
+local statPanel = grafana.statPanel;
 local row = grafana.row;
+local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'python-flask':
+    'nginx-ingress':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -56,7 +58,7 @@ local row = grafana.row;
           name='job',
           label='Job',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster"}, job)',
+          query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster"}, job)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           includeAll=true,
@@ -68,7 +70,7 @@ local row = grafana.row;
           name='view',
           label='View by',
           query='pod,container',
-          current='container',
+          current='pod',
         );
 
       local namespaceTemplate =
@@ -76,7 +78,7 @@ local row = grafana.row;
           name='namespace',
           label='Namespace',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job"}, namespace)',
+          query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job"}, controller_namespace)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -88,7 +90,7 @@ local row = grafana.row;
           name='pod',
           label='Pod',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
+          query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -100,7 +102,19 @@ local row = grafana.row;
           name='container',
           label='Container',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
+          query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local ingressTemplate =
+        template.new(
+          name='ingress',
+          label='Ingress',
+          datasource='$datasource',
+          query='label_values(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, ingress)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -214,108 +228,128 @@ local row = grafana.row;
         )
         .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
 
-      local requestPerMinute =
-        graphPanel.new(
-          title='Total requests per minute',
+      local controllerRequestVolume =
+        statPanel.new(
+          title='Controller Request Volume',
           datasource='$datasource',
-          stack=true,
+          unit='reqps',
+        )
+        .addTarget(prometheus.target('round(sum(irate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", namespace=~"$namespace", container=~"$container"}[5m])), 0.001)'));
+
+      local configReloads =
+        statPanel.new(
+          title='Config Reloads',
+          datasource='$datasource',
+          decimals=0,
+        )
+        .addTarget(prometheus.target('avg(nginx_ingress_controller_success{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", container=~"$container"})'));
+
+      local ingressRequestVolume =
+        graphPanel.new(
+          title='Ingress Request Volume',
+          datasource='$datasource',
+          format='reqps',
+          decimals=2,
           linewidth=2,
-          fill=2,
           legend_alignAsTable=true,
+          legend_rightSide=true,
+          legend_sort='avg',
+          legend_sortDesc=true,
+          legend_hideZero=true,
+          legend_avg=true,
+          legend_values=true,
+        )
+        .addTarget(prometheus.target('round(sum(irate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", ingress=~"$ingress", container=~"$container"}[5m])) by (ingress), 0.001)', legendFormat='{{ingress}}'));
+
+      local controllerConnections =
+        statPanel.new(
+          title='Controller Connections',
+          datasource='$datasource',
+        )
+        .addTarget(prometheus.target('sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", container=~"$container"}[5m]))'));
+
+      local configFailed =
+        statPanel.new(
+          title='Last Config Failed',
+          datasource='$datasource',
+        )
+        .addMapping({ text: '0', type: 1, value: null })
+        .addTarget(prometheus.target('count(nginx_ingress_controller_config_last_reload_successful{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",controller_namespace=~"$namespace", container=~"$container"} == 0)'));
+
+      local controllerSuccessRate =
+        statPanel.new(
+          title='Controller Success Rate (non-4|5xx responses)',
+          datasource='$datasource',
+          colorMode='background',
+          unit='percent',
+        )
+        .addThresholds(
+          [
+            { color: $._config.dashboardCommon.color.red, value: null },
+            { color: $._config.dashboardCommon.color.orange, value: 75 },
+            { color: $._config.dashboardCommon.color.green, value: 90 },
+          ]
+        )
+        .addTarget(prometheus.target('sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",status!~"[4-5].*", container=~"$container"}[5m])) / sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", namespace=~"$namespace", container=~"$container"}[5m])) * 100'));
+
+      local ingressSuccessRate =
+        graphPanel.new(
+          title='Ingress Success Rate (non-4|5xx responses)',
+          datasource='$datasource',
+          format='percentunit',
+          decimals=2,
+          legend_alignAsTable=true,
+          legend_rightSide=true,
+          legend_sort='current',
+          legend_sortDesc=true,
+          legend_hideEmpty=true,
+          legend_avg=true,
           legend_current=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_values=true,
-        )
-        .addSeriesOverride({ alias: 'HTTP 500', color: $._config.dashboardCommon.color.red })
-        .addTarget(prometheus.target('sum(increase(\n  flask_http_request_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m]\n) / 2) by (status, $view)', legendFormat='HTTP {{status}} - {{$view}}'));
-
-      local errorsPerMinute =
-        graphPanel.new(
-          title='Errors per minute',
-          datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          legend_alignAsTable=true,
-          legend_current=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_values=true,
-        )
-        .addSeriesOverride({ alias: 'errors', color: $._config.dashboardCommon.color.orange })
-        .addTarget(prometheus.target('sum(\n  rate(\n    flask_http_request_duration_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status!="200"}[1m]\n)\n) by (status, $view)', legendFormat='HTTP {{status}} - {{$view}}'));
-
-      local averageResponseTime =
-        graphPanel.new(
-          title='Average response time [1m]',
-          datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          format='s',
-          legend_avg=true,
-          legend_alignAsTable=true,
-          legend_rightSide=true,
           legend_max=true,
           legend_min=true,
           legend_values=true,
-          legend_sort='avg',
-          legend_sortDesc=true,
         )
-        .addTarget(prometheus.target('avg(rate(\n  flask_http_request_duration_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n)\n /\nrate(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0)  by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
+        .addTarget(prometheus.target('sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",ingress=~"$ingress",status!~"[4-5].*",  container=~"$container"}[5m])) by (ingress) / sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",  container=~"$container", ingress=~"$ingress"}[5m])) by (ingress)', legendFormat='{{ingress}}'));
 
-      local requestUnder =
-        graphPanel.new(
-          title='Requests under 250ms',
+      local percentileTable =
+        table.new(
+          title='Ingress Percentile Response Times and Transfer Rates',
           datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          format='none',
-          legend_avg=true,
-          legend_alignAsTable=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_min=true,
-          legend_values=true,
-          legend_sort='avg',
-          legend_sortDesc=true,
+          sort={ col: 1, desc: true },
+          styles=[
+            { pattern: 'Time', type: 'hidden' },
+            { alias: 'Ingress', pattern: 'ingress', type: 'string' },
+            { alias: 'P50 Latency', pattern: 'Value #A', type: 'number', unit: 'dtdurations', decimals: 0 },
+            { alias: 'P90 Latency', pattern: 'Value #B', type: 'number', unit: 'dtdurations', decimals: 0 },
+            { alias: 'P99 Latency', pattern: 'Value #C', type: 'number', unit: 'dtdurations', decimals: 0 },
+            { alias: 'IN', pattern: 'Value #D', type: 'number', unit: 'Bps', decimals: 2 },
+            { alias: 'OUT', pattern: 'Value #E', type: 'number', unit: 'Bps', decimals: 2 },
+          ]
         )
-        .addTarget(prometheus.target('sum(increase(\n  flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200",le="0.25"}[1m]\n)\n / ignoring (le)\nincrease(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
+        .addTargets(
+          [
+            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.50, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
+            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.90, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
+            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.99, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
+            prometheus.target(format='table', instant=true, expr='sum(irate(nginx_ingress_controller_request_size_sum{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (ingress)'),
+            prometheus.target(format='table', instant=true, expr='sum(irate(nginx_ingress_controller_response_size_sum{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (ingress)'),
+          ]
+        );
 
-      local requestDurationP50 =
-        graphPanel.new(
-          title='Request duration [s] - p50',
-          datasource='$datasource',
-          description='The 50th percentile of request durations over the last 60 seconds. In other words, half of the requests finish in (min/max/avg) these times.',
-          linewidth=2,
-          fill=2,
-          legend_avg=true,
-          legend_alignAsTable=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_min=true,
-          legend_values=true,
-          legend_sort='avg',
-          legend_sortDesc=true,
-        )
-        .addTarget(prometheus.target('avg(histogram_quantile(\n  0.5,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
+      local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
 
-      local requestDurationP90 =
-        graphPanel.new(
-          title='Request duration [s] - p90',
+      local certificateTable =
+        table.new(
+          title='Ingress Certificate Expiry',
           datasource='$datasource',
-          description='The 90th percentile of request durations over the last 60 seconds. In other words, 90 percent of the requests finish in (min/max/avg) these times.',
-          linewidth=2,
-          fill=2,
-          legend_avg=true,
-          legend_alignAsTable=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_min=true,
-          legend_values=true,
-          legend_sort='avg',
-          legend_sortDesc=true,
+          sort={ col: 2 },
+          styles=[
+            { pattern: 'Time', type: 'hidden' },
+            { alias: 'Host', pattern: 'host', type: 'string' },
+            { alias: 'TTL', pattern: 'Value', type: 'number', colors: colors, colorMode: 'cell', thresholds: [0, 691200], unit: 's', decimals: 0 },
+          ]
         )
-        .addTarget(prometheus.target('avg(histogram_quantile(\n  0.9,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
+        .addTarget(prometheus.target(format='table', instant=true, expr='avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster", job=~"$job", pod=~"$pod", namespace=~"$namespace", container=~"$container"}) by (host) - time()'));
 
       local templates = [
                           datasourceTemplate,
@@ -328,6 +362,7 @@ local row = grafana.row;
                           namespaceTemplate,
                           podTemplate,
                           containerTemplate,
+                          ingressTemplate,
                         ]
                         + if $._config.isLoki then [searchTemplate] else [];
 
@@ -346,23 +381,28 @@ local row = grafana.row;
         .addPanel(bandwidth { tooltip+: { sort: 2 } }, { x: 0, y: 3, w: 24, h: 7 }),
         row.new('Network Drops', collapse=true) { gridPos: { x: 0, y: 3, w: 24, h: 1 } }
         .addPanel(drops { tooltip+: { sort: 2 } }, { x: 0, y: 4, w: 24, h: 7 }),
-        row.new('Server') { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
-        requestPerMinute { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 6, w: 12, h: 7 } },
-        errorsPerMinute { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 6, w: 12, h: 7 } },
-        averageResponseTime { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 13, w: 12, h: 7 } },
-        requestUnder { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 13, w: 12, h: 7 } },
-        requestDurationP50 { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 20, w: 12, h: 7 } },
-        requestDurationP90 { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 20, w: 12, h: 7 } },
+        row.new('Ingress overview') { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
+        controllerRequestVolume { gridPos: { x: 0, y: 6, w: 6, h: 3 } },
+        configReloads { gridPos: { x: 6, y: 6, w: 6, h: 3 } },
+        ingressRequestVolume { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 6, w: 12, h: 6 } },
+        controllerConnections { gridPos: { x: 0, y: 9, w: 6, h: 3 } },
+        configFailed { gridPos: { x: 6, y: 9, w: 6, h: 3 } },
+        controllerSuccessRate { gridPos: { x: 0, y: 12, w: 24, h: 3 } },
+        ingressSuccessRate { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 15, w: 24, h: 9 } },
+        row.new('Ingress Percentile Response Times and Transfer Rates', collapse=true) { gridPos: { x: 0, y: 24, w: 24, h: 1 } }
+        .addPanel(percentileTable, { x: 0, y: 25, w: 24, h: 8 }),
+        row.new('Ingress Certificate Expiry') { gridPos: { x: 0, y: 25, w: 24, h: 1 } },
+        certificateTable { gridPos: { x: 6, y: 26, w: 24, h: 8 } },
       ] + if $._config.isLoki then logsPanels else [];
 
       dashboard.new(
-        'Python Flask',
+        'Nginx Ingress',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
         tags=$._config.dashboardCommon.tags.k8sApp,
-        uid=$._config.dashboardIDs.pythonFlask,
+        uid=$._config.dashboardIDs.nginxIngress,
       )
       .addTemplates(templates)
       .addPanels(panels),

@@ -124,7 +124,7 @@ local row = grafana.row;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sApps,
+        tags=$._config.dashboardCommon.tags.k8sApp,
         uid=$._config.dashboardIDs.apache,
       )
       .addTemplates(templates)

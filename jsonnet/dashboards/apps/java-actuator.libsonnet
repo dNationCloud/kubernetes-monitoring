@@ -224,6 +224,9 @@ local row = grafana.row;
           legend_alignAsTable=true,
           legend_current=true,
           legend_rightSide=true,
+          legend_sort='current',
+          legend_sortDesc=true,
+          legend_values=true,
         )
         .addSeriesOverride({ alias: 'Value #A', legend: false, hiddenSeries: true })
         .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
@@ -634,8 +637,8 @@ local row = grafana.row;
         row.new('Network Drops', collapse=true) { gridPos: { x: 0, y: 4, w: 24, h: 1 } }
         .addPanel(drops { tooltip+: { sort: 2 } }, { x: 0, y: 5, w: 24, h: 7 }),
         row.new('Overview') { gridPos: { x: 0, y: 6, w: 24, h: 1 } },
-        heapUsed { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 7, w: 12, h: 3 } },
-        NonHeapUsed { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 7, w: 12, h: 3 } },
+        heapUsed { gridPos: { x: 0, y: 7, w: 12, h: 3 } },
+        NonHeapUsed { gridPos: { x: 12, y: 7, w: 12, h: 3 } },
         row.new('JVM Memory') { gridPos: { x: 0, y: 10, w: 24, h: 1 } },
         JvmHeap { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 11, w: 8, h: 7 } },
         JvmNonHeap { tooltip+: { sort: 2 }, gridPos: { x: 8, y: 11, w: 8, h: 7 } },
@@ -669,7 +672,7 @@ local row = grafana.row;
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sApps,
+        tags=$._config.dashboardCommon.tags.k8sApp,
         uid=$._config.dashboardIDs.javaActuator,
       )
       .addTemplates(templates)
