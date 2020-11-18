@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s postfix dashboard */
+/* K8s nginx nrpe dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
@@ -21,7 +21,7 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    postfix:
+    'nginx-nrpe':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -46,36 +46,67 @@ local row = grafana.row;
           name='job',
           label='Job',
           datasource='$datasource',
-          query='label_values(postfix_size{cluster=~"$cluster"}, job)',
+          query='label_values(nginx_accepts_total{cluster=~"$cluster"}, job)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           includeAll=true,
           multi=true,
         );
 
-      local queueSize =
+      local connections1 =
         graphPanel.new(
-          title='Postfix Queue Size',
+          title='Nginx connections',
           datasource='$datasource',
           stack=true,
         )
-        .addTarget(prometheus.target('sum(postfix_size{cluster=~"$cluster", job=~"$job"})', legendFormat='queue size'));
+        .addTargets(
+          [
+            prometheus.target('rate(nginx_accepts_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='accepts'),
+            prometheus.target('rate(nginx_handled_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='handled'),
+            prometheus.target('rate(nginx_active{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='active'),
+          ],
+        );
+
+      local connections2 =
+        graphPanel.new(
+          title='Nginx connections',
+          datasource='$datasource',
+          stack=true,
+        )
+        .addTargets(
+          [
+            prometheus.target('rate(nginx_reading{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='reading'),
+            prometheus.target('rate(nginx_writing{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='writing'),
+            prometheus.target('rate(nginx_waiting{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='waiting'),
+          ],
+        );
+
+      local requests =
+        graphPanel.new(
+          title='Nginx requests',
+          datasource='$datasource',
+          stack=true,
+        )
+        .addTarget(prometheus.target('rate(nginx_requests_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='requests'));
 
       local templates = [datasourceTemplate, clusterTemplate, jobTemplate];
 
       local panels = [
-        row.new('Queue Size') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        queueSize { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
+        row.new('Connections') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        connections1 { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
+        connections2 { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 8, w: 24, h: 7 } },
+        row.new('Requests') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
+        requests { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 16, w: 24, h: 7 } },
       ];
 
       dashboard.new(
-        'Postfix',
+        'Nginx Nrpe',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
         tags=$._config.dashboardCommon.tags.k8sApp,
-        uid=$._config.dashboardIDs.postfix,
+        uid=$._config.dashboardIDs.nginxNrpe,
       )
       .addTemplates(templates)
       .addPanels(panels),

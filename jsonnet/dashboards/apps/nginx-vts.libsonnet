@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s python flask dashboard */
+/* K8s nginx vts dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
@@ -23,7 +23,7 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    'python-flask':
+    'nginx-vts':
       local datasourceTemplate =
         template.datasource(
           name='datasource',
@@ -56,19 +56,11 @@ local row = grafana.row;
           name='job',
           label='Job',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster"}, job)',
+          query='label_values(nginx_server_bytes{cluster=~"$cluster"}, job)',
           sort=$._config.dashboardCommon.templateSort,
           refresh=$._config.dashboardCommon.templateRefresh,
           includeAll=true,
           multi=true,
-        );
-
-      local viewByTemplate =
-        template.custom(
-          name='view',
-          label='View by',
-          query='pod,container',
-          current='container',
         );
 
       local namespaceTemplate =
@@ -76,7 +68,7 @@ local row = grafana.row;
           name='namespace',
           label='Namespace',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job"}, namespace)',
+          query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job"}, namespace)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -88,19 +80,31 @@ local row = grafana.row;
           name='pod',
           label='Pod',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
+          query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
           multi=true,
         );
 
-      local containerTemplate =
+      local hostTemplate =
         template.new(
-          name='container',
-          label='Container',
+          name='host',
+          label='Host',
           datasource='$datasource',
-          query='label_values(flask_exporter_info{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
+          query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, host)',
+          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.dashboardCommon.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local upstreamTemplate =
+        template.new(
+          name='upstream',
+          label='Upstream',
+          datasource='$datasource',
+          query='label_values(nginx_upstream_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, upstream)',
           refresh=$._config.dashboardCommon.templateRefresh,
           sort=$._config.dashboardCommon.templateSort,
           includeAll=true,
@@ -127,9 +131,9 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
-            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!~"POD|"}) by (container)', legendFormat='{{container}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"})', legendFormat='PodRequests'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"})', legendFormat='PodLimits'),
           ],
         );
 
@@ -147,9 +151,9 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
-            prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!~"POD|"}) by (container)', legendFormat='{{container}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}) by (container)', legendFormat='PodRequests - {{container}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}) by (container)', legendFormat='PodLimits - {{container}}'),
           ],
         );
 
@@ -204,7 +208,7 @@ local row = grafana.row;
           legend_values=true,
         )
         .addSeriesOverride({ alias: 'Value #A', legend: false, hiddenSeries: true })
-        .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
+        .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"} |~ "(?i)$search"[10s])) by (pod)', legendFormat='{{pod}}'));
 
       local logs =
         logPanel.new(
@@ -212,110 +216,62 @@ local row = grafana.row;
           datasource='$datasource_logs',
           showLabels=true,
         )
-        .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
+        .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"} |~ "(?i)$search"'));
 
-      local requestPerMinute =
+      local serverConnections =
         graphPanel.new(
-          title='Total requests per minute',
+          title='Server Connections',
           datasource='$datasource',
-          stack=true,
-          linewidth=2,
-          fill=2,
-          legend_alignAsTable=true,
-          legend_current=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_values=true,
         )
-        .addSeriesOverride({ alias: 'HTTP 500', color: $._config.dashboardCommon.color.red })
-        .addTarget(prometheus.target('sum(increase(\n  flask_http_request_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m]\n) / 2) by (status, $view)', legendFormat='HTTP {{status}} - {{$view}}'));
+        .addTarget(prometheus.target('sum(nginx_server_connections{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"active|writing|reading|waiting"}) by (status)', legendFormat='{{status}}'));
 
-      local errorsPerMinute =
+      local serverCache =
         graphPanel.new(
-          title='Errors per minute',
+          title='Server Cache',
           datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          legend_alignAsTable=true,
-          legend_current=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_values=true,
+          min=0,
         )
-        .addSeriesOverride({ alias: 'errors', color: $._config.dashboardCommon.color.orange })
-        .addTarget(prometheus.target('sum(\n  rate(\n    flask_http_request_duration_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status!="200"}[1m]\n)\n) by (status, $view)', legendFormat='HTTP {{status}} - {{$view}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_server_cache{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (status)', legendFormat='{{status}}'));
 
-      local averageResponseTime =
+      local serverRequests =
         graphPanel.new(
-          title='Average response time [1m]',
+          title='Server Requests',
           datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          format='s',
-          legend_avg=true,
-          legend_alignAsTable=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_min=true,
-          legend_values=true,
-          legend_sort='avg',
-          legend_sortDesc=true,
         )
-        .addTarget(prometheus.target('avg(rate(\n  flask_http_request_duration_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n)\n /\nrate(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0)  by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_server_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
 
-      local requestUnder =
+      local serverBytes =
         graphPanel.new(
-          title='Requests under 250ms',
+          title='Server Bytes',
           datasource='$datasource',
-          linewidth=2,
-          fill=2,
-          format='none',
-          legend_avg=true,
-          legend_alignAsTable=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_min=true,
-          legend_values=true,
-          legend_sort='avg',
-          legend_sortDesc=true,
+          format='bytes',
+          min=0,
         )
-        .addTarget(prometheus.target('sum(increase(\n  flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200",le="0.25"}[1m]\n)\n / ignoring (le)\nincrease(\n  flask_http_request_duration_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n) >= 0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (direction)', legendFormat='{{direction}}'));
 
-      local requestDurationP50 =
+      local upstreamRequests =
         graphPanel.new(
-          title='Request duration [s] - p50',
+          title='Upstream Requests',
           datasource='$datasource',
-          description='The 50th percentile of request durations over the last 60 seconds. In other words, half of the requests finish in (min/max/avg) these times.',
-          linewidth=2,
-          fill=2,
-          legend_avg=true,
-          legend_alignAsTable=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_min=true,
-          legend_values=true,
-          legend_sort='avg',
-          legend_sortDesc=true,
+          description="This one is providing aggregated error codes, but it's still possible to graph these per upstream.",
         )
-        .addTarget(prometheus.target('avg(histogram_quantile(\n  0.5,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_upstream_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
 
-      local requestDurationP90 =
+      local upstreamBytes =
         graphPanel.new(
-          title='Request duration [s] - p90',
+          title='Upstream Bytes',
           datasource='$datasource',
-          description='The 90th percentile of request durations over the last 60 seconds. In other words, 90 percent of the requests finish in (min/max/avg) these times.',
-          linewidth=2,
-          fill=2,
-          legend_avg=true,
-          legend_alignAsTable=true,
-          legend_rightSide=true,
-          legend_max=true,
-          legend_min=true,
-          legend_values=true,
-          legend_sort='avg',
-          legend_sortDesc=true,
+          format='bytes',
+          min=0,
         )
-        .addTarget(prometheus.target('avg(histogram_quantile(\n  0.9,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", status="200"}[1m]\n  )\n)>=0) by (status, $view)', legendFormat='HTTP 200 - {{$view}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_upstream_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}[5m])) by (direction)', legendFormat='{{direction}}'));
+
+      local upstreamBackendResponse =
+        graphPanel.new(
+          title='Upstream Backend Response',
+          datasource='$datasource',
+        )
+        .addTarget(prometheus.target('sum(nginx_upstream_responseMsec{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}) by (backend)', legendFormat='{{backend}}'));
 
       local templates = [
                           datasourceTemplate,
@@ -324,10 +280,10 @@ local row = grafana.row;
                         + [
                           clusterTemplate,
                           jobTemplate,
-                          viewByTemplate,
                           namespaceTemplate,
                           podTemplate,
-                          containerTemplate,
+                          hostTemplate,
+                          upstreamTemplate,
                         ]
                         + if $._config.isLoki then [searchTemplate] else [];
 
@@ -347,22 +303,24 @@ local row = grafana.row;
         row.new('Network Drops', collapse=true) { gridPos: { x: 0, y: 3, w: 24, h: 1 } }
         .addPanel(drops { tooltip+: { sort: 2 } }, { x: 0, y: 4, w: 24, h: 7 }),
         row.new('Server') { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
-        requestPerMinute { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 6, w: 12, h: 7 } },
-        errorsPerMinute { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 6, w: 12, h: 7 } },
-        averageResponseTime { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 13, w: 12, h: 7 } },
-        requestUnder { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 13, w: 12, h: 7 } },
-        requestDurationP50 { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 20, w: 12, h: 7 } },
-        requestDurationP90 { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 20, w: 12, h: 7 } },
+        serverConnections { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 6, w: 12, h: 7 } },
+        serverCache { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 6, w: 12, h: 7 } },
+        serverRequests { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 13, w: 12, h: 7 } },
+        serverBytes { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 13, w: 12, h: 7 } },
+        row.new('Upstream', collapse=true) { gridPos: { x: 0, y: 20, w: 24, h: 1 } }
+        .addPanel(upstreamRequests { tooltip+: { sort: 2 } }, { x: 0, y: 21, w: 12, h: 7 })
+        .addPanel(upstreamBytes { tooltip+: { sort: 2 } }, { x: 12, y: 21, w: 12, h: 7 })
+        .addPanel(upstreamBackendResponse { tooltip+: { sort: 2 } }, { x: 0, y: 28, w: 24, h: 7 }),
       ] + if $._config.isLoki then logsPanels else [];
 
       dashboard.new(
-        'Python Flask',
+        'Nginx VTS',
         editable=$._config.dashboardCommon.editable,
         graphTooltip=$._config.dashboardCommon.tooltip,
         refresh=$._config.dashboardCommon.refresh,
         time_from=$._config.dashboardCommon.time_from,
         tags=$._config.dashboardCommon.tags.k8sApp,
-        uid=$._config.dashboardIDs.pythonFlask,
+        uid=$._config.dashboardIDs.nginxVts,
       )
       .addTemplates(templates)
       .addPanels(panels),

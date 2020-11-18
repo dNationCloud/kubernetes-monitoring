@@ -111,6 +111,9 @@ local row = grafana.row;
           legend_alignAsTable=true,
           legend_current=true,
           legend_rightSide=true,
+          legend_sort='current',
+          legend_sortDesc=true,
+          legend_values=true,
         )
         .addSeriesOverride({ alias: 'Value #A', legend: false, hiddenSeries: true })
         .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
