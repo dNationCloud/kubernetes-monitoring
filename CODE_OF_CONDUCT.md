@@ -1,4 +1,4 @@
-# Contributor Covenant Code of Conduct
+# dNation Kubernetes Monitoring Code of Conduct
 
 ## Our Pledge
 
