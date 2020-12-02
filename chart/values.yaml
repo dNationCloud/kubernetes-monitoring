@@ -13,16 +13,156 @@ namespaceOverride: ""
 ##
 fullnameOverride: ""
 
-## Label of Grafana dashboard resource used for target discovery.
-## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L552
+## Labels to apply to all resources
 ##
-dashboardLabel:
-  name: grafana_dashboard
-  value: '1'
+commonLabels: {}
+# myLabel: myLabelValue
 
-## Label of Prometheus rule resource used for target discovery.
-## ref: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml#L1735
+## Deploy a dnation-jsonnet-translator
+## ref: https://github.com/dNationCloud/jsonnet-translator
 ##
-ruleLabel:
-  name: prometheus_rule
-  value: '1'
+dnation-jsonnet-translator:
+  enabled: true
+  image:
+    # Arguments for translator container
+    args:
+    - '--libsonnet'
+    - 'https://github.com/grafana/grafonnet-lib/grafonnet@005390f0207ffa4a8ae0d1afb253b7585ff7beca'
+    - 'https://github.com/thelastpickle/grafonnet-polystat-panel@275a48de57afdac0d72219d82863d8ab8bd0e682'
+
+
+## Create rules for monitoring the cluster
+##
+prometheusRules:
+  enable: true
+  # Label of Jsonnet Prometheus rule resources used for target discovery.
+  labelJsonnet:
+    prometheus_rule_jsonnet: '1'
+  # Label of Prometheus rule resources used for target discovery.
+  labelPrometheus:
+    prometheus_rule: '1'
+
+## Create dashboards for monitoring the cluster
+##
+grafanaDashboards:
+  enable: true
+  # Label of Jsonnet Grafana Dashboard resources used for target discovery.
+  labelJsonnet:
+    grafana_dashboard_jsonnet: '1'
+  # Label of Grafana Dashboard resources used for target discovery.
+  labelGrafana:
+    grafana_dashboard: '1'
+
+## Host Monitoring
+##
+hostMonitoring:
+  enabled: false
+  hosts: []
+  # Host Monitoring is defined by host IP address and node exporter port.
+  # If you want to monitor applications running on your host (e.g. docker) you may configure application monitoring
+  # within the host definition under the `apps` section.
+  #
+  #  - name: host-example
+  #    description: Example Host Monitoring
+  #    jobName: host-example
+  #    host:
+  #      address: 1.1.1.1  # Host IP Address
+  #    serviceMonitor:
+  #      endpoints:
+  #      - port: "9100"  # Node Exporter Port
+  #        interval: 30s  # Interval at which metrics should be scraped
+  #        path: /metrics  # HTTP path to scrape for metrics
+  #    apps: []
+  #    - name: host-example-docker
+  #      description: Example Host Application Monitoring
+  #      jobName: host-example-docker
+  #     templates
+  #     - cAdvisor  # Application Exporter template
+  #     serviceMonitor:
+  #       endpoints:
+  #       - port: "9101"  # Application Exporter Port
+  #         interval: 30s  # Interval at which metrics should be scraped
+  #         path: /metrics  # HTTP path to scrape for metrics
+
+## Kubernetes Application Monitoring
+##
+appMonitoring:
+  enabled: false
+  apps: []
+  # Kubernetes Application Monitoring could be defined by ServiceMonitor or PodMonitor CRDs. See following links and examples:
+  # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#servicemonitor
+  # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmonitor
+  #
+  # Application Monitoring using the ServiceMonitor CRD.
+  #
+  #  - name: app-example-service
+  #    description: Example of App Monitoring by ServiceMonitor
+  #    jobName: app-example-service  # The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `serviceMonitor` section
+  #    template: nginxIngress  # Application Exporter template
+  #    grid:  # Grid position in the application monitoring dashboard (optional)
+  #      posX: 0
+  #      posY: 0
+  #    serviceMonitor:
+  #      jobLabel: app # The label to use to retrieve the job name from.
+  #      namespaceSelector:  # Namespaces to transfer from the kubernetes service to the target
+  #        ## Match any namespace
+  #        # any: true
+  #        # Explicit list of namespace names to select
+  #        matchNames:
+  #        - ingress-nginx
+  #      selector:  # Label selector for services to which this ServiceMonitor applies
+  #        matchLabels:
+  #          app: nginx-ingress
+  #        # matchExpressions:
+  #        # - key: tier
+  #        #   operator: In
+  #        #   values:
+  #        #   - cache
+  #        # - key: environment
+  #        #   operator: NotIn
+  #        #   values:
+  #        #   - dev
+  #      # Endpoints of the selected service to be monitored
+  #      # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#endpoint
+  #      endpoints:
+  #      - targetPort: metrics  # Name or number of the endpoint's target port
+  #        interval: 30s  # Interval at which metrics should be scraped
+  #        path: /metrics  # HTTP path to scrape for metrics
+  #        relabelings:
+  #        - *containerLabel
+  #
+  # Application Monitoring using the PodMonitor CRD.
+  #
+  #  - name: app-example-pod
+  #    description: Example of App Monitoring by PodMonitor
+  #    jobName: app-example-pod  # The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `podMonitor` section
+  #    template: nginxIngress  # Application Exporter template
+  #    grid:  # Grid position in the application monitoring dashboard (optional)
+  #      posX: 0
+  #      posY: 0
+  #    podMonitor:
+  #      jobLabel: app # The label to use to retrieve the job name from.
+  #      namespaceSelector:  # Namespaces to transfer from the kubernetes service to the target
+  #        ## Match any namespace
+  #        # any: true
+  #        # Explicit list of namespace names to select
+  #        matchNames:
+  #        - ingress-nginx
+  #      selector:  # Label selector for services to which this PodMonitor applies
+  #        matchLabels:
+  #          app: nginx-ingress
+  #        # matchExpressions:
+  #        # - key: tier
+  #        #   operator: In
+  #        #   values:
+  #        #   - cache
+  #        # - key: environment
+  #        #   operator: NotIn
+  #        #   values:
+  #        #   - dev
+  #      # Endpoints of the selected pod to be monitored
+  #      # https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmetricsendpoint
+  #      podMetricsEndpoints:
+  #      - port: metrics  # Name or number of the endpoint's target port
+  #        interval: 30s  # Interval at which metrics should be scraped
+  #        path: /metrics  # HTTP path to scrape for metrics

@@ -1,0 +1,42 @@
+{{- if and .Values.appMonitoring.enabled }}
+  {{ $app_service_monitors := dict }}
+  {{- range .Values.appMonitoring.apps }}
+    {{ if hasKey . "serviceMonitor" }}
+      {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+      {{ $_ := set $app_service_monitors $name .serviceMonitor }}
+    {{- end }}
+  {{- end }}
+
+{{- if $app_service_monitors }}
+apiVersion: v1
+kind: List
+items:
+{{- range $name, $serviceMonitor := $app_service_monitors }}
+- apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  metadata:
+    namespace: {{ include "k8s-monitoring.namespace" $ }}
+    name: {{ $name }}
+    labels:
+{{ include "k8s-monitoring.labels" $ | indent 6 }}
+      app: {{ include "k8s-monitoring.name" $ }}
+      release: {{ include "k8s-monitoring.release" $ }}
+  spec:
+    endpoints:
+{{ toYaml $serviceMonitor.endpoints | indent 4 }}
+  {{- if $serviceMonitor.jobLabel }}
+    jobLabel: {{ $serviceMonitor.jobLabel }}
+  {{- end }}
+  {{- if $serviceMonitor.namespaceSelector }}
+    namespaceSelector:
+{{ toYaml $serviceMonitor.namespaceSelector | indent 6 }}
+  {{- end }}
+    selector:
+{{ toYaml $serviceMonitor.selector | indent 6 }}
+  {{- if $serviceMonitor.targetLabels }}
+    targetLabels:
+{{ toYaml $serviceMonitor.targetLabels | indent 6 }}
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

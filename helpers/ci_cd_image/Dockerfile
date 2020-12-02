@@ -16,7 +16,6 @@ RUN wget https://github.com/mikefarah/yq/releases/download/3.4.1/yq_linux_amd64 
 RUN go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb && \
     jb init && \
     jb install https://github.com/grafana/grafonnet-lib/grafonnet@005390f0207ffa4a8ae0d1afb253b7585ff7beca && \
-    jb install https://github.com/bitnami-labs/kube-libsonnet@2c48e8e3fb40e38461ba27b05a290877c1e39cec && \
     jb install https://github.com/thelastpickle/grafonnet-polystat-panel@275a48de57afdac0d72219d82863d8ab8bd0e682
 
 FROM alpine:3.12
@@ -28,7 +27,6 @@ LABEL Description="CI/CD jsonnet docker image"
 LABEL JsonnetVersion="fe2809577220c8c06810e842c074f0f0820e9169"
 LABEL YqVersion="3.4.1"
 LABEL GrafonnetVersion="005390f0207ffa4a8ae0d1afb253b7585ff7beca"
-LABEL KubeLibsonnetVersion="2c48e8e3fb40e38461ba27b05a290877c1e39cec"
 LABEL GrafonnetPolystatPanelVersion="275a48de57afdac0d72219d82863d8ab8bd0e682"
 
 RUN addgroup -S jsonnet && adduser -S -G jsonnet jsonnet

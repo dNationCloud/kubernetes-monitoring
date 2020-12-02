@@ -16,15 +16,15 @@ It is a set of Grafana dashboards and Prometheus alerts written in [Jsonnet](htt
 
 Monitoring targets are:
 
-| Kubernetes | Hosts (TBD) | Applications (TBD) |
+| Kubernetes | Hosts | Applications |
 |:----------:|:-----------:|:------------------:|
 | ![Kubernetes](docs/images/kubernetes-monitoring.png) | ![Hosts](docs/images/host-monitoring.png) | ![Applications](docs/images/app-monitoring.png) |
 
 # Full Installation
-In case your current Kubernetes installation doesn't contain Prometheus, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://github.com/dNationCloud/kubernetes-monitoring-stack) helm chart.
+In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://github.com/dNationCloud/kubernetes-monitoring-stack) helm chart.
 
 # Dashboards and Alerts only Installation
-In case your current Kubernetes installation already contains Prometheus, Grafana and Loki, please follow [here](GETTING_STARTED.md).
+In case your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow [here](GETTING_STARTED.md).
 
 # Contribution guidelines
 

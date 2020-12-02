@@ -38,7 +38,7 @@ local graphPanel = grafana.graphPanel;
           label='Cluster',
           datasource='$datasource',
           query='label_values(kube_pod_info, cluster)',
-          refresh=$._config.dashboardCommon.templateRefresh,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -48,8 +48,8 @@ local graphPanel = grafana.graphPanel;
           label='Node',
           query='label_values(kube_pod_info{cluster=~"$cluster"}, node)',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
@@ -60,8 +60,8 @@ local graphPanel = grafana.graphPanel;
           label='Namespace',
           datasource='$datasource',
           query='label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance"}, namespace)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
@@ -72,8 +72,8 @@ local graphPanel = grafana.graphPanel;
           label='Workload',
           datasource='$datasource',
           query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
@@ -84,8 +84,8 @@ local graphPanel = grafana.graphPanel;
           label='Workload Type',
           datasource='$datasource',
           query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, workload_type)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
           allValues='workaround',  // workaround for pods without workload type
@@ -97,8 +97,8 @@ local graphPanel = grafana.graphPanel;
           label='Pod',
           datasource='$datasource',
           query='label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
           hide='variable',
@@ -133,7 +133,7 @@ local graphPanel = grafana.graphPanel;
             { alias: 'CPU Limit', pattern: 'Value #E', type: 'number', decimals: 2 },
             { alias: 'CPU Usage (only defined limit)', pattern: 'Value #F', type: 'number', decimals: 2 },
             { alias: 'CPU Usage (total)', pattern: 'Value #G', type: 'number', decimals: 2 },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: './d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: './d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s' % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
@@ -151,12 +151,12 @@ local graphPanel = grafana.graphPanel;
 
       dashboard.new(
         title='CPU per Namespace',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sOverview,
-        uid=$._config.dashboardIDs.cpuNamespaceOverview,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sOverview,
+        uid=$._config.grafanaDashboards.ids.cpuNamespaceOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate, namespaceTemplate, workloadTypeTemplate, workloadTemplate, podTemplate])
       .addPanels(

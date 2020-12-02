@@ -39,8 +39,8 @@ local polystatPanel = grafana.polystatPanel;
           label='Nodes',
           query='label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
@@ -51,8 +51,8 @@ local polystatPanel = grafana.polystatPanel;
           query='label_values(node_exporter_build_info{cluster=~"$cluster", pod!~""}, job)',
           label='Job',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -62,23 +62,23 @@ local polystatPanel = grafana.polystatPanel;
           query='label_values(node_uname_info, cluster)',
           label='Cluster',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
       local polystatThresholds =
         [
-          { color: $._config.dashboardCommon.color.green, state: 0, value: 0 },
-          { color: $._config.dashboardCommon.color.orange, state: 1, value: 75 },
-          { color: $._config.dashboardCommon.color.red, state: 2, value: 90 },
+          { color: $._config.grafanaDashboards.color.green, state: 0, value: 0 },
+          { color: $._config.grafanaDashboards.color.orange, state: 1, value: 75 },
+          { color: $._config.grafanaDashboards.color.red, state: 2, value: 90 },
         ];
 
       local cpuPerNodePolystat =
         polystatPanel.new(
           title='CPU per Node',
           datasource='$datasource',
-          default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.dashboardIDs.nodeExporter, $._config.dashboardCommon.dataLinkCommonArgs],
+          default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.grafanaDashboards.ids.nodeExporter, $._config.grafanaDashboards.dataLinkCommonArgs],
           global_unit_format='percent',
           global_thresholds=polystatThresholds,
           hexagon_sort_by_direction=4,
@@ -90,7 +90,7 @@ local polystatPanel = grafana.polystatPanel;
           polystat+: {
             globalDecimals: null,
             fontAutoColor: false,
-            fontColor: $._config.dashboardCommon.color.white,
+            fontColor: $._config.grafanaDashboards.color.white,
           },
         }
         .addTarget(prometheus.target(legendFormat='{{nodename}}', expr='round((1 - (avg by (instance) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * 100)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
@@ -125,12 +125,12 @@ local polystatPanel = grafana.polystatPanel;
 
       dashboard.new(
         'CPU per Node',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sOverview,
-        uid=$._config.dashboardIDs.cpuOverview,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sOverview,
+        uid=$._config.grafanaDashboards.ids.cpuOverview,
       )
       .addTemplates([datasourceTemplate, instanceTemplate, jobTemplate, clusterTemplate])
       .addPanels(

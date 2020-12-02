@@ -38,8 +38,8 @@ local table = grafana.tablePanel;
           label='Cluster',
           datasource='$datasource',
           query='label_values(node_uname_info, cluster)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -49,8 +49,8 @@ local table = grafana.tablePanel;
           label='Job',
           datasource='$datasource',
           query='label_values(container_cpu_user_seconds_total{cluster=~"$cluster"}, job)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
           multi=true,
         );
@@ -61,8 +61,8 @@ local table = grafana.tablePanel;
           label='Container',
           datasource='$datasource',
           query='label_values(container_cpu_user_seconds_total{cluster=~"$cluster", job=~"$job"}, name)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -73,8 +73,10 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           graphMode='none',
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
-        .addTarget(prometheus.target('count(rate(container_last_seen{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]))'));
+        .addThresholds($.grafanaThresholds($._config.templates.defaultApp.thresholds))
+        .addTarget(
+          prometheus.target('count(rate(container_last_seen{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]))')
+        );
 
       local imageTable =
         table.new(
@@ -219,12 +221,12 @@ local table = grafana.tablePanel;
 
       dashboard.new(
         'CAdvisor',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sApp,
-        uid=$._config.dashboardIDs.cadvisor,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sApps,
+        uid=$._config.grafanaDashboards.ids.cAdvisor,
       )
       .addTemplates(templates)
       .addPanels(panels),

@@ -36,8 +36,8 @@ local row = grafana.row;
           label='Cluster',
           datasource='$datasource',
           query='label_values(node_uname_info, cluster)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -47,8 +47,8 @@ local row = grafana.row;
           label='Job',
           datasource='$datasource',
           query='label_values(postfix_size{cluster=~"$cluster"}, job)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
           multi=true,
         );
@@ -70,12 +70,12 @@ local row = grafana.row;
 
       dashboard.new(
         'Postfix',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sApp,
-        uid=$._config.dashboardIDs.postfix,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sApps,
+        uid=$._config.grafanaDashboards.ids.postfix,
       )
       .addTemplates(templates)
       .addPanels(panels),

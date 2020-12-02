@@ -54,8 +54,8 @@ local graphPanel = grafana.graphPanel;
           query='label_values(node_uname_info, cluster)',
           label='Cluster',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -132,12 +132,12 @@ local graphPanel = grafana.graphPanel;
 
       dashboard.new(
         'Network per Namespace',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sOverview,
-        uid=$._config.dashboardIDs.networkNamespaceOverview,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sOverview,
+        uid=$._config.grafanaDashboards.ids.networkNamespaceOverview,
       )
       .addTemplates([datasourceTemplate, resolutionTemplate, intervalTemplate, clusterTemplate])
       .addPanels(

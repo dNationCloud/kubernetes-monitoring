@@ -23,13 +23,14 @@ local statPanel = grafana.statPanel;
 {
   grafanaDashboards+:: {
     'controller-manager':
-      local upCount =
+      local health =
         statPanel.new(
-          title='Up',
+          title='Health',
           datasource='$datasource',
+          unit='percent',
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
-        .addTarget(prometheus.target('sum(up{cluster=~"$cluster", %(controllerManager)s})' % $._config.dashboardSelectors));
+        .addThresholds($.grafanaThresholds($._config.templates.controllerManagerHealth.thresholds))
+        .addTarget(prometheus.target($._config.templates.controllerManagerHealth.expr));
 
       local workQueueAddRate =
         graphPanel.new(
@@ -41,7 +42,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('sum(rate(workqueue_adds_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.dashboardSelectors, legendFormat='{{instance}} {{name}}'));
+        .addTarget(prometheus.target('sum(rate(workqueue_adds_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}'));
 
       local workQueueDepth =
         graphPanel.new(
@@ -53,7 +54,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('sum(rate(workqueue_depth{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.dashboardSelectors, legendFormat='{{instance}} {{name}}'));
+        .addTarget(prometheus.target('sum(rate(workqueue_depth{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}'));
 
       local workQueueLatency =
         graphPanel.new(
@@ -65,7 +66,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(workqueue_queue_duration_seconds_bucket{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])) by (instance, name, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} {{name}}'));
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(workqueue_queue_duration_seconds_bucket{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])) by (instance, name, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}'));
 
       local rpcRate =
         graphPanel.new(
@@ -75,10 +76,10 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"2.."}[5m]))' % $._config.dashboardSelectors, legendFormat='2xx'),
-            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"3.."}[5m]))' % $._config.dashboardSelectors, legendFormat='3xx'),
-            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"4.."}[5m]))' % $._config.dashboardSelectors, legendFormat='4xx'),
-            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"5.."}[5m]))' % $._config.dashboardSelectors, legendFormat='5xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"2.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='2xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"3.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='3xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"4.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='4xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", code=~"5.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='5xx'),
           ]
         );
 
@@ -89,7 +90,7 @@ local statPanel = grafana.statPanel;
           format='s',
           min=0,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", verb="POST"}[5m])) by (verb, url, le))' % $._config.dashboardSelectors, legendFormat='{{verb}} {{url}}'));
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", verb="POST"}[5m])) by (verb, url, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{verb}} {{url}}'));
 
       local getRequestLatency =
         graphPanel.new(
@@ -102,7 +103,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", verb="GET"}[5m])) by (verb, url, le))' % $._config.dashboardSelectors, legendFormat='{{verb}} {{url}}'));
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance", verb="GET"}[5m])) by (verb, url, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{verb}} {{url}}'));
 
       local memory =
         graphPanel.new(
@@ -110,7 +111,7 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('process_resident_memory_bytes{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('process_resident_memory_bytes{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}'));
 
       local cpu =
         graphPanel.new(
@@ -118,14 +119,14 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           min=0,
         )
-        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}'));
 
       local goroutines =
         graphPanel.new(
           title='Goroutines',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('go_goroutines{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('go_goroutines{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}'));
 
       local datasourceTemplate =
         template.datasource(
@@ -141,8 +142,8 @@ local statPanel = grafana.statPanel;
           label='Cluster',
           datasource='$datasource',
           query='label_values(workqueue_adds_total, cluster)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -151,26 +152,26 @@ local statPanel = grafana.statPanel;
           name='instance',
           label='Instance',
           datasource='$datasource',
-          query='label_values(process_cpu_seconds_total{cluster=~"$cluster", %(controllerManager)s}, instance)' % $._config.dashboardSelectors,
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          query='label_values(process_cpu_seconds_total{cluster=~"$cluster", %(controllerManager)s}, instance)' % $._config.grafanaDashboards.selectors,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
           multi=true,
         );
 
       dashboard.new(
         'Controller Manager',
-        time_from=$._config.dashboardCommon.time_from,
-        uid=$._config.dashboardIDs.controllerManager,
-        editable=$._config.dashboardCommon.editable,
-        tags=$._config.dashboardCommon.tags.k8sSystem,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        uid=$._config.grafanaDashboards.ids.controllerManager,
+        editable=$._config.grafanaDashboards.editable,
+        tags=$._config.grafanaDashboards.tags.k8sSystem,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
       )
       .addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate])
       .addPanels(
         [
-          upCount { gridPos: { x: 0, y: 0, w: 4, h: 7 } },
+          health { gridPos: { x: 0, y: 0, w: 4, h: 7 } },
           workQueueAddRate { gridPos: { x: 4, y: 0, w: 20, h: 7 }, tooltip+: { sort: 2 } },
           workQueueDepth { gridPos: { x: 0, y: 14, w: 24, h: 7 }, tooltip+: { sort: 2 } },
           workQueueLatency { gridPos: { x: 0, y: 21, w: 24, h: 7 }, tooltip+: { sort: 2 } },

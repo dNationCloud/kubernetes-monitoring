@@ -16,56 +16,108 @@
 {
   prometheusRules+:: {
     'k8s.rules': {
-      groups: [
-        $.newRuleGroup('k8s.rules')
-        .addAlertPair(
+      local k8sRules =
+        $.newAlertPair(
           name='NodesHealthLow',
           message='"{{ $labels.node }}": Node Health Low {{ $value }}%',
-          expr='round(sum(kube_node_info) by (job, node) / (sum(kube_node_info) by (job, node) + sum(kube_node_spec_unschedulable) by (job, node) + sum(kube_node_status_condition{condition="DiskPressure", status="true"}) by (job, node) + sum(kube_node_status_condition{condition="MemoryPressure", status="true"}) by (job, node) ) * 100)',
-          thresholds=$._config.thresholds.k8s,
-        )
-        .addAlertPair(
+          expr=$._config.templates.nodeHealth.expr,
+          thresholds=$._config.templates.nodeHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
           name='RunningPodsHealthLow',
           message='Pods Health Low {{ $value }}%',
-          expr='round(sum(kube_pod_status_phase{phase="Running"}) / (sum(kube_pod_status_phase{phase="Running"}) + sum(kube_pod_status_phase{phase="Pending"}) + sum(kube_pod_status_phase{phase="Failed"}) + sum(kube_pod_status_phase{phase="Unknown"})) * 100)',
-          thresholds=$._config.thresholds.k8s,
-        )
-        .addAlertPair(
+          expr=$._config.templates.runningPods.expr,
+          thresholds=$._config.templates.runningPods.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
           name='RunningStatefulSetsHealthLow',
           message='StatefulSets Health Low {{ $value }}%',
-          expr='round(sum(kube_statefulset_status_replicas_ready) / sum(kube_statefulset_status_replicas) * 100)',
-          thresholds=$._config.thresholds.k8s,
-        )
-        .addAlertPair(
+          expr=$._config.templates.runningStatefulSets.expr,
+          thresholds=$._config.templates.runningStatefulSets.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
           name='RunningDaemonSetsHealthLow',
           message='DaemonSets Health Low {{ $value }}%',
-          expr='round((sum(kube_daemonset_updated_number_scheduled) + sum(kube_daemonset_status_number_available)) / (2 * sum(kube_daemonset_status_desired_number_scheduled)) * 100)',
-          thresholds=$._config.thresholds.k8s,
-        )
-        .addAlertPair(
+          expr=$._config.templates.daemonSetsHealth.expr,
+          thresholds=$._config.templates.daemonSetsHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
           name='PVCBoundRateLow',
           message='PVC Bound Rate Low {{ $value }}%',
-          expr='round(sum(kube_persistentvolumeclaim_status_phase{phase="Bound"}) / (sum(kube_persistentvolumeclaim_status_phase{phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{phase="Pending"}) + sum(kube_persistentvolumeclaim_status_phase{phase="Lost"})) * 100)',
-          thresholds=$._config.thresholds.k8s,
-        )
-        .addAlertPair(
+          expr=$._config.templates.pvcBound.expr,
+          thresholds=$._config.templates.pvcBound.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
           name='RunningDeploymentsHealthLow',
           message='Running Deployments Health Low {{ $value }}%',
-          expr='round((sum(kube_deployment_status_replicas_updated) + sum(kube_deployment_status_replicas_available)) / (2 * sum(kube_deployment_status_replicas)) * 100)',
-          thresholds=$._config.thresholds.k8s,
-        )
-        .addAlertPair(
+          expr=$._config.templates.deploymentsHealth.expr,
+          thresholds=$._config.templates.deploymentsHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
           name='RunningContainersHealthLow',
           message='Running Containers Health Low {{ $value }}%',
-          expr='round(sum(kube_pod_container_status_running) / (sum(kube_pod_container_status_running) + sum(kube_pod_container_status_terminated_reason{reason!="Completed"}) + sum(kube_pod_container_status_waiting)) * 100)',
-          thresholds=$._config.thresholds.k8s,
-        )
-        .addAlertPair(
+          expr=$._config.templates.runningContainers.expr,
+          thresholds=$._config.templates.runningContainers.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
           name='SucceededJobsRateLow',
           message='Succeeded Jobs Rate Low {{ $value }}%',
-          expr='round(sum(kube_job_status_succeeded) / (sum(kube_job_status_succeeded) + sum(kube_job_status_failed)) * 100)',
-          thresholds=$._config.thresholds.k8s,
+          expr=$._config.templates.succeededJobs.expr,
+          thresholds=$._config.templates.succeededJobs.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
+          name='ClusterApiServerHealthLow',
+          message='Cluster Api Server Health Low {{ $value }}%',
+          expr=$._config.templates.apiServerHealth.expr,
+          thresholds=$._config.templates.apiServerHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
+          name='ClusterControllerManagerHealthLow',
+          message='Cluster Controller Manager Health Low {{ $value }}%',
+          expr=$._config.templates.controllerManagerHealth.expr,
+          thresholds=$._config.templates.controllerManagerHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
+          name='ClusterEtcdHealthLow',
+          message='Cluster Etcd Health Low {{ $value }}%',
+          expr=$._config.templates.etcdHealth.expr,
+          thresholds=$._config.templates.etcdHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
+          name='ClusterKubeletHealthLow',
+          message='Cluster Kubelet Health Low {{ $value }}%',
+          expr=$._config.templates.kubeletHealth.expr,
+          thresholds=$._config.templates.kubeletHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
+          name='ClusterProxyHealthLow',
+          message='Cluster Proxy Health Low {{ $value }}%',
+          expr=$._config.templates.proxyHealth.expr,
+          thresholds=$._config.templates.proxyHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
+        ) +
+        $.newAlertPair(
+          name='ClusterSchedulerHealthLow',
+          message='Cluster Scheduler Health Low {{ $value }}%',
+          expr=$._config.templates.schedulerHealth.expr,
+          thresholds=$._config.templates.schedulerHealth.thresholds,
+          customLables={ alertgroup: $._config.prometheusRules.alertGroupCluster },
         ),
+      groups: [
+        $.newRuleGroup('k8s.rules')
+        .addRules(k8sRules),
       ],
     },
   },

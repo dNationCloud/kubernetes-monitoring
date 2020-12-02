@@ -39,16 +39,29 @@ local table = grafana.tablePanel;
           hide='variable',
         );
 
+      local alertGroup =
+        template.new(
+          datasource='$alertmanager',
+          query='label_values(ALERTS, alertgroup)',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          name='alertgroup',
+          label='Alert Group',
+          multi=true,
+          includeAll=true,
+        );
+
       local severityTemplate =
         template.new(
           datasource='$alertmanager',
           query='label_values(ALERTS, severity)',
-          refresh=$._config.dashboardCommon.templateRefresh,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           name='severity',
           label='Severity',
+          multi=true,
+          includeAll=true,
         );
 
-      local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
+      local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
 
       local valueMaps =
         [
@@ -73,18 +86,18 @@ local table = grafana.tablePanel;
             { alias: 'Message', pattern: 'message', type: 'string' },
           ]
         )
-        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity="$severity"}' });
+        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup"}' });
 
       dashboard.new(
         'Alert',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sOverview,
-        uid=$._config.dashboardIDs.alertOverview,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sOverview,
+        uid=$._config.grafanaDashboards.ids.alertOverview,
       )
-      .addTemplates([datasourceTemplate, alertManagerTemplate, severityTemplate])
+      .addTemplates([datasourceTemplate, alertManagerTemplate, alertGroup, severityTemplate])
       .addPanels(
         [
           row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

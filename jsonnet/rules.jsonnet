@@ -11,12 +11,21 @@
   limitations under the License.
 */
 
-/* Module comprises the logic to generate grafana dashboards writted in jsonnet to the json files */
+/* Module comprises the logic to generate json files containing prometheus rules from jsonnet */
 
-local dashboards = (import 'dashboards/dashboards.libsonnet').grafanaDashboards;
-local util = import 'util.libsonnet';
+local rules = (import 'rules/rules.libsonnet');
+local config = (import 'config.libsonnet');
 
-{
-  [util.dashboardJsonFileName(name)]: dashboards[name]
-  for name in std.objectFields(dashboards)
-}
+
+function(customConfig={})
+  /**
+   * Generate prometheus rules
+   *
+   * @param customConfig custom configuration variables taken from the command line top-level arguments.
+   * @return prometheus rules.
+  */
+  local data = (rules + config.mergeConfig(config.defaultConfig, customConfig)).prometheusRules; {
+
+    ['%s.json' % name]: data[name]
+    for name in std.objectFields(data)
+  }

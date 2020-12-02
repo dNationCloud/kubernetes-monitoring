@@ -19,13 +19,8 @@ jobs:
     - name: Fetch history
       run: git fetch --prune --unshallow
 
-    - name: Build jsonnet dashboards
-      run: |
-        # Generate YAML files from jsonnet templates
-        docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-monitoring -S jsonnet/helm.jsonnet
-        # Pretty print of generated YAML files - some escape characters provided by jsonnet build need to be removed to achieve valid HELM template format.
-        # Pretty print is not yet supported by jsonnet library, see https://github.com/google/jsonnet/issues/821
-        find ./chart/templates/k8s-monitoring/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
+    - name: Package jsonnet
+      run: make jsonnet-package
 
     - name: Get helm chart version
       id: version
