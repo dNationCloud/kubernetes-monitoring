@@ -45,32 +45,32 @@ local graphPanel = grafana.graphPanel;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.pvc))
+        .addThresholds($.grafanaThresholds($._config.templates.mostUtilizedPVC.thresholds))
         .addTarget(prometheus.target(expr));
 
       local volSpaceUsageGraphPanel =
         usageGraphPanel(title='Volume Space Usage', format='bytes')
         .addTargets(
           [
-            prometheus.target(legendFormat='Used Space {{persistentvolumeclaim}}', expr='(\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n  -\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_available_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n)' % $._config.dashboardSelectors),
-            prometheus.target(legendFormat='Free Space {{persistentvolumeclaim}}', expr='sum by (persistentvolumeclaim) (kubelet_volume_stats_available_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})' % $._config.dashboardSelectors),
+            prometheus.target(legendFormat='Used Space {{persistentvolumeclaim}}', expr='(\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n  -\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_available_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n)' % $._config.grafanaDashboards.selectors),
+            prometheus.target(legendFormat='Free Space {{persistentvolumeclaim}}', expr='sum by (persistentvolumeclaim) (kubelet_volume_stats_available_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})' % $._config.grafanaDashboards.selectors),
           ]
         );
 
       local volSpaceUsageGaugePanel =
-        usageGaugePanel(title='Volume Space Usage', expr='(\n  sum(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n  -\n  sum(kubelet_volume_stats_available_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n)\n/\nsum(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n* 100' % $._config.dashboardSelectors);
+        usageGaugePanel(title='Volume Space Usage', expr='(\n  sum(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n  -\n  sum(kubelet_volume_stats_available_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n)\n/\nsum(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n* 100' % $._config.grafanaDashboards.selectors);
 
       local volInodesUsageGraphPanel =
         usageGraphPanel(title='Volume inodes Usage', format='none')
         .addTargets(
           [
-            prometheus.target(legendFormat='Used inodes {{persistentvolumeclaim}}', expr='sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes_used{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})' % $._config.dashboardSelectors),
-            prometheus.target(legendFormat='Free inodes {{persistentvolumeclaim}}', expr='(\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace="$namespace", persistentvolumeclaim=~"$volume"})\n  -\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes_used{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n)' % $._config.dashboardSelectors),
+            prometheus.target(legendFormat='Used inodes {{persistentvolumeclaim}}', expr='sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes_used{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})' % $._config.grafanaDashboards.selectors),
+            prometheus.target(legendFormat='Free inodes {{persistentvolumeclaim}}', expr='(\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace="$namespace", persistentvolumeclaim=~"$volume"})\n  -\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes_used{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n)' % $._config.grafanaDashboards.selectors),
           ]
         );
 
       local volInodesUsageGaugePanel =
-        usageGaugePanel(title='Volume inodes Usage', expr='sum(kubelet_volume_stats_inodes_used{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n/\nsum(kubelet_volume_stats_inodes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n* 100' % $._config.dashboardSelectors);
+        usageGaugePanel(title='Volume inodes Usage', expr='sum(kubelet_volume_stats_inodes_used{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n/\nsum(kubelet_volume_stats_inodes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace", persistentvolumeclaim=~"$volume"})\n* 100' % $._config.grafanaDashboards.selectors);
 
       local datasourceTemplate =
         template.datasource(
@@ -86,19 +86,19 @@ local graphPanel = grafana.graphPanel;
           query='label_values(kubelet_volume_stats_capacity_bytes, cluster)',
           name='cluster',
           label='Cluster',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
       local namespaceTemplate =
         template.new(
           datasource='$datasource',
-          query='label_values(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics"}, namespace)' % $._config.dashboardSelectors,
+          query='label_values(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics"}, namespace)' % $._config.grafanaDashboards.selectors,
           name='namespace',
           label='Namespace',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
@@ -106,23 +106,23 @@ local graphPanel = grafana.graphPanel;
       local pvcTemplate =
         template.new(
           datasource='$datasource',
-          query='label_values(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace"}, persistentvolumeclaim)' % $._config.dashboardSelectors,
+          query='label_values(kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", namespace=~"$namespace"}, persistentvolumeclaim)' % $._config.grafanaDashboards.selectors,
           name='volume',
           label='PVC',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
 
       dashboard.new(
         'Persistent Volumes',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sPVC,
-        uid=$._config.dashboardIDs.persistentVolumes,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sPVC,
+        uid=$._config.grafanaDashboards.ids.persistentVolumes,
       )
       .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, pvcTemplate])
       .addPanels(

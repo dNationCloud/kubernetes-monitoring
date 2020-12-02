@@ -56,12 +56,12 @@ local getNextIndex(arrays) =
           label='Cluster',
           datasource='$datasource',
           query='label_values(kube_pod_container_info{cluster=~"$cluster"}, cluster)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
-      local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
+      local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
 
       local waitingErrors = ['CrashLoopBackOff', 'CreateContainerConfigError', 'ErrImagePull', 'ImagePullBackOff', 'CreateContainerError', 'InvalidImageName', 'CrashLoopBackOff'];
       local terminatedErrors = ['OOMKilled', 'Error', 'ContainerCannotRun', 'DeadlineExceeded', 'Evicted'];
@@ -96,7 +96,7 @@ local getNextIndex(arrays) =
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Status', pattern: 'Value #A', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [4, 4], colorMode: 'cell', colors: colors },
             { alias: 'Restarts', pattern: 'Value #B', type: 'number', thresholds: [5, 10], colorMode: 'cell', colors: colors },
-            { alias: 'Container', pattern: 'container', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Container', pattern: 'container', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
             { alias: 'Pod', pattern: 'pod', type: 'string' },
           ]
@@ -110,12 +110,12 @@ local getNextIndex(arrays) =
 
       dashboard.new(
         'Container',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sOverview,
-        uid=$._config.dashboardIDs.containerOverview,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sOverview,
+        uid=$._config.grafanaDashboards.ids.containerOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(

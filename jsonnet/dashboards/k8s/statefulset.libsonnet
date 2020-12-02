@@ -35,21 +35,21 @@ local template = grafana.template;
       local cpuPanel =
         panel(
           title='CPU',
-          expr='sum(rate(container_cpu_usage_seconds_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.dashboardSelectors,
+          expr='sum(rate(container_cpu_usage_seconds_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.grafanaDashboards.selectors,
           unit='cores',
         );
 
       local memoryPanel =
         panel(
           title='Memory',
-          expr='sum(container_memory_working_set_bytes{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*", container!~"POD|", id!=""})' % $._config.dashboardSelectors,
+          expr='sum(container_memory_working_set_bytes{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*", container!~"POD|", id!=""})' % $._config.grafanaDashboards.selectors,
           unit='bytes',
         );
 
       local networkPanel =
         panel(
           title='Network',
-          expr='sum(rate(container_network_transmit_bytes_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m])) + sum(rate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.dashboardSelectors,
+          expr='sum(rate(container_network_transmit_bytes_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m])) + sum(rate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.grafanaDashboards.selectors,
           unit='Bps',
         );
 
@@ -106,8 +106,8 @@ local template = grafana.template;
           query='label_values(kube_statefulset_metadata_generation, cluster)',
           label='Cluster',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -117,8 +117,8 @@ local template = grafana.template;
           query='label_values(kube_statefulset_metadata_generation{cluster=~"$cluster"}, namespace)',
           label='Namespace',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
@@ -129,20 +129,20 @@ local template = grafana.template;
           query='label_values(kube_statefulset_metadata_generation{cluster=~"$cluster", namespace=~"$namespace"}, statefulset)',
           label='StatefulSet',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
 
       dashboard.new(
         'StatefulSet Detail',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sStatefulSet,
-        uid=$._config.dashboardIDs.statefulSet,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sStatefulSet,
+        uid=$._config.grafanaDashboards.ids.statefulSet,
       )
       .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, statefulsetTemplate])
       .addPanels(

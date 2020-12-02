@@ -11,45 +11,35 @@
   limitations under the License.
 */
 
-(import '../config.libsonnet') +
-(import '../util.libsonnet') +
-
 {
+  newAlert(name, message, expr, operator, threshold, labels):: {
+    name: name,
+    alert: '%s%s' % [$._config.prometheusRules.alertNamePrefix, name],
+    annotations: {
+      message: message,
+    },
+    expr: '%s %s %s' % [expr, operator, threshold],
+    'for': $._config.prometheusRules.alertInterval,
+    labels: labels,
+  },
+  newAlertPair(name, message, expr, thresholds, customLables={}):: [
+    $.newAlert(name, message, expr, thresholds.operator, thresholds.critical, { severity: 'critical' } + customLables),
+    $.newAlert(name, message, expr, thresholds.operator, thresholds.warning, { severity: 'warning' } + customLables),
+  ],
   newRuleGroup(name):: {
     name: name,
     rules: [],
-    alertFullName(name):: '%s%s' % [$._config.ruleCommon.alertNamePrefix, name],
 
-    addAlert(name, message, expr, operator, threshold, severity):: self {
-      local ruleGroup = self,
-      rules+: [{
-        alert: ruleGroup.alertFullName(name),
-        annotations: {
-          message: $.escapeDoubleBrackets(message),
-        },
-        expr: '%s %s %s' % [expr, operator, threshold],
-        'for': '5m',
-        labels: {
-          severity: severity,
-        },
-      }],
+    addRules(rules):: self {
+      rules+: rules,
     },
-
-    thresholdExpression(alertName, severity, default)::
-      '{{ if .Values.alertThresholds }}' +
-      '{{ if .Values.alertThresholds.%s }}' % self.alertFullName(alertName) +
-      '{{ .Values.alertThresholds.%s.%s | default %s }}' % [self.alertFullName(alertName), severity, default] +
-      '{{ else }}%s{{ end }}' % default +
-      '{{ else }}%s{{ end }}' % default,
-
-    addAlertPair(name, message, expr, thresholds)::
-      self
-      .addAlert(name, message, expr, thresholds.operator, self.thresholdExpression(name, 'critical', thresholds.critical), 'critical')
-      .addAlert(name, message, expr, thresholds.operator, self.thresholdExpression(name, 'warning', thresholds.warning), 'warning'),
-
+    addRule(rule):: self {
+      rules+: [rule],
+    },
   },
 } +
 
 // dNation rules
 (import 'k8s/rules.libsonnet') +
-(import 'node/rules.libsonnet')
+(import 'hosts/rules.libsonnet') +
+(import 'apps/rules.libsonnet')

@@ -23,13 +23,14 @@ local statPanel = grafana.statPanel;
 {
   grafanaDashboards+:: {
     etcd:
-      local upCount =
+      local health =
         statPanel.new(
-          title='Up',
+          title='Health',
           datasource='$datasource',
+          unit='percent',
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.controlPlane))
-        .addTarget(prometheus.target('sum(etcd_server_has_leader{cluster=~"$cluster", %(etcd)s})' % $._config.dashboardSelectors));
+        .addThresholds($.grafanaThresholds($._config.templates.etcdHealth.thresholds))
+        .addTarget(prometheus.target($._config.templates.etcdHealth.expr));
 
       local rpcRate =
         graphPanel.new(
@@ -42,8 +43,8 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(grpc_server_started_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_type="unary"}[5m]))' % $._config.dashboardSelectors, legendFormat='RPC_Rate'),
-            prometheus.target('sum(rate(grpc_server_handled_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_type="unary", grpc_code!="OK"}[5m]))' % $._config.dashboardSelectors, legendFormat='RPC Failed Rate'),
+            prometheus.target('sum(rate(grpc_server_started_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_type="unary"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='RPC_Rate'),
+            prometheus.target('sum(rate(grpc_server_handled_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_type="unary", grpc_code!="OK"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='RPC Failed Rate'),
           ]
         );
 
@@ -57,8 +58,8 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('sum(grpc_server_started_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_service="etcdserverpb.Watch", grpc_type="bidi_stream"}) - sum(grpc_server_handled_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_service="etcdserverpb.Watch", grpc_type="bidi_stream"})' % $._config.dashboardSelectors, legendFormat='Watch Streams'),
-            prometheus.target('sum(grpc_server_started_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_service="etcdserverpb.Lease", grpc_type="bidi_stream"}) - sum(grpc_server_handled_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_service="etcdserverpb.Lease", grpc_type="bidi_stream"})' % $._config.dashboardSelectors, legendFormat='Lease Streams'),
+            prometheus.target('sum(grpc_server_started_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_service="etcdserverpb.Watch", grpc_type="bidi_stream"}) - sum(grpc_server_handled_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_service="etcdserverpb.Watch", grpc_type="bidi_stream"})' % $._config.grafanaDashboards.selectors, legendFormat='Watch Streams'),
+            prometheus.target('sum(grpc_server_started_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_service="etcdserverpb.Lease", grpc_type="bidi_stream"}) - sum(grpc_server_handled_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_service="etcdserverpb.Lease", grpc_type="bidi_stream"})' % $._config.grafanaDashboards.selectors, legendFormat='Lease Streams'),
           ]
         );
 
@@ -71,7 +72,7 @@ local statPanel = grafana.statPanel;
           fill=0,
           legend_show=false,
         )
-        .addTarget(prometheus.target('etcd_mvcc_db_total_size_in_bytes{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}} DB Size'));
+        .addTarget(prometheus.target('etcd_mvcc_db_total_size_in_bytes{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} DB Size'));
 
       local diskSyncDuration =
         graphPanel.new(
@@ -85,8 +86,8 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('histogram_quantile(0.99, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} WAL fsync'),
-            prometheus.target('histogram_quantile(0.99, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.dashboardSelectors, legendFormat='{{instance}} DB fsync'),
+            prometheus.target('histogram_quantile(0.99, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} WAL fsync'),
+            prometheus.target('histogram_quantile(0.99, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} DB fsync'),
           ]
         );
 
@@ -99,7 +100,7 @@ local statPanel = grafana.statPanel;
           fill=0,
           legend_show=false,
         )
-        .addTarget(prometheus.target('process_resident_memory_bytes{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}' % $._config.dashboardSelectors, legendFormat='{{instance}} Resident Memory'));
+        .addTarget(prometheus.target('process_resident_memory_bytes{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} Resident Memory'));
 
       local clientTrafficIn =
         graphPanel.new(
@@ -109,7 +110,7 @@ local statPanel = grafana.statPanel;
           fill=5,
           legend_show=false,
         )
-        .addTarget(prometheus.target('rate(etcd_network_client_grpc_sent_bytes_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m])' % $._config.dashboardSelectors, legendFormat='{{instance}} Client Traffic In'));
+        .addTarget(prometheus.target('rate(etcd_network_client_grpc_sent_bytes_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m])' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} Client Traffic In'));
 
       local clientTrafficOut =
         graphPanel.new(
@@ -119,7 +120,7 @@ local statPanel = grafana.statPanel;
           fill=5,
           legend_show=false,
         )
-        .addTarget(prometheus.target('rate(etcd_network_client_grpc_sent_bytes_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m])' % $._config.dashboardSelectors, legendFormat='{{instance}} Client Traffic Out'));
+        .addTarget(prometheus.target('rate(etcd_network_client_grpc_sent_bytes_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m])' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} Client Traffic Out'));
 
       local totalLeaderElectionsPerDay =
         graphPanel.new(
@@ -129,7 +130,7 @@ local statPanel = grafana.statPanel;
           fill=0,
           legend_show=false,
         )
-        .addTarget(prometheus.target('changes(etcd_server_leader_changes_seen_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[1d])' % $._config.dashboardSelectors, legendFormat='Total Leader Elections Per Day'));
+        .addTarget(prometheus.target('changes(etcd_server_leader_changes_seen_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[1d])' % $._config.grafanaDashboards.selectors, legendFormat='Total Leader Elections Per Day'));
 
       local raftproposal =
         graphPanel.new(
@@ -141,10 +142,10 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(etcd_server_proposals_failed_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m]))' % $._config.dashboardSelectors, legendFormat='Proposal Failure Rate'),
-            prometheus.target('sum(etcd_server_proposals_pending{cluster=~"$cluster", %(etcd)s, instance=~"$instance"})' % $._config.dashboardSelectors, legendFormat='etcd_server_proposals_pending'),
-            prometheus.target('sum(rate(etcd_server_proposals_committed_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m]))' % $._config.dashboardSelectors, legendFormat='Proposal Commit Rate'),
-            prometheus.target('sum(rate(etcd_server_proposals_applied_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m]))' % $._config.dashboardSelectors, legendFormat='Proposal Apply Rate'),
+            prometheus.target('sum(rate(etcd_server_proposals_failed_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='Proposal Failure Rate'),
+            prometheus.target('sum(etcd_server_proposals_pending{cluster=~"$cluster", %(etcd)s, instance=~"$instance"})' % $._config.grafanaDashboards.selectors, legendFormat='etcd_server_proposals_pending'),
+            prometheus.target('sum(rate(etcd_server_proposals_committed_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='Proposal Commit Rate'),
+            prometheus.target('sum(rate(etcd_server_proposals_applied_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='Proposal Apply Rate'),
           ]
         );
 
@@ -162,36 +163,36 @@ local statPanel = grafana.statPanel;
           label='Cluster',
           datasource='$datasource',
           query='label_values(etcd_server_has_leader, cluster)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
       local instanceTemplate =
         template.new(
           name='instance',
-          query='label_values(etcd_server_has_leader{cluster=~"$cluster", %(etcd)s}, instance)' % $._config.dashboardSelectors,
+          query='label_values(etcd_server_has_leader{cluster=~"$cluster", %(etcd)s}, instance)' % $._config.grafanaDashboards.selectors,
           label='Instance',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
           multi=true,
         );
 
       dashboard.new(
         'Etcd',
-        uid=$._config.dashboardIDs.etcd,
-        editable=$._config.dashboardCommon.editable,
-        tags=$._config.dashboardCommon.tags.k8sSystem,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
+        uid=$._config.grafanaDashboards.ids.etcd,
+        editable=$._config.grafanaDashboards.editable,
+        tags=$._config.grafanaDashboards.tags.k8sSystem,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
       )
       .addTemplates([datasourceTemplate, instanceTemplate, clusterTemplate])
       .addPanels(
         [
-          upCount { gridPos: { h: 7, w: 6, x: 0, y: 0 } },
+          health { gridPos: { h: 7, w: 6, x: 0, y: 0 } },
           rpcRate { gridPos: { h: 7, w: 10, x: 6, y: 0 } },
           activeStreams { gridPos: { h: 7, w: 8, x: 16, y: 0 } },
           dbSize { gridPos: { h: 7, w: 8, x: 0, y: 7 } },

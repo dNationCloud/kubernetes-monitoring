@@ -46,8 +46,8 @@ local row = grafana.row;
           label='Cluster',
           datasource='$datasource',
           query='label_values(node_uname_info, cluster)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -57,8 +57,8 @@ local row = grafana.row;
           label='Job',
           datasource='$datasource',
           query='label_values(nginx_server_bytes{cluster=~"$cluster"}, job)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
           multi=true,
         );
@@ -69,8 +69,8 @@ local row = grafana.row;
           label='Namespace',
           datasource='$datasource',
           query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job"}, namespace)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -81,8 +81,8 @@ local row = grafana.row;
           label='Pod',
           datasource='$datasource',
           query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -93,8 +93,8 @@ local row = grafana.row;
           label='Host',
           datasource='$datasource',
           query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, host)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -105,8 +105,8 @@ local row = grafana.row;
           label='Upstream',
           datasource='$datasource',
           query='label_values(nginx_upstream_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, upstream)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -127,8 +127,8 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
             prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!~"POD|"}) by (container)', legendFormat='{{container}}'),
@@ -147,8 +147,8 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
             prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!~"POD|"}) by (container)', legendFormat='{{container}}'),
@@ -276,7 +276,7 @@ local row = grafana.row;
       local templates = [
                           datasourceTemplate,
                         ]
-                        + (if $._config.isLoki then [datasourceLogsTemplate] else [])
+                        + (if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [])
                         + [
                           clusterTemplate,
                           jobTemplate,
@@ -285,7 +285,7 @@ local row = grafana.row;
                           hostTemplate,
                           upstreamTemplate,
                         ]
-                        + if $._config.isLoki then [searchTemplate] else [];
+                        + if $._config.grafanaDashboards.isLoki then [searchTemplate] else [];
 
       local logsPanels = [
         row.new('Logs', collapse=true) { gridPos: { x: 0, y: 4, w: 24, h: 1 } }
@@ -311,16 +311,16 @@ local row = grafana.row;
         .addPanel(upstreamRequests { tooltip+: { sort: 2 } }, { x: 0, y: 21, w: 12, h: 7 })
         .addPanel(upstreamBytes { tooltip+: { sort: 2 } }, { x: 12, y: 21, w: 12, h: 7 })
         .addPanel(upstreamBackendResponse { tooltip+: { sort: 2 } }, { x: 0, y: 28, w: 24, h: 7 }),
-      ] + if $._config.isLoki then logsPanels else [];
+      ] + if $._config.grafanaDashboards.isLoki then logsPanels else [];
 
       dashboard.new(
         'Nginx VTS',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sApp,
-        uid=$._config.dashboardIDs.nginxVts,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sApps,
+        uid=$._config.grafanaDashboards.ids.nginxVts,
       )
       .addTemplates(templates)
       .addPanels(panels),

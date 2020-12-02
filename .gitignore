@@ -8,6 +8,7 @@
 *.tmp
 # Helm files
 chart/charts/*
-chart/test/*
 chart/release/*
 chart/Chart.lock
+# Test files
+json/*

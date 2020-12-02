@@ -11,8 +11,7 @@
   limitations under the License.
 */
 
-(import '../config.libsonnet') +
-(import '../util.libsonnet') +
+(import 'util.libsonnet') +
 
 // dNation dashboards
 (import 'k8s/k8s-monitoring.libsonnet') +
@@ -49,7 +48,11 @@
 // Kube pvc dashboards
 (import 'k8s/pvc.libsonnet') +
 
-// Apps and hosts dashboards
+// Hosts dashboards
+(import 'hosts/host-monitoring.libsonnet') +
+
+// Apps dashboards
+(import 'apps/app-monitoring.libsonnet') +
 (import 'apps/python-flask.libsonnet') +
 (import 'apps/java-actuator.libsonnet') +
 (import 'apps/php-fpm.libsonnet') +

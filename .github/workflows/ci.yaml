@@ -1,4 +1,4 @@
-name: Lint and Test Chart
+name: Lint and Test Jsonnet and Helm Chart
 
 on:
   pull_request:
@@ -17,16 +17,8 @@ jobs:
     - name: Fetch history
       run: git fetch --prune --unshallow
 
-    - name: Build jsonnet dashboards
-      run: |
-        # Generate YAML files from jsonnet templates
-        docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-monitoring -S jsonnet/helm.jsonnet
-        # Pretty print of generated YAML files - some escape characters provided by jsonnet build need to be removed to achieve valid HELM template format.
-        # Pretty print is not yet supported by jsonnet library, see https://github.com/google/jsonnet/issues/821
-        find ./chart/templates/k8s-monitoring/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
-
-    - name: Run jsonnet-testing (lint)
-      run: find ./jsonnet/ -type f -regex '.*\.\(libsonnet\|jsonnet\)' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet-lint "$f" || exit 1; done;
+    - name: Package jsonnet
+      run: make jsonnet-package
 
     - name: Run chart-testing (lint)
       uses: helm/chart-testing-action@v1.0.0
@@ -34,11 +26,31 @@ jobs:
         command: lint
         config: .github/ct.yaml
 
-  install-chart:
-    name: install-chart
+  lint-jsonnet:
     runs-on: ubuntu-latest
     needs:
-      - lint-chart
+    - lint-chart
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Fetch history
+      run: git fetch --prune --unshallow
+
+    - name: Run jsonnet-testing (lint)
+      run: make jsonnet-lint
+
+    - name: Build jsonnet grafana dashboards
+      run: make json-dashboards
+
+    - name: Build jsonnet prometheus rules
+      run: make json-rules
+
+  install-chart:
+    runs-on: ubuntu-latest
+    needs:
+    - lint-chart
+    - lint-jsonnet
     strategy:
       matrix:
         k8s:
@@ -51,13 +63,8 @@ jobs:
     - name: Fetch history
       run: git fetch --prune --unshallow
 
-    - name: Build jsonnet dashboards
-      run: |
-        # Generate YAML files from jsonnet templates
-        docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m chart/templates/k8s-monitoring -S jsonnet/helm.jsonnet
-        # Pretty print of generated YAML files - some escape characters provided by jsonnet build need to be removed to achieve valid HELM template format.
-        # Pretty print is not yet supported by jsonnet library, see https://github.com/google/jsonnet/issues/821
-        find ./chart/templates/k8s-monitoring/ -type f -regex '.*\.yaml' -print |  while read f; do docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest yq r -P "$f" > "$f"_tmp && mv "$f"_tmp "$f" || exit 1; done;
+    - name: Package jsonnet
+      run: make jsonnet-package
 
     - name: Create kind ${{ matrix.k8s }} cluster
       uses: helm/kind-action@v1.0.0

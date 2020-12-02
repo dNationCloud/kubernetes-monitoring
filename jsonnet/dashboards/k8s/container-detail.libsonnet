@@ -42,8 +42,8 @@ local row = grafana.row;
             prometheus.target('sum(kube_pod_container_resource_limits_cpu_cores{namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
           ]
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true });
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true });
 
       local memory =
         graphPanel.new(
@@ -62,8 +62,8 @@ local row = grafana.row;
             prometheus.target('sum(kube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
           ]
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true });
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true });
 
       local bandwidth =
         graphPanel.new(
@@ -156,8 +156,8 @@ local row = grafana.row;
           label='Cluster',
           query='label_values(node_namespace_pod_container:container_memory_working_set_bytes, cluster)',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -167,8 +167,8 @@ local row = grafana.row;
           label='Node',
           query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster"}, node)',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
@@ -179,8 +179,8 @@ local row = grafana.row;
           label='Namespace',
           datasource='$datasource',
           query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance"}, namespace)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -191,8 +191,8 @@ local row = grafana.row;
           label='Pod',
           datasource='$datasource',
           query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -203,8 +203,8 @@ local row = grafana.row;
           label='Container',
           datasource='$datasource',
           query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", pod=~"$pod"}, container)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -218,7 +218,7 @@ local row = grafana.row;
       local templates = [
                           datasourceTemplate,
                         ]
-                        + (if $._config.isLoki then [datasourceLogsTemplate] else [])
+                        + (if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [])
                         + [
                           viewByTemplate,
                           clusterTemplate,
@@ -227,7 +227,7 @@ local row = grafana.row;
                           podTemplate,
                           containerTemplate,
                         ]
-                        + if $._config.isLoki then [searchTemplate] else [];
+                        + if $._config.grafanaDashboards.isLoki then [searchTemplate] else [];
 
       local logsPanels = [
         row.new('Logs') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
@@ -244,16 +244,16 @@ local row = grafana.row;
         .addPanel(bandwidth { tooltip+: { sort: 2 } }, { x: 0, y: 10, w: 24, h: 7 }),
         row.new('Network Drops', collapse=true) { gridPos: { x: 0, y: 10, w: 24, h: 1 } }
         .addPanel(drops { tooltip+: { sort: 2 } }, { x: 0, y: 11, w: 24, h: 7 }),
-      ] + if $._config.isLoki then logsPanels else [];
+      ] + if $._config.grafanaDashboards.isLoki then logsPanels else [];
 
       dashboard.new(
         'Container Detail',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sContainer,
-        uid=$._config.dashboardIDs.containerDetail,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sContainer,
+        uid=$._config.grafanaDashboards.ids.containerDetail,
       )
       .addTemplates(templates)
       .addPanels(panels),

@@ -12,7 +12,7 @@ If you're experiencing issues please read [FAQ](https://github.com/dNationCloud/
 Check its status by running:
 
     Grafana dashboards:
-    kubectl --namespace {{ template "k8s-monitoring.namespace" . }} get configmaps -l "release={{ $.Release.Name }},{{ .Values.dashboardLabel.name }}={{ .Values.dashboardLabel.value }}"
+    kubectl --namespace {{ template "k8s-monitoring.namespace" . }} get configmaps -l "release={{ include "k8s-monitoring.release" . }},{{ include "grafanaLabelAssignment" . }}"
 
     Prometheus rules:
-    kubectl --namespace {{ template "k8s-monitoring.namespace" . }} get prometheusrules -l "release={{ $.Release.Name }},{{ .Values.ruleLabel.name }}={{ .Values.ruleLabel.value }}"
+    kubectl --namespace {{ template "k8s-monitoring.namespace" . }} get prometheusrules -l "release={{ include "k8s-monitoring.release" . }},{{ include "prometheusLabelAssignment" . }}"

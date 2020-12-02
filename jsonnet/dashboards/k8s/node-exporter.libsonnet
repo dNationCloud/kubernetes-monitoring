@@ -35,9 +35,9 @@ local row = grafana.row;
         )
         .addThresholds(
           [
-            { color: $._config.dashboardCommon.color.red, value: null },
-            { color: $._config.dashboardCommon.color.orange, value: 1 },
-            { color: $._config.dashboardCommon.color.green, value: 3 },
+            { color: $._config.grafanaDashboards.color.red, value: null },
+            { color: $._config.grafanaDashboards.color.orange, value: 1 },
+            { color: $._config.grafanaDashboards.color.green, value: 3 },
           ]
         )
         .addTarget(prometheus.target('avg(time() - node_boot_time_seconds{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
@@ -50,9 +50,9 @@ local row = grafana.row;
         )
         .addThresholds(
           [
-            { color: $._config.dashboardCommon.color.red, value: null },
-            { color: $._config.dashboardCommon.color.orange, value: 1 },
-            { color: $._config.dashboardCommon.color.green, value: 2 },
+            { color: $._config.grafanaDashboards.color.red, value: null },
+            { color: $._config.grafanaDashboards.color.orange, value: 1 },
+            { color: $._config.grafanaDashboards.color.green, value: 2 },
           ]
         )
         .addTarget(prometheus.target('count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
@@ -66,9 +66,9 @@ local row = grafana.row;
         )
         .addThresholds(
           [
-            { color: $._config.dashboardCommon.color.red, value: null },
-            { color: $._config.dashboardCommon.color.orange, value: 2 },
-            { color: $._config.dashboardCommon.color.green, value: 3 },
+            { color: $._config.grafanaDashboards.color.red, value: null },
+            { color: $._config.grafanaDashboards.color.orange, value: 2 },
+            { color: $._config.grafanaDashboards.color.green, value: 3 },
           ]
         )
         .addTarget(prometheus.target('sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
@@ -78,7 +78,7 @@ local row = grafana.row;
           title='CPU Utilization',
           datasource='$datasource',
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.node))
+        .addThresholds($.grafanaThresholds($._config.templates.nodeCpuUtilization.thresholds))
         .addTarget(prometheus.target('round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'));
 
       local memUtilPanel =
@@ -89,7 +89,7 @@ local row = grafana.row;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.node))
+        .addThresholds($.grafanaThresholds($._config.templates.nodeRamUtilization.thresholds))
         .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'));
 
       local mostUtilDiskPanel =
@@ -100,7 +100,7 @@ local row = grafana.row;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.node))
+        .addThresholds($.grafanaThresholds($._config.templates.nodeDiskUtilization.thresholds))
         .addTarget(prometheus.target('round(\nmax(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device))\n * 100 \n * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}\n)\n)'));
 
       local networkErrPanel =
@@ -111,7 +111,7 @@ local row = grafana.row;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.networkErrors))
+        .addThresholds($.grafanaThresholds($._config.templates.nodeNetworkErrors.thresholds))
         .addTarget(prometheus.target('sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
 
       local cpuUtilGraphPanel =
@@ -247,8 +247,8 @@ local row = grafana.row;
           query='label_values(node_uname_info{cluster=~"$cluster"}, job)',
           label='Job',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
           multi=true,
         );
@@ -259,8 +259,8 @@ local row = grafana.row;
           query='label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)',
           label='Instance',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           multi=true,
           includeAll=true,
         );
@@ -271,19 +271,19 @@ local row = grafana.row;
           query='label_values(node_uname_info, cluster)',
           label='Cluster',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
       dashboard.new(
         'Node Exporter',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sNodeExporter,
-        uid=$._config.dashboardIDs.nodeExporter,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sNodeExporter,
+        uid=$._config.grafanaDashboards.ids.nodeExporter,
       )
       .addTemplates([datasourceTemplate, jobTemplate, instanceTemplate, clusterTemplate])
       .addPanels(

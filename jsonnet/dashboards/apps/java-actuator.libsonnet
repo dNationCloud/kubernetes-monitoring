@@ -47,8 +47,8 @@ local row = grafana.row;
           label='Cluster',
           datasource='$datasource',
           query='label_values(node_uname_info, cluster)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -58,8 +58,8 @@ local row = grafana.row;
           label='Job',
           datasource='$datasource',
           query='label_values(jvm_memory_used_bytes{cluster=~"$cluster"}, job)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
           multi=true,
         );
@@ -78,8 +78,8 @@ local row = grafana.row;
           label='Namespace',
           datasource='$datasource',
           query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job"}, namespace)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -90,8 +90,8 @@ local row = grafana.row;
           label='Pod',
           datasource='$datasource',
           query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -102,8 +102,8 @@ local row = grafana.row;
           label='Container',
           datasource='$datasource',
           query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -120,8 +120,8 @@ local row = grafana.row;
           label='JVM Memory Pools Heap',
           datasource='$datasource',
           query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", area="heap"},id)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -132,8 +132,8 @@ local row = grafana.row;
           label='JVM Memory Pools Non-Heap',
           datasource='$datasource',
           query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", area="nonheap"},id)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -148,8 +148,8 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
             prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
@@ -168,8 +168,8 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
             prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
@@ -290,8 +290,10 @@ local row = grafana.row;
           unit='percent',
           decimals=2,
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.node))
-        .addTarget(prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})'));
+        .addThresholds($.grafanaThresholds($._config.templates.javaActuator.thresholds))
+        .addTarget(
+          prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})'),
+        );
 
       local NonHeapUsed =
         statPanel.new(
@@ -300,8 +302,10 @@ local row = grafana.row;
           unit='percent',
           decimals=2,
         )
-        .addThresholds($.grafanaThresholds($._config.thresholds.node))
-        .addTarget(prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})'));
+        .addThresholds($.grafanaThresholds($._config.templates.javaActuator.thresholds))
+        .addTarget(
+          prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})'),
+        );
 
       local JvmHeap =
         graphPanel.new(
@@ -398,13 +402,15 @@ local row = grafana.row;
           legend_values=true,
           legend_max=true,
         )
-        .addSeriesOverride({ alias: '/blocked/', color: $._config.dashboardCommon.color.red })
-        .addSeriesOverride({ alias: '/waiting/', color: $._config.dashboardCommon.color.yellow })
-        .addSeriesOverride({ alias: '/new/', color: $._config.dashboardCommon.color.pink })
-        .addSeriesOverride({ alias: '/runnable/', color: $._config.dashboardCommon.color.green })
-        .addSeriesOverride({ alias: '/terminated/', color: $._config.dashboardCommon.color.purple })
-        .addSeriesOverride({ alias: '/timed-waiting/', color: $._config.dashboardCommon.color.orange })
-        .addTarget(prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}} - {{$view}}'));
+        .addSeriesOverride({ alias: '/blocked/', color: $._config.grafanaDashboards.color.red })
+        .addSeriesOverride({ alias: '/waiting/', color: $._config.grafanaDashboards.color.yellow })
+        .addSeriesOverride({ alias: '/new/', color: $._config.grafanaDashboards.color.pink })
+        .addSeriesOverride({ alias: '/runnable/', color: $._config.grafanaDashboards.color.green })
+        .addSeriesOverride({ alias: '/terminated/', color: $._config.grafanaDashboards.color.purple })
+        .addSeriesOverride({ alias: '/timed-waiting/', color: $._config.grafanaDashboards.color.orange })
+        .addTarget(
+          prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}} - {{$view}}'),
+        );
 
       local fileDescriptions =
         graphPanel.new(
@@ -438,12 +444,14 @@ local row = grafana.row;
           legend_values=true,
           legend_max=true,
         )
-        .addSeriesOverride({ alias: '/error/', color: $._config.dashboardCommon.color.red })
-        .addSeriesOverride({ alias: '/warn/', color: $._config.dashboardCommon.color.yellow })
-        .addSeriesOverride({ alias: '/trace/', color: $._config.dashboardCommon.color.lightblue })
-        .addSeriesOverride({ alias: '/info/', color: $._config.dashboardCommon.color.green })
-        .addSeriesOverride({ alias: '/debug/', color: $._config.dashboardCommon.color.blue })
-        .addTarget(prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}} - {{$view}}'));
+        .addSeriesOverride({ alias: '/error/', color: $._config.grafanaDashboards.color.red })
+        .addSeriesOverride({ alias: '/warn/', color: $._config.grafanaDashboards.color.yellow })
+        .addSeriesOverride({ alias: '/trace/', color: $._config.grafanaDashboards.color.lightblue })
+        .addSeriesOverride({ alias: '/info/', color: $._config.grafanaDashboards.color.green })
+        .addSeriesOverride({ alias: '/debug/', color: $._config.grafanaDashboards.color.blue })
+        .addTarget(
+          prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}} - {{$view}}'),
+        );
 
       local jvmMemoryPoolHeap =
         graphPanel.new(
@@ -604,7 +612,7 @@ local row = grafana.row;
       local templates = [
                           datasourceTemplate,
                         ]
-                        + (if $._config.isLoki then [datasourceLogsTemplate] else [])
+                        + (if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [])
                         + [
                           clusterTemplate,
                           jobTemplate,
@@ -615,7 +623,7 @@ local row = grafana.row;
                           memoryPoolsHeap,
                           memoryPoolsNonHeap,
                         ]
-                        + if $._config.isLoki then [searchTemplate] else [];
+                        + if $._config.grafanaDashboards.isLoki then [searchTemplate] else [];
 
       local logsPanels = [
         row.new('Logs', collapse=true) { gridPos: { x: 0, y: 5, w: 24, h: 1 } }
@@ -664,16 +672,16 @@ local row = grafana.row;
         .addPanel(directBuffersCount { tooltip+: { sort: 2 } }, { x: 6, y: 24, w: 6, h: 7 })
         .addPanel(mappedBuffersMemoryUsedBytes { tooltip+: { sort: 2 } }, { x: 12, y: 24, w: 6, h: 7 })
         .addPanel(mappedBuffersCount { tooltip+: { sort: 2 } }, { x: 18, y: 24, w: 6, h: 7 }),
-      ] + if $._config.isLoki then logsPanels else [];
+      ] + if $._config.grafanaDashboards.isLoki then logsPanels else [];
 
       dashboard.new(
         'Java Actuator',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sApp,
-        uid=$._config.dashboardIDs.javaActuator,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sApps,
+        uid=$._config.grafanaDashboards.ids.javaActuator,
       )
       .addTemplates(templates)
       .addPanels(panels),

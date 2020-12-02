@@ -37,12 +37,12 @@ local table = grafana.tablePanel;
           label='Cluster',
           query='label_values(kube_job_info, cluster)',
           datasource='$datasource',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
-      local colors = [$._config.dashboardCommon.color.green, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.red];
+      local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local valueMaps = [
         { text: 'Succeeded', value: 1 },
         { text: 'Active', value: 2 },
@@ -58,7 +58,7 @@ local table = grafana.tablePanel;
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
             { alias: 'Job name', pattern: 'job_name', type: 'string' },
-            { alias: 'Owner', pattern: 'owner_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_3}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.dashboardIDs.containerDetail, $._config.dashboardCommon.dataLinkCommonArgs] },
+            { alias: 'Owner', pattern: 'owner_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_3}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
           ]
         )
@@ -74,12 +74,12 @@ local table = grafana.tablePanel;
 
       dashboard.new(
         'Job',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sOverview,
-        uid=$._config.dashboardIDs.jobOverview,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sOverview,
+        uid=$._config.grafanaDashboards.ids.jobOverview,
       )
       .addTemplates([datasourceTemplate, clusterTemplate])
       .addPanels(

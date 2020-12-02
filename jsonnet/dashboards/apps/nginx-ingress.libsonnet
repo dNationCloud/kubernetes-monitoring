@@ -48,8 +48,8 @@ local table = grafana.tablePanel;
           label='Cluster',
           datasource='$datasource',
           query='label_values(node_uname_info, cluster)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -59,8 +59,8 @@ local table = grafana.tablePanel;
           label='Job',
           datasource='$datasource',
           query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster"}, job)',
-          sort=$._config.dashboardCommon.templateSort,
-          refresh=$._config.dashboardCommon.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
           multi=true,
         );
@@ -79,8 +79,8 @@ local table = grafana.tablePanel;
           label='Namespace',
           datasource='$datasource',
           query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job"}, controller_namespace)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -91,8 +91,8 @@ local table = grafana.tablePanel;
           label='Pod',
           datasource='$datasource',
           query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -103,8 +103,8 @@ local table = grafana.tablePanel;
           label='Container',
           datasource='$datasource',
           query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -115,8 +115,8 @@ local table = grafana.tablePanel;
           label='Ingress',
           datasource='$datasource',
           query='label_values(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, ingress)',
-          refresh=$._config.dashboardCommon.templateRefresh,
-          sort=$._config.dashboardCommon.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
         );
@@ -137,8 +137,8 @@ local table = grafana.tablePanel;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
             prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
@@ -157,8 +157,8 @@ local table = grafana.tablePanel;
           linewidth=2,
           fill=2,
         )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.dashboardCommon.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.dashboardCommon.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
+        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
             prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
@@ -285,9 +285,9 @@ local table = grafana.tablePanel;
         )
         .addThresholds(
           [
-            { color: $._config.dashboardCommon.color.red, value: null },
-            { color: $._config.dashboardCommon.color.orange, value: 75 },
-            { color: $._config.dashboardCommon.color.green, value: 90 },
+            { color: $._config.grafanaDashboards.color.red, value: null },
+            { color: $._config.grafanaDashboards.color.orange, value: 75 },
+            { color: $._config.grafanaDashboards.color.green, value: 90 },
           ]
         )
         .addTarget(prometheus.target('sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",status!~"[4-5].*", container=~"$container"}[5m])) / sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", namespace=~"$namespace", container=~"$container"}[5m])) * 100'));
@@ -336,7 +336,7 @@ local table = grafana.tablePanel;
           ]
         );
 
-      local colors = [$._config.dashboardCommon.color.red, $._config.dashboardCommon.color.orange, $._config.dashboardCommon.color.green];
+      local colors = [$._config.grafanaDashboards.color.red, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.green];
 
       local certificateTable =
         table.new(
@@ -354,7 +354,7 @@ local table = grafana.tablePanel;
       local templates = [
                           datasourceTemplate,
                         ]
-                        + (if $._config.isLoki then [datasourceLogsTemplate] else [])
+                        + (if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [])
                         + [
                           clusterTemplate,
                           jobTemplate,
@@ -364,7 +364,7 @@ local table = grafana.tablePanel;
                           containerTemplate,
                           ingressTemplate,
                         ]
-                        + if $._config.isLoki then [searchTemplate] else [];
+                        + if $._config.grafanaDashboards.isLoki then [searchTemplate] else [];
 
       local logsPanels = [
         row.new('Logs', collapse=true) { gridPos: { x: 0, y: 4, w: 24, h: 1 } }
@@ -393,16 +393,16 @@ local table = grafana.tablePanel;
         .addPanel(percentileTable, { x: 0, y: 25, w: 24, h: 8 }),
         row.new('Ingress Certificate Expiry') { gridPos: { x: 0, y: 25, w: 24, h: 1 } },
         certificateTable { gridPos: { x: 6, y: 26, w: 24, h: 8 } },
-      ] + if $._config.isLoki then logsPanels else [];
+      ] + if $._config.grafanaDashboards.isLoki then logsPanels else [];
 
       dashboard.new(
         'Nginx Ingress',
-        editable=$._config.dashboardCommon.editable,
-        graphTooltip=$._config.dashboardCommon.tooltip,
-        refresh=$._config.dashboardCommon.refresh,
-        time_from=$._config.dashboardCommon.time_from,
-        tags=$._config.dashboardCommon.tags.k8sApp,
-        uid=$._config.dashboardIDs.nginxIngress,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sApps,
+        uid=$._config.grafanaDashboards.ids.nginxIngress,
       )
       .addTemplates(templates)
       .addPanels(panels),
