@@ -63,4 +63,7 @@
 (import 'apps/rabbitmq.libsonnet') +
 (import 'apps/postfix.libsonnet') +
 (import 'apps/autoscaler.libsonnet') +
-(import 'apps/apache.libsonnet')
+(import 'apps/apache.libsonnet') +
+
+// Monitoring dashboards
+(import 'monitoring.libsonnet')

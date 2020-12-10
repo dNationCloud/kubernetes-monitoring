@@ -96,6 +96,8 @@
         postfix: 'postfix',
         autoscaler: 'autoscaler',
         apache: 'apache',
+        //Monitoring dashboard
+        monitoring: 'monitoring',
       },
       selectors: {
         apiServer: 'job="apiserver"',
@@ -116,6 +118,7 @@
         k8sAppsMain: ['k8s', 'app', 'L0'],
         k8sApps: ['k8s', 'app', 'L1'],
         k8sHostsMain: ['k8s', 'host', 'L1'],
+        k8sMonitoringMain: ['k8s', 'cluster', 'host', 'L0'],
       },
     },
 
@@ -303,6 +306,11 @@
     hostMonitoring: {
       enabled: false,
       hosts: [],
+    },
+    //multiple cluster monitoring isn't supported yet
+    clusterMonitoring: {
+      enabled: true,
+      clusters: [{ name: '' }],
     },
   },
 }
