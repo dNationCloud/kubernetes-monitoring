@@ -39,6 +39,8 @@
   },
 } +
 
+(import '../util.libsonnet') +
+
 // dNation rules
 (import 'k8s/rules.libsonnet') +
 (import 'hosts/rules.libsonnet') +

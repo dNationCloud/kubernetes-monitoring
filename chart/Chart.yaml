@@ -13,7 +13,7 @@ sources:
 dependencies:
 - name: dnation-kubernetes-jsonnet-translator
   version: "0.1.*"
-  repository: https://nexus.ifne.eu/repository/ifne-helm-public
+  repository: https://dnationcloud.github.io/helm-hub/
   condition: dnation-kubernetes-jsonnet-translator.enabled
 icon: https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png
 maintainers:

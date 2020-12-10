@@ -125,7 +125,7 @@ local polystatPanel = grafana.polystatPanel;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.nodeRamUtilization.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.overallUtilizationRAM.panel.thresholds))
         .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'));
 
       dashboard.new(

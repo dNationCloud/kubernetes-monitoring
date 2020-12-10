@@ -73,7 +73,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           graphMode='none',
         )
-        .addThresholds($.grafanaThresholds($._config.templates.defaultApp.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.hostApps.genericApp.panel.thresholds))
         .addTarget(
           prometheus.target('count(rate(container_last_seen{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}[5m]))')
         );

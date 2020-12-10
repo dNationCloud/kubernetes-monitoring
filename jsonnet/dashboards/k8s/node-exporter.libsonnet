@@ -78,7 +78,7 @@ local row = grafana.row;
           title='CPU Utilization',
           datasource='$datasource',
         )
-        .addThresholds($.grafanaThresholds($._config.templates.nodeCpuUtilization.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.overallUtilizationCPU.panel.thresholds))
         .addTarget(prometheus.target('round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'));
 
       local memUtilPanel =
@@ -89,7 +89,7 @@ local row = grafana.row;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.nodeRamUtilization.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.overallUtilizationRAM.panel.thresholds))
         .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'));
 
       local mostUtilDiskPanel =
@@ -100,7 +100,7 @@ local row = grafana.row;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.nodeDiskUtilization.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.overallUtilizationDisk.panel.thresholds))
         .addTarget(prometheus.target('round(\nmax(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (instance, device))\n * 100 \n * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}\n)\n)'));
 
       local networkErrPanel =
@@ -111,7 +111,7 @@ local row = grafana.row;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.nodeNetworkErrors.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.overallNetworkErrors.panel.thresholds))
         .addTarget(prometheus.target('sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
 
       local cpuUtilGraphPanel =

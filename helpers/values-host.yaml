@@ -28,7 +28,8 @@ hostMonitoring:
       description: Host 02 Docker Containers
       jobName: host-02-docker
       templates:
-      - name: cAdvisor
+        cAdvisor:
+          enable: false
       serviceMonitor:
         endpoints:
         - port: "9101"
@@ -36,12 +37,13 @@ hostMonitoring:
           path: /metrics
 
 templates:
-  nodeRamUtilization:
-    thresholds:
-      warning: 10
-  nodeDiskUtilization:
-    thresholds:
-      warning: 20
-
-prometheusRules:
-  alertInterval: '1m'
+  host:
+    overallUtilizationDisk:
+      panel:
+        thresholds:
+          # Override warning threshold for node disk panel
+          warning: 50
+      alert:
+        thresholds:
+          # Override warning threshold for node disk alert
+          warning: 50

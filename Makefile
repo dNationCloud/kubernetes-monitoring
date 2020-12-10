@@ -20,11 +20,11 @@ jsonnet-package: jsonnet-package-dashboards jsonnet-package-rules
 
 jsonnet-package-dashboards:
 	@echo "[Packaging jsonnet dashboard files]"
-	tar -czf chart/jsonnet-dashboards.tar.gz -C jsonnet dashboards config.libsonnet dashboards.jsonnet
+	tar -czf chart/jsonnet-dashboards.tar.gz -C jsonnet dashboards config.libsonnet templates.libsonnet util.libsonnet dashboards.jsonnet
 
 jsonnet-package-rules:
 	@echo "[Packaging jsonnet rule files]"
-	tar -czf chart/jsonnet-rules.tar.gz -C jsonnet rules config.libsonnet rules.jsonnet
+	tar -czf chart/jsonnet-rules.tar.gz -C jsonnet rules config.libsonnet templates.libsonnet util.libsonnet rules.jsonnet
 
 helm-lint:
 	@echo "[Linting helm chart]"

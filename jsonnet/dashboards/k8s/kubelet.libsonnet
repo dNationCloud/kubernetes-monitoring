@@ -29,8 +29,8 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           unit='percent',
         )
-        .addThresholds($.grafanaThresholds($._config.templates.kubeletHealth.thresholds))
-        .addTarget(prometheus.target($._config.templates.kubeletHealth.expr));
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.kubeletHealth.panel.thresholds))
+        .addTarget(prometheus.target($._config.templates.k8s.kubeletHealth.panel.expr));
 
       local operationRate =
         graphPanel.new(

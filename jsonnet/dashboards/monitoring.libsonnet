@@ -78,7 +78,7 @@ local getClusterRowGridY(numOfHosts) =
 
     if isHostMonitoring || isClusterMonitoring then
       {
-        'monitoring':
+        monitoring:
           local dNationLink =
             link.dashboards(
               title='dNation - Making Cloud Easy',
@@ -128,7 +128,7 @@ local getClusterRowGridY(numOfHosts) =
               expr=|||
                 sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) +
                 sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d
-              ||| % { cluster: cluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupApp, maxWarnings: maxWarnings },
+              ||| % { cluster: cluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings },
             )
             .addDataLink({ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [$._config.grafanaDashboards.ids.k8sMonitoring, dataLinkCommonArgs] });
 
