@@ -1,0 +1,32 @@
+site_name: dNation Kubernetes Monitoring
+docs_dir: ./project/
+
+# Repository
+repo_name: dNationCloud/kubernetes-monitoring
+repo_url: https://github.com/dNationCloud/kubernetes-monitoring
+edit_uri: ""
+
+nav:
+- Home: README.md
+- Docs: docs/documentation.md
+- FAQ: helpers/FAQ.md
+
+# https://squidfunk.github.io/mkdocs-material/
+theme:
+  name: material
+  favicon: https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png
+  logo: https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png
+
+extra_css:
+- docs/docs.css
+
+markdown_extensions:
+#https://facelessuser.github.io/pymdown-extensions/extensions/superfences/
+- pymdownx.superfences
+
+# excluding project/docs/project in case of using symlink to kubernetes-monitoring folder (see README_DOCS.md)
+plugins:
+# https://pypi.org/project/mkdocs-exclude/
+- exclude:
+    glob:
+    - docs/project/*
