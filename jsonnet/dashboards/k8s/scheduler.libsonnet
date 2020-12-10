@@ -29,8 +29,8 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           unit='percent',
         )
-        .addThresholds($.grafanaThresholds($._config.templates.schedulerHealth.thresholds))
-        .addTarget(prometheus.target($._config.templates.schedulerHealth.expr));
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.schedulerHealth.panel.thresholds))
+        .addTarget(prometheus.target($._config.templates.k8s.schedulerHealth.panel.expr));
 
       local schedulingRate =
         graphPanel.new(

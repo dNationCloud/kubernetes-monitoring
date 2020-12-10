@@ -29,8 +29,8 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           unit='percent',
         )
-        .addThresholds($.grafanaThresholds($._config.templates.proxyHealth.thresholds))
-        .addTarget(prometheus.target($._config.templates.proxyHealth.expr));
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.proxyHealth.panel.thresholds))
+        .addTarget(prometheus.target($._config.templates.k8s.proxyHealth.panel.expr));
 
       local rulesSyncRate =
         graphPanel.new(

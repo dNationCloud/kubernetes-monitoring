@@ -14,71 +14,68 @@
 /* Application prometheus rules */
 
 {
-  hostApps:: std.flattenArrays([host.apps for host in $._config.hostMonitoring.hosts if std.objectHas(host, 'apps')]),
   prometheusRules+::
-    if std.length($._config.appMonitoring.apps) > 0 && $._config.appMonitoring.enabled then
+    local k8sApps = std.flattenArrays([
+      cluster.apps
+      for cluster in $._config.clusterMonitoring.clusters
+      if std.objectHas(cluster, 'apps')
+    ]);
+    local k8sAppAlerts = std.set(
+      std.flattenArrays([
+        $.getTemplateAlerts($._config.templates.k8sApps, app)
+        for app in k8sApps
+      ]), function(o) o.name
+    );
+    local hostApps = std.flattenArrays([
+      host.apps
+      for host in $._config.hostMonitoring.hosts
+      if std.objectHas(host, 'apps')
+    ]);
+    local hostAppAlerts = std.set(
+      std.flattenArrays([
+        $.getTemplateAlerts($._config.templates.hostApps, app)
+        for app in hostApps
+      ]), function(o) o.name
+    );
+    if std.length(k8sAppAlerts) > 0 || std.length(hostAppAlerts) > 0 then
       {
         'apps.rules': {
-          local ruleTemplates(app, templates, alertgroup) =
-            [
-              if template.name == 'pythonFlask' then
-                $.newAlertPair(
-                  name='%sPythonFlaskSuccessRateLow' % alertgroup,
-                  message='%s {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses) Low {{ $value }}%s' % [alertgroup, '%'],
-                  expr=$._config.templates.pythonFlask.expr % { job: 'job=~".+"' },
-                  thresholds=$._config.templates.pythonFlask.thresholds,
-                  customLables={ alertgroup: alertgroup },
-                )
-              else if template.name == 'javaActuator' then
-                $.newAlertPair(
-                  name='%sJavaActuatorHeapHigh' % alertgroup,
-                  message='%s {{ $labels.job }}: Java Actuator Heap High {{ $value }}%s' % [alertgroup, '%'],
-                  expr=$._config.templates.javaActuator.expr % { job: 'job=~".+"' },
-                  thresholds=$._config.templates.javaActuator.thresholds,
-                  customLables={ alertgroup: alertgroup },
-                )
-              else if template.name == 'cAdvisor' then
-                $.newAlertPair(
-                  name='%sCAdvisorHealthLow' % alertgroup,
-                  message='%s {{ $labels.job }}: cAdvisor Health Low {{ $value }}%s' % [alertgroup, '%'],
-                  expr=$._config.templates.defaultApp.expr % { job: 'job=~".+"' },
-                  thresholds=$._config.templates.defaultApp.thresholds,
-                  customLables={ alertgroup: alertgroup },
-                )
-              else
-                []
-              for template in templates
-            ],
           groups: [
-            $.newRuleGroup('apps.rules')
+            $.newRuleGroup('k8sApps.rules')
             .addRules(
-              // Add application rules
-              std.set(
-                std.flattenArrays(
-                  std.flattenArrays(
-                    [
-                      ruleTemplates(app, app.templates, $._config.prometheusRules.alertGroupApp)
-                      for app in $._config.appMonitoring.apps
-                    ]
+              // Add k8s cluster application rules
+              std.flattenArrays(
+                [
+                  $.newAlertPair(
+                    name=alert.name,
+                    message=alert.message,
+                    expr=alert.expr,
+                    thresholds=alert.thresholds,
+                    customLables=alert.customLables,
                   )
-                )
-                , function(o) (o.name + o.labels)
-              ) +
+                  for alert in k8sAppAlerts
+                ]
+              )
+            ),
+            $.newRuleGroup('hostApps.rules')
+            .addRules(
               // Add host application rules
-              std.set(
-                std.flattenArrays(
-                  std.flattenArrays(
-                    [
-                      ruleTemplates(app, app.templates, $._config.prometheusRules.alertGroupHostApp)
-                      for app in $.hostApps
-                    ]
+              std.flattenArrays(
+                [
+                  $.newAlertPair(
+                    name=alert.name,
+                    message=alert.message,
+                    expr=alert.expr,
+                    thresholds=alert.thresholds,
+                    customLables=alert.customLables,
                   )
-                )
-                , function(o) (o.name + o.labels)
+                  for alert in hostAppAlerts
+                ]
               )
             ),
           ],
         },
       }
-    else {},
+    else
+      {},
 }

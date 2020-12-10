@@ -29,8 +29,8 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           unit='percent',
         )
-        .addThresholds($.grafanaThresholds($._config.templates.etcdHealth.thresholds))
-        .addTarget(prometheus.target($._config.templates.etcdHealth.expr));
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.etcdHealth.panel.thresholds))
+        .addTarget(prometheus.target($._config.templates.k8s.etcdHealth.panel.expr));
 
       local rpcRate =
         graphPanel.new(

@@ -123,8 +123,8 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           unit='percent',
         )
-        .addThresholds($.grafanaThresholds($._config.templates.apiServerHealth.thresholds))
-        .addTarget(prometheus.target($._config.templates.apiServerHealth.expr));
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.apiServerHealth.panel.thresholds))
+        .addTarget(prometheus.target($._config.templates.k8s.apiServerHealth.panel.expr));
 
       local rpcRate =
         graphPanel.new(

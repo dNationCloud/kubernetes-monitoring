@@ -290,7 +290,7 @@ local row = grafana.row;
           unit='percent',
           decimals=2,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.javaActuator.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.k8sApps.javaActuator.panel.thresholds))
         .addTarget(
           prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})'),
         );
@@ -302,7 +302,7 @@ local row = grafana.row;
           unit='percent',
           decimals=2,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.javaActuator.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.k8sApps.javaActuator.panel.thresholds))
         .addTarget(
           prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})'),
         );

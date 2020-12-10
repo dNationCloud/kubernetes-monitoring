@@ -29,8 +29,8 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           unit='percent',
         )
-        .addThresholds($.grafanaThresholds($._config.templates.controllerManagerHealth.thresholds))
-        .addTarget(prometheus.target($._config.templates.controllerManagerHealth.expr));
+        .addThresholds($.grafanaThresholds($._config.templates.k8s.controllerManagerHealth.panel.thresholds))
+        .addTarget(prometheus.target($._config.templates.k8s.controllerManagerHealth.panel.expr));
 
       local workQueueAddRate =
         graphPanel.new(

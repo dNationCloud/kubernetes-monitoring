@@ -16,78 +16,26 @@
 {
   prometheusRules+:: {
     'hosts.rules': {
-      local clusterRules(alertgroup, job) =
-        $.newAlertPair(
-          name='%sCPUOverallHigh' % alertgroup,
-          message='%s High CPU Overall Utilization {{ $value }}%s' % [alertgroup, '%'],
-          expr='avg(%s)' % $._config.templates.nodeCpuUtilization.expr % { job: job },
-          thresholds=$._config.templates.nodeCpuUtilization.thresholds,
-          customLables={ alertgroup: alertgroup },
-        ) +
-        $.newAlertPair(
-          name='%sRAMOverallHigh' % alertgroup,
-          message='%s High RAM Overall Utilization {{ $value }}%s' % [alertgroup, '%'],
-          expr='avg(%s)' % $._config.templates.nodeRamUtilization.expr % { job: job },
-          thresholds=$._config.templates.nodeRamUtilization.thresholds,
-          customLables={ alertgroup: alertgroup },
-        ) +
-        $.newAlertPair(
-          name='%sDiskOverallHigh' % alertgroup,
-          message='%s High Disk Overall Utilization {{ $value }}%s' % [alertgroup, '%'],
-          expr='avg(%s)' % $._config.templates.nodeDiskUtilization.expr % { job: job },
-          thresholds=$._config.templates.nodeDiskUtilization.thresholds,
-          customLables={ alertgroup: alertgroup },
-        ) +
-        $.newAlertPair(
-          name='%sNetworkOverallErrorsHigh' % alertgroup,
-          message='%s High Overall Network Errors Count {{ $value }}%s' % [alertgroup, '%'],
-          expr='sum(%s)' % $._config.templates.nodeNetworkErrors.expr % { job: job },
-          thresholds=$._config.templates.nodeNetworkErrors.thresholds,
-          customLables={ alertgroup: alertgroup },
-        ),
-      local hostRules(alertgroup, job) =
-        $.newAlertPair(
-          name='%sCPUUtilizationHigh' % alertgroup,
-          message='%s {{ $labels.nodename }}: High CPU Utilization {{ $value }}%s' % [alertgroup, '%'],
-          expr=$._config.templates.nodeCpuUtilization.expr % { job: job },
-          thresholds=$._config.templates.nodeCpuUtilization.thresholds,
-          customLables={ alertgroup: alertgroup },
-        ) +
-        $.newAlertPair(
-          name='%sRAMUtilizationHigh' % alertgroup,
-          message='%s {{ $labels.nodename }}: High RAM Utilization {{ $value }}%s' % [alertgroup, '%'],
-          expr=$._config.templates.nodeRamUtilization.expr % { job: job },
-          thresholds=$._config.templates.nodeRamUtilization.thresholds,
-          customLables={ alertgroup: alertgroup },
-        ) +
-        $.newAlertPair(
-          name='%sDiskUtilizationHigh' % alertgroup,
-          message='%s {{ $labels.nodename }}: High Disk Utilization {{ $value }}%s' % [alertgroup, '%'],
-          expr=$._config.templates.nodeDiskUtilization.expr % { job: job },
-          thresholds=$._config.templates.nodeDiskUtilization.thresholds,
-          customLables={ alertgroup: alertgroup },
-        ) +
-        $.newAlertPair(
-          name='%sNetworkErrorsHigh' % alertgroup,
-          message='%s {{ $labels.nodename }}: High Network Errors Count {{ $value }}%s' % [alertgroup, '%'],
-          expr=$._config.templates.nodeNetworkErrors.expr % { job: job },
-          thresholds=$._config.templates.nodeNetworkErrors.thresholds,
-          customLables={ alertgroup: alertgroup },
-        ),
-
+      local alerts = std.set(
+        std.flattenArrays([
+          $.getTemplateAlerts($._config.templates.host, host)
+          for host in $._config.hostMonitoring.hosts
+        ]), function(o) o.name
+      ),
       groups: [
-        $.newRuleGroup('hosts.rules')
+        $.newRuleGroup('host.rules')
         .addRules(
-          // Add overall k8s cluster rules
-          clusterRules($._config.prometheusRules.alertGroupCluster, 'job=~"node-exporter"') +
-          // Add k8s cluster nodes rules
-          hostRules($._config.prometheusRules.alertGroupCluster, 'job=~"node-exporter"') +
-          // Add hosts rules
-          (
-            if std.length([$._config.hostMonitoring.hosts]) > 0 && $._config.hostMonitoring.enabled then
-              hostRules($._config.prometheusRules.alertGroupHost, 'job!~"node-exporter"')
-            else
-              []
+          std.flattenArrays(
+            [
+              $.newAlertPair(
+                name=alert.name,
+                message=alert.message,
+                expr=alert.expr,
+                thresholds=alert.thresholds,
+                customLables=alert.customLables,
+              )
+              for alert in alerts
+            ]
           )
         ),
       ],

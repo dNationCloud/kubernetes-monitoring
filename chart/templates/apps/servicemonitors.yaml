@@ -1,9 +1,13 @@
-{{- if and .Values.appMonitoring.enabled }}
+{{- if and .Values.clusterMonitoring.enabled }}
   {{ $app_service_monitors := dict }}
-  {{- range .Values.appMonitoring.apps }}
-    {{ if hasKey . "serviceMonitor" }}
-      {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
-      {{ $_ := set $app_service_monitors $name .serviceMonitor }}
+  {{- range .Values.clusterMonitoring.clusters }}
+    {{ if hasKey . "apps" }}
+      {{- range .apps }}
+        {{ if hasKey . "serviceMonitor" }}
+          {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+          {{ $_ := set $app_service_monitors $name .serviceMonitor }}
+        {{- end }}
+      {{- end }}
     {{- end }}
   {{- end }}
 

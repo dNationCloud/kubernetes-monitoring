@@ -42,30 +42,34 @@ make jsonnet-package
 ```
 1. Deploy dNation Kubernetes Monitoring with your changes
 ```bash
-K8s monitoring only (default)
+# Update K8s monitoring chart dependencies
+helm dependency update chart
+# K8s monitoring only (default)
 helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack
-Application monitoring example
-helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack -f helpers/values-app.yaml
-Host monitoring example
+# Cluster monitoring example
+helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack -f helpers/values-cluster.yaml
+# Cluster monitoring example with custom dashboard templates
+helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack -f helpers/values-cluster-elk.yaml
+# Host monitoring example
 helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack -f helpers/values-host.yaml
 ```
 
 If you want to run jsonnet formatter or linter use following:
-```
+```bash
 # Format jsonnet files
 make jsonnet-fmt
 # Lint jsonnet files
 make jsonnet-lint
 ```
 If you want to generate plain json grafana dashboards or prometheus rules use following:
-```
+```bash
 # Build json grafana dashboards
 make json-dashboards
 # Build json prometheus rules
 make json-rules
 ```
 If you want to run helm linter use following:
-```
+```bash
 # Lint helm chart
 make helm-lint
 ```

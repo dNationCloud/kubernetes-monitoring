@@ -22,348 +22,199 @@ local row = grafana.row;
 local link = grafana.link;
 local text = grafana.text;
 
-
-local sumArr(arr) =
-  /**
-   * Compute sum of array elements.
-   *
-   * @param arrays The input array.
-   * @return sum as number.
-   */
-  std.foldl(function(x, y) x + y, arr, 0);
-
-local maxArr(arr) =
-  /**
-   * Compute max of array elements.
-   *
-   * @param arrays The input array.
-   * @return max as number.
-   */
-  std.foldl(function(x, y) std.max(x, y), arr, 0);
-
-local zipWithIndex(arr) =
-  /**
-   * Enumarate array elements.
-   *
-   * @param arrays The input array.
-   * @return indexed array.
-  */
-  std.makeArray(std.length(arr), function(i) [i, arr[i]]);
-
-local applicationRowHeight(index, templates) =
-  /**
-   * Compute application row height.
-   *
-   * @param index The index of host with application.
-   * @param templates The input application templates array.
-   * @return application row height as number.
-  */
-  maxArr([
-    local appItemGridY =
-      if std.objectHas(template, 'grid') && std.objectHas(template.grid, 'posY') then
-        (template.grid.posY * 3) + 4  // `3` -> stat panel height
-      else
-        (index * 3) + 4;
-
-    appItemGridY
-    for template in templates
-  ]);
-
-local getGridY(index, hosts) =
-  /**
-   * Compute element grid Y coordinate based on host index number
-   *
-   * @param index The index of host.
-   * @param hosts The input hosts array.
-   * @return grid Y coordinate as number.
-  */
-  local initGridY = 4;
-  local hostHeight = 7;
-  local hostsPasts = if index > 0 then hosts[:index] else [];
-  local hostsPastsApps = if std.length(hostsPasts) > 0 then std.flattenArrays([host.apps for host in hostsPasts if std.objectHas(host, 'apps')]) else [];
-  local hostsPastsAppsHeight = if std.length(hostsPastsApps) > 0 then sumArr([
-    applicationRowHeight(index_app[0], index_app[1].templates)
-    for index_app in zipWithIndex(hostsPastsApps)
-  ]) else 0;
-  initGridY + (index * hostHeight) + hostsPastsAppsHeight;
-
 {
   grafanaDashboards+::
-    if std.length([$._config.hostMonitoring.hosts]) > 0 && $._config.hostMonitoring.enabled then
+    local hostDashboard(hostUid, dashboardName, hostTemplates, hostApps=[]) = {
+      local k8sMonitoringLink =
+        link.dashboards(
+          title='Kubernetes Monitoring',
+          tags=[],
+          url='/d/%s' % $._config.grafanaDashboards.ids.k8sMonitoring,
+          type='link',
+        ),
+      local dNationLink =
+        link.dashboards(
+          title='dNation - Making Cloud Easy',
+          tags=[],
+          icon='cloud',
+          url='https://www.dNation.cloud/',
+          type='link',
+          targetBlank=true,
+        ),
+      local alertPanel(title, expr) =
+        statPanel.new(
+          title=title,
+          datasource='$alertmanager',
+          graphMode='none',
+          colorMode='background',
+        )
+        .addTarget({ type: 'single', expr: expr }),
+      local criticalPanel =
+        alertPanel(
+          title='Critical',
+          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp],
+        )
+        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=$job&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
+      local warningPanel =
+        alertPanel(
+          title='Warning',
+          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp],
+        )
+        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=$job&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
+      local hostStatsPanels = [
+        statPanel.new(
+          title=tpl.panel.title,
+          description='%s\n\nHost monitoring template: _%s_' % [tpl.panel.description, tpl.templateName],
+          datasource=tpl.panel.datasource,
+          colorMode=tpl.panel.colorMode,
+          graphMode=tpl.panel.graphMode,
+          unit=tpl.panel.unit,
+        )
+        .addTarget(prometheus.target(tpl.panel.expr))
+        .addMappings(tpl.panel.mappings)
+        .addDataLinks(tpl.panel.dataLinks)
+        .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
+        {
+          gridPos: {
+            x: tpl.panel.gridPos.x,
+            y: tpl.panel.gridPos.y,
+            w: tpl.panel.gridPos.w,
+            h: tpl.panel.gridPos.h,
+          },
+        }
+        for tpl in hostTemplates
+      ],
+      local hostAppStatsPanels(index, app) = [
+        local appGridX =
+          if std.type(tpl.panel.gridPos.x) == 'number' then
+            tpl.panel.gridPos.x * 4  // `4` -> default stat panel weight
+          else
+            index * 4;
+        local appGridY =
+          if std.type(tpl.panel.gridPos.y) == 'number' then
+            12 + (tpl.panel.gridPos.y * 3)  // `12` -> init Y position in application row; `3` -> default stat panel height
+          else
+            12 + (index * 3);
+        statPanel.new(
+          title='Health %s' % app.name,
+          description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
+          datasource=tpl.panel.datasource,
+          colorMode=tpl.panel.colorMode,
+          graphMode=tpl.panel.graphMode,
+          unit=tpl.panel.unit,
+        )
+        .addTarget(prometheus.target(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName }))
+        .addMappings(tpl.panel.mappings)
+        .addDataLinks(
+          if std.length(tpl.panel.dataLinks) > 0 then
+            tpl.panel.dataLinks
+          else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
+            [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
+          else
+            []
+        )
+        .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
+        {
+          gridPos: {
+            x: appGridX,
+            y: appGridY,
+            w: tpl.panel.gridPos.w,
+            h: tpl.panel.gridPos.h,
+          },
+        }
+        for tpl in app.templates
+      ],
+      local applicationPanels(apps) =
+        if std.length(apps) > 0 then
+          [
+            row.new('Applications') { gridPos: { x: 0, y: 12, w: 24, h: 1 } },
+          ] +
+          std.flattenArrays([
+            hostAppStatsPanels(app.index, app.item)
+            for app in $.zipWithIndex(apps)
+          ])
+        else
+          [],
+      local datasourceTemplate =
+        template.datasource(
+          query='prometheus',
+          name='datasource',
+          current=null,
+          label='Datasource',
+        ),
+      local jobTemplate =
+        template.new(
+          name='job',
+          query='label_values(node_uname_info, job)',
+          label='Job',
+          datasource='$datasource',
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+        ),
+      local alertManagerTemplate =
+        template.datasource(
+          query='camptocamp-prometheus-alertmanager-datasource',
+          name='alertmanager',
+          current=null,
+          label='AlertManager',
+          hide='variable',
+        ),
+      local clusterTemplate =
+        template.new(
+          name='cluster',
+          label='Cluster',
+          datasource='$datasource',
+          query='label_values(kube_node_info, cluster)',
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          hide='variable',
+        ),
+      dashboard: dashboard.new(
+        dashboardName,
+        editable=$._config.grafanaDashboards.editable,
+        graphTooltip=$._config.grafanaDashboards.tooltip,
+        refresh=$._config.grafanaDashboards.refresh,
+        time_from=$._config.grafanaDashboards.time_from,
+        tags=$._config.grafanaDashboards.tags.k8sHostsMain,
+        uid=hostUid,
+      )
+                 .addLinks(
+        [
+          k8sMonitoringLink,
+          dNationLink,
+        ]
+      )
+                 .addTemplates([datasourceTemplate, jobTemplate, alertManagerTemplate, clusterTemplate])
+                 .addPanels(
+        [
+          row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
+          warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
+          row.new('Host') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+          text.new('CPU') { gridPos: { x: 0, y: 5, w: 6, h: 1 } },
+          text.new('RAM') { gridPos: { x: 6, y: 5, w: 6, h: 1 } },
+          text.new('Disk') { gridPos: { x: 12, y: 5, w: 6, h: 1 } },
+          text.new('Network') { gridPos: { x: 18, y: 5, w: 6, h: 1 } },
+        ] + hostStatsPanels + applicationPanels(hostApps)
+      ),
+    };
+    if $._config.hostMonitoring.enabled && std.length($._config.hostMonitoring.hosts) > 0 then
       {
-        'host-monitoring':
-          local appMonitoringLink =
-            link.dashboards(
-              title='Application Monitoring',
-              tags=[],
-              url='/d/%s' % $._config.grafanaDashboards.ids.appMonitoring,
-              type='link',
-            );
+        local getUid(obj) = '%s%s' % [$._config.grafanaDashboards.ids.hostMonitoring, std.asciiLower(obj.name)],
+        local getName(obj) = 'Host Monitoring %s' % obj.name,
 
-          local k8sMonitoringLink =
-            link.dashboards(
-              title='Kubernetes Monitoring',
-              tags=[],
-              url='/d/%s' % $._config.grafanaDashboards.ids.k8sMonitoring,
-              type='link',
-            );
-
-          local dNationLink =
-            link.dashboards(
-              title='dNation - Making Cloud Easy',
-              tags=[],
-              icon='cloud',
-              url='https://www.dNation.cloud/',
-              type='link',
-              targetBlank=true,
-            );
-
-          local alertPanel(title, expr) =
-            statPanel.new(
-              title=title,
-              datasource='$alertmanager',
-              graphMode='none',
-              colorMode='background',
-            )
-            .addTarget({ type: 'single', expr: expr });
-
-          local criticalPanel =
-            alertPanel(
-              title='Critical',
-              expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp],
-            )
-            .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
-            .addThresholds($.grafanaThresholds($._config.commonThresholds.criticalPanel));
-
-          local warningPanel =
-            alertPanel(
-              title='Warning',
-              expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp],
-            )
-            .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
-            .addThresholds($.grafanaThresholds($._config.commonThresholds.warningPanel));
-
-          local datasourceTemplate =
-            template.datasource(
-              query='prometheus',
-              name='datasource',
-              current=null,
-              label='Datasource',
-            );
-
-          local alertManagerTemplate =
-            template.datasource(
-              query='camptocamp-prometheus-alertmanager-datasource',
-              name='alertmanager',
-              current=null,
-              label='AlertManager',
-              hide='variable',
-            );
-
-          local clusterTemplate =
-            template.new(
-              name='cluster',
-              label='Cluster',
-              datasource='$datasource',
-              query='label_values(kube_node_info, cluster)',
-              sort=$._config.grafanaDashboards.templateSort,
-              refresh=$._config.grafanaDashboards.templateRefresh,
-              hide='variable',
-            );
-
-          local percentStatPanel(title, expr) =
-            statPanel.new(
-              title=title,
-              datasource='$datasource',
-              colorMode='background',
-              unit='percent',
-            )
-            .addTarget(prometheus.target(expr));
-
-          local overallUtilizationCPUPanel(host) =
-            percentStatPanel(
-              title='Overall Utilization',
-              expr='avg(%s)' % $._config.templates.nodeCpuUtilization.expr % { job: 'job=~"%s"' % host.jobName },
-            )
-            .addThresholds($.grafanaThresholds($._config.templates.nodeCpuUtilization.thresholds))
-            .addDataLink({ title: 'System Overview', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids.nodeExporter, host.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] });
-
-          local overallUtilizationRAMPanel(host) =
-            percentStatPanel(
-              title='Overall Utilization',
-              expr='avg(%s)' % $._config.templates.nodeRamUtilization.expr % { job: 'job=~"%s"' % host.jobName },
-            )
-            { description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```' }
-            .addThresholds($.grafanaThresholds($._config.templates.nodeRamUtilization.thresholds))
-            .addDataLink({ title: 'System Overview', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids.nodeExporter, host.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] });
-
-          local overallUtilizationDiskPanel(host) =
-            percentStatPanel(
-              title='Overall Utilization',
-              expr='avg(%s)' % $._config.templates.nodeDiskUtilization.expr % { job: 'job=~"%s"' % host.jobName },
-            )
-            { description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.' }
-            .addThresholds($.grafanaThresholds($._config.templates.nodeDiskUtilization.thresholds))
-            .addDataLink({ title: 'System Overview', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids.nodeExporter, host.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] });
-
-          local networkErrorsPanel(host) =
-            percentStatPanel(
-              title='Errors',
-              expr='sum(%s)' % $._config.templates.nodeNetworkErrors.expr % { job: 'job=~"%s"' % host.jobName },
-            )
-            { fieldConfig: { defaults: { unit: 'pps' } } }
-            .addThresholds($.grafanaThresholds($._config.templates.nodeNetworkErrors.thresholds))
-            .addDataLink({ title: 'System Overview', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids.nodeExporter, host.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] });
-
-          local valueStatPanel(title, expr, unit='none') =
-            statPanel.new(
-              title=title,
-              datasource='$datasource',
-              graphMode='none',
-              unit=unit,
-            )
-            .addTarget(prometheus.target(expr))
-            .addThreshold({ color: $._config.grafanaDashboards.color.white, value: null });
-
-          local usedCoresPanel(host) =
-            valueStatPanel(
-              title='Used Cores',
-              expr='(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"%(job)s", mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", job=~"%(job)s", mode="system"})' % { job: host.jobName },
-            );
-
-          local totalCoresPanel(host) =
-            valueStatPanel(
-              title='Total Cores',
-              expr='count(node_cpu_seconds_total{cluster=~"$cluster", job=~"%(job)s", mode="system"})' % { job: host.jobName },
-            );
-
-          local usedRAMPanel(host) =
-            valueStatPanel(
-              title='Used',
-              expr='sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"%(job)s"}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"%(job)s"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"%(job)s"}))))' % { job: host.jobName },
-              unit='bytes',
-            );
-
-          local totalRAMPanel(host) =
-            valueStatPanel(
-              title='Total',
-              expr='sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"%(job)s"})' % { job: host.jobName },
-              unit='bytes',
-            );
-
-          local usedDiskPanel(host) =
-            valueStatPanel(
-              title='Used',
-              expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"%(job)s", device!="rootfs"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"%(job)s", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"%(job)s", device!="rootfs"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"%(job)s", device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"%(job)s", device!="rootfs"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"%(job)s", device!="rootfs"}) by (device)  > 0 )\n)))' % { job: host.jobName },
-              unit='bytes',
-            );
-
-          local totalDiskPanel(host) =
-            valueStatPanel(
-              title='Total',
-              expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"%(job)s", device!="rootfs"})' % { job: host.jobName },
-              unit='bytes',
-            );
-
-          local applicationPanel(app, templates, index, appGridY) =
-            [
-              local appItemGridX =
-                if std.objectHas(template, 'grid') && std.objectHas(template.grid, 'posX') then
-                  template.grid.posX * 4  // `4` -> stat panel weight
-                else
-                  index * 4;
-              local appItemGridY =
-                if std.objectHas(template, 'grid') && std.objectHas(template.grid, 'posY') then
-                  appGridY + (template.grid.posY * 3) + 1  // `appGridY` -> init Y position in application row; `3` -> stat panel height
-                else
-                  appGridY; //+(index * 3)+1
-
-              statPanel.new(
-                title='Health %s %s' % [app.name, template.name],
-                description=app.description,
-                datasource='$datasource',
-                colorMode='background',
-                unit=if std.objectHas($._config.templates, template.name) && std.objectHas($._config.templates[template.name], 'unit') then $._config.templates[template.name].unit else 'percent',
-              )
-              .addTarget(prometheus.target(
-                if std.objectHas($._config.templates, template.name) then
-                  $._config.templates[template.name].expr % { job: 'job=~"%s"' % app.jobName }
-                else
-                  $._config.templates.defaultApp.expr % { job: 'job=~"%s"' % app.jobName }
-              ))
-              .addDataLink({ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[template.name], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] })
-              .addThresholds(
-                if std.objectHas($._config.templates, template.name) then
-                  $.grafanaThresholds($._config.templates[template.name].thresholds)
-                else
-                  $.grafanaThresholds($._config.templates.defaultApp.thresholds)
-              )
-              { gridPos: { x: appItemGridX, y: appItemGridY, w: 4, h: 3 } }
-
-              for template in templates
-            ];
-
-          local hostPanel(host, apps, gridY) =
-            local rowGridY = gridY;
-            local textGridY = rowGridY + 1;
-            local overallGridY = textGridY + 1;
-            local usedTotalGridY = overallGridY + 3;
-            local appGridY = usedTotalGridY + 2;
-            [
-              row.new('Host %s' % host.name) { gridPos: { x: 0, y: rowGridY, w: 24, h: 1 } },
-              text.new('CPU') { gridPos: { x: 0, y: textGridY, w: 6, h: 1 } },
-              text.new('RAM') { gridPos: { x: 6, y: textGridY, w: 6, h: 1 } },
-              text.new('Disk') { gridPos: { x: 12, y: textGridY, w: 6, h: 1 } },
-              text.new('Network') { gridPos: { x: 18, y: textGridY, w: 6, h: 1 } },
-              overallUtilizationCPUPanel(host) { gridPos: { x: 0, y: overallGridY, w: 6, h: 3 } },
-              overallUtilizationRAMPanel(host) { gridPos: { x: 6, y: overallGridY, w: 6, h: 3 } },
-              overallUtilizationDiskPanel(host) { gridPos: { x: 12, y: overallGridY, w: 6, h: 3 } },
-              networkErrorsPanel(host) { gridPos: { x: 18, y: overallGridY, w: 6, h: 3 } },
-              usedCoresPanel(host) { gridPos: { x: 0, y: usedTotalGridY, w: 3, h: 2 } },
-              totalCoresPanel(host) { gridPos: { x: 3, y: usedTotalGridY, w: 3, h: 2 } },
-              usedRAMPanel(host) { gridPos: { x: 6, y: usedTotalGridY, w: 3, h: 2 } },
-              totalRAMPanel(host) { gridPos: { x: 9, y: usedTotalGridY, w: 3, h: 2 } },
-              usedDiskPanel(host) { gridPos: { x: 12, y: usedTotalGridY, w: 3, h: 2 } },
-              totalDiskPanel(host) { gridPos: { x: 15, y: usedTotalGridY, w: 3, h: 2 } },
-            ] +
-            (if std.length(apps) > 0 then [text.new('Applications') { gridPos: { x: 0, y: appGridY, w: 24, h: 1 } }] else []) +
-            (if std.length(apps) > 0 then std.flattenArrays([
-               applicationPanel(index_app[1], index_app[1].templates, index_app[0], appGridY + 1)
-               for index_app in zipWithIndex(apps)
-             ]) else []);
-
-          local hostPanels =
-            std.flattenArrays([
-              hostPanel(
-                index_host[1],
-                if std.objectHas(index_host[1], 'apps') then index_host[1].apps else [],
-                getGridY(index_host[0], $._config.hostMonitoring.hosts)
-              )
-              for index_host in zipWithIndex($._config.hostMonitoring.hosts)
-            ]);
-
-          local isAppMonitoring =
-            std.length($._config.appMonitoring.apps) > 0 && $._config.appMonitoring.enabled;
-
-          dashboard.new(
-            'Host Monitoring',
-            editable=$._config.grafanaDashboards.editable,
-            graphTooltip=$._config.grafanaDashboards.tooltip,
-            refresh=$._config.grafanaDashboards.refresh,
-            time_from=$._config.grafanaDashboards.time_from,
-            tags=$._config.grafanaDashboards.tags.k8sHostsMain,
-            uid=$._config.grafanaDashboards.ids.hostMonitoring,
-          )
-          .addLinks(
-            (if isAppMonitoring then [appMonitoringLink] else []) + [k8sMonitoringLink, dNationLink]
-          )
-          .addTemplates([datasourceTemplate, alertManagerTemplate, clusterTemplate])
-          .addPanels(
-            [
-              row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-              criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
-              warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
-            ] + hostPanels
-          ),
-      } else {},
+        ['host-monitoring-%s' % host.name]: hostDashboard(getUid(host), getName(host), $.getTemplates($._config.templates.host, host), $.getApps($._config.templates.hostApps, host)).dashboard
+        for host in $._config.hostMonitoring.hosts
+        if (std.objectHas(host, 'apps') || std.objectHas(host, 'templates'))
+      } +
+      if $.isAnyDefault($._config.hostMonitoring.hosts) then
+        {
+          'host-monitoring': hostDashboard($._config.grafanaDashboards.ids.hostMonitoring, 'Host Monitoring', $.getTemplates($._config.templates.host)).dashboard,
+        }
+      else
+        {}
+    else
+      {},
 }
