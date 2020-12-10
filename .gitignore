@@ -12,3 +12,6 @@ chart/release/*
 chart/Chart.lock
 # Test files
 json/*
+# Docs files
+docs/site/*
+docs/documentation.md

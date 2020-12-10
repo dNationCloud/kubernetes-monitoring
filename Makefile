@@ -37,3 +37,12 @@ json-dashboards:
 json-rules:
 	@echo "[Building prometheus rules]"
 	docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m json jsonnet/rules.jsonnet
+
+docs-generate:
+	@echo "[Generate documentation]"
+	rm -rf docs/project docs/site
+	mkdir docs/project
+	rsync -Rr ./ ./docs/project --exclude=".*"
+	cd docs/project && python3 docs/generate_md_docs.py
+	cd docs/ && python3 -m mkdocs build -f mkdocs.yml
+	rm -rf docs/project

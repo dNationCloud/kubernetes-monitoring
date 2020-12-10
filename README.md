@@ -26,11 +26,14 @@ In case your current Kubernetes installation doesn't contain Prometheus Operator
 # Dashboards and Alerts only Installation
 In case your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow [here](GETTING_STARTED.md).
 
-# Contribution guidelines
+# Documentation
+See the documentation here: [dnationcloud.github.io/kubernetes-monitoring/documentation](https://dnationcloud.github.io/kubernetes-monitoring/documentation)    
 
+# Contribution guidelines
 If you want to contribute, please read following:
-1. [Contribution Guidelines](CONTRIBUTING.md)
-1. [Code of Conduct](CODE_OF_CONDUCT.md)
+
+1. [Contribution Guidelines](CONTRIBUTING.md) 
+1. [Code of Conduct](CODE_OF_CONDUCT.md) 
 1. [How To](helpers/README.md) simplify your local development
 
 We use GitHub issues to manage requests and bugs.

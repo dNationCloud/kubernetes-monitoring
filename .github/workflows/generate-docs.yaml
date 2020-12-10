@@ -1,0 +1,38 @@
+name: Generate documentation and upload to Github Page
+
+on:
+  push:
+    branches:
+    - main
+    # Only if there are changes.
+    paths:
+    - 'docs/**'
+    - 'mkdocs.yaml'
+    - 'jsonnet/config.libsonnet'
+    - 'jsonnet/templates.libsonnet'
+    - 'chart/values.yaml'
+    - '**.md'
+
+jobs:
+  generate-docs-and-page:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Fetch history
+      run: git fetch --prune --unshallow
+
+    - name: Install Python dependencies
+      run: |
+        pip3 install -U pip setuptools
+        pip3 install -r "docs/requirements.txt"
+
+    - name: Generate docs
+      run: make docs-generate
+
+    - name: Deploy docs
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site

@@ -1,0 +1,34 @@
+tr, th {
+  font-size: .8rem;
+}
+
+.md-typeset__scrollwrap {
+  overflow-x: unset;
+}
+
+.my-pre code {
+  padding: 0.5em;
+  font-size: .8rem;
+  display: block;
+  unicode-bidi: embed;
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: unset;
+  color: #c7254e;
+}
+
+.md-typeset h2 {
+  font-size: 1.8em;
+}
+
+.md-typeset h3 {
+  font-size: 1.6em;
+}
+
+.md-typeset h4 {
+  font-size: 1.25em;
+}
+
+.md-typeset  h5, .md-typeset h6 {
+  font-size: 0.8em;
+}
