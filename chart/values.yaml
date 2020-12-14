@@ -21,7 +21,7 @@ commonLabels: {}
 ## Deploy a dnation-jsonnet-translator
 ## ref: https://github.com/dNationCloud/jsonnet-translator
 ##
-dnation-jsonnet-translator:
+dnation-kubernetes-jsonnet-translator:
   enabled: true
   image:
     # Arguments for translator container
