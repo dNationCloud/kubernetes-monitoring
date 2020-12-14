@@ -46,7 +46,7 @@ local table = grafana.tablePanel;
       local thresholds = [1, 1];
       local rangeMaps = [
         { from: 0, text: 'OK', to: 0 },
-        { from: 1, text: 'Failed', to: 300000 },
+        { from: 1, text: 'Failed', to: $._config.grafanaDashboards.constants.infinity },
       ];
 
       local daemonSetsTable =

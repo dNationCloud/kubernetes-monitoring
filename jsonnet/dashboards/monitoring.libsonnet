@@ -21,6 +21,7 @@ local row = grafana.row;
 local link = grafana.link;
 
 
+local maxWarnings = 10000;
 local panelWidth = 4;
 local panelHeight = 3;
 local rowWidth = 24;
@@ -66,9 +67,6 @@ local getClusterRowGridY(numOfHosts) =
 {
   grafanaDashboards+::
 
-    local isAppMonitoring =
-      std.length($._config.appMonitoring.apps) > 0 && $._config.appMonitoring.enabled;
-
     local isHostMonitoring =
       std.length($._config.hostMonitoring.hosts) > 0 && $._config.hostMonitoring.enabled;
 
@@ -95,8 +93,8 @@ local getClusterRowGridY(numOfHosts) =
 
             local rangeMaps = [
               { from: 0, text: 'OK', to: 0, type: 2, value: '' },
-              { from: 1, text: 'Warning', to: 10000, type: 2, value: '' },
-              { from: 10000, text: 'Critical', to: 1000000, type: 2, value: '' },
+              { from: 1, text: 'Warning', to: maxWarnings, type: 2, value: '' },
+              { from: maxWarnings, text: 'Critical', to: $._config.grafanaDashboards.constants.infinity, type: 2, value: '' },
             ];
 
             statPanel.new(
@@ -106,7 +104,7 @@ local getClusterRowGridY(numOfHosts) =
               colorMode='background',
             )
             .addTarget({ type: 'single', expr: expr })
-            .addThresholds($.grafanaThresholds({ operator: '>=', warning: 1, critical: 10000 }))
+            .addThresholds($.grafanaThresholds({ operator: '>=', warning: 1, critical: maxWarnings }))
             .addMappings(rangeMaps);
 
           local hostAlertsPanel(host) =
@@ -114,8 +112,8 @@ local getClusterRowGridY(numOfHosts) =
               title='Host %s' % host.name,
               expr=|||
                 sum(ALERTS{alertname!="Watchdog", severity="warning", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) +
-                sum(ALERTS{alertname!="Watchdog", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * 10000
-              ||| % { job: host.jobName, groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp },
+                sum(ALERTS{alertname!="Watchdog", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * %(maxWarnings)d
+              ||| % { job: host.jobName, groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings },
             )
             .addDataLink({ title: 'Host Monitoring', url: '/d/%s?%s' % [$._config.grafanaDashboards.ids.hostMonitoring, $._config.grafanaDashboards.dataLinkCommonArgs] });
 
@@ -129,15 +127,10 @@ local getClusterRowGridY(numOfHosts) =
               title='Cluster %s' % cluster.name,
               expr=|||
                 sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) +
-                sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * 10000
-              ||| % { cluster: cluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupApp },
+                sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d
+              ||| % { cluster: cluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupApp, maxWarnings: maxWarnings },
             )
-            .addDataLinks(
-              [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [$._config.grafanaDashboards.ids.k8sMonitoring, dataLinkCommonArgs] }] +
-              (if isAppMonitoring then
-                 [{ title: 'Application Monitoring', url: '/d/%s?%s' % [$._config.grafanaDashboards.ids.appMonitoring, dataLinkCommonArgs] }]
-               else [])
-            );
+            .addDataLink({ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [$._config.grafanaDashboards.ids.k8sMonitoring, dataLinkCommonArgs] });
 
           local datasourceTemplate =
             template.datasource(
