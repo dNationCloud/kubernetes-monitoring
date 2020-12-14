@@ -120,6 +120,9 @@
         k8sHostsMain: ['k8s', 'host', 'L1'],
         k8sMonitoringMain: ['k8s', 'cluster', 'host', 'L0'],
       },
+      constants: {
+        infinity: 999999999,
+      },
     },
 
     prometheusRules: {
