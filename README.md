@@ -20,8 +20,6 @@ Monitoring targets are:
 |:----------:|:-----------:|:------------------:|
 | ![Kubernetes](docs/images/kubernetes-monitoring.png) | ![Hosts](docs/images/host-monitoring.png) | ![Applications](docs/images/app-monitoring.png) |
 
-This project has been developed, maintained and used in production by professionals to simplify their day-to-day monitoring tasks and reduce incident reaction time.
-
 # Full Installation
 In case your current Kubernetes installation doesn't contain Prometheus, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://github.com/dNationCloud/kubernetes-monitoring-stack) helm chart.
 
@@ -36,3 +34,8 @@ If you want to contribute, please read following:
 1. [How To](helpers/README.md) simplify your local development
 
 We use GitHub issues to manage requests and bugs, please visit our discussion forum if you have any questions.
+
+# Commercial support
+This project has been developed, maintained and used in production by professionals to simplify their day-to-day monitoring tasks and reduce incident reaction time.
+
+Commercial support is available, including 24/7, please [contact us](mailto:cloud@dNation.cloud?subject=Request%20for%20commercial%20support%20of%20dNation%20Kubernetes%20Monitoring).
