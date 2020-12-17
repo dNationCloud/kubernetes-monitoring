@@ -46,14 +46,14 @@ local getGridY(offset, index) =
   */
   std.floor((index * panelWidth) / rowWidth) * panelHeight + offset;
 
-local getClusterRowGridY(numOfHosts) =
+local getClusterRowGridY(numOfClusters) =
   /**
-   * Compute grid Y coordinate of cluster row based on number of hosts.
+   * Compute grid Y coordinate of host row based on number of clusters.
    *
    * @param index The index of host.
    * @return grid Y coordinate as number.
   */
-  getGridY(2 + panelHeight, numOfHosts - 1);
+  getGridY(2 + panelHeight, numOfClusters - 1);
 
 {
   grafanaDashboards+::
@@ -64,16 +64,14 @@ local getClusterRowGridY(numOfHosts) =
     local isClusterMonitoring =
       std.length($._config.clusterMonitoring.clusters) > 0 && $._config.clusterMonitoring.enabled;
 
-    local numOfHosts =
-      if isHostMonitoring then std.length($._config.hostMonitoring.hosts) else 0;
+    local numOfClusters =
+      if isClusterMonitoring then std.length($._config.clusterMonitoring.clusters) else 0;
 
     local getUid(defaultId, obj) =
       if $.isAnyDefault([obj]) then defaultId else defaultId + std.asciiLower(obj.name);
 
     local getJob(obj) =
       if $.isAnyDefault([obj]) then '&var-job=%s' % obj.jobName else '';
-
-    local getClusterVar(cluster) = '&var-cluster=%s' % cluster.name;
 
     if isHostMonitoring || isClusterMonitoring then
       {
@@ -132,7 +130,7 @@ local getClusterRowGridY(numOfHosts) =
                 sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d
               ||| % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings },
             )
-            .addDataLink({ title: 'Kubernetes Monitoring', url: '/d/%s?%s%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster), dataLinkCommonArgs, getClusterVar(localCluster)] });
+            .addDataLink({ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster), dataLinkCommonArgs] });
 
           local datasourceTemplate =
             template.datasource(
@@ -153,13 +151,14 @@ local getClusterRowGridY(numOfHosts) =
 
           local hostPanel(index, host) =
             local gridX = getGridX(index);
-            local gridY = getGridY(1, index);
+            local gridY = getGridY(getClusterRowGridY(numOfClusters) + 1, index);
+
 
             [hostAlertsPanel(host) { gridPos: { x: gridX, y: gridY, w: panelWidth, h: panelHeight } }];
 
           local clusterPanel(index, cluster) =
             local gridX = getGridX(index);
-            local gridY = getGridY(getClusterRowGridY(numOfHosts) + 1, index);
+            local gridY = getGridY(1, index);
 
             [clusterAlertsPanel(cluster) { gridPos: { x: gridX, y: gridY, w: panelWidth, h: panelHeight } }];
 
@@ -178,8 +177,8 @@ local getClusterRowGridY(numOfHosts) =
 
             std.flattenArrays([
               clusterPanel(cluster.index, cluster.item)
-              for cluster in $.zipWithIndex(firstCluster)
-              //for cluster in $.zipWithIndex($._config.clusterMonitoring.clusters)
+              //for cluster in $.zipWithIndex(firstCluster)
+              for cluster in $.zipWithIndex($._config.clusterMonitoring.clusters)
             ]);
 
           dashboard.new(
@@ -194,11 +193,11 @@ local getClusterRowGridY(numOfHosts) =
           .addLink(dNationLink)
           .addTemplates([datasourceTemplate, alertManagerTemplate])
           .addPanels(
-            (if isHostMonitoring then
-               [row.new('Host Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + hostPanels
-             else []) +
             (if isClusterMonitoring then
-               [row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: getClusterRowGridY(numOfHosts), w: 24, h: 1 } }] + clusterPanels
+               [row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
+             else []) +
+            (if isHostMonitoring then
+               [row.new('Host Monitoring') { gridPos: { x: 0, y: getClusterRowGridY(numOfClusters), w: 24, h: 1 } }] + hostPanels
              else [])
           ),
       } else {},
