@@ -100,14 +100,14 @@ local text = grafana.text;
       local k8sAppStatsPanels(index, app) = [
         local appGridX =
           if std.type(tpl.panel.gridPos.x) == 'number' then
-            tpl.panel.gridPos.x * 4  // `4` -> default stat panel weight
+            tpl.panel.gridPos.x
           else
-            index * 4;
+            index * 4;  // `4` -> default stat panel width
         local appGridY =
           if std.type(tpl.panel.gridPos.y) == 'number' then
-            23 + (tpl.panel.gridPos.y * 3)  // `23` -> init Y position in application row; `3` -> default stat panel height
+            tpl.panel.gridPos.y
           else
-            23 + (index * 3);
+            23;  // `23` -> init Y position in application row;
         statPanel.new(
           title='Health %s' % app.name,
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],

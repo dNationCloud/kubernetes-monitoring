@@ -67,9 +67,9 @@
 
   isAnyDefault(obj):: std.length(std.prune([
     if std.objectHas(item, 'apps') || std.objectHas(item, 'templates') then
-      true
-    else
       null
+    else
+      true
     for item in obj
   ])) > 0,
 
