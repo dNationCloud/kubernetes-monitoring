@@ -89,14 +89,14 @@ local text = grafana.text;
       local hostAppStatsPanels(index, app) = [
         local appGridX =
           if std.type(tpl.panel.gridPos.x) == 'number' then
-            tpl.panel.gridPos.x * 4  // `4` -> default stat panel weight
+            tpl.panel.gridPos.x
           else
-            index * 4;
+            index * 4;  // `4` -> default stat panel width
         local appGridY =
           if std.type(tpl.panel.gridPos.y) == 'number' then
-            12 + (tpl.panel.gridPos.y * 3)  // `12` -> init Y position in application row; `3` -> default stat panel height
+            tpl.panel.gridPos.y
           else
-            12 + (index * 3);
+            12;  // `12` -> init Y position in application row;
         statPanel.new(
           title='Health %s' % app.name,
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
@@ -129,7 +129,7 @@ local text = grafana.text;
       local applicationPanels(apps) =
         if std.length(apps) > 0 then
           [
-            row.new('Applications') { gridPos: { x: 0, y: 12, w: 24, h: 1 } },
+            row.new('Applications') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
           ] +
           std.flattenArrays([
             hostAppStatsPanels(app.index, app.item)

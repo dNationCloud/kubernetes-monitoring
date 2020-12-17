@@ -27,15 +27,6 @@ local panelHeight = 3;
 local rowWidth = 24;
 
 
-local zipWithIndex(arr) =
-  /**
-   * Enumarate array elements.
-   *
-   * @param arrays The input array.
-   * @return indexed array.
-  */
-  std.makeArray(std.length(arr), function(i) [i, arr[i]]);
-
 local getGridX(index) =
   /**
    * Compute element grid X coordinate based on index number
@@ -76,6 +67,14 @@ local getClusterRowGridY(numOfHosts) =
     local numOfHosts =
       if isHostMonitoring then std.length($._config.hostMonitoring.hosts) else 0;
 
+    local getUid(defaultId, obj) =
+      if $.isAnyDefault([obj]) then defaultId else defaultId + std.asciiLower(obj.name);
+
+    local getJob(obj) =
+      if $.isAnyDefault([obj]) then '&var-job=%s' % obj.jobName else '';
+
+    local getClusterVar(cluster) = '&var-cluster=%s' % cluster.name;
+
     if isHostMonitoring || isClusterMonitoring then
       {
         monitoring:
@@ -115,7 +114,7 @@ local getClusterRowGridY(numOfHosts) =
                 sum(ALERTS{alertname!="Watchdog", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * %(maxWarnings)d
               ||| % { job: host.jobName, groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings },
             )
-            .addDataLink({ title: 'Host Monitoring', url: '/d/%s?%s' % [$._config.grafanaDashboards.ids.hostMonitoring, $._config.grafanaDashboards.dataLinkCommonArgs] });
+            .addDataLink({ title: 'Host Monitoring', url: '/d/%s?%s%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, getJob(host)] });
 
           local clusterAlertsPanel(cluster) =
 
@@ -123,14 +122,17 @@ local getClusterRowGridY(numOfHosts) =
             local dataLinkCommonArgs = $._config.grafanaDashboards.dataLinkCommonArgs;
             //local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster|', cluster.name);
 
+            // when multiple cluster will be supported, cluster variable will in expr will be cluster name
+            local localCluster = { name: '' };
+
             alertPanel(
               title='Cluster %s' % cluster.name,
               expr=|||
                 sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) +
                 sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d
-              ||| % { cluster: cluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings },
+              ||| % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings },
             )
-            .addDataLink({ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [$._config.grafanaDashboards.ids.k8sMonitoring, dataLinkCommonArgs] });
+            .addDataLink({ title: 'Kubernetes Monitoring', url: '/d/%s?%s%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster), dataLinkCommonArgs, getClusterVar(localCluster)] });
 
           local datasourceTemplate =
             template.datasource(
@@ -149,35 +151,35 @@ local getClusterRowGridY(numOfHosts) =
               hide='variable',
             );
 
-          local hostPanel(host, ix) =
-            local gridX = getGridX(ix);
-            local gridY = getGridY(1, ix);
+          local hostPanel(index, host) =
+            local gridX = getGridX(index);
+            local gridY = getGridY(1, index);
 
             [hostAlertsPanel(host) { gridPos: { x: gridX, y: gridY, w: panelWidth, h: panelHeight } }];
 
-          local clusterPanel(cluster, ix) =
-            local gridX = getGridX(ix);
-            local gridY = getGridY(getClusterRowGridY(numOfHosts) + 1, ix);
+          local clusterPanel(index, cluster) =
+            local gridX = getGridX(index);
+            local gridY = getGridY(getClusterRowGridY(numOfHosts) + 1, index);
 
             [clusterAlertsPanel(cluster) { gridPos: { x: gridX, y: gridY, w: panelWidth, h: panelHeight } }];
 
           local hostPanels =
             std.flattenArrays([
-              hostPanel(index_host[1], index_host[0])
-              for index_host in zipWithIndex($._config.hostMonitoring.hosts)
+              hostPanel(host.index, host.item)
+              for host in $.zipWithIndex($._config.hostMonitoring.hosts)
             ]);
 
           local clusterPanels =
-            // multiple cluster monitoring isn't supported yet, always take first cluster
+            // multiple cluster monitoring isn't supported yet, always take only first cluster
             local firstCluster =
               (if std.length($._config.clusterMonitoring.clusters) > 0 then
                  [$._config.clusterMonitoring.clusters[0]]
                else []);
 
             std.flattenArrays([
-              clusterPanel(index_cluster[1], index_cluster[0])
-              for index_cluster in zipWithIndex(firstCluster)
-              //for index_cluster in zipWithIndex($._config.clusterMonitoring.clusters)
+              clusterPanel(cluster.index, cluster.item)
+              for cluster in $.zipWithIndex(firstCluster)
+              //for cluster in $.zipWithIndex($._config.clusterMonitoring.clusters)
             ]);
 
           dashboard.new(
