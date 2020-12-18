@@ -24,12 +24,12 @@ local text = grafana.text;
 
 {
   grafanaDashboards+::
-    local hostDashboard(hostUid, dashboardName, hostTemplates, hostApps=[]) = {
-      local k8sMonitoringLink =
+    local hostDashboard(hostUid, alertJobs, dashboardName, hostTemplates, hostApps=[]) = {
+      local monitoringLink =
         link.dashboards(
-          title='Kubernetes Monitoring',
+          title='Monitoring',
           tags=[],
-          url='/d/%s' % $._config.grafanaDashboards.ids.k8sMonitoring,
+          url='/d/%s' % $._config.grafanaDashboards.ids.monitoring,
           type='link',
         ),
       local dNationLink =
@@ -52,16 +52,16 @@ local text = grafana.text;
       local criticalPanel =
         alertPanel(
           title='Critical',
-          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp],
+          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=$job&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
       local warningPanel =
         alertPanel(
           title='Warning',
-          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp],
+          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=$job&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
       local hostStatsPanels = [
         statPanel.new(
@@ -87,18 +87,20 @@ local text = grafana.text;
         for tpl in hostTemplates
       ],
       local hostAppStatsPanels(index, app) = [
+        local tpl = template.item;
+        local tplIndex = template.index;
         local appGridX =
           if std.type(tpl.panel.gridPos.x) == 'number' then
             tpl.panel.gridPos.x
           else
-            index * 4;  // `4` -> default stat panel width
+            (index + tplIndex) * tpl.panel.gridPos.w;
         local appGridY =
           if std.type(tpl.panel.gridPos.y) == 'number' then
             tpl.panel.gridPos.y
           else
             12;  // `12` -> init Y position in application row;
         statPanel.new(
-          title='Health %s' % app.name,
+          title='%s %s' % [tpl.templateName, app.name],
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
           datasource=tpl.panel.datasource,
           colorMode=tpl.panel.colorMode,
@@ -124,7 +126,7 @@ local text = grafana.text;
             h: tpl.panel.gridPos.h,
           },
         }
-        for tpl in app.templates
+        for template in $.zipWithIndex(app.templates)
       ],
       local applicationPanels(apps) =
         if std.length(apps) > 0 then
@@ -182,7 +184,7 @@ local text = grafana.text;
       )
                  .addLinks(
         [
-          k8sMonitoringLink,
+          monitoringLink,
           dNationLink,
         ]
       )
@@ -204,14 +206,15 @@ local text = grafana.text;
       {
         local getUid(obj) = '%s%s' % [$._config.grafanaDashboards.ids.hostMonitoring, std.asciiLower(obj.name)],
         local getName(obj) = 'Host Monitoring %s' % obj.name,
+        local alertJobs(obj) = $.getAlertJobs(obj),
 
-        ['host-monitoring-%s' % host.name]: hostDashboard(getUid(host), getName(host), $.getTemplates($._config.templates.host, host), $.getApps($._config.templates.hostApps, host)).dashboard
+        ['host-monitoring-%s' % host.name]: hostDashboard(getUid(host), alertJobs(host), getName(host), $.getTemplates($._config.templates.host, host), $.getApps($._config.templates.hostApps, host)).dashboard
         for host in $._config.hostMonitoring.hosts
         if (std.objectHas(host, 'apps') || std.objectHas(host, 'templates'))
       } +
       if $.isAnyDefault($._config.hostMonitoring.hosts) then
         {
-          'host-monitoring': hostDashboard($._config.grafanaDashboards.ids.hostMonitoring, 'Host Monitoring', $.getTemplates($._config.templates.host)).dashboard,
+          'host-monitoring': hostDashboard($._config.grafanaDashboards.ids.hostMonitoring, ['$job'], 'Host Monitoring', $.getTemplates($._config.templates.host)).dashboard,
         }
       else
         {}

@@ -70,9 +70,6 @@ local getClusterRowGridY(numOfClusters) =
     local getUid(defaultId, obj) =
       if $.isAnyDefault([obj]) then defaultId else defaultId + std.asciiLower(obj.name);
 
-    local getJob(obj) =
-      if $.isAnyDefault([obj]) then '&var-job=%s' % obj.jobName else '';
-
     if isHostMonitoring || isClusterMonitoring then
       {
         monitoring:
@@ -110,9 +107,9 @@ local getClusterRowGridY(numOfClusters) =
               expr=|||
                 sum(ALERTS{alertname!="Watchdog", severity="warning", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) +
                 sum(ALERTS{alertname!="Watchdog", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * %(maxWarnings)d
-              ||| % { job: host.jobName, groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings },
+              ||| % { job: std.join('|', $.getAlertJobs(host)), groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings },
             )
-            .addDataLink({ title: 'Host Monitoring', url: '/d/%s?%s%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, getJob(host)] });
+            .addDataLink({ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] });
 
           local clusterAlertsPanel(cluster) =
 

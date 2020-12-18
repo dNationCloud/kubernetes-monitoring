@@ -545,7 +545,7 @@
           name: 'ClusterCPUOverallHigh',
           message: 'Cluster High CPU Overall Utilization {{ $value }}%%',
           expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
-          customLables: { alertgroup: k8sCustomLables },
+          customLables: k8sCustomLables,
           thresholds: thresholds,
         },
       },
@@ -571,7 +571,7 @@
           name: 'ClusterRAMOverallHigh',
           message: 'Cluster High RAM Overall Utilization {{ $value }}%%',
           expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
-          customLables: { alertgroup: k8sCustomLables },
+          customLables: k8sCustomLables,
           thresholds: thresholds,
         },
       },
@@ -594,7 +594,7 @@
           name: 'ClusterDiskOverallHigh',
           message: 'Cluster High Disk Overall Utilization {{ $value }}%%',
           expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
-          customLables: { alertgroup: k8sCustomLables },
+          customLables: k8sCustomLables,
           thresholds: thresholds,
         },
       },
@@ -624,7 +624,7 @@
           name: 'ClusterNetworkOverallErrorsHigh',
           message: 'Cluster High Overall Network Errors Count {{ $value }}%%',
           expr: 'sum(%s)' % expr % { job: 'job=~"node-exporter"' },
-          customLables: { alertgroup: k8sCustomLables },
+          customLables: k8sCustomLables,
           thresholds: thresholds,
         },
       },
@@ -1008,7 +1008,7 @@
         },
       },
       autoscaler: {
-        local expr = '(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100) > 0 OR (sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) + 100)',
+        local expr = '(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100)',
         local thresholds = {
           operator: '<',
           critical: 85,
@@ -1040,6 +1040,7 @@
         panel: {
           expr: expr,
           thresholds: thresholds,
+          unit: 'mailq',
           gridPos: {
             w: 4,
           },
