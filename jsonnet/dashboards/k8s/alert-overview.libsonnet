@@ -61,6 +61,20 @@ local table = grafana.tablePanel;
           includeAll=true,
         );
 
+      local jobTemplate =
+        template.new(
+          name='job',
+          query='label_values(up, job)',
+          label='Job',
+          datasource='$datasource',
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          hide='variable',
+          multi=true,
+          includeAll=true,
+        );
+
+
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
 
       local valueMaps =
@@ -86,7 +100,7 @@ local table = grafana.tablePanel;
             { alias: 'Message', pattern: 'message', type: 'string' },
           ]
         )
-        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup"}' });
+        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup", job=~"$job"}' });
 
       dashboard.new(
         'Alert',
@@ -97,7 +111,7 @@ local table = grafana.tablePanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.alertOverview,
       )
-      .addTemplates([datasourceTemplate, alertManagerTemplate, alertGroup, severityTemplate])
+      .addTemplates([datasourceTemplate, alertManagerTemplate, alertGroup, severityTemplate, jobTemplate])
       .addPanels(
         [
           row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

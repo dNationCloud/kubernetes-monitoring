@@ -65,6 +65,16 @@
     else
       [],
 
+  getAlertJobs(obj)::
+    [
+      obj.jobName,
+    ] +
+    [
+      app.jobName
+      for app in obj.apps
+      if (std.objectHas(obj, 'apps') && std.length(obj.apps) > 0)
+    ],
+
   isAnyDefault(obj):: std.length(std.prune([
     if std.objectHas(item, 'apps') || std.objectHas(item, 'templates') then
       null
