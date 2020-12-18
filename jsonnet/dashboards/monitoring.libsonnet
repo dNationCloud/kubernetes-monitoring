@@ -153,7 +153,6 @@ local getClusterRowGridY(numOfClusters) =
             local gridX = getGridX(index);
             local gridY = getGridY(getClusterRowGridY(numOfClusters) + 1, index);
 
-
             [hostAlertsPanel(host) { gridPos: { x: gridX, y: gridY, w: panelWidth, h: panelHeight } }];
 
           local clusterPanel(index, cluster) =
@@ -170,14 +169,8 @@ local getClusterRowGridY(numOfClusters) =
 
           local clusterPanels =
             // multiple cluster monitoring isn't supported yet, always take only first cluster
-            local firstCluster =
-              (if std.length($._config.clusterMonitoring.clusters) > 0 then
-                 [$._config.clusterMonitoring.clusters[0]]
-               else []);
-
             std.flattenArrays([
               clusterPanel(cluster.index, cluster.item)
-              //for cluster in $.zipWithIndex(firstCluster)
               for cluster in $.zipWithIndex($._config.clusterMonitoring.clusters)
             ]);
 
