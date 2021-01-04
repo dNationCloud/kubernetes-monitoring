@@ -925,10 +925,12 @@
           operator: '<',
           critical: 85,
           warning: 95,
+          lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
         },
         panel: {
-          expr: expr,
+          expr: '%s OR on() vector(-1)' % expr,
           thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
@@ -947,10 +949,12 @@
           operator: '>=',
           critical: 90,
           warning: 75,
+          lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
         },
         panel: {
-          expr: expr,
+          expr: '%s OR on() vector(-1)' % expr,
           thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
@@ -969,11 +973,13 @@
           operator: '<',
           critical: 85,
           warning: 95,
+          lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
         },
         default: false,
         panel: {
-          expr: expr,
+          expr: '%s OR on() vector(-1)' % expr,
           thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
@@ -991,11 +997,13 @@
           operator: '<',
           critical: 85,
           warning: 95,
+          lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
         },
         default: false,
         panel: {
-          expr: expr,
+          expr: '%s OR on() vector(-1)' % expr,
           thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
@@ -1013,11 +1021,13 @@
           operator: '<',
           critical: 85,
           warning: 95,
+          lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
         },
         default: false,
         panel: {
-          expr: expr,
+          expr: '%s OR on() vector(-1)' % expr,
           thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
@@ -1035,11 +1045,13 @@
           operator: '>=',
           warning: 5,
           critical: 10,
+          lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
         },
         default: false,
         panel: {
-          expr: expr,
+          expr: '%s OR on() vector(-1)' % expr,
           thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           unit: 'mailq',
           gridPos: {
             w: 4,
@@ -1050,13 +1062,15 @@
           message: '%(prefix)s {{ $labels.job }}: Postfix Queue Size High {{ $value }}%%',
           expr: expr % { job: 'job=~".+"' },
           thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: -1 }],
         },
       },
       apache: {
         default: false,
         panel: {
-          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100',
-          thresholds: defaultTemplate.commonThresholds.app,
+          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+          thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
@@ -1065,8 +1079,9 @@
       cAdvisor: {
         default: false,
         panel: {
-          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100',
-          thresholds: defaultTemplate.commonThresholds.app,
+          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+          thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
@@ -1075,8 +1090,9 @@
       phpFpm: {
         default: false,
         panel: {
-          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100',
-          thresholds: defaultTemplate.commonThresholds.app,
+          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+          thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
@@ -1085,8 +1101,9 @@
       rabbitmq: {
         default: false,
         panel: {
-          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100',
-          thresholds: defaultTemplate.commonThresholds.app,
+          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+          thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
+          mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
             w: 4,
           },
