@@ -150,6 +150,10 @@ local row = grafana.row;
           min=0,
         )
         .addSeriesOverride({ alias: '/total/', color: '#C4162A', fill: 0, linewidth: 2 })
+        .addSeriesOverride({ alias: '/available/', hiddenSeries: true })
+        .addSeriesOverride({ alias: '/buffers/', hiddenSeries: true })
+        .addSeriesOverride({ alias: '/cached/', hiddenSeries: true })
+        .addSeriesOverride({ alias: '/free/', hiddenSeries: true })
         .addTargets(
           [
             prometheus.target(legendFormat='memory used - {{nodename}}', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) - sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
