@@ -145,9 +145,9 @@ local polystatPanel = grafana.polystatPanel;
         [
           memPerNodePolystat { gridPos: { x: 0, y: 0, w: 24, h: 6 } },
           row.new('$instance', repeat='instance', collapse=true) { gridPos: { x: 0, y: 6, w: 24, h: 1 } }
-          .addPanel(transRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 7, w: 8, h: 7 })
-          .addPanel(netRecGraphPanel { tooltip+: { sort: 2 } }, { x: 8, y: 7, w: 8, h: 7 })
-          .addPanel(netTransGraphPanel { tooltip+: { sort: 2 } }, { x: 16, y: 7, w: 8, h: 7 }),
+          .addPanel(transRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 7, w: 24, h: 7 })
+          .addPanel(netRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 14, w: 24, h: 7 })
+          .addPanel(netTransGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 21, w: 24, h: 7 }),
         ]
       ),
   },

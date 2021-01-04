@@ -104,13 +104,13 @@ local polystatPanel = grafana.polystatPanel;
           format='bytes',
           min=0,
         )
-        .addSeriesOverride({ alias: 'used', color: '#E0B400' })
-        .addSeriesOverride({ alias: '/available/', fill: 0, linewidth: 2 })
+        .addSeriesOverride({ alias: '/size/', fill: 0, linewidth: 2 })
+        .addSeriesOverride({ alias: '/available/', hiddenSeries: true })
         .addTargets(
           [
-            prometheus.target(legendFormat='used {{device}}', expr='(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance))\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-            prometheus.target(legendFormat='size {{device}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-            prometheus.target(legendFormat='available {{device}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='disk used {{device}}', expr='(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance))\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='disk size {{device}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='disk available {{device}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
           ]
         );
 
@@ -146,8 +146,8 @@ local polystatPanel = grafana.polystatPanel;
         [
           diskPerNodePolystat { gridPos: { x: 0, y: 0, w: 24, h: 6 } },
           row.new('$instance', repeat='instance', collapse=true) { gridPos: { x: 0, y: 6, w: 24, h: 1 } }
-          .addPanel(diskUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 7, w: 12, h: 7 })
-          .addPanel(diskIOGraphPanel { tooltip+: { sort: 2 } }, { x: 12, y: 7, w: 12, h: 7 }),
+          .addPanel(diskUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 7, w: 24, h: 7 })
+          .addPanel(diskIOGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 14, w: 24, h: 7 }),
         ]
       ),
   },
