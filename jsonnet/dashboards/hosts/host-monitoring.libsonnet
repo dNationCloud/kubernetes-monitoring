@@ -154,6 +154,7 @@ local text = grafana.text;
           datasource='$datasource',
           sort=$._config.grafanaDashboards.templateSort,
           refresh=$._config.grafanaDashboards.templateRefresh,
+          hide='variable',
         ),
       local alertManagerTemplate =
         template.datasource(
