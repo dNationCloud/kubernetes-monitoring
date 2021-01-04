@@ -113,7 +113,7 @@ local graphPanel = grafana.graphPanel;
         )
         .addTarget(
           prometheus.target(
-            'sum(rate(\ncontainer_cpu_usage_seconds_total{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}[5m])\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$type"})\nby (pod) or on() sum(rate(container_cpu_usage_seconds_total{cluster="$cluster", namespace=~"$namespace", container!~"POD|", id!=""}[5m])) by (pod)',
+            'sum(rate(\ncontainer_cpu_usage_seconds_total{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}[5m])\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$workload_type"})\nby (pod) or on() sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}[5m])) by (pod)',
             legendFormat='{{pod}}'
           ),
         );
