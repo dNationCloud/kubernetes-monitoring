@@ -780,7 +780,7 @@
           title: 'Overall Utilization',
           description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.',
           dataLinks: [{ title: 'System Overview', url: '/d/%s?var-job=$job&%s' % [$.defaultConfig.grafanaDashboards.ids.nodeExporter, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
-          expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
+          expr: 'max(%s)' % expr % { job: 'job=~"$job"' },
           thresholds: thresholds,
           gridPos: {
             x: 12,
@@ -790,7 +790,7 @@
         alert: {
           name: 'HostDiskOverallHigh',
           message: 'Host High Disk Overall Utilization {{ $value }}%%',
-          expr: 'avg(%s)' % expr % { job: 'job!~"node-exporter"' },
+          expr: 'max(%s)' % expr % { job: 'job!~"node-exporter"' },
           customLables: { alertgroup: hostCustomLables },
           thresholds: thresholds,
         },
@@ -891,7 +891,7 @@
           colorMode: 'value',
           graphMode: 'none',
           unit: 'bytes',
-          expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device))\n)))' % { job: 'job=~"$job"' },
+          expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) * ((max((sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", %(job)s, device!="rootfs"}) by (device)))))' % { job: 'job=~"$job"' },
           thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
           gridPos: {
             x: 12,
