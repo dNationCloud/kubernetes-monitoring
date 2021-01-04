@@ -173,13 +173,13 @@ local row = grafana.row;
           format='bytes',
           min=0,
         )
-        .addSeriesOverride({ alias: 'used', color: '#E0B400' })
-        .addSeriesOverride({ alias: '/available/', fill: 0, linewidth: 2 })
+        .addSeriesOverride({ alias: '/size/', fill: 0, linewidth: 2 })
+        .addSeriesOverride({ alias: '/available/', hiddenSeries: true })
         .addTargets(
           [
-            prometheus.target(legendFormat='used {{device}}  {{nodename}}', expr='(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='size {{device}} {{nodename}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
-            prometheus.target(legendFormat='available {{device}} {{nodename}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk used {{device}}  {{nodename}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk size {{device}} {{nodename}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk available {{device}} {{nodename}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
           ]
         );
 
@@ -301,17 +301,17 @@ local row = grafana.row;
           cpuCoresPanel { gridPos: { x: 0, y: 4, w: 2, h: 2 } },
           memoryPanel { gridPos: { x: 2, y: 4, w: 2, h: 2 } },
           row.new('CPU Utilization / Load Average') { gridPos: { x: 0, y: 6, w: 24, h: 1 } },
-          cpuUtilGraphPanel { gridPos: { x: 0, y: 7, w: 12, h: 7 }, tooltip+: { sort: 2 } },
-          loadAverageGraphPanel { gridPos: { x: 12, y: 7, w: 12, h: 7 }, tooltip+: { sort: 2 } },
-          row.new('Memory Utilization', collapse=true) { gridPos: { x: 0, y: 14, w: 24, h: 1 } }
-          .addPanel(memUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 15, w: 24, h: 7 }),
-          row.new('Disk Utilization', collapse=true) { gridPos: { x: 0, y: 15, w: 24, h: 1 } }
-          .addPanel(diskUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 23, w: 12, h: 7 })
-          .addPanel(diskIOGraphPanel { tooltip+: { sort: 2 } }, { x: 12, y: 23, w: 12, h: 7 }),
-          row.new('Network', collapse=true) { gridPos: { x: 0, y: 16, w: 24, h: 1 } }
-          .addPanel(transRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 31, w: 8, h: 7 })
-          .addPanel(netRecGraphPanel { tooltip+: { sort: 2 } }, { x: 8, y: 31, w: 8, h: 7 })
-          .addPanel(netTransGraphPanel { tooltip+: { sort: 2 } }, { x: 16, y: 31, w: 8, h: 7 }),
+          cpuUtilGraphPanel { gridPos: { x: 0, y: 7, w: 24, h: 7 }, tooltip+: { sort: 2 } },
+          loadAverageGraphPanel { gridPos: { x: 0, y: 14, w: 24, h: 7 }, tooltip+: { sort: 2 } },
+          row.new('Memory Utilization', collapse=true) { gridPos: { x: 0, y: 21, w: 24, h: 1 } }
+          .addPanel(memUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 22, w: 24, h: 7 }),
+          row.new('Disk Utilization', collapse=true) { gridPos: { x: 0, y: 22, w: 24, h: 1 } }
+          .addPanel(diskUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 23, w: 24, h: 7 })
+          .addPanel(diskIOGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 30, w: 24, h: 7 }),
+          row.new('Network', collapse=true) { gridPos: { x: 0, y: 23, w: 24, h: 1 } }
+          .addPanel(transRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 24, w: 24, h: 7 })
+          .addPanel(netRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 31, w: 24, h: 7 })
+          .addPanel(netTransGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 38, w: 24, h: 7 }),
         ]
       ),
   },
