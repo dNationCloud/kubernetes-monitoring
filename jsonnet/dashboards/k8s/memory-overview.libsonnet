@@ -19,7 +19,6 @@ local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
 local template = grafana.template;
 local row = grafana.row;
-local gaugePanel = grafana.gaugePanel;
 local graphPanel = grafana.graphPanel;
 local polystatPanel = grafana.polystatPanel;
 
@@ -121,17 +120,6 @@ local polystatPanel = grafana.polystatPanel;
           ]
         );
 
-      local memUtilGaugePanel =
-        gaugePanel.new(
-          title='Memory Utilization',
-          datasource='$datasource',
-          description='The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
-          min=0,
-          max=100,
-        )
-        .addThresholds($.grafanaThresholds($._config.templates.k8s.overallUtilizationRAM.panel.thresholds))
-        .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'));
-
       dashboard.new(
         'Memory per Node',
         editable=$._config.grafanaDashboards.editable,
@@ -146,8 +134,7 @@ local polystatPanel = grafana.polystatPanel;
         [
           memPerNodePolystat { gridPos: { x: 0, y: 0, w: 24, h: 6 } },
           row.new('$instance', repeat='instance', collapse=true) { gridPos: { x: 0, y: 6, w: 24, h: 1 } }
-          .addPanel(memUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 7, w: 18, h: 7 })
-          .addPanel(memUtilGaugePanel, { x: 18, y: 7, w: 6, h: 7 }),
+          .addPanel(memUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 7, w: 24, h: 7 })
         ]
       ),
   },
