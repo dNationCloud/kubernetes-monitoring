@@ -170,18 +170,21 @@ local row = grafana.row;
           title='Disk Utilization',
           description='The value of the available disk capacity is reduced by  5%, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition.',
           datasource='$datasource',
-          format='bytes',
+          formatY1='bytes',
+          formatY2='percent',
           min=0,
         )
         .addSeriesOverride({ alias: '/size/', fill: 0, linewidth: 2 })
         .addSeriesOverride({ alias: '/available/', hiddenSeries: true })
+        .addSeriesOverride({ alias: '/utilization/', yaxis: 2, lines: false, legend: false, pointradius: 0 })
         .addTargets(
           [
             prometheus.target(legendFormat='disk used {{device}}  {{nodename}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
             prometheus.target(legendFormat='disk size {{device}} {{nodename}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
             prometheus.target(legendFormat='disk available {{device}} {{nodename}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk utilization {{device}} {{nodename}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
           ]
-        );
+        )  { yaxes: [super.yaxes[0], super.yaxes[1] { show: false }]};
 
       local diskIOGraphPanel =
         graphPanel.new(
