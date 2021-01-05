@@ -82,7 +82,7 @@ local polystatPanel = grafana.polystatPanel;
           default_click_through='/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$._config.grafanaDashboards.ids.nodeExporter, $._config.grafanaDashboards.dataLinkCommonArgs],
           global_unit_format='percent',
           global_thresholds=polystatThresholds,
-          hexagon_sort_by_direction=4,
+          hexagon_sort_by_direction=2,
           hexagon_sort_by_field='value',
           polygon_border_size=0,
           tooltip_timestamp_enabled=false,
