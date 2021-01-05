@@ -184,7 +184,7 @@ local row = grafana.row;
             prometheus.target(legendFormat='disk available {{device}} {{nodename}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
             prometheus.target(legendFormat='disk utilization {{device}} {{nodename}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", device!="rootfs"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
           ]
-        )  { yaxes: [super.yaxes[0], super.yaxes[1] { show: false }]};
+        ) { yaxes: [super.yaxes[0], super.yaxes[1] { show: false }]};
 
       local diskIOGraphPanel =
         graphPanel.new(
