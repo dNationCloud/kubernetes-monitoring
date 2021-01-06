@@ -14,8 +14,8 @@ Prerequisites
 Grafana dashboards and Prometheus alerts are stored in the [jsonnet](https://jsonnet.org/) templates. 
 
 Jsonnet templates are shipped in compressed form by the k8s configmap.
-Then the k8s configmap with compressed jsonnet is consumed by `jsonnet-translator`.
-`jsonnet-translator` translates jsonnet templates to the plain json and generates prometheus rule or grafana configmap k8s objects.
+Then the k8s configmap with compressed jsonnet is consumed by [kubernetes-jsonnet-translator](https://github.com/dNationCloud/kubernetes-jsonnet-translator).
+[kubernetes-jsonnet-translator](https://github.com/dNationCloud/kubernetes-jsonnet-translator) translates jsonnet templates to the plain json and generates prometheus rule or grafana configmap k8s objects.
 
 If you want to test your local changes in local KinD k8s cluster use following steps:
 
@@ -24,8 +24,8 @@ If you want to test your local changes in local KinD k8s cluster use following s
 kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.19.1
 ```
 1. Install K8s-m8g-stack (without dNation Kubernetes Monitoring dependency)
-K8s-m8g-stack is an umbrella helm chart which deploys Grafana, Loki and Prometheus projects.
-* Grafana UI is exposed on port `5000`, see http://localhost:5000
+K8s-m8g-stack is an umbrella helm chart which deploys Grafana, Loki and Prometheus Operator projects.
+* Grafana UI is exposed on port `5000`, see http://localhost:5000 (default username: admin, default password: pass)
 * Prometheus UI is exposed on port `5001`, see http://localhost:5001
 * Prometheus Alertmanager UI is exposed on port `5002`, see http://localhost:5002
 ```bash

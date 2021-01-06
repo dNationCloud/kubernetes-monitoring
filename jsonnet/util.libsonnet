@@ -93,7 +93,9 @@
     local severityColor(severity) =
       $._config.grafanaDashboards.color[$._config.grafanaDashboards.severityColors[severity]];
 
-    if thresholds == {} then [] else
+    if thresholds == {} then
+      []
+    else
       if std.objectHas(thresholds, 'operator') && thresholds.operator == '>=' then
         (
           if std.objectHas(thresholds, 'lowest') then [

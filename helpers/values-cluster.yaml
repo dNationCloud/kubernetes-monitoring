@@ -28,7 +28,7 @@ clusterMonitoring:
         jobLabel: app
         namespaceSelector:
           matchNames:
-            - default
+          - default
         selector:
           matchLabels:
             app: python-flask-app
@@ -63,11 +63,12 @@ clusterMonitoring:
 
 templates:
   k8s:
+    # Override title for etcd health panel
     etcdHealth:
       panel:
         title: "Override Title"
+    # Override warning threshold for running pods panel
     runningPods:
       panel:
         thresholds:
-          # Override warning threshold for running pods panel
           warning: 95

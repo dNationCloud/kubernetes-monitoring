@@ -97,7 +97,7 @@ local getClusterRowGridY(numOfClusters) =
               graphMode='none',
               colorMode='background',
             )
-            .addTarget({ type: 'single', expr: expr })
+            .addTarget({ type: 'single', instant: true, expr: expr })
             .addThresholds($.grafanaThresholds({ operator: '>=', warning: 1, critical: maxWarnings }))
             .addMappings(rangeMaps);
 
@@ -105,8 +105,8 @@ local getClusterRowGridY(numOfClusters) =
             alertPanel(
               title='Host %s' % host.name,
               expr=|||
-                sum(ALERTS{alertname!="Watchdog", severity="warning", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) +
-                sum(ALERTS{alertname!="Watchdog", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * %(maxWarnings)d
+                sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="warning", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) +
+                sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * %(maxWarnings)d
               ||| % { job: std.join('|', $.getAlertJobs(host)), groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings },
             )
             .addDataLink({ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] });
@@ -123,8 +123,8 @@ local getClusterRowGridY(numOfClusters) =
             alertPanel(
               title='Cluster %s' % cluster.name,
               expr=|||
-                sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) +
-                sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d
+                sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) +
+                sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d
               ||| % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings },
             )
             .addDataLink({ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster), dataLinkCommonArgs] });
