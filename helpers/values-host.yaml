@@ -38,12 +38,11 @@ hostMonitoring:
 
 templates:
   host:
+    # Override warning thresholds for node disk panel and alert
     overallUtilizationDisk:
       panel:
         thresholds:
-          # Override warning threshold for node disk panel
           warning: 50
       alert:
         thresholds:
-          # Override warning threshold for node disk alert
           warning: 50

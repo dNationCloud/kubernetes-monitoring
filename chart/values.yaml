@@ -1,5 +1,9 @@
-# Default values for dNation Kubernetes Monitoring.
-# Declare variables to be passed into your templates.
+# Default values for dNation Kubernetes Monitoring are defined by merging of
+# jsonnet/config.libsonnet and chart/values.yaml files.
+# Full list of possible configuration parameters are listed in
+# the project documentation ref: https://dnationcloud.github.io/kubernetes-monitoring/documentation
+# All default values can be overridden as in standard helm chart, see examples in helpers directory.
+#
 
 ## Override the default value of 'app' label used by k8s objects
 ##
@@ -65,6 +69,7 @@ clusterMonitoring:
     # Kubernetes Application Monitoring could be defined by ServiceMonitor or PodMonitor CRDs. See following links and examples:
     # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#servicemonitor
     # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmonitor
+    # See also values examples in helpers directory and projects docs, ref: https://dnationcloud.github.io/kubernetes-monitoring/documentation
     #
     # Application Monitoring using the ServiceMonitor CRD.
     #
@@ -74,9 +79,6 @@ clusterMonitoring:
     #    template:
     #      nginxIngress:  # Application Exporter template
     #        enabled: true
-    #    grid:  # Grid position in the application monitoring dashboard (optional)
-    #      posX: 0
-    #      posY: 0
     #    serviceMonitor:
     #      jobLabel: app # The label to use to retrieve the job name from.
     #      namespaceSelector:  # Namespaces to transfer from the kubernetes service to the target
@@ -114,9 +116,6 @@ clusterMonitoring:
     #    template:
     #      nginxIngress:  # Application Exporter template
     #        enabled: true
-    #    grid:  # Grid position in the application monitoring dashboard (optional)
-    #      posX: 0
-    #      posY: 0
     #    podMonitor:
     #      jobLabel: app # The label to use to retrieve the job name from.
     #      namespaceSelector:  # Namespaces to transfer from the kubernetes service to the target
@@ -152,6 +151,7 @@ hostMonitoring:
   # Host Monitoring is defined by host IP address and node exporter port.
   # If you want to monitor applications running on your host (e.g. docker) you may configure application monitoring
   # within the host definition under the `apps` section.
+  # See also values examples in helpers directory and projects docs, ref: https://dnationcloud.github.io/kubernetes-monitoring/documentation
   #
   #  - name: host-example
   #    description: Example Host Monitoring
@@ -163,12 +163,12 @@ hostMonitoring:
   #      - port: "9100"  # Node Exporter Port
   #        interval: 30s  # Interval at which metrics should be scraped
   #        path: /metrics  # HTTP path to scrape for metrics
-  #    apps: []
+  #    apps:
   #    - name: host-example-docker
   #      description: Example Host Application Monitoring
   #      jobName: host-example-docker
   #     templates:
-  #       cAdvisor  # Application Exporter template
+  #       cAdvisor:  # Application Exporter template
   #         enabled: true
   #     serviceMonitor:
   #       endpoints:

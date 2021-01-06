@@ -14,7 +14,7 @@ metadata:
   annotations:
     jsonnet_filename: "dashboards.jsonnet"
     tla_codes: |-
-      { 'customConfig': '{{ .Values | toJson }}' }
+      { 'customConfig': '{{ .Values | mustToJson }}' }
 {{- if .Values.grafanaDashboards.labelGrafana }}
     grafana_label: {{ include "grafanaLabelAssignment" . | quote }}
 {{- end }}

@@ -14,7 +14,7 @@ metadata:
   annotations:
     jsonnet_filename: "rules.jsonnet"
     tla_codes: |-
-      { 'customConfig': '{{ .Values | toJson }}' }
+      { 'customConfig': '{{ .Values | mustToJson }}' }
 {{- if .Values.prometheusRules.labelPrometheus }}
     prometheus_label: {{ include "prometheusLabelAssignment" . | quote }}
 {{- end }}
