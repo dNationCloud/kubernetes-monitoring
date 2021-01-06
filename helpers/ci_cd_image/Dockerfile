@@ -5,7 +5,7 @@ RUN apk update && apk upgrade && \
 
 RUN git clone https://github.com/google/go-jsonnet.git && \
     cd go-jsonnet && \
-    git reset --hard fe2809577220c8c06810e842c074f0f0820e9169 && \
+    git reset --hard 31d71aaccda6d98135ecc02acae823ef6e78270c && \
     go build ./cmd/jsonnet && \
     go build ./cmd/jsonnetfmt && \
     go build ./cmd/jsonnet-lint
