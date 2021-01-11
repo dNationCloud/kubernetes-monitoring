@@ -47,8 +47,9 @@ items:
       matchLabels:
         {{ $serviceMonitor.jobLabel | default "host/app" }}: {{ $serviceMonitor.jobName }}
   {{- end }}
-  {{- if $serviceMonitor.targetLabels }}
     targetLabels:
+    - alertGroup
+  {{- if $serviceMonitor.targetLabels }}
 {{ toYaml $serviceMonitor.targetLabels | indent 6 }}
   {{- end }}
 {{- end }}
