@@ -102,7 +102,7 @@ local text = grafana.text;
             h: tpl.panel.gridPos.h,
           },
         }
-        for tpl in clusterTemplates
+        for tpl in clusterTemplates if (std.objectHas(tpl, 'panel') && tpl.panel != {})
       ],
       local k8sAppStatsPanels(index, app) = [
         local tpl = template.item;

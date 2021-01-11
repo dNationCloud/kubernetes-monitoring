@@ -91,13 +91,14 @@
     k8s: {
       local k8sCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupCluster },
       targetDown: {
+        panel: null,
         alert: {
           name: 'ClusterTargetDown',
           message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
           customLables: k8sCustomLables,
           expr: '100 * (count by(job, namespace, service) (up == 0) / count by(job, namespace, service) (up))',
           thresholds: {
-            operator: '<',
+            operator: '>=',
             warning: 10,
             critical: 90,
           },
@@ -749,13 +750,14 @@
       local hostCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupHost },
 
       targetDown: {
+        panel: null,
         alert: {
           name: 'HostTargetDown',
           message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
           customLables: hostCustomLables,
           expr: '100 * (count by(job, namespace, service) (up == 0) / count by(job, namespace, service) (up))',
           thresholds: {
-            operator: '<',
+            operator: '>=',
             warning: 10,
             critical: 90,
           },
