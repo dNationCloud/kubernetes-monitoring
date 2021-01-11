@@ -84,7 +84,8 @@ local text = grafana.text;
             h: tpl.panel.gridPos.h,
           },
         }
-        for tpl in hostTemplates if (std.objectHas(tpl, 'panel') && tpl.panel != {})
+        for tpl in hostTemplates
+        if (std.objectHas(tpl, 'panel') && tpl.panel != {})
       ],
       local hostAppStatsPanels(index, app) = [
         local tpl = template.item;
