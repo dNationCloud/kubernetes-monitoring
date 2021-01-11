@@ -11,7 +11,7 @@ Prerequisites
 * [Helm3](https://helm.sh/)
 * [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
-Grafana dashboards and Prometheus alerts are stored in the [jsonnet](https://jsonnet.org/) templates. 
+Grafana dashboards and Prometheus alerts are stored in the [jsonnet](https://jsonnet.org/) templates.
 
 Jsonnet templates are shipped in compressed form by the k8s configmap.
 Then the k8s configmap with compressed jsonnet is consumed by [kubernetes-jsonnet-translator](https://github.com/dNationCloud/kubernetes-jsonnet-translator).
@@ -34,7 +34,7 @@ helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
 helm repo update
 
 # Install dNation Kubernetes Monitoring Stack without dNation Kubernetes Monitoring chart
-helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack -f helpers/values-stack.yaml 
+helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack -f helpers/values-stack.yaml
 ```
 1. Package jsonnet templates
 ```bash

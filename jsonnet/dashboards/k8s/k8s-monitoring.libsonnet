@@ -71,14 +71,14 @@ local text = grafana.text;
           title='Critical',
           expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s"}' % [$._config.prometheusRules.alertGroupCluster, $._config.prometheusRules.alertGroupClusterApp]
         )
-        .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, $._config.prometheusRules.alertGroupCluster, $._config.prometheusRules.alertGroupClusterApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.prometheusRules.alertGroupCluster, $._config.prometheusRules.alertGroupClusterApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
       local warningPanel =
         alertPanel(
           title='Warning',
           expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s"}' % [$._config.prometheusRules.alertGroupCluster, $._config.prometheusRules.alertGroupClusterApp]
         )
-        .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertOverview, $._config.prometheusRules.alertGroupCluster, $._config.prometheusRules.alertGroupClusterApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.prometheusRules.alertGroupCluster, $._config.prometheusRules.alertGroupClusterApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
 
       local k8sStatsPanels = [

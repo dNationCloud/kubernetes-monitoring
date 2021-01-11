@@ -21,7 +21,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'alert-cluster-overview':
+    'alert-host-overview':
       local datasourceTemplate =
         template.datasource(
           query='prometheus',
@@ -100,16 +100,16 @@ local table = grafana.tablePanel;
             { alias: 'Message', pattern: 'message', type: 'string' },
           ]
         )
-        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup"}' });
+        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup", job=~"$job"}' });
 
       dashboard.new(
-        'AlertCluster',
+        'AlertHost',
         editable=$._config.grafanaDashboards.editable,
         graphTooltip=$._config.grafanaDashboards.tooltip,
         refresh=$._config.grafanaDashboards.refresh,
         time_from=$._config.grafanaDashboards.time_from,
         tags=$._config.grafanaDashboards.tags.k8sOverview,
-        uid=$._config.grafanaDashboards.ids.alertClusterOverview,
+        uid=$._config.grafanaDashboards.ids.alertHostOverview,
       )
       .addTemplates([datasourceTemplate, alertManagerTemplate, alertGroup, severityTemplate, jobTemplate])
       .addPanels(

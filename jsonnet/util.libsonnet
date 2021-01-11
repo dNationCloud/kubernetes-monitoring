@@ -95,44 +95,43 @@
 
     if thresholds == {} then
       []
-    else
-      if std.objectHas(thresholds, 'operator') && thresholds.operator == '>=' then
-        (
-          if std.objectHas(thresholds, 'lowest') then [
-            { color: severityColor('invalid'), value: null },
-            { color: severityColor('default'), value: thresholds.lowest },
-          ] else [
-            { color: severityColor('default'), value: null },
-          ]
-        ) + (
-          if std.objectHas(thresholds, 'warning') then [
-            { color: severityColor('warning'), value: thresholds.warning },
-          ] else []
-        ) + (
-          if std.objectHas(thresholds, 'critical') then [
-            { color: severityColor('critical'), value: thresholds.critical },
-          ] else []
-        )
-      else if std.objectHas(thresholds, 'operator') && thresholds.operator == '<' then
-        local a0 =
-          if std.objectHas(thresholds, 'lowest') && thresholds.lowest != null then {
-            list: [{ color: severityColor('invalid'), value: null }],
-            lastThreshold: thresholds.lowest,
-          } else {
-            list: [],
-            lastThreshold: null,
-          };
-        local a1 =
-          if std.objectHas(thresholds, 'critical') then {
-            list: a0.list + [{ color: severityColor('critical'), value: a0.lastThreshold }],
-            lastThreshold: thresholds.critical,
-          } else a0;
-        local a2 =
-          if std.objectHas(thresholds, 'warning') then {
-            list: a1.list + [{ color: severityColor('warning'), value: a1.lastThreshold }],
-            lastThreshold: thresholds.warning,
-          } else a1;
-        a2.list + [{ color: severityColor('default'), value: a2.lastThreshold }]
-      else  // allow custom thredhold definition
-        [thresholds],
+    else if std.objectHas(thresholds, 'operator') && thresholds.operator == '>=' then
+      (
+        if std.objectHas(thresholds, 'lowest') then [
+          { color: severityColor('invalid'), value: null },
+          { color: severityColor('default'), value: thresholds.lowest },
+        ] else [
+          { color: severityColor('default'), value: null },
+        ]
+      ) + (
+        if std.objectHas(thresholds, 'warning') then [
+          { color: severityColor('warning'), value: thresholds.warning },
+        ] else []
+      ) + (
+        if std.objectHas(thresholds, 'critical') then [
+          { color: severityColor('critical'), value: thresholds.critical },
+        ] else []
+      )
+    else if std.objectHas(thresholds, 'operator') && thresholds.operator == '<' then
+      local a0 =
+        if std.objectHas(thresholds, 'lowest') && thresholds.lowest != null then {
+          list: [{ color: severityColor('invalid'), value: null }],
+          lastThreshold: thresholds.lowest,
+        } else {
+          list: [],
+          lastThreshold: null,
+        };
+      local a1 =
+        if std.objectHas(thresholds, 'critical') then {
+          list: a0.list + [{ color: severityColor('critical'), value: a0.lastThreshold }],
+          lastThreshold: thresholds.critical,
+        } else a0;
+      local a2 =
+        if std.objectHas(thresholds, 'warning') then {
+          list: a1.list + [{ color: severityColor('warning'), value: a1.lastThreshold }],
+          lastThreshold: thresholds.warning,
+        } else a1;
+      a2.list + [{ color: severityColor('default'), value: a2.lastThreshold }]
+    else  // allow custom thredhold definition
+      [thresholds],
 }
