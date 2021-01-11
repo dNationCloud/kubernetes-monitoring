@@ -96,7 +96,7 @@
           name: 'ClusterTargetDown',
           message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
           customLables: k8sCustomLables,
-          expr: '100 * (count by(job, namespace, service) (up == 0) / count by(job, namespace, service) (up))',
+          expr: '100 * (count by(job, namespace, service) (up{alertGroup!="Host"} == 0) / count by(job, namespace, service) (up{alertGroup!="Host"}))',
           thresholds: {
             operator: '>=',
             warning: 10,
@@ -755,7 +755,7 @@
           name: 'HostTargetDown',
           message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
           customLables: hostCustomLables,
-          expr: '100 * (count by(job, namespace, service) (up == 0) / count by(job, namespace, service) (up))',
+          expr: '100 * (count by(job, namespace, service) (up{alertGroup="Host"} == 0) / count by(job, namespace, service) (up{alertGroup="Host"}))',
           thresholds: {
             operator: '>=',
             warning: 10,
