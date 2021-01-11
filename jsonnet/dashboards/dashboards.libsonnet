@@ -50,6 +50,7 @@
 
 // Hosts dashboards
 (import 'hosts/host-monitoring.libsonnet') +
+(import 'hosts/alert-overview.libsonnet') +
 
 // Apps dashboards
 (import 'apps/python-flask.libsonnet') +

@@ -90,7 +90,19 @@
     },
     k8s: {
       local k8sCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupCluster },
-
+      targetDown: {
+        alert: {
+          name: 'ClusterTargetDown',
+          message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
+          customLables: k8sCustomLables,
+          expr: '100 * (count by(job, namespace, service) (up == 0) / count by(job, namespace, service) (up))',
+          thresholds: {
+            operator: '<',
+            warning: 10,
+            critical: 90,
+          },
+        },
+      },
       nodeHealth: {
         local expr = 'round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|", condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  + sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"}) ) * 100)',
         local thresholds = defaultTemplate.commonThresholds.k8s,
@@ -267,7 +279,7 @@
         },
       },
       mostUtilizedPVC: {
-        local expr = 'max(sum(\n  ((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"}) / \n  kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100\n) by (persistentvolumeclaim))',
+        local expr = 'sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100) by (persistentvolumeclaim)',
         local thresholds = {
           operator: '>=',
           warning: 85,
@@ -277,7 +289,7 @@
         panel: {
           title: 'Most Utilized PVC',
           dataLinks: [{ title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.pvcOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
-          expr: '%s OR on() vector(-1)' % expr,
+          expr: 'max(%s) OR on() vector(-1)' % expr,
           thresholds: thresholds,
           mappings: [{ text: '-', type: 1, value: -1 }],
           gridPos: {
@@ -285,6 +297,13 @@
             y: 8,
             w: 3,
           },
+        },
+        alert: {
+          name: 'PVCUtilizationHigh',
+          message: '"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value }}%',
+          customLables: k8sCustomLables,
+          expr: expr,
+          thresholds: thresholds,
         },
       },
       apiServerHealth: {
@@ -575,7 +594,7 @@
         },
       },
       overallUtilizationDisk: {
-        local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100)',
+        local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
         local thresholds = defaultTemplate.commonThresholds.node,
         panel: {
           title: 'Overall Utilization',
@@ -729,6 +748,19 @@
     host: {
       local hostCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupHost },
 
+      targetDown: {
+        alert: {
+          name: 'HostTargetDown',
+          message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
+          customLables: hostCustomLables,
+          expr: '100 * (count by(job, namespace, service) (up == 0) / count by(job, namespace, service) (up))',
+          thresholds: {
+            operator: '<',
+            warning: 10,
+            critical: 90,
+          },
+        },
+      },
       overallUtilizationCPU: {
         local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
         local thresholds = defaultTemplate.commonThresholds.node,
@@ -773,7 +805,7 @@
         },
       },
       overallUtilizationDisk: {
-        local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100)',
+        local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
         local thresholds = defaultTemplate.commonThresholds.node,
         panel: {
           title: 'Overall Utilization',
@@ -967,7 +999,7 @@
         },
       },
       nginxIngress: {
-        local expr = '(sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s, status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
+        local expr = '((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s, status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100))',
         local thresholds = {
           operator: '<',
           critical: 85,

@@ -115,7 +115,7 @@ local polystatPanel = grafana.polystatPanel;
             prometheus.target(legendFormat='disk available {{device}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
             prometheus.target(legendFormat='disk utilization {{device}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
           ]
-        ) { yaxes: std.mapWithIndex(function(i, item) if (i == 1) then item { show: false } else item, super.yaxes) };  // Hide second Y axe
+        ) { yaxes: std.mapWithIndex(function(i, item) if (i == 1) then item { show: false } else item, super.yaxes) };  // Hide second Y axis
 
       local diskIOGraphPanel =
         graphPanel.new(

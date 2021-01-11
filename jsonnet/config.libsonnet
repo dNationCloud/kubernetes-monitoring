@@ -60,7 +60,8 @@
       ids: {
         // dNation dashboards
         k8sMonitoring: 'k8smonitoring',
-        alertOverview: 'alertoverview',
+        alertHostOverview: 'alerthostoverview',
+        alertClusterOverview: 'alertclusteroverview',
         nodeOverview: 'nodeoverview',
         jobOverview: 'joboverview',
         podOverview: 'podoverview',

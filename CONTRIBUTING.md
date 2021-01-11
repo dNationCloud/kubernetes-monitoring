@@ -18,7 +18,7 @@ Before sending your pull requests, make sure you followed this list.
 - Update the [Readme](README.md) with details of changes to the interface
 - In case the pull request would update the version number, please edit the version number in all appropriate
   files e.g. [Chart.yaml](chart/Chart.yaml). The versioning scheme we use is [SemVer](http://semver.org/)
-- You may merge the Pull Request once you have the sign-off of two other developers, or if you 
+- You may merge the Pull Request once you have the sign-off of two other developers, or if you
   don't have the permission to do that, you may request the second reviewer to merge it for you
 
 ## Developer Certificate of Origin (DCO)
