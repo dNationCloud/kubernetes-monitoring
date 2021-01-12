@@ -39,7 +39,7 @@ json-rules:
 	docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m json jsonnet/rules.jsonnet
 
 docs-generate:
-	@echo "[Generate documentation]"
+	@echo "[Generating documentation]"
 	rm -rf docs/project docs/site
 	mkdir docs/project
 	rsync -Rr ./ ./docs/project --exclude=".*"

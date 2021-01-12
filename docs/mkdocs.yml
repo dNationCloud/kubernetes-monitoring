@@ -21,7 +21,7 @@ extra_css:
 - docs/docs.css
 
 markdown_extensions:
-#https://facelessuser.github.io/pymdown-extensions/extensions/superfences/
+# https://facelessuser.github.io/pymdown-extensions/extensions/superfences/
 - pymdownx.superfences
 
 # excluding project/docs/project in case of using symlink to kubernetes-monitoring folder (see README_DOCS.md)
