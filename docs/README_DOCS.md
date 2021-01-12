@@ -31,7 +31,7 @@ and configuration file (`mkdocs.yaml`) has to be at least one level above `docs_
 Therefore whole project has to be copied inside `docs/project` to allow Mkdocs to access files like `chart/README.md` or 
 `helpers/FAQ.md`. 
 To see changes at dev-server, files inside `docs/project` has to be modified. After development is done, 
-changes has to be copied to `kubernetes-monitoring` folder and command `make docs-generate` run.
+changes has to be copied to `kubernetes-monitoring` folder and command `make docs-generate` has to be run.
 
 Other option that avoids copying changes is using symlink.
 ```

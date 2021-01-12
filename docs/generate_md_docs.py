@@ -18,11 +18,6 @@ yaml = ruamel_yaml.YAML(typ="safe")
 _anchor_ID = 0
 
 
-def load_json_config(path):
-    with open(path) as f:
-        return json.load(f)
-
-
 def load_file(path):
     with open(path) as f:
         return f.read()
@@ -33,7 +28,7 @@ def save_file(path, content):
         f.write(content)
 
 
-def load_values(values_path):
+def load_yaml_file(values_path):
     with open(values_path) as f:
         return yaml.load(f)
 
@@ -41,8 +36,7 @@ def load_values(values_path):
 def generate_json_config(jsonnet_config_path, values):
     """Generate json config from jsonnet config and values.yaml.
 
-    Jsonnet code is used to load jsonnet config and used it's function
-    to merge it with values.
+    Jsonnet code is used to load jsonnet config and merge it with values.
 
     Args:
         jsonnet_config_path (str): Path to jsonnet (libsonnet) config file.
@@ -116,7 +110,7 @@ def to_md(key, obj, level):
 def table(obj, level):
     """Create html table from dict (loaded from json).
 
-    For every key in dict generates row in table, where is
+    For every key in dict generate row in table. Each row is
     markdown representation of value or reference to anchor
     with sub table.
 
@@ -155,7 +149,7 @@ def main():
     intro_path = "docs/documentation-intro.md"
     docs_path = "docs/documentation.md"
 
-    values = load_values(values_path)
+    values = load_yaml_file(values_path)
     json_config = json.loads(generate_json_config(jsonnet_config_path, values))
     intro = load_file(intro_path)
     docs = f"{intro}\n\n{table(json_config, 2)}"
