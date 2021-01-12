@@ -1142,6 +1142,17 @@
           },
         },
       },
+      nginxNrpe: {
+        default: false,
+        panel: {
+          expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+          thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
+          mappings: [{ text: '-', type: 1, value: -1 }],
+          gridPos: {
+            w: 4,
+          },
+        },
+      },
       genericApp: {
         default: false,
         panel: {
