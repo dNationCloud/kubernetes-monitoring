@@ -484,7 +484,7 @@
         },
         alert: {
           name: 'ClusterNodesRAMUtilizationHigh',
-          message: 'Cluster {{ $labels.nodename }}: High RAM Utilization {{ $value }}%',
+          message: 'Cluster node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%',
           customLables: k8sCustomLables,
           expr: expr % { job: 'job=~"node-exporter"' },
           thresholds: thresholds,
@@ -507,7 +507,7 @@
         },
         alert: {
           name: 'ClusterHostDiskUtilizationHigh',
-          message: 'Cluster {{ $labels.nodename }}: High Disk Utilization {{ $value }}%',
+          message: 'Cluster node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%',
           customLables: k8sCustomLables,
           expr: expr % { job: 'job=~"node-exporter"' },
           thresholds: thresholds,
@@ -537,7 +537,7 @@
         },
         alert: {
           name: 'ClusterHostNetworkErrorsHigh',
-          message: '{{ $labels.nodename }}: High Network Errors Count {{ $value }}%',
+          message: 'Cluster node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%',
           customLables: k8sCustomLables,
           expr: expr % { job: 'job=~"node-exporter"' },
           thresholds: thresholds,
@@ -562,7 +562,7 @@
         },
         alert: {
           name: 'ClusterCPUOverallHigh',
-          message: 'Cluster High CPU Overall Utilization {{ $value }}%%',
+          message: 'Cluster High CPU Overall Utilization {{ $value }}%',
           expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
           customLables: k8sCustomLables,
           thresholds: thresholds,
@@ -588,7 +588,7 @@
         },
         alert: {
           name: 'ClusterRAMOverallHigh',
-          message: 'Cluster High RAM Overall Utilization {{ $value }}%%',
+          message: 'Cluster High RAM Overall Utilization {{ $value }}%',
           expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
           customLables: k8sCustomLables,
           thresholds: thresholds,
@@ -611,7 +611,7 @@
         },
         alert: {
           name: 'ClusterDiskOverallHigh',
-          message: 'Cluster High Disk Overall Utilization {{ $value }}%%',
+          message: 'Cluster High Disk Overall Utilization {{ $value }}%',
           expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
           customLables: k8sCustomLables,
           thresholds: thresholds,
@@ -641,7 +641,7 @@
         },
         alert: {
           name: 'ClusterNetworkOverallErrorsHigh',
-          message: 'Cluster High Overall Network Errors Count {{ $value }}%%',
+          message: 'Cluster High Overall Network Errors Count {{ $value }}%',
           expr: 'sum(%s)' % expr % { job: 'job=~"node-exporter"' },
           customLables: k8sCustomLables,
           thresholds: thresholds,
@@ -778,9 +778,9 @@
         },
         alert: {
           name: 'HostCPUOverallHigh',
-          message: 'Host High CPU Overall Utilization {{ $value }}%%',
-          expr: 'avg(%s)' % expr % { job: 'job!~"node-exporter"' },
-          customLables: { alertgroup: hostCustomLables },
+          message: 'Host {{ $labels.nodename }}: High CPU Overall Utilization {{ $value }}%',
+          expr: expr % { job: 'job!~"node-exporter"' },
+          customLables: hostCustomLables,
           thresholds: thresholds,
         },
       },
@@ -800,9 +800,9 @@
         },
         alert: {
           name: 'HostRAMOverallHigh',
-          message: 'Host High RAM Overall Utilization {{ $value }}%%',
-          expr: 'avg(%s)' % expr % { job: 'job!~"node-exporter"' },
-          customLables: { alertgroup: hostCustomLables },
+          message: 'Host {{ $labels.nodename }}: High RAM Overall Utilization {{ $value }}%',
+          expr: expr % { job: 'job!~"node-exporter"' },
+          customLables: hostCustomLables,
           thresholds: thresholds,
         },
       },
@@ -822,9 +822,9 @@
         },
         alert: {
           name: 'HostDiskOverallHigh',
-          message: 'Host High Disk Overall Utilization {{ $value }}%%',
-          expr: 'max(%s)' % expr % { job: 'job!~"node-exporter"' },
-          customLables: { alertgroup: hostCustomLables },
+          message: 'Host {{ $labels.nodename }}: High Disk Overall Utilization {{ $value }}%',
+          expr: expr % { job: 'job!~"node-exporter"' },
+          customLables: hostCustomLables,
           thresholds: thresholds,
         },
       },
@@ -838,7 +838,7 @@
         panel: {
           title: 'Overall Errors',
           dataLinks: [{ title: 'System Overview', url: '/d/%s?var-job=$job&%s' % [$.defaultConfig.grafanaDashboards.ids.nodeExporter, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
-          expr: 'sum(%s)' % expr % { job: 'job=~"$job"' },
+          expr: expr % { job: 'job=~"$job"' },
           unit: 'pps',
           thresholds: thresholds,
           gridPos: {
@@ -848,9 +848,9 @@
         },
         alert: {
           name: 'HostNetworkOverallErrorsHigh',
-          message: 'Host High Overall Network Errors Count {{ $value }}%%',
-          expr: 'sum(%s)' % expr % { job: 'job!~"node-exporter"' },
-          customLables: { alertgroup: hostCustomLables },
+          message: 'Host {{ $labels.nodename }}: High Overall Network Errors Count {{ $value }}%',
+          expr: expr % { job: 'job!~"node-exporter"' },
+          customLables: hostCustomLables,
           thresholds: thresholds,
         },
       },
