@@ -7,7 +7,6 @@ on:
     # Only if there are changes.
     paths:
     - 'docs/**'
-    - 'mkdocs.yaml'
     - 'jsonnet/config.libsonnet'
     - 'jsonnet/templates.libsonnet'
     - 'chart/values.yaml'
@@ -35,4 +34,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+          publish_dir: ./docs/site
