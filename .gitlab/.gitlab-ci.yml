@@ -12,8 +12,8 @@ variables:
   - docker
   - privileged
   only:
-    - merge_requests
-    - main
+  - merge_requests
+  - main
 
 .base-jsonnet:
   image: docker:18.09
@@ -23,16 +23,16 @@ variables:
   - docker
   - privileged
   only:
-    - merge_requests
-    - main
+  - merge_requests
+  - main
   services:
   - docker:18.09-dind
 
 stages:
-  - build jsonnet
-  - build helm
-  - test
-  - publish
+- package jsonnet
+- build helm
+- test
+- publish
 
 package jsonnet:
   stage: package jsonnet
