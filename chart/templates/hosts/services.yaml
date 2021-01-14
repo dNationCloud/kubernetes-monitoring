@@ -1,0 +1,45 @@
+{{- if and .Values.hostMonitoring.enabled }}
+  {{ $host_service_monitors := dict }}
+  {{- range .Values.hostMonitoring.hosts }}
+    {{ $address := .host.address }}
+    {{ if hasKey . "serviceMonitor" }}
+      {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+      {{ $_ := set .serviceMonitor "address" $address }}
+      {{ $_ := set .serviceMonitor "jobName" .jobName }}
+      {{ $_ := set $host_service_monitors $name .serviceMonitor }}
+    {{- end }}
+    {{ if hasKey . "apps" }}
+      {{- range .apps }}
+        {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+        {{ $_ := set .serviceMonitor "address" $address }}
+        {{ $_ := set .serviceMonitor "jobName" .jobName }}
+        {{ $_ := set $host_service_monitors $name .serviceMonitor }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
+{{- if $host_service_monitors }}
+apiVersion: v1
+kind: List
+items:
+{{- range $name, $serviceMonitor := $host_service_monitors }}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    namespace: {{ include "k8s-monitoring.namespace" $ }}
+    name: {{ $name }}
+    labels:
+{{ include "k8s-monitoring.labels" $ | indent 6 }}
+      app: {{ include "k8s-monitoring.name" $ }}
+      release: {{ $.Release.Name }}
+      alertGroup: Host
+      {{ $serviceMonitor.jobLabel | default "host/app" }}: {{ $serviceMonitor.jobName }}
+  spec:
+    type: ExternalName
+    externalName: {{ $serviceMonitor.address }}
+    ports:
+    - name: {{ (first $serviceMonitor.endpoints).port | quote }}
+      port: {{ (first $serviceMonitor.endpoints).port }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,23 @@
+{{- if $.Values.grafanaDashboards.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ include "k8s-monitoring.namespace" . }}
+  name: {{ include "k8s-monitoring.fullname" . }}-dashboards-jsonnet
+  labels:
+{{ include "k8s-monitoring.labels" . | indent 4 }}
+    app: {{ include "k8s-monitoring.name" . }}
+    release: {{ include "k8s-monitoring.release" . }}
+{{- if .Values.grafanaDashboards.labelJsonnet }}
+{{ toYaml .Values.grafanaDashboards.labelJsonnet | indent 4 }}
+{{- end }}
+  annotations:
+    jsonnet_filename: "dashboards.jsonnet"
+    tla_codes: |-
+      { 'customConfig': '{{ .Values | mustToJson }}' }
+{{- if .Values.grafanaDashboards.labelGrafana }}
+    grafana_label: {{ include "grafanaLabelAssignment" . | quote }}
+{{- end }}
+binaryData:
+  jsonnet-dashboards.tar.gz: {{ .Files.Get "jsonnet-dashboards.tar.gz" | b64enc }}
+{{- end }}

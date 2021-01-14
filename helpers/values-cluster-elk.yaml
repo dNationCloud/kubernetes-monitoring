@@ -1,0 +1,50 @@
+# Example of cluster monitoring configuration (ELK templates)
+
+clusterMonitoring:
+  enabled: true
+  clusters:
+  - name: K8sCluster
+    description: 'Kubernetes cluster monitoring'
+    templates:
+      mostUtilizedPVCELK:
+        enabled: true
+      mostUtilizedPVCExceptELK:
+        enable: true
+      mostUtilizedPVC:
+        enabled: false
+
+templates:
+  k8s:
+    # Create custom template for PVC Utilization of ELK PVCs
+    mostUtilizedPVCELK:
+      parent: 'mostUtilizedPVC'
+      default: false
+      panel:
+        title: 'Most Utilized ELK PVC'
+        expr: 'max(sum(((kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"elasticsearch.*\"} - kubelet_volume_stats_available_bytes{persistentvolumeclaim=~\"elasticsearch.*\"}) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"elasticsearch.*\"}) * 100) by (persistentvolumeclaim))'
+        thresholds:
+          critical: 97
+          warning: 95
+        gridPos:
+          x: 18
+          'y': 10
+          w: 6
+          h: 3
+      alert:
+        name: 'ElkPVCUtilizationHigh'
+        message: '\"{{ $labels.persistentvolumeclaim }}\": High ELK PVC Utilization {{ $value }}%'
+        expr: 'sum(((kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"elasticsearch.*\"} - kubelet_volume_stats_available_bytes{persistentvolumeclaim=~\"elasticsearch.*\"}) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"elasticsearch.*\"}) * 100) by (persistentvolumeclaim)'
+        thresholds:
+          critical: 97
+          warning: 95
+    # Create custom template for PVC Utilization except ELK PVCs
+    mostUtilizedPVCExceptELK:
+      parent: 'mostUtilizedPVC'
+      default: false
+      panel:
+        title: 'Most Utilized PVC (except ELK)'
+        expr: 'max(sum(((kubelet_volume_stats_capacity_bytes{persistentvolumeclaim!~\"elasticsearch.*\"} - kubelet_volume_stats_available_bytes{persistentvolumeclaim!~\"elasticsearch.*\"}) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim!~\"elasticsearch.*\"}) * 100) by (persistentvolumeclaim))'
+      alert:
+        name: 'ExceptElkPVCUtilizationHigh'
+        message: '\"{{ $labels.persistentvolumeclaim }}\": High PVC Utilization (except ELK) {{ $value }}%'
+        expr: 'sum(((kubelet_volume_stats_capacity_bytes{persistentvolumeclaim!~\"elasticsearch.*\"} - kubelet_volume_stats_available_bytes{persistentvolumeclaim!~\"elasticsearch.*\"}) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim!~\"elasticsearch.*\"}) * 100) by (persistentvolumeclaim)'

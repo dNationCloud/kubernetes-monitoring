@@ -1,0 +1,49 @@
+{{- if and .Values.clusterMonitoring.enabled }}
+  {{ $app_pod_monitors := dict }}
+  {{- range .Values.clusterMonitoring.clusters }}
+    {{ if hasKey . "apps" }}
+      {{- range .apps }}
+        {{ if hasKey . "podMonitor" }}
+          {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+          {{ $_ := set $app_pod_monitors $name .podMonitor }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
+{{- if $app_pod_monitors }}
+apiVersion: v1
+kind: List
+items:
+{{- range $name, $podMonitor := $app_pod_monitors }}
+- apiVersion: monitoring.coreos.com/v1
+  kind: PodMonitor
+  metadata:
+    namespace: {{ include "k8s-monitoring.namespace" $ }}
+    name: {{ $name }}
+    labels:
+{{ include "k8s-monitoring.labels" $ | indent 6 }}
+      app: {{ include "k8s-monitoring.name" $ }}
+      release: {{ include "k8s-monitoring.release" $ }}
+  spec:
+    podMetricsEndpoints:
+{{ toYaml $podMonitor.podMetricsEndpoints | indent 4 }}
+  {{- if $podMonitor.jobLabel }}
+    jobLabel: {{ $podMonitor.jobLabel }}
+  {{- end }}
+  {{- if $podMonitor.namespaceSelector }}
+    namespaceSelector:
+{{ toYaml $podMonitor.namespaceSelector | indent 6 }}
+  {{- end }}
+    selector:
+{{ toYaml $podMonitor.selector | indent 6 }}
+  {{- if $podMonitor.targetLabels }}
+    podTargetLabels:
+{{ toYaml $podMonitor.targetLabels | indent 6 }}
+  {{- end }}
+  {{- if $podMonitor.sampleLimit }}
+    sampleLimit: {{ $podMonitor.sampleLimit }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

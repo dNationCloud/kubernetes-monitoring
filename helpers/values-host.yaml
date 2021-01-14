@@ -1,0 +1,48 @@
+# Example of host monitoring configuration
+
+hostMonitoring:
+  enabled: true
+  hosts:
+  - name: host-01
+    description: Host 01 Node Exporter
+    jobName: host-01
+    host:
+      address: 46.4.77.52
+    serviceMonitor:
+      endpoints:
+      - port: "9100"  # Node exporter port
+        interval: 30s
+        path: /metrics
+  - name: host-02
+    description: Host 02 Node Exporter
+    jobName: host-02
+    host:
+      address: 195.154.253.139
+    serviceMonitor:
+      endpoints:
+      - port: "9100"
+        interval: 30s
+        path: /metrics
+    apps:
+    - name: host-02-docker
+      description: Host 02 Docker Containers
+      jobName: host-02-docker
+      templates:
+        cAdvisor:
+          enable: false
+      serviceMonitor:
+        endpoints:
+        - port: "9101"
+          interval: 30s
+          path: /metrics
+
+templates:
+  host:
+    # Override warning thresholds for node disk panel and alert
+    overallUtilizationDisk:
+      panel:
+        thresholds:
+          warning: 50
+      alert:
+        thresholds:
+          warning: 50
