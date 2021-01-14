@@ -1,7 +1,6 @@
 <a href="https://dNation.cloud/"><img src="https://cdn.ifne.eu/public/icons/dnation.png" width="250" alt="dNationCloud"></a>
 
 # dNation Kubernetes Monitoring
-
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/dnationcloud)](https://artifacthub.io/packages/search?repo=dnationcloud)
 
@@ -21,7 +20,7 @@ Monitoring targets are:
 | ![Kubernetes](docs/images/kubernetes-monitoring.png) | ![Hosts](docs/images/host-monitoring.png) | ![Applications](docs/images/app-monitoring.png) |
 
 # Full Installation
-In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://github.com/dNationCloud/kubernetes-monitoring-stack) helm chart.
+In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://github.com/dNationCloud/kubernetes-monitoring-stack) helm chart (recommended).
 
 # Dashboards and Alerts only Installation
 In case your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow [here](GETTING_STARTED.md).
