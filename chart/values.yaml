@@ -1,7 +1,7 @@
 # Default values for dNation Kubernetes Monitoring are defined by merging of
 # jsonnet/config.libsonnet and chart/values.yaml files.
 # Full list of possible configuration parameters are listed in
-# the project documentation ref: https://dnationcloud.github.io/kubernetes-monitoring/documentation
+# the project documentation ref: https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation
 # All default values can be overridden as in standard helm chart, see examples in helpers directory.
 #
 
@@ -69,7 +69,7 @@ clusterMonitoring:
     # Kubernetes Application Monitoring could be defined by ServiceMonitor or PodMonitor CRDs. See following links and examples:
     # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#servicemonitor
     # ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmonitor
-    # See also values examples in helpers directory and projects docs, ref: https://dnationcloud.github.io/kubernetes-monitoring/documentation
+    # See also values examples in helpers directory and projects docs, ref: https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation
     #
     # Application Monitoring using the ServiceMonitor CRD.
     #
@@ -151,7 +151,7 @@ hostMonitoring:
   # Host Monitoring is defined by host IP address and node exporter port.
   # If you want to monitor applications running on your host (e.g. docker) you may configure application monitoring
   # within the host definition under the `apps` section.
-  # See also values examples in helpers directory and projects docs, ref: https://dnationcloud.github.io/kubernetes-monitoring/documentation
+  # See also values examples in helpers directory and projects docs, ref: https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation
   #
   #  - name: host-example
   #    description: Example Host Monitoring

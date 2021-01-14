@@ -24,5 +24,5 @@ If you're experiencing issues please read [FAQ](helpers/FAQ.md).
 ## Configuration
 
 Default values for dNation Kubernetes Monitoring are defined by merging of jsonnet/config.libsonnet and chart/values.yaml files.
-Full list of possible configuration parameters are listed in the project [documentation](https://dnationcloud.github.io/kubernetes-monitoring/documentation).
+Full list of possible configuration parameters are listed in the project [documentation](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation).
 All default values can be overridden as in standard helm chart, see examples in helpers directory.
