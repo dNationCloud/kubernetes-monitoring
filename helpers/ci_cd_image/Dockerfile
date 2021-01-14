@@ -20,7 +20,7 @@ RUN go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb && \
 
 FROM alpine:3.12
 
-LABEL Version="1.0.1"
+LABEL Version="1.0.2"
 LABEL Vendor="dNation"
 LABEL Description="CI/CD jsonnet docker image"
 
