@@ -5,7 +5,7 @@
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/dnationcloud)](https://artifacthub.io/packages/search?repo=dnationcloud)
 
 See status of your Kubernetes infrastructure and applications at a glance using semaphore (green/orange/red) principle:
-[![Watch the video](https://cdn.ifne.eu/public/icons/dnation_k8sm8g_screenshot.png)](https://www.youtube.com/watch?v=nrXvRKlsLgs)
+[![Watch the video](https://cdn.ifne.eu/public/icons/dnation_k8sm8g_screenshot.png)](https://youtu.be/fnodYhJacXc)
 
 It is a set of Grafana dashboards and Prometheus alerts written in [Jsonnet](https://jsonnet.org/). This Monitoring following 3 basic design principles:
 
