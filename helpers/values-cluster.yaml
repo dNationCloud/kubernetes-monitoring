@@ -19,7 +19,7 @@ clusterMonitoring:
     apps:
     # Application Monitoring using the service monitor CRD.
     - name: Python-Flask-App
-      description: Python Flask Aapplication
+      description: Python Flask Application
       jobName: python-flask-app
       templates:
         pythonFlask:

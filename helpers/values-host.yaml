@@ -7,7 +7,7 @@ hostMonitoring:
     description: Host 01 Node Exporter
     jobName: host-01
     host:
-      address: 46.4.77.52
+      address: 1.2.3.3
     serviceMonitor:
       endpoints:
       - port: "9100"  # Node exporter port
@@ -17,7 +17,7 @@ hostMonitoring:
     description: Host 02 Node Exporter
     jobName: host-02
     host:
-      address: 195.154.253.139
+      address: 1.2.3.4
     serviceMonitor:
       endpoints:
       - port: "9100"
@@ -29,7 +29,7 @@ hostMonitoring:
       jobName: host-02-docker
       templates:
         cAdvisor:
-          enable: false
+          enable: true
       serviceMonitor:
         endpoints:
         - port: "9101"

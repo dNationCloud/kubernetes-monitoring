@@ -17,7 +17,7 @@ Monitoring targets are:
 
 | Kubernetes | Hosts | Applications |
 |:----------:|:-----------:|:------------------:|
-| ![Kubernetes](docs/images/kubernetes-monitoring.png) | ![Hosts](docs/images/host-monitoring.png) | ![Applications](docs/images/app-monitoring.png) |
+| ![Kubernetes](docs/images/l1_k8s.png) | ![Hosts](docs/images/l1_host.png) | ![Applications](docs/images/l2_k8s_app.png) |
 
 # Full Installation
 In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install [dNation Kubernetes Monitoring Stack](https://github.com/dNationCloud/kubernetes-monitoring-stack) helm chart (recommended).
@@ -26,7 +26,7 @@ In case your current Kubernetes installation doesn't contain Prometheus Operator
 In case your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow [here](GETTING_STARTED.md).
 
 # Documentation
-See the documentation [here](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation).    
+See the [documentation](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation) and [FAQ](https://dnationcloud.github.io/kubernetes-monitoring/helpers/FAQ/) for further information.  
 
 # Contribution guidelines
 If you want to contribute, please read following:
