@@ -24,7 +24,7 @@ rsync -Rr ./ docs/project
 cd docs/project
 python3 docs/generate_md_docs.py
 cd ..
-mkdoc serve
+mkdocs serve
 ```
 [Mkdocs](https://www.mkdocs.org/) doesn't have access to files outside `docs_dir` (in our case `docs/project`) 
 and configuration file (`mkdocs.yaml`) has to be at least one level above `docs_dir` in filesystem tree. 
