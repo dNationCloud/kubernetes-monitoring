@@ -96,9 +96,9 @@ def to_md(key, obj, level):
 
         return ref, anchor + table(obj, level + 1)
 
-    # lists are dumped as json for prettier formatting
-    if isinstance(obj, list):
-        obj_to_str = json.dumps(obj, indent=2)
+    # lists/dicts are dumped as yaml for prettier formatting
+    if isinstance(obj, list) or isinstance(obj, dict):
+        obj_to_str = ruamel_yaml.dump(obj, Dumper=ruamel_yaml.RoundTripDumper)
     else:
         obj_to_str = str(obj)
     if key != "description":
