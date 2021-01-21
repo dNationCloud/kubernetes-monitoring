@@ -26,6 +26,7 @@ markdown_extensions:
 
 # excluding project/docs/project in case of using symlink to kubernetes-monitoring folder (see README_DOCS.md)
 plugins:
+- search
 # https://pypi.org/project/mkdocs-exclude/
 - exclude:
     glob:
