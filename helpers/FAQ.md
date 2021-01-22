@@ -87,17 +87,17 @@ Look at some examples from layer 2 and layer 3 of k8s monitoring:
 
 ### Host monitoring Layer 1
 ![l1_host](../docs/images/l1_host.png)
-The host monitoring layer 1 consists from a bunch of state panels that clearly visualize the current state of your host. The state
-panels are separated into several logical sections:
+The first layer of host monitoring consists of state panels that visualize the current state of your host. The state
+panels are separated into several sections:
 - Alerts
 - Host
 - Applications (optional)
 
-When some failed condition of monitored element occurs, state panel shows lower percentage value of health. If the health state is too 
-low and value reached defined warning or even critical threshold level then the corresponding state panel change background color.
-Simple and intuitive green, orange and red colors principle is used. When failed state persist for **5** minutes (default) then 
-the relevant alert will be triggered and highlighted in alert panel and also the overall host health panel in the monitoring layer 0 is changed too.
-The host layer 1 is the source of all aggregated host alerts triggered by dNation monitoring.
+When a failed condition of monitored k8s element occurs the state panel shows lowered percentage value on health indicator. If the state of health is too 
+low and the percentage value reached warning or even critical threshold, corresponding state panel changes its color.
+Intuitive green, orange and red color principle is used. When failed state lasts longer than **5** minutes (default) then 
+the relevant alert is triggered and highlighted in alert panel. Also the panel representing the overall health of the k8s cluster in the monitoring layer 0 changes accordingly.
+The first layer is the source of all aggregated k8s cluster alerts triggered by dNation monitoring.
 
 #### Alerts
 The upper section shows the number of triggered critical and warning alerts. If you want to see detailed list of 
