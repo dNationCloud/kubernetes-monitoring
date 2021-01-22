@@ -40,8 +40,8 @@ triggered alerts simply apply the drill down principle.
 
 #### Overview
 The overview section allows you to monitor the health status of k8s nodes, workloads (deployments, stateful sets, daemon sets, pods, containers and more)
-and persistent volumes. Each state panel aggregates important information of monitored k8s element e.g. single node health state panel 
-gives you an insight if k8s nodes are able to schedule resources or if they are under disk, memory or PID pressure.
+and persistent volumes. Each state panel conatains important information of monitored k8s element, e.g. single node health state panel 
+gives you an insight on whether the k8s nodes are able to schedule resources or if they are under disk, memory or PID pressure.
 
 #### Control Plane Components
 Monitoring of k8s cluster control plane components (api server, controller manager, etcd database, kubelet, proxy and scheduler) 
