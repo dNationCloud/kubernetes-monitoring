@@ -7,9 +7,11 @@
 
 #### Kubernetes monitoring
 Kubernetes cluster health is simply represented by the single state panel. State panel aggregates alerts from the 
-underlying layer of kubernetes monitoring. The healthy status is represented by the green state panel with 'OK' label. It is displayed if the k8s cluster meets all the defined thresholds for healthy status. When some threshold is crossed and this state  persists for **5** minutes (default), relevant alert is triggered and highlighted. The orange state panel  with `Warning` label is displayed in case of warning alert. Red state panel with  `Critical` label is displayed in case of critical alert. 
-This simple and intuitive green, orange and red colors principle signalizing whether or not your action is needed. If you want to see more informations about your k8s cluster, just drill down by left-clicking on 
-the relevant state panel. As of now, only single cluster monitoring is supported. Multi cluster monitoring support is under development. 
+underlying layer of kubernetes monitoring. The healthy status is represented by the green state panel with 'OK' label. It is displayed if the k8s cluster meets all the defined thresholds for healthy status.
+When some threshold is crossed and this state  persists for **5** minutes (default), relevant alert is triggered and highlighted.
+The orange state panel  with `Warning` label is displayed in case of warning alert. Red state panel with  `Critical` label is displayed in case of critical alert.
+This simple and intuitive green, orange and red colors principle signalizing whether or not your action is needed. If you want to see more informations about your k8s cluster, just drill down by left-clicking on
+the relevant state panel. As of now, only single cluster monitoring is supported. Multi cluster monitoring support is under development.
 - If you are interested in the k8s cluster monitoring see [How to set up k8s cluster monitoring?](#how-to-set-up-k8s-cluster-monitoring) section.
 
 #### Host monitoring
@@ -40,30 +42,28 @@ triggered alerts simply apply the drill down principle.
 
 #### Overview
 The overview section allows you to monitor the health status of k8s nodes, workloads (deployments, stateful sets, daemon sets, pods, containers and more)
-and persistent volumes. Each state panel conatains important information of monitored k8s element, e.g. single node health state panel 
+and persistent volumes. Each state panel contains important information of monitored k8s element, e.g. single node health state panel
 gives you an insight on whether the k8s nodes are able to schedule resources or if they are under disk, memory or PID pressure.
 
 #### Control Plane Components
 Monitoring of k8s cluster control plane components (api server, controller manager, etcd database, kubelet, proxy and scheduler) 
-is located in the separate section. If you want to check the work queue rate of controller manager or scheduler latency this section
-is the right place to see.
+is located in separate section. If you want to check the work queue rate of controller manager or scheduler latency, the Control Plane Components section is the section you are looking for.
 
 #### Node Metrics (including Master)
-Measure k8s nodes system metrics is important in ensuring k8s cluster availability. Node Metrics section gives you a clear overview
+Measuring k8s nodes system metrics is important in ensuring k8s cluster availability. Node Metrics section gives you a clear overview
 of cluster's CPU, memory, disk and network utilization. Each system metric is visualized in several state panels such as overall (average) utilization panel, the most utilized cluster node panel and information panels which show
-used and total state of system metric. It is always useful to know overall cluster utilization 
-but also it is important to know when one node is more utilized then others which may indicates that your
-k8s cluster does not work properly. 
+used and total state of system metrics. It is always useful to know overall cluster utilization, but it is also important to know when one node is utilized more than other nodes which may indicates that your
+k8s cluster doesn't work properly.
 If you want to drill down for further investigation of your k8s node you can select between `System Overview` or `K8s Overview` buttons.
-`System Overview` shows what you expected i.e. CPU, memory, disk and network utilization per k8s cluster node in detail.         
-`K8s Overview` shows system resources usage in k8s oriented way, it means that you can filter particular k8s workload per k8s cluster node
+`System Overview` shows CPU, memory, disk and network utilization per k8s cluster node in greater detail.
+`K8s Overview` shows systems resource usage in k8s oriented manner, meaning that you can filter particular k8s workload per k8s cluster node
 or see information about CPU and memory requests and limits.
 
 #### Applications
 In order to thoroughly understand application health, we created custom dashboards which help us to
 properly understand and diagnose application workloads in k8s cluster. As of today we have designed several dashboards for well known and widely used 
 frameworks such as java actuator, python flask, nginx ingress controller and more. Layer 1 state panels aggregate 
-important information of monitored application. Green, orange and red color principle informs us if there is  action needed and 
+important information of monitored application. Green, orange and red color principle informs us if there is action needed and
 drill down principle can be used to access verbose and detailed application dashboard. 
 
 - If you want to customize your L1 layer see [How to customize my k8s monitoring?](#how-to-customize-my-k8s-monitoring) section.
@@ -93,26 +93,26 @@ panels are separated into several sections:
 - Host
 - Applications (optional)
 
-When a failed condition of monitored k8s element occurs the state panel shows lowered percentage value on health indicator. If the state of health is too 
+When a failed condition of monitored host element occurs the state panel shows lowered percentage value on health indicator. If the state of health is too
 low and the percentage value reached warning or even critical threshold, corresponding state panel changes its color.
 Intuitive green, orange and red color principle is used. When failed state lasts longer than **5** minutes (default) then 
-the relevant alert is triggered and highlighted in alert panel. Also the panel representing the overall health of the k8s cluster in the monitoring layer 0 changes accordingly.
-The first layer is the source of all aggregated k8s cluster alerts triggered by dNation monitoring.
+the relevant alert is triggered and highlighted in alert panel. Also the panel representing the overall health of the host in the monitoring layer 0 changes accordingly.
+The first layer is the source of all aggregated hosts alerts triggered by dNation monitoring.
 
 #### Alerts
 The upper section shows the amount of triggered critical and warning alerts. If you want to see detailed list of 
 triggered alerts simply apply the drill down principle.
 
 #### Host
-Host section gives you a clear overview of host's CPU, memory, disk and network utilization.
-Each system metric is visualized in several state panels. The main host overall utilization panel and information panels which show
+Host section gives you clear overview of host's CPU, memory, disk and network utilization.
+Each system metric is visualized in several state panels. The main host overall utilization panel and information panels show
 used and total state of system metric.
 
 #### Applications
 In order to thoroughly understand application health, we created custom dashboards which help us to
-deeply understand and diagnose host applications. Currently, we designed several dashboards such cadvisor.
-Layer 1 state panels aggregate important information of monitored application, green, orange and red colors principle 
-inform us if there is some action needed and drill down principle can be used to access rich and detailed application dashboard. 
+properly understand and diagnose host applications. As of today, we have designed several dashboards such as cadvisor.
+Layer 1 state panels aggregate important information of monitored application. Green, orange and red color principle
+informs us if there is some action needed and drill down principle can be used to access verbose and detailed application dashboard.
 
 - If you want to customize your L1 layer by custom host monitoring template definition, see [How to customize my host monitoring?](#how-to-customize-my-host-monitoring) section.
 - If you are interested in the host application monitoring, see [How to set up host application monitoring?](#how-to-set-up-host-application-monitoring) section.
@@ -293,6 +293,8 @@ hostMonitoring:
   hosts:
   - name: host-01
     description: 'Host 01 with application monitoring'
+    host:
+      address: 1.2.3.4
     apps:
     - name: host-01-docker
       description: Host 01 Docker Containers
@@ -335,7 +337,7 @@ Edit and use `kubeadm_init.yaml` file to configure `kubeadm init` in case of fre
 kubeadm init --config=helpers/kubeadm_init.yaml
 ```
 
-Manual set up in case of already running K8s deployment.
+Manual setup in case of already running K8s deployment.
 
 * Setup `etcd` metrics bind address
     ```bash
