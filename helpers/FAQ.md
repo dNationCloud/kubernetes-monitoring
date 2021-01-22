@@ -310,7 +310,7 @@ Application monitoring definition contains two main sections: `template` and `se
 The `template` section defines which template and pre-defined application dashboard will be used.
 For full list of pre-defined host application templates see the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#hostapps).
 The `serviceMonitor` defines [service monitor](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#servicemonitor)
-CRD endpoint i.e. the application's exporter port and path. Lot of service monitor parameters are pre-configured to simplify application monitoring configuration, if you are interested how, or you want to 
+CRD endpoint, i.e. the application's exporter port and path. Lot of service monitor parameters are pre-configured to simplify application monitoring configuration. If you are curious how or you want to 
 override some of these parameters see the `chart/templates/hosts` directory or find some examples in `helpers` directory.
 
 Finally, update your k8s monitoring deployment and apply the application monitoring configuration:
