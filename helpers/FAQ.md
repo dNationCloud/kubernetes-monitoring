@@ -321,8 +321,8 @@ helm upgrade [RELEASE] [CHART] -f apps.yaml
 
 ## Kubernetes Monitoring shows `DOWN` state for some control plane components. Are control plane components working correctly?
 
-Control plane components work probably well, but their metrics server is disabled or misconfigured.
-You have to check address bindings of control plane components' metrics as follows:
+Control plane components work probably well, but their metrics server might be disabled or misconfigured.
+You should want  to check address bindings of control plane components' metrics as follows:
 
 The metrics of `etcd` and `kube-proxy` control plane components are by default
 bound to the localhost that prometheus instances **cannot** access.
