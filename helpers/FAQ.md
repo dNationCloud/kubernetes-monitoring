@@ -246,7 +246,7 @@ hostMonitoring:
 ```
 Host monitoring definition contains two main sections: `host` and `serviceMonitor`.
 The `host` section simply defines the host IP address. The `serviceMonitor` defines [service monitor](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#servicemonitor)
-CRD endpoint i.e. the host's node exporter port and path. Lot of service monitor parameters are pre-configured to simplify host monitoring configuration, if you are interested how, or you want to 
+CRD endpoint i.e. the host's node exporter port and path. Lot of service monitor parameters are pre-configured to simplify host monitoring configuration. If you are interested how or you want to 
 override some of these parameters see the `chart/templates/hosts` directory. 
 
 Finally, update your k8s monitoring deployment and apply the host monitoring configuration:
