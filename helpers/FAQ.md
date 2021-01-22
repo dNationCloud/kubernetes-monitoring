@@ -272,7 +272,7 @@ templates:
         thresholds:
           warning: 50
 ```
-Each state panel which can be modified contains a template name in its description for easy navigation:
+Each state panel that can be modified contains a template name in its description for easy navigation:
 
 ![l1_host_cpu_hover.png](../docs/images/l1_host_cpu_hover.png)
 
