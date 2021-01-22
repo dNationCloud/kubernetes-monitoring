@@ -317,7 +317,7 @@ Finally, update your k8s monitoring deployment and apply the application monitor
 ```bash
 helm upgrade [RELEASE] [CHART] -f apps.yaml
 ```
-- If you want to customize the default application template see [How to customize my host monitoring?](#how-to-customize-my-host-monitoring) section.
+- If you want to customize the default application template see the [How to customize my host monitoring?](#how-to-customize-my-host-monitoring) section.
 
 ## Kubernetes Monitoring shows `DOWN` state for some control plane components. Are control plane components working correctly?
 
