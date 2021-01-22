@@ -70,16 +70,16 @@ drill down principle can be used to access verbose and detailed application dash
 - If you are interested in the k8s application monitoring see [How to set up k8s application monitoring?](#how-to-set-up-k8s-application-monitoring) section.
 
 ### K8s monitoring lower layers
-If you want to know details why is some stats panel in upper layer green, orange or red, just drill down and click it.
-See some examples from layer 2 and layer 3 of k8s monitoring:
+If you want to know details on why is particular stat panel in upper layer green, orange or red, just drill down.
+Look at some examples from layer 2 and layer 3 of k8s monitoring:
 
-- K8s monitoring Layer 2 examples
+- K8s monitoring Layer 2 example
 
-  | Containers | Nodes Disks | Application |
+  | Containers | Node Disks | Application |
   |:----------:|:-----------:|:------------------:|
   | ![l2_k8s_container](../docs/images/l2_k8s_container.png)  | ![l2_k8s_disk](../docs/images/l2_k8s_disk.png) | ![l2_k8s_app](../docs/images/l2_k8s_app.png) |
 
-- K8s monitoring Layer 3 examples
+- K8s monitoring Layer 3 example
 
   | Containers | Nodes |
   |:----------:|:-----------:|
