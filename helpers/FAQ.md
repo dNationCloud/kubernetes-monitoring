@@ -20,8 +20,8 @@ monitoring is supported.
 
 ### K8s monitoring Layer 1
 ![l1_k8s](../docs/images/l1_k8s.png)
-The k8s monitoring layer 1 consists from a bunch of state panels that clearly visualize the current state of your k8s cluster. The state
-panels are separated into several logical sections:
+The first layer of k8s monitoring consists of state panels that visualize the current state of your k8s cluster. The state
+panels are separated into several sections:
 - Alerts
 - Overview
 - Control Plane Components Health
