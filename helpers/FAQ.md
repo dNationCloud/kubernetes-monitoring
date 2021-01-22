@@ -165,7 +165,7 @@ templates:
         thresholds:
           warning: 96
 ```
-Each state panel which can be modified contains a template name in its description for easy navigation:
+Each state panel that can be modified contains a template name in its description for easy navigation:
 
 ![l1_k8s_etcd_hover.png](../docs/images/l1_k8s_etcd_hover.png)
 
