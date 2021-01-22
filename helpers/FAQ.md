@@ -100,8 +100,8 @@ the relevant alert is triggered and highlighted in alert panel. Also the panel r
 The first layer is the source of all aggregated k8s cluster alerts triggered by dNation monitoring.
 
 #### Alerts
-The upper section shows the number of triggered critical and warning alerts. If you want to see detailed list of 
-triggered alerts apply the drill down principle and see the list with detailed information. 
+The upper section shows the amount of triggered critical and warning alerts. If you want to see detailed list of 
+triggered alerts simply apply the drill down principle.
 
 #### Host
 Host section gives you a clear overview of host's CPU, memory, disk and network utilization.
