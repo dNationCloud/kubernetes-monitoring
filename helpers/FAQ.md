@@ -139,7 +139,7 @@ clusterMonitoring:
     description: 'Kubernetes cluster monitoring'
     apps: []
 ```
-It means that your k8s cluster is monitored right after installation of dNation k8s monitoring.
+It means that your k8s cluster is being monitored right after installation of dNation k8s monitoring.
 If you want to customize k8s cluster monitoring see [How to customize my k8s monitoring?](#how-to-customize-my-k8s-monitoring) section.
 
 ## How to customize my k8s monitoring?
