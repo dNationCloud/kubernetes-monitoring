@@ -144,11 +144,11 @@ If you want to customize k8s cluster monitoring see [How to customize my k8s mon
 
 ## How to customize my k8s monitoring?
 
-We understand that each k8s cluster may contain various workloads, or may have configured various scaling strategies.
-We tried to do our best and set up suitable defaults based on our production environment experiences, but we understand that 
-we could not cover variety of k8s cluster configurations. Based on above, we implemented the template logic that allows you to
-fully customize the default state panels or alerts and also you can create your own to fulfill your k8s cluster monitoring requirements.
-Currently, layer 1 customization is implemented. The templating of other layers is under development.
+We understand that each k8s cluster may contain various workloads or implement various scaling strategies.
+We tried to do our best and set up suitable defaults based on our production environment experiences, but we know that 
+isn't possible cover the variety of k8s cluster configurations. To tackle this problem, we implemented template logic that allows you to
+fully customize the default state panels or alerts. You can also create your own to fulfill your k8s cluster monitoring requirements.
+Currently only first layer is customizable, however, the templating of other layers is under development.
 For full list of k8s templates see the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#templates).
 
 If you want to customize some existing (default) layer 1 template in k8s monitoring just create a simple yaml file:
