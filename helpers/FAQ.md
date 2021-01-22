@@ -259,7 +259,7 @@ To cover variety of host configurations we implemented the template logic in the
 fully customize the default state panels or alerts. You can also create your own to fulfill your host monitoring requirements.
 Currently, layer 1 customization is implemented. For full list of host templates see the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#templates).
 
-If you want to customize some existing (default) layer 1 template in host monitoring just create a simple yaml file:
+If you want to customize default layer 1 template in host monitoring just create a simple yaml file:
 ```yaml
 templates:
   host:
