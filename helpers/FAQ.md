@@ -128,7 +128,7 @@ See some examples from layer 2 of host monitoring:
 
 ## How to set up k8s cluster monitoring?
 ### Prerequisites
-Install dNation k8s monitoring on k8s cluster, see [here](https://github.com/dNationCloud/kubernetes-monitoring#full-installation). 
+Install dNation k8s monitoring on k8s cluster. See installation steps [here](https://github.com/dNationCloud/kubernetes-monitoring#full-installation). 
 ### Set up
 K8s cluster monitoring is enabled by default. See the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#clustermonitoring):
 ```yaml
