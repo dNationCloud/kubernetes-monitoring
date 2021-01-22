@@ -256,7 +256,7 @@ helm upgrade [RELEASE] [CHART] -f host.yaml
 
 ## How to customize my host monitoring?
 To cover variety of host configurations we implemented the template logic in the host monitoring as well. Templates allow you to
-fully customize the default state panels or alerts and also you can create your own to fulfill your host monitoring requirements.
+fully customize the default state panels or alerts. You can also create your own to fulfill your host monitoring requirements.
 Currently, layer 1 customization is implemented. For full list of host templates see the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#templates).
 
 If you want to customize some existing (default) layer 1 template in host monitoring just create a simple yaml file:
