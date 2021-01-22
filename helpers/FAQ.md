@@ -61,13 +61,13 @@ or see information about CPU and memory requests and limits.
 
 #### Applications
 In order to thoroughly understand application health, we created custom dashboards which help us to
-deeply understand and diagnose application workloads in k8s cluster. Currently, we designed several dashboards for well known and widely used 
+properly understand and diagnose application workloads in k8s cluster. As of today we have designed several dashboards for well known and widely used 
 frameworks such as java actuator, python flask, nginx ingress controller and more. Layer 1 state panels aggregate 
-important information of monitored application, green, orange and red colors principle inform us if there is some action needed and 
-drill down principle can be used to access rich and detailed application dashboard. 
+important information of monitored application. Green, orange and red color principle informs us if there is  action needed and 
+drill down principle can be used to access verbose and detailed application dashboard. 
 
-- If you want to customize your L1 layer by custom k8s monitoring template definition, see [How to customize my k8s monitoring?](#how-to-customize-my-k8s-monitoring) section.
-- If you are interested in the k8s application monitoring, see [How to set up k8s application monitoring?](#how-to-set-up-k8s-application-monitoring) section.
+- If you want to customize your L1 layer see [How to customize my k8s monitoring?](#how-to-customize-my-k8s-monitoring) section.
+- If you are interested in the k8s application monitoring see [How to set up k8s application monitoring?](#how-to-set-up-k8s-application-monitoring) section.
 
 ### K8s monitoring lower layers
 If you want to know details why is some stats panel in upper layer green, orange or red, just drill down and click it.
