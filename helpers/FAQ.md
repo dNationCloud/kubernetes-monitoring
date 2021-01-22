@@ -151,7 +151,7 @@ fully customize the default state panels or alerts. You can also create your own
 Currently only first layer is customizable, however, the templating of other layers is under development.
 For full list of k8s templates see the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#templates).
 
-If you want to customize some existing (default) layer 1 template in k8s monitoring just create a simple yaml file:
+If you want to customize default layer 1 template in k8s monitoring just create a simple yaml file:
 ```yaml
 templates:
   k8s:
