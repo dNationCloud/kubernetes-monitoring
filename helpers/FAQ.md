@@ -213,7 +213,7 @@ Application monitoring definition contains two main sections: `template` and `se
 The `template` section defines which template and pre-defined application dashboard will be used.
 For full list of pre-defined k8s application templates see the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#k8sapps).
 Application monitoring metrics endpoint is auto-discovered by [service monitor](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#servicemonitor) 
-or [pod monitor](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmonitor) CRDs.
+or by [pod monitor](https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmonitor) CRDs.
 See the documentation of CRDs to ensure that your application metrics endpoint will be discovered as you want or find some 
 examples in `helpers` directory.
 
