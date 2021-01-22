@@ -8,9 +8,9 @@
 #### Kubernetes monitoring
 Kubernetes cluster health is simply represented by the single state panel. State panel aggregates alerts from the 
 underlying layer of kubernetes monitoring. The healthy status is represented by the green state panel with 'OK' label. It is displayed if the k8s cluster meets all the defined thresholds for healthy status. When some threshold is crossed and this state  persists for **5** minutes (default), relevant alert is triggered and highlighted. The orange state panel  with `Warning` label is displayed in case of warning alert. Red state panel with  `Critical` label is displayed in case of critical alert. 
-This simple and intuitive green, orange and red colors principle signalizing whether or not your action is needed. If you want to inspect what is going on with your k8s cluster, just drill down by right-click on 
-the k8s cluster's state panel. Currently, only single cluster monitoring is supported. Multi cluster monitoring support is under development. 
-- If you are interested in the k8s cluster monitoring, see [How to set up k8s cluster monitoring?](#how-to-set-up-k8s-cluster-monitoring) section.
+This simple and intuitive green, orange and red colors principle signalizing whether or not your action is needed. If you want to see more informations about your k8s cluster, just drill down by left-clicking on 
+the relevant state panel. As of now, only single cluster monitoring is supported. Multi cluster monitoring support is under development. 
+- If you are interested in the k8s cluster monitoring see [How to set up k8s cluster monitoring?](#how-to-set-up-k8s-cluster-monitoring) section.
 
 #### Host monitoring
 Host monitoring integration allows you to monitor your hosts infrastructure within our kubernetes based 
