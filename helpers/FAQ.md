@@ -285,7 +285,7 @@ If you want to create your own custom template see full examples in the `helpers
 ### Prerequisites
 Enable or install metrics exporter in your host application.
 ### Set up
-Hots application monitoring is disabled by default. See the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#hostmonitoring).
+Hosts application monitoring is disabled by default. See the [docs](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#hostmonitoring).
 To enable it just create application monitoring definition as follows:
 ```yaml
 hostMonitoring:
