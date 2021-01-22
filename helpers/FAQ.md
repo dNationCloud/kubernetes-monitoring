@@ -13,10 +13,10 @@ the relevant state panel. As of now, only single cluster monitoring is supported
 - If you are interested in the k8s cluster monitoring see [How to set up k8s cluster monitoring?](#how-to-set-up-k8s-cluster-monitoring) section.
 
 #### Host monitoring
-Host monitoring integration allows you to monitor your hosts infrastructure within our kubernetes based 
-stable and high available monitoring. Hosts state panel contains the same logic as k8s cluster state panel. Multi host 
+Host monitoring integration allows you to monitor your hosts infrastructure within our kubernetes based, 
+stable and highly available monitoring. Hosts state panel functions on the same principles as k8s cluster state panel. Multi host 
 monitoring is supported.
-- If you are interested in the host monitoring, see [How to set up host monitoring?](#how-to-set-up-host-monitoring) section.
+- If you are interested in the host monitoring see [How to set up host monitoring?](#how-to-set-up-host-monitoring) section.
 
 ### K8s monitoring Layer 1
 ![l1_k8s](../docs/images/l1_k8s.png)
