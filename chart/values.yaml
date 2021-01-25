@@ -56,6 +56,10 @@ grafanaDashboards:
   # Label of Grafana Dashboard resources used for target discovery.
   labelGrafana:
     grafana_dashboard: '1'
+  # Override destination where monitoring dashboards will be saved by grafana sidecar.
+  # destinationOverride:
+  #   k8s-sidecar-target-directory: "/var/lib/grafana/dashboards/dnation/"
+
 
 ## Kubernetes Monitoring
 ##
