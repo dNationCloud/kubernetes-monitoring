@@ -21,6 +21,7 @@ local gaugePanel = grafana.gaugePanel;
 local graphPanel = grafana.graphPanel;
 local template = grafana.template;
 local row = grafana.row;
+local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
@@ -41,6 +42,19 @@ local row = grafana.row;
           ]
         )
         .addTarget(prometheus.target('avg(time() - node_boot_time_seconds{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
+
+      local ipTable =
+        table.new(
+          title='Table of IP Addresses',
+          datasource='$datasource',
+          styles=[
+            { pattern: 'Time', type: 'hidden' },
+            { pattern: 'Value', type: 'hidden' },
+            { alias: 'Instance', pattern: '_0_nodename', type: 'string' },
+            { alias: 'IP Address', pattern: '_1_instance', type: 'string' },
+          ]
+        )
+        .addTarget(prometheus.target(format='table', instant=true, expr='sum by(_1_instance, _0_nodename) (\nlabel_replace(\nlabel_replace(\n  node_uname_info{cluster=~"$cluster", job=~"$job", nodename=~"$instance"}\n    , "_1_instance", "$1", "instance", "(.*):.*")\n    , "_0_nodename","$1", "nodename", "(.*)")\n)'));
 
       local cpuCoresPanel =
         statPanel.new(
@@ -303,18 +317,19 @@ local row = grafana.row;
           networkErrPanel { gridPos: { x: 19, y: 1, w: 5, h: 5 } },
           cpuCoresPanel { gridPos: { x: 0, y: 4, w: 2, h: 2 } },
           memoryPanel { gridPos: { x: 2, y: 4, w: 2, h: 2 } },
-          row.new('CPU Utilization / Load Average') { gridPos: { x: 0, y: 6, w: 24, h: 1 } },
-          cpuUtilGraphPanel { gridPos: { x: 0, y: 7, w: 24, h: 7 }, tooltip+: { sort: 2 } },
-          loadAverageGraphPanel { gridPos: { x: 0, y: 14, w: 24, h: 7 }, tooltip+: { sort: 2 } },
-          row.new('Memory Utilization', collapse=true) { gridPos: { x: 0, y: 21, w: 24, h: 1 } }
-          .addPanel(memUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 22, w: 24, h: 7 }),
-          row.new('Disk Utilization', collapse=true) { gridPos: { x: 0, y: 22, w: 24, h: 1 } }
-          .addPanel(diskUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 23, w: 24, h: 7 })
-          .addPanel(diskIOGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 30, w: 24, h: 7 }),
-          row.new('Network', collapse=true) { gridPos: { x: 0, y: 23, w: 24, h: 1 } }
-          .addPanel(transRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 24, w: 24, h: 7 })
-          .addPanel(netRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 31, w: 24, h: 7 })
-          .addPanel(netTransGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 38, w: 24, h: 7 }),
+          ipTable { gridPos: { x: 0, y: 6, w: 24, h: 5 } },
+          row.new('CPU Utilization / Load Average') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
+          cpuUtilGraphPanel { gridPos: { x: 0, y: 12, w: 24, h: 7 }, tooltip+: { sort: 2 } },
+          loadAverageGraphPanel { gridPos: { x: 0, y: 19, w: 24, h: 7 }, tooltip+: { sort: 2 } },
+          row.new('Memory Utilization', collapse=true) { gridPos: { x: 0, y: 26, w: 24, h: 1 } }
+          .addPanel(memUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 27, w: 24, h: 7 }),
+          row.new('Disk Utilization', collapse=true) { gridPos: { x: 0, y: 28, w: 24, h: 1 } }
+          .addPanel(diskUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 29, w: 24, h: 7 })
+          .addPanel(diskIOGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 36, w: 24, h: 7 }),
+          row.new('Network', collapse=true) { gridPos: { x: 0, y: 29, w: 24, h: 1 } }
+          .addPanel(transRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 30, w: 24, h: 7 })
+          .addPanel(netRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 37, w: 24, h: 7 })
+          .addPanel(netTransGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 44, w: 24, h: 7 }),
         ]
       ),
   },
