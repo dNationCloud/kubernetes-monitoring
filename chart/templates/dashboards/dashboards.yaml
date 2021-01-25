@@ -18,6 +18,9 @@ metadata:
 {{- if .Values.grafanaDashboards.labelGrafana }}
     grafana_label: {{ include "grafanaLabelAssignment" . | quote }}
 {{- end }}
+{{- if .Values.grafanaDashboards.destinationOverride }}
+{{ toYaml .Values.grafanaDashboards.destinationOverride | indent 4 }}
+{{- end }}
 binaryData:
   jsonnet-dashboards.tar.gz: {{ .Files.Get "jsonnet-dashboards.tar.gz" | b64enc }}
 {{- end }}
