@@ -10,7 +10,7 @@ See status of your Kubernetes infrastructure and applications at a glance using 
 It is a set of Grafana dashboards and Prometheus alerts written in [Jsonnet](https://jsonnet.org/). This Monitoring following 3 basic design principles:
 
 1. `Intuitive` - Green, orange and red colors signaling whether or not your action is needed
-1. `Drill-down` - if you want details why is something green, orange or red, just click it
+1. `Drill-down` - if you want details why something is green, orange or red, just click it
 1. `Relevant information only` - provide only metrics relevant for this particular area of interest and drill-down level, side-by-side with logs (experimental feature)
 
 Monitoring targets are:
