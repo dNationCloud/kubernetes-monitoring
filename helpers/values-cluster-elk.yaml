@@ -17,6 +17,7 @@ templates:
   k8s:
     # Create custom template for PVC Utilization of ELK PVCs
     mostUtilizedPVCELK:
+      # Use `mostUtilizedPVC` as a parent template and inherit its template values
       parent: 'mostUtilizedPVC'
       default: false
       panel:
