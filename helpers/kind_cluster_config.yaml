@@ -1,21 +1,8 @@
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
-networking:
-  apiServerAddress: 127.0.0.1
-  apiServerPort: 34321
 nodes:
 - role: worker
 - role: control-plane
-  extraPortMappings:
-  # Grafana UI port forward 5000 on the host to 30001 on cluster node
-  - containerPort: 30001
-    hostPort: 5000
-  # Prometheus UI port forward 5001 on the host to 30090 on cluster node
-  - containerPort: 30090
-    hostPort: 5001
-  # Prometheus Alertmanager UI port forward 5002 on the host to 30903 on cluster node
-  - containerPort: 30903
-    hostPort: 5002
   # Expose control plane controller metrics by changing bind addresses
   kubeadmConfigPatches:
     - |
@@ -29,8 +16,6 @@ nodes:
         local:
           extraArgs:
             listen-metrics-urls: http://0.0.0.0:2381
-      networking:
-        podSubnet: 10.244.0.0/16
       scheduler:
         extraArgs:
           port: "10251"

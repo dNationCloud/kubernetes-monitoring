@@ -277,23 +277,30 @@ Then the k8s configmap with compressed jsonnet is consumed by <a href="https://g
 <p>If you want to test your local changes in local KinD k8s cluster use following steps:</p>
 <ol>
 <li>Create KinD cluster
-<div class="highlight"><pre><span></span><code>kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.19.1
+<div class="highlight"><pre><span></span><code>kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.20.2
 </code></pre></div></li>
-<li>Install K8s-m8g-stack (without dNation Kubernetes Monitoring dependency)
-K8s-m8g-stack is an umbrella helm chart which deploys Grafana, Loki and Prometheus Operator projects.</li>
-<li>Grafana UI is exposed on port <code>5000</code>, see http://localhost:5000 (default username: admin, default password: pass)</li>
-<li>Prometheus UI is exposed on port <code>5001</code>, see http://localhost:5001</li>
-<li>Prometheus Alertmanager UI is exposed on port <code>5002</code>, see http://localhost:5002
+<li>
+<p>Install K8s-m8g-stack (without dNation Kubernetes Monitoring dependency)
+K8s-m8g-stack is an umbrella helm chart which deploys Grafana, Loki and Prometheus Operator projects.
 <div class="highlight"><pre><span></span><code><span class="c1"># Add dNation helm repository</span>
 helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
 helm repo update
 
 <span class="c1"># Install dNation Kubernetes Monitoring Stack without dNation Kubernetes Monitoring chart</span>
-helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack -f helpers/values-stack.yaml
-</code></pre></div></li>
-<li>Package jsonnet templates
+helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack  --set dnation-kubernetes-monitoring.enabled<span class="o">=</span><span class="nb">false</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Follow installation notes and use Port Forwarding if you want to access the Grafana server from outside your KinD cluster
+<div class="highlight"><pre><span></span><code> <span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace default -l <span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
+kubectl --namespace default port-forward <span class="nv">$POD_NAME</span> <span class="m">3000</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Package jsonnet templates
 <div class="highlight"><pre><span></span><code>make jsonnet-package
-</code></pre></div></li>
+</code></pre></div></p>
+</li>
 <li>Deploy dNation Kubernetes Monitoring with your changes
 <div class="highlight"><pre><span></span><code><span class="c1"># Update K8s monitoring chart dependencies</span>
 helm dependency update chart
