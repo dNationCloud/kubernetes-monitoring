@@ -98,6 +98,7 @@ local table = grafana.tablePanel;
             { alias: 'Node', pattern: 'nodename', type: 'string' },
             { pattern: 'prometheus', type: 'hidden' },
             { alias: 'Message', pattern: 'message', type: 'string' },
+            { alias: 'Detailed link', pattern: 'link', type: 'string', link: true, linkUrl: '/d/${__cell:raw}&from=${__cell_0:raw}&to=now' },
           ]
         )
         .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup"}' });

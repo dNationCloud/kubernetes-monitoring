@@ -47,7 +47,7 @@
   ],
 
   getTemplateAlerts(objTemplates, obj=null):: [
-    tpl.alert
+    std.mergePatch($._config.templates.baseAlert, tpl.alert)
     for tpl in self.getTemplates(objTemplates, obj)
     if (std.objectHas(tpl, 'alert') && tpl.alert != {})
   ],

@@ -12,19 +12,21 @@
 */
 
 {
-  newAlert(name, message, expr, operator, threshold, labels):: {
+  newAlert(name, message, expr, operator, threshold, link, labels):: {
     name: name,
     alert: '%s%s' % [$._config.prometheusRules.alertNamePrefix, name],
     annotations: {
       message: message,
+      local link_delim = if std.length(std.findSubstr('?', link)) > 0 then '&' else '?',
+      [if link != '' then 'link']: '%s%srefresh=%s' % [link, link_delim, $._config.grafanaDashboards.refresh],
     },
     expr: '%s %s %s' % [expr, operator, threshold],
     'for': $._config.prometheusRules.alertInterval,
     labels: labels,
   },
-  newAlertPair(name, message, expr, thresholds, customLables={}):: [
-    $.newAlert(name, message, expr, thresholds.operator, thresholds.critical, { severity: 'critical' } + customLables),
-    $.newAlert(name, message, expr, thresholds.operator, thresholds.warning, { severity: 'warning' } + customLables),
+  newAlertPair(name, message, expr, thresholds, link, customLables={}):: [
+    $.newAlert(name, message, expr, thresholds.operator, thresholds.critical, link, { severity: 'critical' } + customLables),
+    $.newAlert(name, message, expr, thresholds.operator, thresholds.warning, link, { severity: 'warning' } + customLables),
   ],
   newRuleGroup(name):: {
     name: name,

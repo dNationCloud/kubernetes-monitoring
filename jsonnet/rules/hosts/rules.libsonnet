@@ -32,6 +32,7 @@
                 message=alert.message,
                 expr=alert.expr,
                 thresholds=alert.thresholds,
+                link=alert.link,
                 customLables=alert.customLables,
               )
               for alert in alerts
