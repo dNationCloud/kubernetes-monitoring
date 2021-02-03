@@ -327,6 +327,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#basealert" class="md-nav__link">
+    baseAlert
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#basestatstemplate" class="md-nav__link">
     baseStatsTemplate
   </a>
@@ -1051,6 +1058,13 @@
   
     <nav class="md-nav" aria-label="templates">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basealert" class="md-nav__link">
+    baseAlert
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#basestatstemplate" class="md-nav__link">
@@ -1971,21 +1985,40 @@ during helm installation.</p>
 
 <p><br></p>
 <h2 id="templates"><a name='templates_11'>templates</a></h2>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>baseStatsTemplate</td><td><a href='#baseStatsTemplate_12'>baseStatsTemplate</a>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>baseAlert</td><td><a href='#baseAlert_12'>baseAlert</a>
 </td></tr>
-<tr><td>commonThresholds</td><td><a href='#commonThresholds_15'>commonThresholds</a>
+<tr><td>baseStatsTemplate</td><td><a href='#baseStatsTemplate_13'>baseStatsTemplate</a>
 </td></tr>
-<tr><td>host</td><td><a href='#host_22'>host</a>
+<tr><td>commonThresholds</td><td><a href='#commonThresholds_16'>commonThresholds</a>
 </td></tr>
-<tr><td>hostApps</td><td><a href='#hostApps_49'>hostApps</a>
+<tr><td>host</td><td><a href='#host_23'>host</a>
 </td></tr>
-<tr><td>k8s</td><td><a href='#k8s_80'>k8s</a>
+<tr><td>hostApps</td><td><a href='#hostApps_50'>hostApps</a>
 </td></tr>
-<tr><td>k8sApps</td><td><a href='#k8sApps_164'>k8sApps</a>
+<tr><td>k8s</td><td><a href='#k8s_81'>k8s</a>
+</td></tr>
+<tr><td>k8sApps</td><td><a href='#k8sApps_165'>k8sApps</a>
 </td></tr></table>
 
 <p><br></p>
-<h3 id="basestatstemplate"><a name='baseStatsTemplate_12'>baseStatsTemplate</a></h3>
+<h3 id="basealert"><a name='baseAlert_12'>baseAlert</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>{}
+</code></div>
+</td></tr>
+<tr><td>expr</td><td><div class='my-pre'><code></code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code></code></div>
+</td></tr>
+<tr><td>message</td><td><div class='my-pre'><code></code></div>
+</td></tr>
+<tr><td>name</td><td><div class='my-pre'><code>error must be overwritten</code></div>
+</td></tr>
+<tr><td>thresholds</td><td><div class='my-pre'><code>{}
+</code></div>
+</td></tr></table>
+
+<p><br></p>
+<h3 id="basestatstemplate"><a name='baseStatsTemplate_13'>baseStatsTemplate</a></h3>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
@@ -1993,11 +2026,11 @@ during helm installation.</p>
 </td></tr>
 <tr><td>enabled</td><td><div class='my-pre'><code>True</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_13'>panel</a>
+<tr><td>panel</td><td><a href='#panel_14'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="panel"><a name='panel_13'>panel</a></h4>
+<h4 id="panel"><a name='panel_14'>panel</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>background</code></div>
 </td></tr>
 <tr><td>dataLinks</td><td><div class='my-pre'><code>[]
@@ -2011,7 +2044,7 @@ during helm installation.</p>
 </td></tr>
 <tr><td>graphMode</td><td><div class='my-pre'><code>area</code></div>
 </td></tr>
-<tr><td>gridPos</td><td><a href='#gridPos_14'>gridPos</a>
+<tr><td>gridPos</td><td><a href='#gridPos_15'>gridPos</a>
 </td></tr>
 <tr><td>mappings</td><td><div class='my-pre'><code>[]
 </code></div>
@@ -2025,7 +2058,7 @@ during helm installation.</p>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='gridPos_14'>gridPos</a> </p>
+<p> <a name='gridPos_15'>gridPos</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>h</td><td><div class='my-pre'><code>3</code></div>
 </td></tr>
@@ -2037,22 +2070,22 @@ during helm installation.</p>
 </td></tr></table>
 
 <p><br></p>
-<h3 id="commonthresholds"><a name='commonThresholds_15'>commonThresholds</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>app</td><td><a href='#app_16'>app</a>
+<h3 id="commonthresholds"><a name='commonThresholds_16'>commonThresholds</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>app</td><td><a href='#app_17'>app</a>
 </td></tr>
-<tr><td>controlPlane</td><td><a href='#controlPlane_17'>controlPlane</a>
+<tr><td>controlPlane</td><td><a href='#controlPlane_18'>controlPlane</a>
 </td></tr>
-<tr><td>criticalPanel</td><td><a href='#criticalPanel_18'>criticalPanel</a>
+<tr><td>criticalPanel</td><td><a href='#criticalPanel_19'>criticalPanel</a>
 </td></tr>
-<tr><td>k8s</td><td><a href='#k8s_19'>k8s</a>
+<tr><td>k8s</td><td><a href='#k8s_20'>k8s</a>
 </td></tr>
-<tr><td>node</td><td><a href='#node_20'>node</a>
+<tr><td>node</td><td><a href='#node_21'>node</a>
 </td></tr>
-<tr><td>warningPanel</td><td><a href='#warningPanel_21'>warningPanel</a>
+<tr><td>warningPanel</td><td><a href='#warningPanel_22'>warningPanel</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="app"><a name='app_16'>app</a></h4>
+<h4 id="app"><a name='app_17'>app</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code><</code></div>
@@ -2061,7 +2094,7 @@ during helm installation.</p>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="controlplane"><a name='controlPlane_17'>controlPlane</a></h4>
+<h4 id="controlplane"><a name='controlPlane_18'>controlPlane</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code><</code></div>
@@ -2070,14 +2103,14 @@ during helm installation.</p>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="criticalpanel"><a name='criticalPanel_18'>criticalPanel</a></h4>
+<h4 id="criticalpanel"><a name='criticalPanel_19'>criticalPanel</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>1</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code>>=</code></div>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="k8s"><a name='k8s_19'>k8s</a></h4>
+<h4 id="k8s"><a name='k8s_20'>k8s</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code><</code></div>
@@ -2086,7 +2119,7 @@ during helm installation.</p>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="node"><a name='node_20'>node</a></h4>
+<h4 id="node"><a name='node_21'>node</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>90</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code>>=</code></div>
@@ -2095,51 +2128,53 @@ during helm installation.</p>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="warningpanel"><a name='warningPanel_21'>warningPanel</a></h4>
+<h4 id="warningpanel"><a name='warningPanel_22'>warningPanel</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>operator</td><td><div class='my-pre'><code>>=</code></div>
 </td></tr>
 <tr><td>warning</td><td><div class='my-pre'><code>1</code></div>
 </td></tr></table>
 
 <p><br></p>
-<h3 id="host"><a name='host_22'>host</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>overallNetworkErrors</td><td><a href='#overallNetworkErrors_23'>overallNetworkErrors</a>
+<h3 id="host"><a name='host_23'>host</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>overallNetworkErrors</td><td><a href='#overallNetworkErrors_24'>overallNetworkErrors</a>
 </td></tr>
-<tr><td>overallUtilizationCPU</td><td><a href='#overallUtilizationCPU_26'>overallUtilizationCPU</a>
+<tr><td>overallUtilizationCPU</td><td><a href='#overallUtilizationCPU_27'>overallUtilizationCPU</a>
 </td></tr>
-<tr><td>overallUtilizationDisk</td><td><a href='#overallUtilizationDisk_29'>overallUtilizationDisk</a>
+<tr><td>overallUtilizationDisk</td><td><a href='#overallUtilizationDisk_30'>overallUtilizationDisk</a>
 </td></tr>
-<tr><td>overallUtilizationRAM</td><td><a href='#overallUtilizationRAM_32'>overallUtilizationRAM</a>
+<tr><td>overallUtilizationRAM</td><td><a href='#overallUtilizationRAM_33'>overallUtilizationRAM</a>
 </td></tr>
-<tr><td>targetDown</td><td><a href='#targetDown_35'>targetDown</a>
+<tr><td>targetDown</td><td><a href='#targetDown_36'>targetDown</a>
 </td></tr>
-<tr><td>totalCores</td><td><a href='#totalCores_37'>totalCores</a>
+<tr><td>totalCores</td><td><a href='#totalCores_38'>totalCores</a>
 </td></tr>
-<tr><td>totalDisk</td><td><a href='#totalDisk_39'>totalDisk</a>
+<tr><td>totalDisk</td><td><a href='#totalDisk_40'>totalDisk</a>
 </td></tr>
-<tr><td>totalRAM</td><td><a href='#totalRAM_41'>totalRAM</a>
+<tr><td>totalRAM</td><td><a href='#totalRAM_42'>totalRAM</a>
 </td></tr>
-<tr><td>usedCores</td><td><a href='#usedCores_43'>usedCores</a>
+<tr><td>usedCores</td><td><a href='#usedCores_44'>usedCores</a>
 </td></tr>
-<tr><td>usedDisk</td><td><a href='#usedDisk_45'>usedDisk</a>
+<tr><td>usedDisk</td><td><a href='#usedDisk_46'>usedDisk</a>
 </td></tr>
-<tr><td>usedRAM</td><td><a href='#usedRAM_47'>usedRAM</a>
+<tr><td>usedRAM</td><td><a href='#usedRAM_48'>usedRAM</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="overallnetworkerrors"><a name='overallNetworkErrors_23'>overallNetworkErrors</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_24'>alert</a>
+<h4 id="overallnetworkerrors"><a name='overallNetworkErrors_24'>overallNetworkErrors</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_25'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_25'>panel</a>
+<tr><td>panel</td><td><a href='#panel_26'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_24'>alert</a> </p>
+<p> <a name='alert_25'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job!~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job!~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Host {{ $labels.nodename }}: High Overall Network Errors Count {{ $value }}%</code></div>
 </td></tr>
@@ -2152,7 +2187,7 @@ warning: 10
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_25'>panel</a> </p>
+<p> <a name='panel_26'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -2175,19 +2210,21 @@ warning: 10
 </td></tr></table>
 
 <p><br></p>
-<h4 id="overallutilizationcpu"><a name='overallUtilizationCPU_26'>overallUtilizationCPU</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_27'>alert</a>
+<h4 id="overallutilizationcpu"><a name='overallUtilizationCPU_27'>overallUtilizationCPU</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_28'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_28'>panel</a>
+<tr><td>panel</td><td><a href='#panel_29'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_27'>alert</a> </p>
+<p> <a name='alert_28'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job!~"node-exporter", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Host {{ $labels.nodename }}: High CPU Overall Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -2200,7 +2237,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_28'>panel</a> </p>
+<p> <a name='panel_29'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -2212,6 +2249,8 @@ warning: 75
 y: 6
 </code></div>
 </td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter</code></div>
+</td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
 warning: 75
@@ -2221,19 +2260,21 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="overallutilizationdisk"><a name='overallUtilizationDisk_29'>overallUtilizationDisk</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_30'>alert</a>
+<h4 id="overallutilizationdisk"><a name='overallUtilizationDisk_30'>overallUtilizationDisk</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_31'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_31'>panel</a>
+<tr><td>panel</td><td><a href='#panel_32'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_30'>alert</a> </p>
+<p> <a name='alert_31'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Host {{ $labels.nodename }}: High Disk Overall Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -2246,7 +2287,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_31'>panel</a> </p>
+<p> <a name='panel_32'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -2275,19 +2316,21 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="overallutilizationram"><a name='overallUtilizationRAM_32'>overallUtilizationRAM</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_33'>alert</a>
+<h4 id="overallutilizationram"><a name='overallUtilizationRAM_33'>overallUtilizationRAM</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_34'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_34'>panel</a>
+<tr><td>panel</td><td><a href='#panel_35'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_33'>alert</a> </p>
+<p> <a name='alert_34'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Host {{ $labels.nodename }}: High RAM Overall Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -2300,7 +2343,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_34'>panel</a> </p>
+<p> <a name='panel_35'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -2325,14 +2368,14 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="targetdown"><a name='targetDown_35'>targetDown</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_36'>alert</a>
+<h4 id="targetdown"><a name='targetDown_36'>targetDown</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_37'>alert</a>
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>None</code></div>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_36'>alert</a> </p>
+<p> <a name='alert_37'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
@@ -2350,12 +2393,12 @@ warning: 10
 </td></tr></table>
 
 <p><br></p>
-<h4 id="totalcores"><a name='totalCores_37'>totalCores</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_38'>panel</a>
+<h4 id="totalcores"><a name='totalCores_38'>totalCores</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_39'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_38'>panel</a> </p>
+<p> <a name='panel_39'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -2379,12 +2422,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="totaldisk"><a name='totalDisk_39'>totalDisk</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_40'>panel</a>
+<h4 id="totaldisk"><a name='totalDisk_40'>totalDisk</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_41'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_40'>panel</a> </p>
+<p> <a name='panel_41'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -2408,12 +2451,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="totalram"><a name='totalRAM_41'>totalRAM</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_42'>panel</a>
+<h4 id="totalram"><a name='totalRAM_42'>totalRAM</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_43'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_42'>panel</a> </p>
+<p> <a name='panel_43'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -2437,12 +2480,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="usedcores"><a name='usedCores_43'>usedCores</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_44'>panel</a>
+<h4 id="usedcores"><a name='usedCores_44'>usedCores</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_45'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_44'>panel</a> </p>
+<p> <a name='panel_45'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -2466,12 +2509,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="useddisk"><a name='usedDisk_45'>usedDisk</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_46'>panel</a>
+<h4 id="useddisk"><a name='usedDisk_46'>usedDisk</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_47'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_46'>panel</a> </p>
+<p> <a name='panel_47'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -2495,12 +2538,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="usedram"><a name='usedRAM_47'>usedRAM</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_48'>panel</a>
+<h4 id="usedram"><a name='usedRAM_48'>usedRAM</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_49'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_48'>panel</a> </p>
+<p> <a name='panel_49'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -2524,44 +2567,44 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h3 id="hostapps"><a name='hostApps_49'>hostApps</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_50'>apache</a>
+<h3 id="hostapps"><a name='hostApps_50'>hostApps</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_51'>apache</a>
 </td></tr>
-<tr><td>autoscaler</td><td><a href='#autoscaler_52'>autoscaler</a>
+<tr><td>autoscaler</td><td><a href='#autoscaler_53'>autoscaler</a>
 </td></tr>
-<tr><td>cAdvisor</td><td><a href='#cAdvisor_55'>cAdvisor</a>
+<tr><td>cAdvisor</td><td><a href='#cAdvisor_56'>cAdvisor</a>
 </td></tr>
-<tr><td>genericApp</td><td><a href='#genericApp_57'>genericApp</a>
+<tr><td>genericApp</td><td><a href='#genericApp_58'>genericApp</a>
 </td></tr>
-<tr><td>javaActuator</td><td><a href='#javaActuator_59'>javaActuator</a>
+<tr><td>javaActuator</td><td><a href='#javaActuator_60'>javaActuator</a>
 </td></tr>
-<tr><td>nginxIngress</td><td><a href='#nginxIngress_62'>nginxIngress</a>
+<tr><td>nginxIngress</td><td><a href='#nginxIngress_63'>nginxIngress</a>
 </td></tr>
-<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_65'>nginxNrpe</a>
+<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_66'>nginxNrpe</a>
 </td></tr>
-<tr><td>nginxVts</td><td><a href='#nginxVts_67'>nginxVts</a>
+<tr><td>nginxVts</td><td><a href='#nginxVts_68'>nginxVts</a>
 </td></tr>
-<tr><td>phpFpm</td><td><a href='#phpFpm_70'>phpFpm</a>
+<tr><td>phpFpm</td><td><a href='#phpFpm_71'>phpFpm</a>
 </td></tr>
-<tr><td>postfix</td><td><a href='#postfix_72'>postfix</a>
+<tr><td>postfix</td><td><a href='#postfix_73'>postfix</a>
 </td></tr>
-<tr><td>pythonFlask</td><td><a href='#pythonFlask_75'>pythonFlask</a>
+<tr><td>pythonFlask</td><td><a href='#pythonFlask_76'>pythonFlask</a>
 </td></tr>
-<tr><td>rabbitmq</td><td><a href='#rabbitmq_78'>rabbitmq</a>
+<tr><td>rabbitmq</td><td><a href='#rabbitmq_79'>rabbitmq</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="apache"><a name='apache_50'>apache</a></h4>
+<h4 id="apache"><a name='apache_51'>apache</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_51'>panel</a>
+<tr><td>panel</td><td><a href='#panel_52'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_51'>panel</a> </p>
+<p> <a name='panel_52'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -2581,21 +2624,23 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="autoscaler"><a name='autoscaler_52'>autoscaler</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_53'>alert</a>
+<h4 id="autoscaler"><a name='autoscaler_53'>autoscaler</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_54'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_54'>panel</a>
+<tr><td>panel</td><td><a href='#panel_55'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_53'>alert</a> </p>
+<p> <a name='alert_54'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", job=~".+"}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", job=~".+"}) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>autoscaler?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -2609,7 +2654,7 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_54'>panel</a> </p>
+<p> <a name='panel_55'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100) OR on() vector(-1)</code></div>
 </td></tr>
@@ -2629,17 +2674,17 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<h4 id="cadvisor"><a name='cAdvisor_55'>cAdvisor</a></h4>
+<h4 id="cadvisor"><a name='cAdvisor_56'>cAdvisor</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_56'>panel</a>
+<tr><td>panel</td><td><a href='#panel_57'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_56'>panel</a> </p>
+<p> <a name='panel_57'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -2659,17 +2704,17 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="genericapp"><a name='genericApp_57'>genericApp</a></h4>
+<h4 id="genericapp"><a name='genericApp_58'>genericApp</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_58'>panel</a>
+<tr><td>panel</td><td><a href='#panel_59'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_58'>panel</a> </p>
+<p> <a name='panel_59'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>description</td><td>GenericApp template. Used when application monitoring is requested but appropriate template was not found.
 </td></tr>
@@ -2685,21 +2730,23 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="javaactuator"><a name='javaActuator_59'>javaActuator</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_60'>alert</a>
+<h4 id="javaactuator"><a name='javaActuator_60'>javaActuator</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_61'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_61'>panel</a>
+<tr><td>panel</td><td><a href='#panel_62'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_60'>alert</a> </p>
+<p> <a name='alert_61'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="heap"}))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>javaactuator?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%</code></div>
 </td></tr>
@@ -2713,7 +2760,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_61'>panel</a> </p>
+<p> <a name='panel_62'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"})) OR on() vector(-1)</code></div>
 </td></tr>
@@ -2733,21 +2780,23 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="nginxingress"><a name='nginxIngress_62'>nginxIngress</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_63'>alert</a>
+<h4 id="nginxingress"><a name='nginxIngress_63'>nginxIngress</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_64'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_64'>panel</a>
+<tr><td>panel</td><td><a href='#panel_65'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_63'>alert</a> </p>
+<p> <a name='alert_64'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+", status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+"}[5m])) + 100))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nginxingress?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
 </td></tr>
@@ -2761,7 +2810,7 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_64'>panel</a> </p>
+<p> <a name='panel_65'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s, status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)) OR on() vector(-1)</code></div>
 </td></tr>
@@ -2781,17 +2830,17 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<h4 id="nginxnrpe"><a name='nginxNrpe_65'>nginxNrpe</a></h4>
+<h4 id="nginxnrpe"><a name='nginxNrpe_66'>nginxNrpe</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_66'>panel</a>
+<tr><td>panel</td><td><a href='#panel_67'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_66'>panel</a> </p>
+<p> <a name='panel_67'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -2811,21 +2860,23 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="nginxvts"><a name='nginxVts_67'>nginxVts</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_68'>alert</a>
+<h4 id="nginxvts"><a name='nginxVts_68'>nginxVts</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_69'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_69'>panel</a>
+<tr><td>panel</td><td><a href='#panel_70'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_68'>alert</a> </p>
+<p> <a name='alert_69'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+", code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+"}[5m])) + 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nginxvts?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
 </td></tr>
@@ -2839,7 +2890,7 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_69'>panel</a> </p>
+<p> <a name='panel_70'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100) OR on() vector(-1)</code></div>
 </td></tr>
@@ -2859,17 +2910,17 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<h4 id="phpfpm"><a name='phpFpm_70'>phpFpm</a></h4>
+<h4 id="phpfpm"><a name='phpFpm_71'>phpFpm</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_71'>panel</a>
+<tr><td>panel</td><td><a href='#panel_72'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_71'>panel</a> </p>
+<p> <a name='panel_72'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -2889,21 +2940,23 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="postfix"><a name='postfix_72'>postfix</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_73'>alert</a>
+<h4 id="postfix"><a name='postfix_73'>postfix</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_74'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_74'>panel</a>
+<tr><td>panel</td><td><a href='#panel_75'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_73'>alert</a> </p>
+<p> <a name='alert_74'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (postfix_size{cluster=~"$cluster|", job=~".+"}))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>postfix?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>mappings</td><td><div class='my-pre'><code>- text: '-'
   type: 1
@@ -2922,7 +2975,7 @@ warning: 5
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_74'>panel</a> </p>
+<p> <a name='panel_75'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (postfix_size{cluster=~"$cluster|", %(job)s})) OR on() vector(-1)</code></div>
 </td></tr>
@@ -2944,21 +2997,23 @@ warning: 5
 </td></tr></table>
 
 <p><br></p>
-<h4 id="pythonflask"><a name='pythonFlask_75'>pythonFlask</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_76'>alert</a>
+<h4 id="pythonflask"><a name='pythonFlask_76'>pythonFlask</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_77'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_77'>panel</a>
+<tr><td>panel</td><td><a href='#panel_78'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_76'>alert</a> </p>
+<p> <a name='alert_77'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+",status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+"}[5m])) + 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>pythonflask?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
 </td></tr>
@@ -2972,7 +3027,7 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_77'>panel</a> </p>
+<p> <a name='panel_78'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s,status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) + 100) OR on() vector(-1)</code></div>
 </td></tr>
@@ -2992,17 +3047,17 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<h4 id="rabbitmq"><a name='rabbitmq_78'>rabbitmq</a></h4>
+<h4 id="rabbitmq"><a name='rabbitmq_79'>rabbitmq</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_79'>panel</a>
+<tr><td>panel</td><td><a href='#panel_80'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_79'>panel</a> </p>
+<p> <a name='panel_80'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -3022,82 +3077,84 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h3 id="k8s_1"><a name='k8s_80'>k8s</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>apiServerHealth</td><td><a href='#apiServerHealth_81'>apiServerHealth</a>
+<h3 id="k8s_1"><a name='k8s_81'>k8s</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>apiServerHealth</td><td><a href='#apiServerHealth_82'>apiServerHealth</a>
 </td></tr>
-<tr><td>controllerManagerHealth</td><td><a href='#controllerManagerHealth_84'>controllerManagerHealth</a>
+<tr><td>controllerManagerHealth</td><td><a href='#controllerManagerHealth_85'>controllerManagerHealth</a>
 </td></tr>
-<tr><td>daemonSetsHealth</td><td><a href='#daemonSetsHealth_87'>daemonSetsHealth</a>
+<tr><td>daemonSetsHealth</td><td><a href='#daemonSetsHealth_88'>daemonSetsHealth</a>
 </td></tr>
-<tr><td>deploymentsHealth</td><td><a href='#deploymentsHealth_90'>deploymentsHealth</a>
+<tr><td>deploymentsHealth</td><td><a href='#deploymentsHealth_91'>deploymentsHealth</a>
 </td></tr>
-<tr><td>etcdHealth</td><td><a href='#etcdHealth_93'>etcdHealth</a>
+<tr><td>etcdHealth</td><td><a href='#etcdHealth_94'>etcdHealth</a>
 </td></tr>
-<tr><td>kubeletHealth</td><td><a href='#kubeletHealth_96'>kubeletHealth</a>
+<tr><td>kubeletHealth</td><td><a href='#kubeletHealth_97'>kubeletHealth</a>
 </td></tr>
-<tr><td>mostUtilizedNodeCPU</td><td><a href='#mostUtilizedNodeCPU_99'>mostUtilizedNodeCPU</a>
+<tr><td>mostUtilizedNodeCPU</td><td><a href='#mostUtilizedNodeCPU_100'>mostUtilizedNodeCPU</a>
 </td></tr>
-<tr><td>mostUtilizedNodeDisk</td><td><a href='#mostUtilizedNodeDisk_102'>mostUtilizedNodeDisk</a>
+<tr><td>mostUtilizedNodeDisk</td><td><a href='#mostUtilizedNodeDisk_103'>mostUtilizedNodeDisk</a>
 </td></tr>
-<tr><td>mostUtilizedNodeNetworkErrors</td><td><a href='#mostUtilizedNodeNetworkErrors_105'>mostUtilizedNodeNetworkErrors</a>
+<tr><td>mostUtilizedNodeNetworkErrors</td><td><a href='#mostUtilizedNodeNetworkErrors_106'>mostUtilizedNodeNetworkErrors</a>
 </td></tr>
-<tr><td>mostUtilizedNodeRAM</td><td><a href='#mostUtilizedNodeRAM_108'>mostUtilizedNodeRAM</a>
+<tr><td>mostUtilizedNodeRAM</td><td><a href='#mostUtilizedNodeRAM_109'>mostUtilizedNodeRAM</a>
 </td></tr>
-<tr><td>mostUtilizedPVC</td><td><a href='#mostUtilizedPVC_111'>mostUtilizedPVC</a>
+<tr><td>mostUtilizedPVC</td><td><a href='#mostUtilizedPVC_112'>mostUtilizedPVC</a>
 </td></tr>
-<tr><td>nodeHealth</td><td><a href='#nodeHealth_114'>nodeHealth</a>
+<tr><td>nodeHealth</td><td><a href='#nodeHealth_115'>nodeHealth</a>
 </td></tr>
-<tr><td>overallNetworkErrors</td><td><a href='#overallNetworkErrors_117'>overallNetworkErrors</a>
+<tr><td>overallNetworkErrors</td><td><a href='#overallNetworkErrors_118'>overallNetworkErrors</a>
 </td></tr>
-<tr><td>overallUtilizationCPU</td><td><a href='#overallUtilizationCPU_120'>overallUtilizationCPU</a>
+<tr><td>overallUtilizationCPU</td><td><a href='#overallUtilizationCPU_121'>overallUtilizationCPU</a>
 </td></tr>
-<tr><td>overallUtilizationDisk</td><td><a href='#overallUtilizationDisk_123'>overallUtilizationDisk</a>
+<tr><td>overallUtilizationDisk</td><td><a href='#overallUtilizationDisk_124'>overallUtilizationDisk</a>
 </td></tr>
-<tr><td>overallUtilizationRAM</td><td><a href='#overallUtilizationRAM_126'>overallUtilizationRAM</a>
+<tr><td>overallUtilizationRAM</td><td><a href='#overallUtilizationRAM_127'>overallUtilizationRAM</a>
 </td></tr>
-<tr><td>proxyHealth</td><td><a href='#proxyHealth_129'>proxyHealth</a>
+<tr><td>proxyHealth</td><td><a href='#proxyHealth_130'>proxyHealth</a>
 </td></tr>
-<tr><td>pvcBound</td><td><a href='#pvcBound_132'>pvcBound</a>
+<tr><td>pvcBound</td><td><a href='#pvcBound_133'>pvcBound</a>
 </td></tr>
-<tr><td>runningContainers</td><td><a href='#runningContainers_135'>runningContainers</a>
+<tr><td>runningContainers</td><td><a href='#runningContainers_136'>runningContainers</a>
 </td></tr>
-<tr><td>runningPods</td><td><a href='#runningPods_138'>runningPods</a>
+<tr><td>runningPods</td><td><a href='#runningPods_139'>runningPods</a>
 </td></tr>
-<tr><td>runningStatefulSets</td><td><a href='#runningStatefulSets_141'>runningStatefulSets</a>
+<tr><td>runningStatefulSets</td><td><a href='#runningStatefulSets_142'>runningStatefulSets</a>
 </td></tr>
-<tr><td>schedulerHealth</td><td><a href='#schedulerHealth_144'>schedulerHealth</a>
+<tr><td>schedulerHealth</td><td><a href='#schedulerHealth_145'>schedulerHealth</a>
 </td></tr>
-<tr><td>succeededJobs</td><td><a href='#succeededJobs_147'>succeededJobs</a>
+<tr><td>succeededJobs</td><td><a href='#succeededJobs_148'>succeededJobs</a>
 </td></tr>
-<tr><td>targetDown</td><td><a href='#targetDown_150'>targetDown</a>
+<tr><td>targetDown</td><td><a href='#targetDown_151'>targetDown</a>
 </td></tr>
-<tr><td>totalCores</td><td><a href='#totalCores_152'>totalCores</a>
+<tr><td>totalCores</td><td><a href='#totalCores_153'>totalCores</a>
 </td></tr>
-<tr><td>totalDisk</td><td><a href='#totalDisk_154'>totalDisk</a>
+<tr><td>totalDisk</td><td><a href='#totalDisk_155'>totalDisk</a>
 </td></tr>
-<tr><td>totalRAM</td><td><a href='#totalRAM_156'>totalRAM</a>
+<tr><td>totalRAM</td><td><a href='#totalRAM_157'>totalRAM</a>
 </td></tr>
-<tr><td>usedCores</td><td><a href='#usedCores_158'>usedCores</a>
+<tr><td>usedCores</td><td><a href='#usedCores_159'>usedCores</a>
 </td></tr>
-<tr><td>usedDisk</td><td><a href='#usedDisk_160'>usedDisk</a>
+<tr><td>usedDisk</td><td><a href='#usedDisk_161'>usedDisk</a>
 </td></tr>
-<tr><td>usedRAM</td><td><a href='#usedRAM_162'>usedRAM</a>
+<tr><td>usedRAM</td><td><a href='#usedRAM_163'>usedRAM</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="apiserverhealth"><a name='apiServerHealth_81'>apiServerHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_82'>alert</a>
+<h4 id="apiserverhealth"><a name='apiServerHealth_82'>apiServerHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_83'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_83'>panel</a>
+<tr><td>panel</td><td><a href='#panel_84'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_82'>alert</a> </p>
+<p> <a name='alert_83'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="apiserver"}) / count(up{cluster=~"$cluster|", job="apiserver"})) * 100</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>apiserver</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster Api Server Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -3110,7 +3167,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_83'>panel</a> </p>
+<p> <a name='panel_84'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/apiserver?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3132,19 +3189,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="controllermanagerhealth"><a name='controllerManagerHealth_84'>controllerManagerHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_85'>alert</a>
+<h4 id="controllermanagerhealth"><a name='controllerManagerHealth_85'>controllerManagerHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_86'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_86'>panel</a>
+<tr><td>panel</td><td><a href='#panel_87'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_85'>alert</a> </p>
+<p> <a name='alert_86'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-controller-manager"}) / count(up{cluster=~"$cluster|", job="kube-controller-manager"})) * 100</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>controllermanager</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster Controller Manager Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -3157,7 +3216,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_86'>panel</a> </p>
+<p> <a name='panel_87'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/controllermanager?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3179,19 +3238,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="daemonsetshealth"><a name='daemonSetsHealth_87'>daemonSetsHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_88'>alert</a>
+<h4 id="daemonsetshealth"><a name='daemonSetsHealth_88'>daemonSetsHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_89'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_89'>panel</a>
+<tr><td>panel</td><td><a href='#panel_90'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_88'>alert</a> </p>
+<p> <a name='alert_89'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round((sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster|"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster|"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|"})) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>daemonsetoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>DaemonSets Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -3204,7 +3265,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_89'>panel</a> </p>
+<p> <a name='panel_90'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/daemonsetoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3225,19 +3286,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="deploymentshealth"><a name='deploymentsHealth_90'>deploymentsHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_91'>alert</a>
+<h4 id="deploymentshealth"><a name='deploymentsHealth_91'>deploymentsHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_92'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_92'>panel</a>
+<tr><td>panel</td><td><a href='#panel_93'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_91'>alert</a> </p>
+<p> <a name='alert_92'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster|"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster|"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster|"})) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>deploymentoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Running Deployments Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -3250,7 +3313,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_92'>panel</a> </p>
+<p> <a name='panel_93'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/deploymentoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3271,19 +3334,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="etcdhealth"><a name='etcdHealth_93'>etcdHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_94'>alert</a>
+<h4 id="etcdhealth"><a name='etcdHealth_94'>etcdHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_95'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_95'>panel</a>
+<tr><td>panel</td><td><a href='#panel_96'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_94'>alert</a> </p>
+<p> <a name='alert_95'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-etcd"}) / count(up{cluster=~"$cluster|", job="kube-etcd"})) * 100</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>etcd</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster Etcd Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -3296,7 +3361,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_95'>panel</a> </p>
+<p> <a name='panel_96'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/etcd?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3318,19 +3383,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="kubelethealth"><a name='kubeletHealth_96'>kubeletHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_97'>alert</a>
+<h4 id="kubelethealth"><a name='kubeletHealth_97'>kubeletHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_98'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_98'>panel</a>
+<tr><td>panel</td><td><a href='#panel_99'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_97'>alert</a> </p>
+<p> <a name='alert_98'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"}) / count(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"})) * 100</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>kubelet</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster Kubelet Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -3343,7 +3410,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_98'>panel</a> </p>
+<p> <a name='panel_99'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/kubelet?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3365,19 +3432,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="mostutilizednodecpu"><a name='mostUtilizedNodeCPU_99'>mostUtilizedNodeCPU</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_100'>alert</a>
+<h4 id="mostutilizednodecpu"><a name='mostUtilizedNodeCPU_100'>mostUtilizedNodeCPU</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_101'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_101'>panel</a>
+<tr><td>panel</td><td><a href='#panel_102'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_100'>alert</a> </p>
+<p> <a name='alert_101'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"node-exporter", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster {{ $labels.nodename }}: High CPU Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -3390,7 +3459,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_101'>panel</a> </p>
+<p> <a name='panel_102'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/cpuoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
@@ -3414,19 +3483,21 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="mostutilizednodedisk"><a name='mostUtilizedNodeDisk_102'>mostUtilizedNodeDisk</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_103'>alert</a>
+<h4 id="mostutilizednodedisk"><a name='mostUtilizedNodeDisk_103'>mostUtilizedNodeDisk</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_104'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_104'>panel</a>
+<tr><td>panel</td><td><a href='#panel_105'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_103'>alert</a> </p>
+<p> <a name='alert_104'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -3439,7 +3510,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_104'>panel</a> </p>
+<p> <a name='panel_105'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/diskoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
@@ -3469,19 +3540,21 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="mostutilizednodenetworkerrors"><a name='mostUtilizedNodeNetworkErrors_105'>mostUtilizedNodeNetworkErrors</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_106'>alert</a>
+<h4 id="mostutilizednodenetworkerrors"><a name='mostUtilizedNodeNetworkErrors_106'>mostUtilizedNodeNetworkErrors</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_107'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_107'>panel</a>
+<tr><td>panel</td><td><a href='#panel_108'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_106'>alert</a> </p>
+<p> <a name='alert_107'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%</code></div>
 </td></tr>
@@ -3494,7 +3567,7 @@ warning: 10
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_107'>panel</a> </p>
+<p> <a name='panel_108'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/networkoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
@@ -3520,19 +3593,21 @@ warning: 10
 </td></tr></table>
 
 <p><br></p>
-<h4 id="mostutilizednoderam"><a name='mostUtilizedNodeRAM_108'>mostUtilizedNodeRAM</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_109'>alert</a>
+<h4 id="mostutilizednoderam"><a name='mostUtilizedNodeRAM_109'>mostUtilizedNodeRAM</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_110'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_110'>panel</a>
+<tr><td>panel</td><td><a href='#panel_111'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_109'>alert</a> </p>
+<p> <a name='alert_110'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -3545,7 +3620,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_110'>panel</a> </p>
+<p> <a name='panel_111'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/memoryoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
@@ -3573,19 +3648,21 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="mostutilizedpvc"><a name='mostUtilizedPVC_111'>mostUtilizedPVC</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_112'>alert</a>
+<h4 id="mostutilizedpvc"><a name='mostUtilizedPVC_112'>mostUtilizedPVC</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_113'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_113'>panel</a>
+<tr><td>panel</td><td><a href='#panel_114'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_112'>alert</a> </p>
+<p> <a name='alert_113'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100) by (persistentvolumeclaim)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>pvcoverview?var-volume={{ $labels.persistentvolumeclaim }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -3599,7 +3676,7 @@ warning: 85
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_113'>panel</a> </p>
+<p> <a name='panel_114'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/pvcoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3627,21 +3704,23 @@ warning: 85
 </td></tr></table>
 
 <p><br></p>
-<h4 id="nodehealth"><a name='nodeHealth_114'>nodeHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_115'>alert</a>
+<h4 id="nodehealth"><a name='nodeHealth_115'>nodeHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_116'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_116'>panel</a>
+<tr><td>panel</td><td><a href='#panel_117'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_115'>alert</a> </p>
+<p> <a name='alert_116'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|", condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  + sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"}) ) * 100)</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>"{{ $labels.node }}": Node Health Low {{ $value }}%</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>nodeoverview</code></div>
+</td></tr>
+<tr><td>message</td><td><div class='my-pre'><code>Nodes Health Low {{ $value }}%</code></div>
 </td></tr>
 <tr><td>name</td><td><div class='my-pre'><code>NodesHealthLow</code></div>
 </td></tr>
@@ -3652,13 +3731,13 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_116'>panel</a> </p>
+<p> <a name='panel_117'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/nodeoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|", condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  + sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"}) ) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|", condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  + sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"}) ) * 100)</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 0
 y: 5
@@ -3673,19 +3752,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="overallnetworkerrors_1"><a name='overallNetworkErrors_117'>overallNetworkErrors</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_118'>alert</a>
+<h4 id="overallnetworkerrors_1"><a name='overallNetworkErrors_118'>overallNetworkErrors</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_119'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_119'>panel</a>
+<tr><td>panel</td><td><a href='#panel_120'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_118'>alert</a> </p>
+<p> <a name='alert_119'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>sum(sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>networkoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster High Overall Network Errors Count {{ $value }}%</code></div>
 </td></tr>
@@ -3698,7 +3779,7 @@ warning: 10
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_119'>panel</a> </p>
+<p> <a name='panel_120'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/networkoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
@@ -3724,19 +3805,21 @@ warning: 10
 </td></tr></table>
 
 <p><br></p>
-<h4 id="overallutilizationcpu_1"><a name='overallUtilizationCPU_120'>overallUtilizationCPU</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_121'>alert</a>
+<h4 id="overallutilizationcpu_1"><a name='overallUtilizationCPU_121'>overallUtilizationCPU</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_122'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_122'>panel</a>
+<tr><td>panel</td><td><a href='#panel_123'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_121'>alert</a> </p>
+<p> <a name='alert_122'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"node-exporter", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>cpuoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster High CPU Overall Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -3749,7 +3832,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_122'>panel</a> </p>
+<p> <a name='panel_123'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/cpuoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
@@ -3773,19 +3856,21 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="overallutilizationdisk_1"><a name='overallUtilizationDisk_123'>overallUtilizationDisk</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_124'>alert</a>
+<h4 id="overallutilizationdisk_1"><a name='overallUtilizationDisk_124'>overallUtilizationDisk</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_125'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_125'>panel</a>
+<tr><td>panel</td><td><a href='#panel_126'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_124'>alert</a> </p>
+<p> <a name='alert_125'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>avg(round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>diskoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster High Disk Overall Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -3798,7 +3883,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_125'>panel</a> </p>
+<p> <a name='panel_126'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/diskoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
@@ -3828,19 +3913,21 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="overallutilizationram_1"><a name='overallUtilizationRAM_126'>overallUtilizationRAM</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_127'>alert</a>
+<h4 id="overallutilizationram_1"><a name='overallUtilizationRAM_127'>overallUtilizationRAM</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_128'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_128'>panel</a>
+<tr><td>panel</td><td><a href='#panel_129'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_127'>alert</a> </p>
+<p> <a name='alert_128'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))) * 100))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>memoryoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster High RAM Overall Utilization {{ $value }}%</code></div>
 </td></tr>
@@ -3853,7 +3940,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_128'>panel</a> </p>
+<p> <a name='panel_129'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: System Overview
   url: /d/memoryoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
@@ -3881,19 +3968,21 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="proxyhealth"><a name='proxyHealth_129'>proxyHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_130'>alert</a>
+<h4 id="proxyhealth"><a name='proxyHealth_130'>proxyHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_131'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_131'>panel</a>
+<tr><td>panel</td><td><a href='#panel_132'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_130'>alert</a> </p>
+<p> <a name='alert_131'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-proxy"}) / count(up{cluster=~"$cluster|", job="kube-proxy"})) * 100</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>proxy</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster Proxy Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -3906,7 +3995,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_131'>panel</a> </p>
+<p> <a name='panel_132'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/proxy?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3928,14 +4017,14 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="pvcbound"><a name='pvcBound_132'>pvcBound</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_133'>alert</a>
+<h4 id="pvcbound"><a name='pvcBound_133'>pvcBound</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_134'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_134'>panel</a>
+<tr><td>panel</td><td><a href='#panel_135'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_133'>alert</a> </p>
+<p> <a name='alert_134'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
@@ -3944,6 +4033,8 @@ warning: 99
 sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Pending"}) +
 sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Lost"})
 ) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>pvcoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>PVC Bound Rate Low {{ $value }}%</code></div>
 </td></tr>
@@ -3957,7 +4048,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_134'>panel</a> </p>
+<p> <a name='panel_135'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/pvcoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -3988,19 +4079,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="runningcontainers"><a name='runningContainers_135'>runningContainers</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_136'>alert</a>
+<h4 id="runningcontainers"><a name='runningContainers_136'>runningContainers</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_137'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_137'>panel</a>
+<tr><td>panel</td><td><a href='#panel_138'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_136'>alert</a> </p>
+<p> <a name='alert_137'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_pod_container_status_running{cluster=~"$cluster|"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster|"})) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>containeroverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Running Containers Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -4013,7 +4106,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_137'>panel</a> </p>
+<p> <a name='panel_138'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/containeroverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -4034,19 +4127,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="runningpods"><a name='runningPods_138'>runningPods</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_139'>alert</a>
+<h4 id="runningpods"><a name='runningPods_139'>runningPods</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_140'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_140'>panel</a>
+<tr><td>panel</td><td><a href='#panel_141'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_139'>alert</a> </p>
+<p> <a name='alert_140'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Unknown"})) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>podoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Pods Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -4059,7 +4154,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_140'>panel</a> </p>
+<p> <a name='panel_141'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/podoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -4080,19 +4175,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="runningstatefulsets"><a name='runningStatefulSets_141'>runningStatefulSets</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_142'>alert</a>
+<h4 id="runningstatefulsets"><a name='runningStatefulSets_142'>runningStatefulSets</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_143'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_143'>panel</a>
+<tr><td>panel</td><td><a href='#panel_144'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_142'>alert</a> </p>
+<p> <a name='alert_143'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster|"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster|"}) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>statefulsetoverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>StatefulSets Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -4105,7 +4202,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_143'>panel</a> </p>
+<p> <a name='panel_144'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/statefulsetoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -4126,19 +4223,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="schedulerhealth"><a name='schedulerHealth_144'>schedulerHealth</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_145'>alert</a>
+<h4 id="schedulerhealth"><a name='schedulerHealth_145'>schedulerHealth</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_146'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_146'>panel</a>
+<tr><td>panel</td><td><a href='#panel_147'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_145'>alert</a> </p>
+<p> <a name='alert_146'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-scheduler"}) / count(up{cluster=~"$cluster|", job="kube-scheduler"})) * 100</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>scheduler</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Cluster Scheduler Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -4151,7 +4250,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_146'>panel</a> </p>
+<p> <a name='panel_147'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/scheduler?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -4173,19 +4272,21 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="succeededjobs"><a name='succeededJobs_147'>succeededJobs</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_148'>alert</a>
+<h4 id="succeededjobs"><a name='succeededJobs_148'>succeededJobs</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_149'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_149'>panel</a>
+<tr><td>panel</td><td><a href='#panel_150'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_148'>alert</a> </p>
+<p> <a name='alert_149'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_job_status_succeeded{cluster=~"$cluster|"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster|"}) + sum(kube_job_status_failed{cluster=~"$cluster|"})) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>joboverview</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>Succeeded Jobs Rate Low {{ $value }}%</code></div>
 </td></tr>
@@ -4199,7 +4300,7 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_149'>panel</a> </p>
+<p> <a name='panel_150'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>dataLinks</td><td><div class='my-pre'><code>- title: K8s Overview
   url: /d/joboverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
@@ -4226,14 +4327,14 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="targetdown_1"><a name='targetDown_150'>targetDown</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_151'>alert</a>
+<h4 id="targetdown_1"><a name='targetDown_151'>targetDown</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_152'>alert</a>
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>None</code></div>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_151'>alert</a> </p>
+<p> <a name='alert_152'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
@@ -4251,12 +4352,12 @@ warning: 10
 </td></tr></table>
 
 <p><br></p>
-<h4 id="totalcores_1"><a name='totalCores_152'>totalCores</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_153'>panel</a>
+<h4 id="totalcores_1"><a name='totalCores_153'>totalCores</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_154'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_153'>panel</a> </p>
+<p> <a name='panel_154'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -4280,12 +4381,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="totaldisk_1"><a name='totalDisk_154'>totalDisk</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_155'>panel</a>
+<h4 id="totaldisk_1"><a name='totalDisk_155'>totalDisk</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_156'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_155'>panel</a> </p>
+<p> <a name='panel_156'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -4309,12 +4410,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="totalram_1"><a name='totalRAM_156'>totalRAM</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_157'>panel</a>
+<h4 id="totalram_1"><a name='totalRAM_157'>totalRAM</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_158'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_157'>panel</a> </p>
+<p> <a name='panel_158'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -4338,12 +4439,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="usedcores_1"><a name='usedCores_158'>usedCores</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_159'>panel</a>
+<h4 id="usedcores_1"><a name='usedCores_159'>usedCores</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_160'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_159'>panel</a> </p>
+<p> <a name='panel_160'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -4367,12 +4468,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="useddisk_1"><a name='usedDisk_160'>usedDisk</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_161'>panel</a>
+<h4 id="useddisk_1"><a name='usedDisk_161'>usedDisk</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_162'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_161'>panel</a> </p>
+<p> <a name='panel_162'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -4401,12 +4502,12 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="usedram_1"><a name='usedRAM_162'>usedRAM</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_163'>panel</a>
+<h4 id="usedram_1"><a name='usedRAM_163'>usedRAM</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><a href='#panel_164'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_163'>panel</a> </p>
+<p> <a name='panel_164'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
 </td></tr>
@@ -4430,44 +4531,44 @@ value:
 </td></tr></table>
 
 <p><br></p>
-<h3 id="k8sapps"><a name='k8sApps_164'>k8sApps</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_165'>apache</a>
+<h3 id="k8sapps"><a name='k8sApps_165'>k8sApps</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_166'>apache</a>
 </td></tr>
-<tr><td>autoscaler</td><td><a href='#autoscaler_167'>autoscaler</a>
+<tr><td>autoscaler</td><td><a href='#autoscaler_168'>autoscaler</a>
 </td></tr>
-<tr><td>cAdvisor</td><td><a href='#cAdvisor_170'>cAdvisor</a>
+<tr><td>cAdvisor</td><td><a href='#cAdvisor_171'>cAdvisor</a>
 </td></tr>
-<tr><td>genericApp</td><td><a href='#genericApp_172'>genericApp</a>
+<tr><td>genericApp</td><td><a href='#genericApp_173'>genericApp</a>
 </td></tr>
-<tr><td>javaActuator</td><td><a href='#javaActuator_174'>javaActuator</a>
+<tr><td>javaActuator</td><td><a href='#javaActuator_175'>javaActuator</a>
 </td></tr>
-<tr><td>nginxIngress</td><td><a href='#nginxIngress_177'>nginxIngress</a>
+<tr><td>nginxIngress</td><td><a href='#nginxIngress_178'>nginxIngress</a>
 </td></tr>
-<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_180'>nginxNrpe</a>
+<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_181'>nginxNrpe</a>
 </td></tr>
-<tr><td>nginxVts</td><td><a href='#nginxVts_182'>nginxVts</a>
+<tr><td>nginxVts</td><td><a href='#nginxVts_183'>nginxVts</a>
 </td></tr>
-<tr><td>phpFpm</td><td><a href='#phpFpm_185'>phpFpm</a>
+<tr><td>phpFpm</td><td><a href='#phpFpm_186'>phpFpm</a>
 </td></tr>
-<tr><td>postfix</td><td><a href='#postfix_187'>postfix</a>
+<tr><td>postfix</td><td><a href='#postfix_188'>postfix</a>
 </td></tr>
-<tr><td>pythonFlask</td><td><a href='#pythonFlask_190'>pythonFlask</a>
+<tr><td>pythonFlask</td><td><a href='#pythonFlask_191'>pythonFlask</a>
 </td></tr>
-<tr><td>rabbitmq</td><td><a href='#rabbitmq_193'>rabbitmq</a>
+<tr><td>rabbitmq</td><td><a href='#rabbitmq_194'>rabbitmq</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="apache_1"><a name='apache_165'>apache</a></h4>
+<h4 id="apache_1"><a name='apache_166'>apache</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_166'>panel</a>
+<tr><td>panel</td><td><a href='#panel_167'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_166'>panel</a> </p>
+<p> <a name='panel_167'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -4487,21 +4588,23 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="autoscaler_1"><a name='autoscaler_167'>autoscaler</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_168'>alert</a>
+<h4 id="autoscaler_1"><a name='autoscaler_168'>autoscaler</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_169'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_169'>panel</a>
+<tr><td>panel</td><td><a href='#panel_170'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_168'>alert</a> </p>
+<p> <a name='alert_169'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", job=~".+"}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", job=~".+"}) * 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>autoscaler?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%</code></div>
 </td></tr>
@@ -4515,7 +4618,7 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_169'>panel</a> </p>
+<p> <a name='panel_170'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100) OR on() vector(-1)</code></div>
 </td></tr>
@@ -4535,17 +4638,17 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<h4 id="cadvisor_1"><a name='cAdvisor_170'>cAdvisor</a></h4>
+<h4 id="cadvisor_1"><a name='cAdvisor_171'>cAdvisor</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_171'>panel</a>
+<tr><td>panel</td><td><a href='#panel_172'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_171'>panel</a> </p>
+<p> <a name='panel_172'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -4565,17 +4668,17 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="genericapp_1"><a name='genericApp_172'>genericApp</a></h4>
+<h4 id="genericapp_1"><a name='genericApp_173'>genericApp</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_173'>panel</a>
+<tr><td>panel</td><td><a href='#panel_174'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_173'>panel</a> </p>
+<p> <a name='panel_174'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>description</td><td>GenericApp template. Used when application monitoring is requested but appropriate template was not found.
 </td></tr>
@@ -4591,21 +4694,23 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="javaactuator_1"><a name='javaActuator_174'>javaActuator</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_175'>alert</a>
+<h4 id="javaactuator_1"><a name='javaActuator_175'>javaActuator</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_176'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_176'>panel</a>
+<tr><td>panel</td><td><a href='#panel_177'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_175'>alert</a> </p>
+<p> <a name='alert_176'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="heap"}))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>javaactuator?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%</code></div>
 </td></tr>
@@ -4619,7 +4724,7 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_176'>panel</a> </p>
+<p> <a name='panel_177'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"})) OR on() vector(-1)</code></div>
 </td></tr>
@@ -4639,21 +4744,23 @@ warning: 75
 </td></tr></table>
 
 <p><br></p>
-<h4 id="nginxingress_1"><a name='nginxIngress_177'>nginxIngress</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_178'>alert</a>
+<h4 id="nginxingress_1"><a name='nginxIngress_178'>nginxIngress</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_179'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_179'>panel</a>
+<tr><td>panel</td><td><a href='#panel_180'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_178'>alert</a> </p>
+<p> <a name='alert_179'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+", status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+"}[5m])) + 100))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nginxingress?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
 </td></tr>
@@ -4667,7 +4774,7 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_179'>panel</a> </p>
+<p> <a name='panel_180'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s, status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)) OR on() vector(-1)</code></div>
 </td></tr>
@@ -4687,17 +4794,17 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<h4 id="nginxnrpe_1"><a name='nginxNrpe_180'>nginxNrpe</a></h4>
+<h4 id="nginxnrpe_1"><a name='nginxNrpe_181'>nginxNrpe</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_181'>panel</a>
+<tr><td>panel</td><td><a href='#panel_182'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_181'>panel</a> </p>
+<p> <a name='panel_182'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -4717,21 +4824,23 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="nginxvts_1"><a name='nginxVts_182'>nginxVts</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_183'>alert</a>
+<h4 id="nginxvts_1"><a name='nginxVts_183'>nginxVts</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_184'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_184'>panel</a>
+<tr><td>panel</td><td><a href='#panel_185'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_183'>alert</a> </p>
+<p> <a name='alert_184'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+", code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+"}[5m])) + 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>nginxvts?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
 </td></tr>
@@ -4745,7 +4854,7 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_184'>panel</a> </p>
+<p> <a name='panel_185'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100) OR on() vector(-1)</code></div>
 </td></tr>
@@ -4765,17 +4874,17 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<h4 id="phpfpm_1"><a name='phpFpm_185'>phpFpm</a></h4>
+<h4 id="phpfpm_1"><a name='phpFpm_186'>phpFpm</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_186'>panel</a>
+<tr><td>panel</td><td><a href='#panel_187'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_186'>panel</a> </p>
+<p> <a name='panel_187'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
@@ -4795,21 +4904,23 @@ warning: 99
 </td></tr></table>
 
 <p><br></p>
-<h4 id="postfix_1"><a name='postfix_187'>postfix</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_188'>alert</a>
+<h4 id="postfix_1"><a name='postfix_188'>postfix</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_189'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_189'>panel</a>
+<tr><td>panel</td><td><a href='#panel_190'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_188'>alert</a> </p>
+<p> <a name='alert_189'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (postfix_size{cluster=~"$cluster|", job=~".+"}))</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>postfix?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>mappings</td><td><div class='my-pre'><code>- text: '-'
   type: 1
@@ -4828,7 +4939,7 @@ warning: 5
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_189'>panel</a> </p>
+<p> <a name='panel_190'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (postfix_size{cluster=~"$cluster|", %(job)s})) OR on() vector(-1)</code></div>
 </td></tr>
@@ -4850,21 +4961,23 @@ warning: 5
 </td></tr></table>
 
 <p><br></p>
-<h4 id="pythonflask_1"><a name='pythonFlask_190'>pythonFlask</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_191'>alert</a>
+<h4 id="pythonflask_1"><a name='pythonFlask_191'>pythonFlask</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_192'>alert</a>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_192'>panel</a>
+<tr><td>panel</td><td><a href='#panel_193'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='alert_191'>alert</a> </p>
+<p> <a name='alert_192'>alert</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+",status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+"}[5m])) + 100)</code></div>
+</td></tr>
+<tr><td>link</td><td><div class='my-pre'><code>pythonflask?var-job={{ $labels.job }}</code></div>
 </td></tr>
 <tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
 </td></tr>
@@ -4878,7 +4991,7 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_192'>panel</a> </p>
+<p> <a name='panel_193'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s,status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) + 100) OR on() vector(-1)</code></div>
 </td></tr>
@@ -4898,17 +5011,17 @@ warning: 95
 </td></tr></table>
 
 <p><br></p>
-<h4 id="rabbitmq_1"><a name='rabbitmq_193'>rabbitmq</a></h4>
+<h4 id="rabbitmq_1"><a name='rabbitmq_194'>rabbitmq</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>default</td><td><div class='my-pre'><code>False</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_194'>panel</a>
+<tr><td>panel</td><td><a href='#panel_195'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_194'>panel</a> </p>
+<p> <a name='panel_195'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
 </td></tr>
