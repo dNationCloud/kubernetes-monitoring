@@ -26,6 +26,39 @@ jobs:
         command: lint
         config: .github/ct.yaml
 
+    - name: Check if jsonnet folder changed
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          jsonnet:
+          - 'jsonnet/**'
+
+    - name: Get new helm chart appVersion
+      id: new-helm-app-version
+      run: |
+        app=$(grep "appVersion" chart/Chart.yaml | head -1 | awk '{print $2}')
+        echo "::set-output name=app-version::$app"
+
+    - name: Checkout target branch of pull request
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.base_ref }}
+
+    - name: Get old helm chart appVersion
+      id: old-helm-app-version
+      run: |
+        app=$(grep "appVersion" chart/Chart.yaml | head -1 | awk '{print $2}')
+        echo "::set-output name=app-version::$app"
+
+    - name: Check if chart appVersion is bumped if jsonnet folder changed
+      if: steps.changes.outputs.jsonnet == 'true'
+      uses: nick-invision/assert-action@v1
+      with:
+        expected: ${{ steps.new-helm-app-version.outputs.app-version }}
+        actual: ${{ steps.old-helm-app-version.outputs.app-version }}
+        comparison: notEqual
+
   lint-jsonnet:
     runs-on: ubuntu-latest
     needs:
