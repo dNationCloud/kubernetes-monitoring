@@ -1057,7 +1057,7 @@
         },
         alert: {
           name: '%(prefix)sNginxIngressSuccessRateLow',
-          message: '%(prefix)s {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ $value }}%%',
+          message: '%(prefix)s {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ printf "%.0f" $value }}%%',
           expr: expr % { job: 'job=~".+"' },
           link: '%s?var-job={{ $labels.job }}' % $.defaultConfig.grafanaDashboards.ids.nginxIngress,
           thresholds: thresholds,
