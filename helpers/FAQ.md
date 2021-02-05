@@ -322,6 +322,20 @@ helm upgrade [RELEASE] [CHART] -f apps.yaml
 ```
 - If you want to customize the default application template see the [How to customize my host monitoring?](#how-to-customize-my-host-monitoring) section.
 
+## Why L2 table item has different background color as corresponding L1 stat panel?
+
+If you [customized your k8s monitoring](#how-to-customize-my-k8s-monitoring), you can see that some
+table items on L2 layer dashboard may have different background color as corresponding L1 stat panel.
+
+Example:
+- Define custom L1 PVC utilization panel with custom thresholds for ELK PVCs
+![l1_k8s_elk_pvc.png](../docs/images/l1_k8s_elk_pvc.png)
+- If you drill down, you can see that corresponding PVC capacity is in _Critical_ state (orange background color)
+![l2_k8s_elk_pvc.png](../docs/images/l2_k8s_elk_pvc.png)
+
+Currently only first layer is customizable, which caused this unexpected behaviour.
+Templating of other layers is under development and is planned in [v1.1.x release](https://github.com/issues?q=is%3Aopen+is%3Aissue+author%3Amatofeder+archived%3Afalse+label%3Av1.1.x).
+
 ## Kubernetes Monitoring shows `DOWN` state for some control plane components. Are control plane components working correctly?
 
 Control plane components work probably well, but their metrics server might be disabled or misconfigured.
