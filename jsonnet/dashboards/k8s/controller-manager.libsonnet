@@ -68,7 +68,7 @@ local statPanel = grafana.statPanel;
         )
         .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(workqueue_queue_duration_seconds_bucket{cluster=~"$cluster", %(controllerManager)s, instance=~"$instance"}[5m])) by (instance, name, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}'));
 
-      local rpcRate =
+      local grpcRate =
         graphPanel.new(
           title='Kube API Request Rate',
           datasource='$datasource',
@@ -175,7 +175,7 @@ local statPanel = grafana.statPanel;
           workQueueAddRate { gridPos: { x: 4, y: 0, w: 20, h: 7 }, tooltip+: { sort: 2 } },
           workQueueDepth { gridPos: { x: 0, y: 14, w: 24, h: 7 }, tooltip+: { sort: 2 } },
           workQueueLatency { gridPos: { x: 0, y: 21, w: 24, h: 7 }, tooltip+: { sort: 2 } },
-          rpcRate { gridPos: { x: 0, y: 28, w: 24, h: 7 }, tooltip+: { sort: 2 } },
+          grpcRate { gridPos: { x: 0, y: 28, w: 24, h: 7 }, tooltip+: { sort: 2 } },
           postRequestLatency { gridPos: { x: 0, y: 35, w: 12, h: 7 }, tooltip+: { sort: 2 } },
           getRequestLatency { gridPos: { x: 12, y: 35, w: 12, h: 7 }, tooltip+: { sort: 2 } },
           memory { gridPos: { x: 0, y: 42, w: 8, h: 7 }, tooltip+: { sort: 2 } },

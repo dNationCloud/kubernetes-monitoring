@@ -72,7 +72,7 @@ local statPanel = grafana.statPanel;
           ]
         );
 
-      local rpcRate =
+      local grpcRate =
         graphPanel.new(
           title='Kube API Request Rate',
           datasource='$datasource',
@@ -179,7 +179,7 @@ local statPanel = grafana.statPanel;
           health { gridPos: { x: 0, y: 0, w: 4, h: 7 } },
           schedulingRate { gridPos: { x: 4, y: 0, w: 10, h: 7 }, tooltip+: { sort: 2 } },
           schedulingLatency { gridPos: { x: 14, y: 0, w: 10, h: 7 }, tooltip+: { sort: 2 } },
-          rpcRate { gridPos: { x: 0, y: 7, w: 8, h: 7 }, tooltip+: { sort: 2 } },
+          grpcRate { gridPos: { x: 0, y: 7, w: 8, h: 7 }, tooltip+: { sort: 2 } },
           postRequestLatency { gridPos: { x: 8, y: 7, w: 16, h: 7 }, tooltip+: { sort: 2 } },
           getRequestLatency { gridPos: { x: 0, y: 14, w: 24, h: 7 }, tooltip+: { sort: 2 } },
           memory { gridPos: { x: 0, y: 21, w: 8, h: 7 }, tooltip+: { sort: 2 } },

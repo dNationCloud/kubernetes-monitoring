@@ -216,9 +216,9 @@ local statPanel = grafana.statPanel;
         )
         .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_interval_seconds_bucket{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}'));
 
-      local rpcRate =
+      local grpcRate =
         graphPanel.new(
-          title='RPC Rate',
+          title='GRPC Rate',
           datasource='$datasource',
           min=0,
           format='reqps',
@@ -325,7 +325,7 @@ local statPanel = grafana.statPanel;
           plegRelistRate { gridPos: { x: 0, y: 42, w: 12, h: 7 } },
           plegRelistInterval { gridPos: { x: 12, y: 42, w: 12, h: 7 } },
           plegRelistDuration { gridPos: { x: 0, y: 49, w: 24, h: 7 } },
-          rpcRate { gridPos: { x: 0, y: 56, w: 24, h: 7 } },
+          grpcRate { gridPos: { x: 0, y: 56, w: 24, h: 7 } },
           requestDuration { gridPos: { x: 0, y: 63, w: 24, h: 7 } },
           memory { gridPos: { x: 0, y: 70, w: 8, h: 7 } },
           cpu { gridPos: { x: 8, y: 70, w: 8, h: 7 } },

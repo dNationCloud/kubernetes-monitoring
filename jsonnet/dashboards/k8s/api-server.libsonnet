@@ -126,9 +126,9 @@ local errorBudgetTarget = 0.99;
         .addThresholds($.grafanaThresholds($._config.templates.k8s.apiServerHealth.panel.thresholds))
         .addTarget(prometheus.target($._config.templates.k8s.apiServerHealth.panel.expr));
 
-      local rpcRate =
+      local grpcRate =
         graphPanel.new(
-          title='RPC Rate',
+          title='GRPC Rate',
           datasource='$datasource',
           format='reqps',
         )
@@ -255,7 +255,7 @@ local errorBudgetTarget = 0.99;
           writeErrors { gridPos: { x: 12, y: 14, w: 6, h: 7 } },
           writeDuration { gridPos: { x: 18, y: 14, w: 6, h: 7 } },
           health { gridPos: { x: 0, y: 21, w: 4, h: 7 } },
-          rpcRate { gridPos: { x: 4, y: 21, w: 10, h: 7 } },
+          grpcRate { gridPos: { x: 4, y: 21, w: 10, h: 7 } },
           requestDuration { gridPos: { x: 14, y: 21, w: 10, h: 7 } },
           workQueueAddRate { gridPos: { x: 0, y: 28, w: 12, h: 7 } },
           workQueueDepth { gridPos: { x: 12, y: 28, w: 12, h: 7 } },
