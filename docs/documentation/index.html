@@ -2798,7 +2798,7 @@ warning: 75
 </td></tr>
 <tr><td>link</td><td><div class='my-pre'><code>nginxingress?var-job={{ $labels.job }}</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ printf "%.0f" $value }}%</code></div>
 </td></tr>
 <tr><td>name</td><td><div class='my-pre'><code>HostAppNginxIngressSuccessRateLow</code></div>
 </td></tr>
@@ -4762,7 +4762,7 @@ warning: 75
 </td></tr>
 <tr><td>link</td><td><div class='my-pre'><code>nginxingress?var-job={{ $labels.job }}</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ printf "%.0f" $value }}%</code></div>
 </td></tr>
 <tr><td>name</td><td><div class='my-pre'><code>ClusterAppNginxIngressSuccessRateLow</code></div>
 </td></tr>
