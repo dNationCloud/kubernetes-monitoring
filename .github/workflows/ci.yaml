@@ -46,10 +46,10 @@ jobs:
         app=$(grep "appVersion" chart/Chart.yaml | head -1 | awk '{print $2}')
         echo "::set-output name=app-version::$app"
 
-    - name: Checkout target branch of pull request
+    - name: Checkout main branch
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.base_ref }}
+        ref: main
 
     - name: Get old helm chart appVersion
       id: old-helm-app-version
