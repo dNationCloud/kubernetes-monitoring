@@ -261,6 +261,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#release-policy" class="md-nav__link">
+    Release policy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chart-versioning-policy" class="md-nav__link">
+    Chart versioning policy
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -289,9 +303,10 @@ or by any other method with the owners of this repository before making a change
 <li>Include a <a href="./#license-on-the-top-of-file">License</a> at the top of new files</li>
 <li>Update the <a href="..">Readme</a> with details of changes to the interface</li>
 <li>In case the pull request would update the version number, please edit the version number in all appropriate
-  files e.g. <a href="../chart/Chart.yaml">Chart.yaml</a>. The versioning scheme we use is <a href="http://semver.org/">SemVer</a></li>
-<li>You may merge the Pull Request once you have the sign-off of two other developers, or if you
-  don't have the permission to do that, you may request the second reviewer to merge it for you</li>
+  files e.g. <a href="../chart/Chart.yaml">Chart.yaml</a>. Read more about our <a href="#chart-versioning-policy">chart versioning policy</a>.</li>
+<li>Choose appropriate base branch for pull request. Read more about our <a href="#release-policy">release policy</a>.</li>
+<li>You may merge the Pull Request once you have the sign-off of other developer, or if you
+  don't have the permission to do that, you may request the reviewer to merge it for you</li>
 </ul>
 <h2 id="developer-certificate-of-origin-dco">Developer Certificate of Origin (DCO)</h2>
 <p>The Developer Certificate of Origin (DCO) is a legally binding statement that asserts that you are the
@@ -321,6 +336,18 @@ document, granting the dNation Kubernetes Monitoring project to use your work.</
   limitations under the License.
 */
 </code></pre></div>
+<h2 id="release-policy">Release policy</h2>
+<ul>
+<li>Release branch <code>vMajor.Minor.x</code> (e.g. <code>v1.1.x</code>) - all PRs with new functionality should target this branch</li>
+<li>PRs with hot-fixes target <code>main</code> branch</li>
+</ul>
+<h2 id="chart-versioning-policy">Chart versioning policy</h2>
+<p>Versioning scheme is <a href="https://semver.org/">SemVer</a>.</p>
+<ul>
+<li><strong>version</strong>: should increase when changes in chart are made</li>
+<li><strong>appVersion</strong>: should increase when changes in <code>jsonnet/</code> folder are made (when <code>appVersion</code> is increased, <code>version</code> has to be too)</li>
+<li><strong>version</strong> and <strong>appVersion</strong> in release branch are set to same version as new release will be</li>
+</ul>
                 
               
               
