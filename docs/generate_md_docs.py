@@ -100,7 +100,7 @@ def to_md(key, obj, level):
     if isinstance(obj, list) or isinstance(obj, dict):
         obj_to_str = ruamel_yaml.dump(obj, Dumper=ruamel_yaml.RoundTripDumper)
     else:
-        obj_to_str = str(obj)
+        obj_to_str = json.dumps(obj)
     if key != "description":
         obj_to_str = f"<div class='my-pre'><code>{obj_to_str}</code></div>"
 
