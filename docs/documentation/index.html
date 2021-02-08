@@ -1679,15 +1679,15 @@ during helm installation.</p>
 </td></tr>
 <tr><td>dnation-kubernetes-jsonnet-translator</td><td><a href='#dnation-kubernetes-jsonnet-translator_1'>dnation-kubernetes-jsonnet-translator</a>
 </td></tr>
-<tr><td>fullnameOverride</td><td><div class='my-pre'><code></code></div>
+<tr><td>fullnameOverride</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
 <tr><td>grafanaDashboards</td><td><a href='#grafanaDashboards_3'>grafanaDashboards</a>
 </td></tr>
 <tr><td>hostMonitoring</td><td><a href='#hostMonitoring_9'>hostMonitoring</a>
 </td></tr>
-<tr><td>nameOverride</td><td><div class='my-pre'><code></code></div>
+<tr><td>nameOverride</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
-<tr><td>namespaceOverride</td><td><div class='my-pre'><code></code></div>
+<tr><td>namespaceOverride</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
 <tr><td>prometheusRules</td><td><a href='#prometheusRules_10'>prometheusRules</a>
 </td></tr>
@@ -1701,12 +1701,12 @@ during helm installation.</p>
   name: K8sCluster
 </code></div>
 </td></tr>
-<tr><td>enabled</td><td><div class='my-pre'><code>True</code></div>
+<tr><td>enabled</td><td><div class='my-pre'><code>true</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h2 id="dnation-kubernetes-jsonnet-translator"><a name='dnation-kubernetes-jsonnet-translator_1'>dnation-kubernetes-jsonnet-translator</a></h2>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>enabled</td><td><div class='my-pre'><code>True</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>enabled</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
 <tr><td>image</td><td><a href='#image_2'>image</a>
 </td></tr></table>
@@ -1726,15 +1726,15 @@ during helm installation.</p>
 <tr><td>constants</td><td><div class='my-pre'><code>infinity: 999999999
 </code></div>
 </td></tr>
-<tr><td>dataLinkCommonArgs</td><td><div class='my-pre'><code>refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to</code></div>
+<tr><td>dataLinkCommonArgs</td><td><div class='my-pre'><code>"refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to"</code></div>
 </td></tr>
-<tr><td>editable</td><td><div class='my-pre'><code>True</code></div>
+<tr><td>editable</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
-<tr><td>enable</td><td><div class='my-pre'><code>True</code></div>
+<tr><td>enable</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
 <tr><td>ids</td><td><a href='#ids_5'>ids</a>
 </td></tr>
-<tr><td>isLoki</td><td><div class='my-pre'><code>True</code></div>
+<tr><td>isLoki</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
 <tr><td>labelGrafana</td><td><div class='my-pre'><code>grafana_dashboard: '1'
 </code></div>
@@ -1742,7 +1742,7 @@ during helm installation.</p>
 <tr><td>labelJsonnet</td><td><div class='my-pre'><code>grafana_dashboard_jsonnet: '1'
 </code></div>
 </td></tr>
-<tr><td>refresh</td><td><div class='my-pre'><code>10s</code></div>
+<tr><td>refresh</td><td><div class='my-pre'><code>"10s"</code></div>
 </td></tr>
 <tr><td>selectors</td><td><a href='#selectors_6'>selectors</a>
 </td></tr>
@@ -1750,147 +1750,147 @@ during helm installation.</p>
 </td></tr>
 <tr><td>tags</td><td><a href='#tags_8'>tags</a>
 </td></tr>
-<tr><td>templateRefresh</td><td><div class='my-pre'><code>time</code></div>
+<tr><td>templateRefresh</td><td><div class='my-pre'><code>"time"</code></div>
 </td></tr>
 <tr><td>templateSort</td><td><div class='my-pre'><code>5</code></div>
 </td></tr>
-<tr><td>time_from</td><td><div class='my-pre'><code>now-5m</code></div>
+<tr><td>time_from</td><td><div class='my-pre'><code>"now-5m"</code></div>
 </td></tr>
-<tr><td>tooltip</td><td><div class='my-pre'><code>shared_crosshair</code></div>
+<tr><td>tooltip</td><td><div class='my-pre'><code>"shared_crosshair"</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h3 id="color"><a name='color_4'>color</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>black</td><td><div class='my-pre'><code>#000000</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>black</td><td><div class='my-pre'><code>"#000000"</code></div>
 </td></tr>
-<tr><td>blue</td><td><div class='my-pre'><code>#5794f2</code></div>
+<tr><td>blue</td><td><div class='my-pre'><code>"#5794f2"</code></div>
 </td></tr>
-<tr><td>green</td><td><div class='my-pre'><code>#56a64b</code></div>
+<tr><td>green</td><td><div class='my-pre'><code>"#56a64b"</code></div>
 </td></tr>
-<tr><td>lightblue</td><td><div class='my-pre'><code>#8ab8ff</code></div>
+<tr><td>lightblue</td><td><div class='my-pre'><code>"#8ab8ff"</code></div>
 </td></tr>
-<tr><td>orange</td><td><div class='my-pre'><code>#ff780a</code></div>
+<tr><td>orange</td><td><div class='my-pre'><code>"#ff780a"</code></div>
 </td></tr>
-<tr><td>pink</td><td><div class='my-pre'><code>#fce2de</code></div>
+<tr><td>pink</td><td><div class='my-pre'><code>"#fce2de"</code></div>
 </td></tr>
-<tr><td>purple</td><td><div class='my-pre'><code>#a352cc</code></div>
+<tr><td>purple</td><td><div class='my-pre'><code>"#a352cc"</code></div>
 </td></tr>
-<tr><td>red</td><td><div class='my-pre'><code>#e02f44</code></div>
+<tr><td>red</td><td><div class='my-pre'><code>"#e02f44"</code></div>
 </td></tr>
-<tr><td>white</td><td><div class='my-pre'><code>#ffffff</code></div>
+<tr><td>white</td><td><div class='my-pre'><code>"#ffffff"</code></div>
 </td></tr>
-<tr><td>yellow</td><td><div class='my-pre'><code>#fade2a</code></div>
+<tr><td>yellow</td><td><div class='my-pre'><code>"#fade2a"</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h3 id="ids"><a name='ids_5'>ids</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alertClusterOverview</td><td><div class='my-pre'><code>alertclusteroverview</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alertClusterOverview</td><td><div class='my-pre'><code>"alertclusteroverview"</code></div>
 </td></tr>
-<tr><td>alertHostOverview</td><td><div class='my-pre'><code>alerthostoverview</code></div>
+<tr><td>alertHostOverview</td><td><div class='my-pre'><code>"alerthostoverview"</code></div>
 </td></tr>
-<tr><td>apache</td><td><div class='my-pre'><code>apache</code></div>
+<tr><td>apache</td><td><div class='my-pre'><code>"apache"</code></div>
 </td></tr>
-<tr><td>apiServer</td><td><div class='my-pre'><code>apiserver</code></div>
+<tr><td>apiServer</td><td><div class='my-pre'><code>"apiserver"</code></div>
 </td></tr>
-<tr><td>autoscaler</td><td><div class='my-pre'><code>autoscaler</code></div>
+<tr><td>autoscaler</td><td><div class='my-pre'><code>"autoscaler"</code></div>
 </td></tr>
-<tr><td>cAdvisor</td><td><div class='my-pre'><code>cadvisor</code></div>
+<tr><td>cAdvisor</td><td><div class='my-pre'><code>"cadvisor"</code></div>
 </td></tr>
-<tr><td>containerDetail</td><td><div class='my-pre'><code>containerdetail</code></div>
+<tr><td>containerDetail</td><td><div class='my-pre'><code>"containerdetail"</code></div>
 </td></tr>
-<tr><td>containerOverview</td><td><div class='my-pre'><code>containeroverview</code></div>
+<tr><td>containerOverview</td><td><div class='my-pre'><code>"containeroverview"</code></div>
 </td></tr>
-<tr><td>controllerManager</td><td><div class='my-pre'><code>controllermanager</code></div>
+<tr><td>controllerManager</td><td><div class='my-pre'><code>"controllermanager"</code></div>
 </td></tr>
-<tr><td>cpuNamespaceOverview</td><td><div class='my-pre'><code>cpunamespaceoverview</code></div>
+<tr><td>cpuNamespaceOverview</td><td><div class='my-pre'><code>"cpunamespaceoverview"</code></div>
 </td></tr>
-<tr><td>cpuOverview</td><td><div class='my-pre'><code>cpuoverview</code></div>
+<tr><td>cpuOverview</td><td><div class='my-pre'><code>"cpuoverview"</code></div>
 </td></tr>
-<tr><td>daemonSetOverview</td><td><div class='my-pre'><code>daemonsetoverview</code></div>
+<tr><td>daemonSetOverview</td><td><div class='my-pre'><code>"daemonsetoverview"</code></div>
 </td></tr>
-<tr><td>deploymentOverview</td><td><div class='my-pre'><code>deploymentoverview</code></div>
+<tr><td>deploymentOverview</td><td><div class='my-pre'><code>"deploymentoverview"</code></div>
 </td></tr>
-<tr><td>diskOverview</td><td><div class='my-pre'><code>diskoverview</code></div>
+<tr><td>diskOverview</td><td><div class='my-pre'><code>"diskoverview"</code></div>
 </td></tr>
-<tr><td>etcd</td><td><div class='my-pre'><code>etcd</code></div>
+<tr><td>etcd</td><td><div class='my-pre'><code>"etcd"</code></div>
 </td></tr>
-<tr><td>hostMonitoring</td><td><div class='my-pre'><code>hostmonitoring</code></div>
+<tr><td>hostMonitoring</td><td><div class='my-pre'><code>"hostmonitoring"</code></div>
 </td></tr>
-<tr><td>javaActuator</td><td><div class='my-pre'><code>javaactuator</code></div>
+<tr><td>javaActuator</td><td><div class='my-pre'><code>"javaactuator"</code></div>
 </td></tr>
-<tr><td>jobOverview</td><td><div class='my-pre'><code>joboverview</code></div>
+<tr><td>jobOverview</td><td><div class='my-pre'><code>"joboverview"</code></div>
 </td></tr>
-<tr><td>k8sMonitoring</td><td><div class='my-pre'><code>k8smonitoring</code></div>
+<tr><td>k8sMonitoring</td><td><div class='my-pre'><code>"k8smonitoring"</code></div>
 </td></tr>
-<tr><td>kubelet</td><td><div class='my-pre'><code>kubelet</code></div>
+<tr><td>kubelet</td><td><div class='my-pre'><code>"kubelet"</code></div>
 </td></tr>
-<tr><td>memoryNamespaceOverview</td><td><div class='my-pre'><code>memorynamespaceoverview</code></div>
+<tr><td>memoryNamespaceOverview</td><td><div class='my-pre'><code>"memorynamespaceoverview"</code></div>
 </td></tr>
-<tr><td>memoryOverview</td><td><div class='my-pre'><code>memoryoverview</code></div>
+<tr><td>memoryOverview</td><td><div class='my-pre'><code>"memoryoverview"</code></div>
 </td></tr>
-<tr><td>monitoring</td><td><div class='my-pre'><code>monitoring</code></div>
+<tr><td>monitoring</td><td><div class='my-pre'><code>"monitoring"</code></div>
 </td></tr>
-<tr><td>networkNamespaceOverview</td><td><div class='my-pre'><code>networknamespaceoverview</code></div>
+<tr><td>networkNamespaceOverview</td><td><div class='my-pre'><code>"networknamespaceoverview"</code></div>
 </td></tr>
-<tr><td>networkOverview</td><td><div class='my-pre'><code>networkoverview</code></div>
+<tr><td>networkOverview</td><td><div class='my-pre'><code>"networkoverview"</code></div>
 </td></tr>
-<tr><td>nginxIngress</td><td><div class='my-pre'><code>nginxingress</code></div>
+<tr><td>nginxIngress</td><td><div class='my-pre'><code>"nginxingress"</code></div>
 </td></tr>
-<tr><td>nginxNrpe</td><td><div class='my-pre'><code>nginxnrpe</code></div>
+<tr><td>nginxNrpe</td><td><div class='my-pre'><code>"nginxnrpe"</code></div>
 </td></tr>
-<tr><td>nginxVts</td><td><div class='my-pre'><code>nginxvts</code></div>
+<tr><td>nginxVts</td><td><div class='my-pre'><code>"nginxvts"</code></div>
 </td></tr>
-<tr><td>nodeExporter</td><td><div class='my-pre'><code>nodeexporter</code></div>
+<tr><td>nodeExporter</td><td><div class='my-pre'><code>"nodeexporter"</code></div>
 </td></tr>
-<tr><td>nodeOverview</td><td><div class='my-pre'><code>nodeoverview</code></div>
+<tr><td>nodeOverview</td><td><div class='my-pre'><code>"nodeoverview"</code></div>
 </td></tr>
-<tr><td>persistentVolumes</td><td><div class='my-pre'><code>persistentvolumes</code></div>
+<tr><td>persistentVolumes</td><td><div class='my-pre'><code>"persistentvolumes"</code></div>
 </td></tr>
-<tr><td>phpFpm</td><td><div class='my-pre'><code>phpfpm</code></div>
+<tr><td>phpFpm</td><td><div class='my-pre'><code>"phpfpm"</code></div>
 </td></tr>
-<tr><td>podOverview</td><td><div class='my-pre'><code>podoverview</code></div>
+<tr><td>podOverview</td><td><div class='my-pre'><code>"podoverview"</code></div>
 </td></tr>
-<tr><td>postfix</td><td><div class='my-pre'><code>postfix</code></div>
+<tr><td>postfix</td><td><div class='my-pre'><code>"postfix"</code></div>
 </td></tr>
-<tr><td>proxy</td><td><div class='my-pre'><code>proxy</code></div>
+<tr><td>proxy</td><td><div class='my-pre'><code>"proxy"</code></div>
 </td></tr>
-<tr><td>pvcOverview</td><td><div class='my-pre'><code>pvcoverview</code></div>
+<tr><td>pvcOverview</td><td><div class='my-pre'><code>"pvcoverview"</code></div>
 </td></tr>
-<tr><td>pythonFlask</td><td><div class='my-pre'><code>pythonflask</code></div>
+<tr><td>pythonFlask</td><td><div class='my-pre'><code>"pythonflask"</code></div>
 </td></tr>
-<tr><td>rabbitmq</td><td><div class='my-pre'><code>rabbitmq</code></div>
+<tr><td>rabbitmq</td><td><div class='my-pre'><code>"rabbitmq"</code></div>
 </td></tr>
-<tr><td>scheduler</td><td><div class='my-pre'><code>scheduler</code></div>
+<tr><td>scheduler</td><td><div class='my-pre'><code>"scheduler"</code></div>
 </td></tr>
-<tr><td>statefulSet</td><td><div class='my-pre'><code>statefulset</code></div>
+<tr><td>statefulSet</td><td><div class='my-pre'><code>"statefulset"</code></div>
 </td></tr>
-<tr><td>statefulSetOverview</td><td><div class='my-pre'><code>statefulsetoverview</code></div>
+<tr><td>statefulSetOverview</td><td><div class='my-pre'><code>"statefulsetoverview"</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h3 id="selectors"><a name='selectors_6'>selectors</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>apiServer</td><td><div class='my-pre'><code>job="apiserver"</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>apiServer</td><td><div class='my-pre'><code>"job=\"apiserver\""</code></div>
 </td></tr>
-<tr><td>controllerManager</td><td><div class='my-pre'><code>job="kube-controller-manager"</code></div>
+<tr><td>controllerManager</td><td><div class='my-pre'><code>"job=\"kube-controller-manager\""</code></div>
 </td></tr>
-<tr><td>etcd</td><td><div class='my-pre'><code>job="kube-etcd"</code></div>
+<tr><td>etcd</td><td><div class='my-pre'><code>"job=\"kube-etcd\""</code></div>
 </td></tr>
-<tr><td>kubelet</td><td><div class='my-pre'><code>job="kubelet"</code></div>
+<tr><td>kubelet</td><td><div class='my-pre'><code>"job=\"kubelet\""</code></div>
 </td></tr>
-<tr><td>proxy</td><td><div class='my-pre'><code>job="kube-proxy"</code></div>
+<tr><td>proxy</td><td><div class='my-pre'><code>"job=\"kube-proxy\""</code></div>
 </td></tr>
-<tr><td>scheduler</td><td><div class='my-pre'><code>job="kube-scheduler"</code></div>
+<tr><td>scheduler</td><td><div class='my-pre'><code>"job=\"kube-scheduler\""</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h3 id="severitycolors"><a name='severityColors_7'>severityColors</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>red</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>"red"</code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>green</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>"green"</code></div>
 </td></tr>
-<tr><td>invalid</td><td><div class='my-pre'><code>black</code></div>
+<tr><td>invalid</td><td><div class='my-pre'><code>"black"</code></div>
 </td></tr>
-<tr><td>warning</td><td><div class='my-pre'><code>orange</code></div>
+<tr><td>warning</td><td><div class='my-pre'><code>"orange"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -1954,7 +1954,7 @@ during helm installation.</p>
 
 <p><br></p>
 <h2 id="hostmonitoring"><a name='hostMonitoring_9'>hostMonitoring</a></h2>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>enabled</td><td><div class='my-pre'><code>False</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>enabled</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>hosts</td><td><div class='my-pre'><code>[]
 </code></div>
@@ -1962,19 +1962,19 @@ during helm installation.</p>
 
 <p><br></p>
 <h2 id="prometheusrules"><a name='prometheusRules_10'>prometheusRules</a></h2>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alertGroupCluster</td><td><div class='my-pre'><code>Cluster</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alertGroupCluster</td><td><div class='my-pre'><code>"Cluster"</code></div>
 </td></tr>
-<tr><td>alertGroupClusterApp</td><td><div class='my-pre'><code>ClusterApp</code></div>
+<tr><td>alertGroupClusterApp</td><td><div class='my-pre'><code>"ClusterApp"</code></div>
 </td></tr>
-<tr><td>alertGroupHost</td><td><div class='my-pre'><code>Host</code></div>
+<tr><td>alertGroupHost</td><td><div class='my-pre'><code>"Host"</code></div>
 </td></tr>
-<tr><td>alertGroupHostApp</td><td><div class='my-pre'><code>HostApp</code></div>
+<tr><td>alertGroupHostApp</td><td><div class='my-pre'><code>"HostApp"</code></div>
 </td></tr>
-<tr><td>alertInterval</td><td><div class='my-pre'><code>5m</code></div>
+<tr><td>alertInterval</td><td><div class='my-pre'><code>"5m"</code></div>
 </td></tr>
-<tr><td>alertNamePrefix</td><td><div class='my-pre'><code>KubernetesMonitoring</code></div>
+<tr><td>alertNamePrefix</td><td><div class='my-pre'><code>"KubernetesMonitoring"</code></div>
 </td></tr>
-<tr><td>enable</td><td><div class='my-pre'><code>True</code></div>
+<tr><td>enable</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
 <tr><td>labelJsonnet</td><td><div class='my-pre'><code>prometheus_rule_jsonnet: '1'
 </code></div>
@@ -2005,13 +2005,13 @@ during helm installation.</p>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code></code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code></code></div>
+<tr><td>link</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code></code></div>
+<tr><td>message</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>error must be overwritten</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"error must be overwritten"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2022,27 +2022,27 @@ during helm installation.</p>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>True</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
-<tr><td>enabled</td><td><div class='my-pre'><code>True</code></div>
+<tr><td>enabled</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_14'>panel</a>
 </td></tr></table>
 
 <p><br></p>
 <h4 id="panel"><a name='panel_14'>panel</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>background</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"background"</code></div>
 </td></tr>
 <tr><td>dataLinks</td><td><div class='my-pre'><code>[]
 </code></div>
 </td></tr>
-<tr><td>datasource</td><td><div class='my-pre'><code>$datasource</code></div>
+<tr><td>datasource</td><td><div class='my-pre'><code>"$datasource"</code></div>
 </td></tr>
-<tr><td>description</td><td>
+<tr><td>description</td><td>""
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code></code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>area</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"area"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><a href='#gridPos_15'>gridPos</a>
 </td></tr>
@@ -2052,9 +2052,9 @@ during helm installation.</p>
 <tr><td>thresholds</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>error must be overwritten</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"error must be overwritten"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>percent</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"percent"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2064,9 +2064,9 @@ during helm installation.</p>
 </td></tr>
 <tr><td>w</td><td><div class='my-pre'><code>6</code></div>
 </td></tr>
-<tr><td>x</td><td><div class='my-pre'><code>error must be overwritten</code></div>
+<tr><td>x</td><td><div class='my-pre'><code>"error must be overwritten"</code></div>
 </td></tr>
-<tr><td>y</td><td><div class='my-pre'><code>error must be overwritten</code></div>
+<tr><td>y</td><td><div class='my-pre'><code>"error must be overwritten"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2088,7 +2088,7 @@ during helm installation.</p>
 <h4 id="app"><a name='app_17'>app</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
-<tr><td>operator</td><td><div class='my-pre'><code><</code></div>
+<tr><td>operator</td><td><div class='my-pre'><code>"<"</code></div>
 </td></tr>
 <tr><td>warning</td><td><div class='my-pre'><code>99</code></div>
 </td></tr></table>
@@ -2097,7 +2097,7 @@ during helm installation.</p>
 <h4 id="controlplane"><a name='controlPlane_18'>controlPlane</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
-<tr><td>operator</td><td><div class='my-pre'><code><</code></div>
+<tr><td>operator</td><td><div class='my-pre'><code>"<"</code></div>
 </td></tr>
 <tr><td>warning</td><td><div class='my-pre'><code>99</code></div>
 </td></tr></table>
@@ -2106,14 +2106,14 @@ during helm installation.</p>
 <h4 id="criticalpanel"><a name='criticalPanel_19'>criticalPanel</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>1</code></div>
 </td></tr>
-<tr><td>operator</td><td><div class='my-pre'><code>>=</code></div>
+<tr><td>operator</td><td><div class='my-pre'><code>">="</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h4 id="k8s"><a name='k8s_20'>k8s</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
-<tr><td>operator</td><td><div class='my-pre'><code><</code></div>
+<tr><td>operator</td><td><div class='my-pre'><code>"<"</code></div>
 </td></tr>
 <tr><td>warning</td><td><div class='my-pre'><code>99</code></div>
 </td></tr></table>
@@ -2122,14 +2122,14 @@ during helm installation.</p>
 <h4 id="node"><a name='node_21'>node</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>90</code></div>
 </td></tr>
-<tr><td>operator</td><td><div class='my-pre'><code>>=</code></div>
+<tr><td>operator</td><td><div class='my-pre'><code>">="</code></div>
 </td></tr>
 <tr><td>warning</td><td><div class='my-pre'><code>75</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h4 id="warningpanel"><a name='warningPanel_22'>warningPanel</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>operator</td><td><div class='my-pre'><code>>=</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>operator</td><td><div class='my-pre'><code>">="</code></div>
 </td></tr>
 <tr><td>warning</td><td><div class='my-pre'><code>1</code></div>
 </td></tr></table>
@@ -2172,13 +2172,13 @@ during helm installation.</p>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job!~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job!~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(rate(node_network_transmit_errs_total{cluster=~\"$cluster|\", job!~\"node-exporter\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~\"$cluster|\", job!~\"node-exporter\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter?var-instance={{ $labels.nodename }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Host {{ $labels.nodename }}: High Overall Network Errors Count {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Host {{ $labels.nodename }}: High Overall Network Errors Count {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostNetworkOverallErrorsHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostNetworkOverallErrorsHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 15
 operator: '>='
@@ -2193,7 +2193,7 @@ warning: 10
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(rate(node_network_transmit_errs_total{cluster=~\"$cluster|\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~\"$cluster|\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 18
 y: 6
@@ -2204,9 +2204,9 @@ operator: '>='
 warning: 10
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Overall Errors</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Overall Errors"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>pps</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"pps"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2222,13 +2222,13 @@ warning: 10
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job!~"node-exporter", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((1 - (avg(irate(node_cpu_seconds_total{cluster=~\"$cluster|\", job!~\"node-exporter\", mode=\"idle\"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter?var-instance={{ $labels.nodename }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Host {{ $labels.nodename }}: High CPU Overall Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Host {{ $labels.nodename }}: High CPU Overall Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostCPUOverallHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostCPUOverallHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -2243,20 +2243,20 @@ warning: 75
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~\"$cluster|\", job=~\"$job\", mode=\"idle\"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 0
 y: 6
 </code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Overall Utilization</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Overall Utilization"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2272,13 +2272,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job!~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job!~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job!~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job!~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~\"$cluster|\", job!~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter?var-instance={{ $labels.nodename }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Host {{ $labels.nodename }}: High Disk Overall Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Host {{ $labels.nodename }}: High Disk Overall Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostDiskOverallHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostDiskOverallHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -2293,15 +2293,9 @@ warning: 75
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>description</td><td>The percentage of the disk utilization is calculated using the fraction:
-<div class="highlight"><pre><span></span><code>&lt;space used&gt;/(&lt;space used&gt; + &lt;space free&gt;)
-</code></pre></div>
-The value of <space free> is reduced by  5% of the available disk capacity, because   
-the file system marks 5% of the available disk capacity as reserved. 
-If less than 5% is free, using the remaining reserved space requires root privileges.
-Any non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)
+<tr><td>description</td><td>"The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>max(round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"max(round((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 12
 y: 6
@@ -2312,7 +2306,7 @@ operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Overall Utilization</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Overall Utilization"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2328,13 +2322,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job!~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~\"$cluster|\", job!~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~\"$cluster|\", job!~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info))) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter?var-instance={{ $labels.nodename }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Host {{ $labels.nodename }}: High RAM Overall Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Host {{ $labels.nodename }}: High RAM Overall Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostRAMOverallHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostRAMOverallHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -2349,11 +2343,9 @@ warning: 75
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>description</td><td>The percentage of the memory utilization is calculated by:
-<div class="highlight"><pre><span></span><code>1 - (&lt;memory available&gt;/&lt;memory total&gt;)
-</code></pre></div>
+<tr><td>description</td><td>"The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```"
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info))) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info))) * 100))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 6
 y: 6
@@ -2364,14 +2356,14 @@ operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Overall Utilization</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Overall Utilization"</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h4 id="targetdown"><a name='targetDown_36'>targetDown</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_37'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>None</code></div>
+<tr><td>panel</td><td><div class='my-pre'><code>null</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2380,11 +2372,11 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Host
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>100 * (count by(job, namespace, service) (up{alertGroup="Host"} == 0) / count by(job, namespace, service) (up{alertGroup="Host"}))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"100 * (count by(job, namespace, service) (up{alertGroup=\"Host\"} == 0) / count by(job, namespace, service) (up{alertGroup=\"Host\"}))"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"{{ printf \"%.4g\" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down."</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostTargetDown</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostTargetDown"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -2400,11 +2392,11 @@ warning: 10
 <p><br></p>
 <p> <a name='panel_39'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"})</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"count(node_cpu_seconds_total{cluster=~\"$cluster\", job=~\"$job\", mode=\"system\"})"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -2416,9 +2408,9 @@ y: 9
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Total Cores</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Total Cores"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2429,11 +2421,11 @@ value:
 <p><br></p>
 <p> <a name='panel_41'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"})</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(node_filesystem_size_bytes{cluster=~\"$cluster\", job=~\"$job\"})"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -2445,9 +2437,9 @@ y: 9
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Total</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Total"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>bytes</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"bytes"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2458,11 +2450,11 @@ value:
 <p><br></p>
 <p> <a name='panel_43'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"})</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(node_memory_MemTotal_bytes{cluster=~\"$cluster\", job=~\"$job\"})"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -2474,9 +2466,9 @@ y: 9
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Total</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Total"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>bytes</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"bytes"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2487,11 +2479,11 @@ value:
 <p><br></p>
 <p> <a name='panel_45'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"})</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(1 - (avg(irate(node_cpu_seconds_total{cluster=~\"$cluster\", job=~\"$job\", mode=\"idle\"}[5m])))) * count(node_cpu_seconds_total{cluster=~\"$cluster\", job=~\"$job\", mode=\"system\"})"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -2503,9 +2495,9 @@ y: 9
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Used Cores</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Used Cores"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2516,11 +2508,11 @@ value:
 <p><br></p>
 <p> <a name='panel_47'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) * ((max((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device)))))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(node_filesystem_size_bytes{cluster=~\"$cluster\", job=~\"$job\"}) * ((max((sum(node_filesystem_size_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device)) / (sum(node_filesystem_size_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device) + sum(node_filesystem_avail_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device)))))"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -2532,9 +2524,9 @@ y: 9
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Used</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Used"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>bytes</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"bytes"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2545,11 +2537,11 @@ value:
 <p><br></p>
 <p> <a name='panel_49'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}))))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(node_memory_MemTotal_bytes{cluster=~\"$cluster\", job=~\"$job\"}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~\"$cluster\", job=~\"$job\"}) / sum(node_memory_MemTotal_bytes{cluster=~\"$cluster\", job=~\"$job\"}))))"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -2561,9 +2553,9 @@ y: 9
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Used</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Used"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>bytes</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"bytes"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -2598,7 +2590,7 @@ value:
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_52'>panel</a>
 </td></tr></table>
@@ -2606,7 +2598,7 @@ value:
 <p><br></p>
 <p> <a name='panel_52'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2627,7 +2619,7 @@ warning: 99
 <h4 id="autoscaler"><a name='autoscaler_53'>autoscaler</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_54'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_55'>panel</a>
 </td></tr></table>
@@ -2638,13 +2630,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", job=~".+"}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", job=~".+"}) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (autoscaler_healthy{cluster=~\"$cluster|\", job=~\".+\"}) / sum by (job) (autoscaler_instances{cluster=~\"$cluster|\", job=~\".+\"}) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>autoscaler?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"autoscaler?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"HostApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostAppAutoscalerHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostAppAutoscalerHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 85
 lowest: 0
@@ -2656,7 +2648,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_55'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (autoscaler_healthy{cluster=~\"$cluster|\", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~\"$cluster|\", %(job)s}) * 100) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2678,7 +2670,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_57'>panel</a>
 </td></tr></table>
@@ -2686,7 +2678,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_57'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2708,7 +2700,7 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_59'>panel</a>
 </td></tr></table>
@@ -2716,9 +2708,9 @@ warning: 99
 <p><br></p>
 <p> <a name='panel_59'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>description</td><td>GenericApp template. Used when application monitoring is requested but appropriate template was not found.
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>description</td><td>"GenericApp template. Used when application monitoring is requested but appropriate template was not found."
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2733,7 +2725,7 @@ warning: 99
 <h4 id="javaactuator"><a name='javaActuator_60'>javaActuator</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_61'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_62'>panel</a>
 </td></tr></table>
@@ -2744,13 +2736,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="heap"}))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"heap\"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"nonheap\"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"nonheap\"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"heap\"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"nonheap\"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"heap\"}))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>javaactuator?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"javaactuator?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"HostApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostAppJavaActuatorHeapHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostAppJavaActuatorHeapHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 lowest: 0
@@ -2762,7 +2754,7 @@ warning: 75
 <p><br></p>
 <p> <a name='panel_62'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"})) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", %(job)s, area=\"heap\"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", %(job)s, area=\"nonheap\"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", %(job)s, area=\"nonheap\"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", %(job)s, area=\"heap\"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", %(job)s, area=\"nonheap\"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", %(job)s, area=\"heap\"})) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2783,7 +2775,7 @@ warning: 75
 <h4 id="nginxingress"><a name='nginxIngress_63'>nginxIngress</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_64'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_65'>panel</a>
 </td></tr></table>
@@ -2794,13 +2786,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+", status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+"}[5m])) + 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", job=~\".+\", status!~\"[4-5].*\"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", job=~\".+\"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", job=~\".+\"}[5m])) + 100))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nginxingress?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nginxingress?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ printf "%.0f" $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"HostApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ printf \"%.0f\" $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostAppNginxIngressSuccessRateLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostAppNginxIngressSuccessRateLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 85
 lowest: 0
@@ -2812,7 +2804,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_65'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s, status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", %(job)s, status!~\"[4-5].*\"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", %(job)s}[5m])) + 100)) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2834,7 +2826,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_67'>panel</a>
 </td></tr></table>
@@ -2842,7 +2834,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_67'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2863,7 +2855,7 @@ warning: 99
 <h4 id="nginxvts"><a name='nginxVts_68'>nginxVts</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_69'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_70'>panel</a>
 </td></tr></table>
@@ -2874,13 +2866,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+", code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+"}[5m])) + 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", job=~\".+\", code!~\"[4-5].*\", code!=\"total\"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", job=~\".+\", code!=\"total\"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", job=~\".+\"}[5m])) + 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nginxvts?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nginxvts?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostAppNginxVTSSuccessRateLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostAppNginxVTSSuccessRateLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 85
 lowest: 0
@@ -2892,7 +2884,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_70'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", %(job)s, code!~\"[4-5].*\", code!=\"total\"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", %(job)s, code!=\"total\"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", %(job)s}[5m])) + 100) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2914,7 +2906,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_72'>panel</a>
 </td></tr></table>
@@ -2922,7 +2914,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_72'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2943,7 +2935,7 @@ warning: 99
 <h4 id="postfix"><a name='postfix_73'>postfix</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_74'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_75'>panel</a>
 </td></tr></table>
@@ -2954,18 +2946,18 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (postfix_size{cluster=~"$cluster|", job=~".+"}))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (postfix_size{cluster=~\"$cluster|\", job=~\".+\"}))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>postfix?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"postfix?var-job={{ $labels.job }}"</code></div>
 </td></tr>
 <tr><td>mappings</td><td><div class='my-pre'><code>- text: '-'
   type: 1
   value: -1
 </code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Postfix Queue Size High {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"HostApp {{ $labels.job }}: Postfix Queue Size High {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostAppPostfixQueueSizeHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostAppPostfixQueueSizeHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 10
 lowest: 0
@@ -2977,7 +2969,7 @@ warning: 5
 <p><br></p>
 <p> <a name='panel_75'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (postfix_size{cluster=~"$cluster|", %(job)s})) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (postfix_size{cluster=~\"$cluster|\", %(job)s})) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -2993,14 +2985,14 @@ operator: '>='
 warning: 5
 </code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>mailq</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"mailq"</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h4 id="pythonflask"><a name='pythonFlask_76'>pythonFlask</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_77'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_78'>panel</a>
 </td></tr></table>
@@ -3011,13 +3003,13 @@ warning: 5
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+",status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+"}[5m])) + 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", job=~\".+\",status!~\"[4-5].*\"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", job=~\".+\"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", job=~\".+\"}[5m])) + 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>pythonflask?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"pythonflask?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>HostApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"HostApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses) Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>HostAppPythonFlaskSuccessRateLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"HostAppPythonFlaskSuccessRateLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 85
 lowest: 0
@@ -3029,7 +3021,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_78'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s,status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) + 100) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", %(job)s,status!~\"[4-5].*\"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", %(job)s}[5m])) + 100) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -3051,7 +3043,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_80'>panel</a>
 </td></tr></table>
@@ -3059,7 +3051,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_80'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -3152,13 +3144,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="apiserver"}) / count(up{cluster=~"$cluster|", job="apiserver"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"apiserver\"}) / count(up{cluster=~\"$cluster|\", job=\"apiserver\"})) * 100"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>apiserver</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"apiserver"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster Api Server Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster Api Server Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterApiServerHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterApiServerHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -3173,7 +3165,7 @@ warning: 99
   url: /d/apiserver?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="apiserver"}) / count(up{cluster=~"$cluster|", job="apiserver"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"apiserver\"}) / count(up{cluster=~\"$cluster|\", job=\"apiserver\"})) * 100"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 x: 0
@@ -3185,7 +3177,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>API Server</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"API Server"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3201,13 +3193,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-controller-manager"}) / count(up{cluster=~"$cluster|", job="kube-controller-manager"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kube-controller-manager\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-controller-manager\"})) * 100"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>controllermanager</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"controllermanager"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster Controller Manager Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster Controller Manager Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterControllerManagerHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterControllerManagerHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -3222,7 +3214,7 @@ warning: 99
   url: /d/controllermanager?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-controller-manager"}) / count(up{cluster=~"$cluster|", job="kube-controller-manager"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kube-controller-manager\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-controller-manager\"})) * 100"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 x: 4
@@ -3234,7 +3226,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Controller Manager</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Controller Manager"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3250,13 +3242,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster|"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster|"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((sum(kube_daemonset_updated_number_scheduled{cluster=~\"$cluster|\"}) + sum(kube_daemonset_status_number_available{cluster=~\"$cluster|\"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~\"$cluster|\"})) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>daemonsetoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"daemonsetoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>DaemonSets Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"DaemonSets Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>RunningDaemonSetsHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"RunningDaemonSetsHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -3271,7 +3263,7 @@ warning: 99
   url: /d/daemonsetoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster|"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster|"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((sum(kube_daemonset_updated_number_scheduled{cluster=~\"$cluster|\"}) + sum(kube_daemonset_status_number_available{cluster=~\"$cluster|\"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~\"$cluster|\"})) * 100)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 6
 y: 8
@@ -3282,7 +3274,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>DaemonSets Health</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"DaemonSets Health"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3298,13 +3290,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster|"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster|"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster|"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((sum(kube_deployment_status_replicas_updated{cluster=~\"$cluster|\"}) + sum(kube_deployment_status_replicas_available{cluster=~\"$cluster|\"})) / (2 * sum(kube_deployment_status_replicas{cluster=~\"$cluster|\"})) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>deploymentoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"deploymentoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Running Deployments Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Running Deployments Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>RunningDeploymentsHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"RunningDeploymentsHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -3319,7 +3311,7 @@ warning: 99
   url: /d/deploymentoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster|"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster|"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster|"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((sum(kube_deployment_status_replicas_updated{cluster=~\"$cluster|\"}) + sum(kube_deployment_status_replicas_available{cluster=~\"$cluster|\"})) / (2 * sum(kube_deployment_status_replicas{cluster=~\"$cluster|\"})) * 100)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 0
 y: 8
@@ -3330,7 +3322,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Deployments Health</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Deployments Health"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3346,13 +3338,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-etcd"}) / count(up{cluster=~"$cluster|", job="kube-etcd"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kube-etcd\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-etcd\"})) * 100"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>etcd</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"etcd"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster Etcd Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster Etcd Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterEtcdHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterEtcdHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -3367,7 +3359,7 @@ warning: 99
   url: /d/etcd?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-etcd"}) / count(up{cluster=~"$cluster|", job="kube-etcd"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kube-etcd\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-etcd\"})) * 100"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 x: 8
@@ -3379,7 +3371,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Etcd</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Etcd"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3395,13 +3387,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"}) / count(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kubelet\", metrics_path=\"/metrics\"}) / count(up{cluster=~\"$cluster|\", job=\"kubelet\", metrics_path=\"/metrics\"})) * 100"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>kubelet</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"kubelet"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster Kubelet Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster Kubelet Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterKubeletHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterKubeletHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -3416,7 +3408,7 @@ warning: 99
   url: /d/kubelet?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"}) / count(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kubelet\", metrics_path=\"/metrics\"}) / count(up{cluster=~\"$cluster|\", job=\"kubelet\", metrics_path=\"/metrics\"})) * 100"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 x: 12
@@ -3428,7 +3420,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Kubelet</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Kubelet"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3444,13 +3436,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"node-exporter", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((1 - (avg(irate(node_cpu_seconds_total{cluster=~\"$cluster|\", job=~\"node-exporter\", mode=\"idle\"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter?var-instance={{ $labels.nodename }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster {{ $labels.nodename }}: High CPU Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster {{ $labels.nodename }}: High CPU Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterNodeCPUUtilizationHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterNodeCPUUtilizationHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -3467,7 +3459,7 @@ warning: 75
   url: /d/cpunamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>max(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"max(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~\"$cluster|\", job=~\"$job\", mode=\"idle\"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 3
@@ -3479,7 +3471,7 @@ operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Most Utilized Node</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Most Utilized Node"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3495,13 +3487,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter?var-instance={{ $labels.nodename }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterHostDiskUtilizationHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterHostDiskUtilizationHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -3516,15 +3508,9 @@ warning: 75
   url: /d/diskoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
 </code></div>
 </td></tr>
-<tr><td>description</td><td>The percentage of the disk utilization is calculated using the fraction:
-<div class="highlight"><pre><span></span><code>&lt;space used&gt;/(&lt;space used&gt; + &lt;space free&gt;)
-</code></pre></div>
-The value of <space free> is reduced by  5% of the available disk capacity, because   
-the file system marks 5% of the available disk capacity as reserved. 
-If less than 5% is free, using the remaining reserved space requires root privileges.
-Any non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)
+<tr><td>description</td><td>"The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>max(round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"max(round((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 15
@@ -3536,7 +3522,7 @@ operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Most Utilized Node</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Most Utilized Node"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3552,13 +3538,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(rate(node_network_transmit_errs_total{cluster=~\"$cluster|\", job=~\"node-exporter\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~\"$cluster|\", job=~\"node-exporter\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter?var-instance={{ $labels.nodename }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterHostNetworkErrorsHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterHostNetworkErrorsHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 15
 operator: '>='
@@ -3575,7 +3561,7 @@ warning: 10
   url: /d/networknamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>max(sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"max(sum(rate(node_network_transmit_errs_total{cluster=~\"$cluster|\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~\"$cluster|\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 21
@@ -3587,9 +3573,9 @@ operator: '>='
 warning: 10
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Most Affected Node</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Most Affected Node"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>pps</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"pps"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3605,13 +3591,13 @@ warning: 10
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info))) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeexporter?var-instance={{ $labels.nodename }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeexporter?var-instance={{ $labels.nodename }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterNodesRAMUtilizationHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterNodesRAMUtilizationHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -3628,11 +3614,9 @@ warning: 75
   url: /d/memorynamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>description</td><td>The percentage of the memory utilization is calculated by:
-<div class="highlight"><pre><span></span><code>1 - (&lt;memory available&gt;/&lt;memory total&gt;)
-</code></pre></div>
+<tr><td>description</td><td>"The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```"
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>max(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info))) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"max(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info))) * 100))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 9
@@ -3644,7 +3628,7 @@ operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Most Utilized Node</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Most Utilized Node"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3660,13 +3644,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100) by (persistentvolumeclaim)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(((kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster|\"} - kubelet_volume_stats_available_bytes{cluster=~\"$cluster|\"}) / kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster|\"}) * 100) by (persistentvolumeclaim)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>pvcoverview?var-volume={{ $labels.persistentvolumeclaim }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"pvcoverview?var-volume={{ $labels.persistentvolumeclaim }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"\"{{ $labels.persistentvolumeclaim }}\": High PVC Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>PVCUtilizationHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"PVCUtilizationHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 97
 lowest: 0
@@ -3682,7 +3666,7 @@ warning: 85
   url: /d/pvcoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>max(sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100) by (persistentvolumeclaim)) OR on() vector(-1)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"max(sum(((kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster|\"} - kubelet_volume_stats_available_bytes{cluster=~\"$cluster|\"}) / kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster|\"}) * 100) by (persistentvolumeclaim)) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 21
@@ -3700,7 +3684,7 @@ operator: '>='
 warning: 85
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Most Utilized PVC</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Most Utilized PVC"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3716,13 +3700,13 @@ warning: 85
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|", condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  + sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"}) ) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_node_info{cluster=~\"$cluster|\"}) / (sum(kube_node_info{cluster=~\"$cluster|\"}) + sum(kube_node_spec_unschedulable{cluster=~\"$cluster|\"}) + sum(kube_node_status_condition{cluster=~\"$cluster|\", condition=~\"DiskPressure|MemoryPressure|PIDPressure\", status=~\"true|unknown\"})  + sum(kube_node_status_condition{cluster=~\"$cluster|\", condition=\"Ready\", status=~\"false|unknown\"}) ) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nodeoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nodeoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Nodes Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Nodes Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>NodesHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"NodesHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -3737,7 +3721,7 @@ warning: 99
   url: /d/nodeoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|", condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  + sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"}) ) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_node_info{cluster=~\"$cluster|\"}) / (sum(kube_node_info{cluster=~\"$cluster|\"}) + sum(kube_node_spec_unschedulable{cluster=~\"$cluster|\"}) + sum(kube_node_status_condition{cluster=~\"$cluster|\", condition=~\"DiskPressure|MemoryPressure|PIDPressure\", status=~\"true|unknown\"})  + sum(kube_node_status_condition{cluster=~\"$cluster|\", condition=\"Ready\", status=~\"false|unknown\"}) ) * 100)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 0
 y: 5
@@ -3748,7 +3732,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Nodes Health</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Nodes Health"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3764,13 +3748,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(sum(rate(node_network_transmit_errs_total{cluster=~\"$cluster|\", job=~\"node-exporter\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~\"$cluster|\", job=~\"node-exporter\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>networkoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"networkoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster High Overall Network Errors Count {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster High Overall Network Errors Count {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterNetworkOverallErrorsHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterNetworkOverallErrorsHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 15
 operator: '>='
@@ -3787,7 +3771,7 @@ warning: 10
   url: /d/networknamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(sum(rate(node_network_transmit_errs_total{cluster=~\"$cluster|\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~\"$cluster|\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 18
@@ -3799,9 +3783,9 @@ operator: '>='
 warning: 10
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Overall Errors</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Overall Errors"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>pps</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"pps"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3817,13 +3801,13 @@ warning: 10
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"node-exporter", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~\"$cluster|\", job=~\"node-exporter\", mode=\"idle\"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>cpuoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"cpuoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster High CPU Overall Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster High CPU Overall Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterCPUOverallHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterCPUOverallHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -3840,7 +3824,7 @@ warning: 75
   url: /d/cpunamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~\"$cluster|\", job=~\"$job\", mode=\"idle\"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 0
@@ -3852,7 +3836,7 @@ operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Overall Utilization</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Overall Utilization"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3868,13 +3852,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"avg(round((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>diskoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"diskoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster High Disk Overall Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster High Disk Overall Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterDiskOverallHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterDiskOverallHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -3889,15 +3873,9 @@ warning: 75
   url: /d/diskoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to&var-instance=All
 </code></div>
 </td></tr>
-<tr><td>description</td><td>The percentage of the disk utilization is calculated using the fraction:
-<div class="highlight"><pre><span></span><code>&lt;space used&gt;/(&lt;space used&gt; + &lt;space free&gt;)
-</code></pre></div>
-The value of <space free> is reduced by  5% of the available disk capacity, because   
-the file system marks 5% of the available disk capacity as reserved. 
-If less than 5% is free, using the remaining reserved space requires root privileges.
-Any non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)
+<tr><td>description</td><td>"The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"avg(round((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 12
@@ -3909,7 +3887,7 @@ operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Overall Utilization</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Overall Utilization"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3925,13 +3903,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~\"$cluster|\", job=~\"node-exporter\"} * on(instance) group_left(nodename) (node_uname_info))) * 100))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>memoryoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"memoryoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster High RAM Overall Utilization {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster High RAM Overall Utilization {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterRAMOverallHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterRAMOverallHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -3948,11 +3926,9 @@ warning: 75
   url: /d/memorynamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>description</td><td>The percentage of the memory utilization is calculated by:
-<div class="highlight"><pre><span></span><code>1 - (&lt;memory available&gt;/&lt;memory total&gt;)
-</code></pre></div>
+<tr><td>description</td><td>"The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```"
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"$job"} * on(instance) group_left(nodename) (node_uname_info))) * 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~\"$cluster|\", job=~\"$job\"} * on(instance) group_left(nodename) (node_uname_info))) * 100))"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 6
@@ -3964,7 +3940,7 @@ operator: '>='
 warning: 75
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Overall Utilization</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Overall Utilization"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -3980,13 +3956,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-proxy"}) / count(up{cluster=~"$cluster|", job="kube-proxy"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kube-proxy\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-proxy\"})) * 100"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>proxy</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"proxy"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster Proxy Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster Proxy Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterProxyHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterProxyHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -4001,7 +3977,7 @@ warning: 99
   url: /d/proxy?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-proxy"}) / count(up{cluster=~"$cluster|", job="kube-proxy"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kube-proxy\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-proxy\"})) * 100"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 x: 16
@@ -4013,7 +3989,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Proxy</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Proxy"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4029,16 +4005,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"}) / (
-sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Pending"}) +
-sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Lost"})
-) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster|\", phase=\"Bound\"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster|\", phase=\"Bound\"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster|\", phase=\"Pending\"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster|\", phase=\"Lost\"})\n) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>pvcoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"pvcoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>PVC Bound Rate Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"PVC Bound Rate Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>PVCBoundRateLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"PVCBoundRateLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 lowest: 0
@@ -4054,10 +4027,7 @@ warning: 99
   url: /d/pvcoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"}) / (
-sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Pending"}) +
-sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Lost"})
-) * 100) OR on() vector(-1)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster|\", phase=\"Bound\"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster|\", phase=\"Bound\"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster|\", phase=\"Pending\"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster|\", phase=\"Lost\"})\n) * 100) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 3
 x: 18
@@ -4075,7 +4045,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>PVC Bound</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"PVC Bound"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4091,13 +4061,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_pod_container_status_running{cluster=~"$cluster|"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster|"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_pod_container_status_running{cluster=~\"$cluster|\"}) / (sum(kube_pod_container_status_running{cluster=~\"$cluster|\"}) + sum(kube_pod_container_status_terminated_reason{cluster=~\"$cluster|\", reason!=\"Completed\"}) + sum(kube_pod_container_status_waiting{cluster=~\"$cluster|\"})) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>containeroverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"containeroverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Running Containers Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Running Containers Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>RunningContainersHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"RunningContainersHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -4112,7 +4082,7 @@ warning: 99
   url: /d/containeroverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_pod_container_status_running{cluster=~"$cluster|"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster|"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_pod_container_status_running{cluster=~\"$cluster|\"}) / (sum(kube_pod_container_status_running{cluster=~\"$cluster|\"}) + sum(kube_pod_container_status_terminated_reason{cluster=~\"$cluster|\", reason!=\"Completed\"}) + sum(kube_pod_container_status_waiting{cluster=~\"$cluster|\"})) * 100)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 12
 y: 8
@@ -4123,7 +4093,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Running Containers</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Running Containers"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4139,13 +4109,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Unknown"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Running\"}) / (sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Running\"}) + sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Pending\"}) + sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Failed\"}) + sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Unknown\"})) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>podoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"podoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Pods Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Pods Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>RunningPodsHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"RunningPodsHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -4160,7 +4130,7 @@ warning: 99
   url: /d/podoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Unknown"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Running\"}) / (sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Running\"}) + sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Pending\"}) + sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Failed\"}) + sum(kube_pod_status_phase{cluster=~\"$cluster|\", phase=\"Unknown\"})) * 100)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 12
 y: 5
@@ -4171,7 +4141,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Running Pods</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Running Pods"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4187,13 +4157,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster|"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster|"}) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_statefulset_status_replicas_ready{cluster=~\"$cluster|\"}) / sum(kube_statefulset_status_replicas{cluster=~\"$cluster|\"}) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>statefulsetoverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"statefulsetoverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>StatefulSets Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"StatefulSets Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>RunningStatefulSetsHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"RunningStatefulSetsHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -4208,7 +4178,7 @@ warning: 99
   url: /d/statefulsetoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster|"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster|"}) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_statefulset_status_replicas_ready{cluster=~\"$cluster|\"}) / sum(kube_statefulset_status_replicas{cluster=~\"$cluster|\"}) * 100)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 6
 y: 5
@@ -4219,7 +4189,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Running StatefulSets</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Running StatefulSets"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4235,13 +4205,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-scheduler"}) / count(up{cluster=~"$cluster|", job="kube-scheduler"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kube-scheduler\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-scheduler\"})) * 100"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>scheduler</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"scheduler"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Cluster Scheduler Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Cluster Scheduler Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterSchedulerHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterSchedulerHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 operator: <
@@ -4256,7 +4226,7 @@ warning: 99
   url: /d/scheduler?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{cluster=~"$cluster|", job="kube-scheduler"}) / count(up{cluster=~"$cluster|", job="kube-scheduler"})) * 100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{cluster=~\"$cluster|\", job=\"kube-scheduler\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-scheduler\"})) * 100"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 x: 20
@@ -4268,7 +4238,7 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Scheduler</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Scheduler"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4284,13 +4254,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_job_status_succeeded{cluster=~"$cluster|"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster|"}) + sum(kube_job_status_failed{cluster=~"$cluster|"})) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_job_status_succeeded{cluster=~\"$cluster|\"}) / (sum(kube_job_status_succeeded{cluster=~\"$cluster|\"}) + sum(kube_job_status_failed{cluster=~\"$cluster|\"})) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>joboverview</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"joboverview"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>Succeeded Jobs Rate Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"Succeeded Jobs Rate Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>SucceededJobsRateLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"SucceededJobsRateLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 95
 lowest: 0
@@ -4306,7 +4276,7 @@ warning: 99
   url: /d/joboverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>round(sum(kube_job_status_succeeded{cluster=~"$cluster|"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster|"}) + sum(kube_job_status_failed{cluster=~"$cluster|"})) * 100) OR on() vector(-1)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"round(sum(kube_job_status_succeeded{cluster=~\"$cluster|\"}) / (sum(kube_job_status_succeeded{cluster=~\"$cluster|\"}) + sum(kube_job_status_failed{cluster=~\"$cluster|\"})) * 100) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>x: 18
 y: 5
@@ -4323,14 +4293,14 @@ operator: <
 warning: 99
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Succeeded Jobs</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Succeeded Jobs"</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h4 id="targetdown_1"><a name='targetDown_151'>targetDown</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_152'>alert</a>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>None</code></div>
+<tr><td>panel</td><td><div class='my-pre'><code>null</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4339,11 +4309,11 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: Cluster
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>100 * (count by(job, namespace, service) (up{alertGroup!="Host"} == 0) / count by(job, namespace, service) (up{alertGroup!="Host"}))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"100 * (count by(job, namespace, service) (up{alertGroup!=\"Host\"} == 0) / count by(job, namespace, service) (up{alertGroup!=\"Host\"}))"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"{{ printf \"%.4g\" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down."</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterTargetDown</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterTargetDown"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 operator: '>='
@@ -4359,11 +4329,11 @@ warning: 10
 <p><br></p>
 <p> <a name='panel_154'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"})</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"count(node_cpu_seconds_total{cluster=~\"$cluster\", job=~\"$job\", mode=\"system\"})"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -4375,9 +4345,9 @@ y: 20
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Total Cores</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Total Cores"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4388,11 +4358,11 @@ value:
 <p><br></p>
 <p> <a name='panel_156'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"})</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(node_filesystem_size_bytes{cluster=~\"$cluster\", job=~\"$job\"})"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -4404,9 +4374,9 @@ y: 20
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Total</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Total"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>bytes</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"bytes"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4417,11 +4387,11 @@ value:
 <p><br></p>
 <p> <a name='panel_158'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"})</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(node_memory_MemTotal_bytes{cluster=~\"$cluster\", job=~\"$job\"})"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -4433,9 +4403,9 @@ y: 20
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Total</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Total"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>bytes</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"bytes"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4446,11 +4416,11 @@ value:
 <p><br></p>
 <p> <a name='panel_160'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"})</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(1 - (avg(irate(node_cpu_seconds_total{cluster=~\"$cluster\", job=~\"$job\", mode=\"idle\"}[5m])))) * count(node_cpu_seconds_total{cluster=~\"$cluster\", job=~\"$job\", mode=\"system\"})"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -4462,9 +4432,9 @@ y: 20
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Used Cores</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Used Cores"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4475,16 +4445,11 @@ value:
 <p><br></p>
 <p> <a name='panel_162'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) * ((
-avg(
-(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device)) /
-(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device) +
-sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device)) > 0
-)))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(node_filesystem_size_bytes{cluster=~\"$cluster\", job=~\"$job\"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device) - sum(node_filesystem_free_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~\"$cluster\", job=~\"$job\"}) by (device)) > 0\n)))"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -4496,9 +4461,9 @@ y: 20
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Used</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Used"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>bytes</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"bytes"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4509,11 +4474,11 @@ value:
 <p><br></p>
 <p> <a name='panel_164'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>value</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"value"</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}))))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"sum(node_memory_MemTotal_bytes{cluster=~\"$cluster\", job=~\"$job\"}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~\"$cluster\", job=~\"$job\"}) / sum(node_memory_MemTotal_bytes{cluster=~\"$cluster\", job=~\"$job\"}))))"</code></div>
 </td></tr>
-<tr><td>graphMode</td><td><div class='my-pre'><code>none</code></div>
+<tr><td>graphMode</td><td><div class='my-pre'><code>"none"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>h: 2
 w: 3
@@ -4525,9 +4490,9 @@ y: 20
 value:
 </code></div>
 </td></tr>
-<tr><td>title</td><td><div class='my-pre'><code>Used</code></div>
+<tr><td>title</td><td><div class='my-pre'><code>"Used"</code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>bytes</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"bytes"</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -4562,7 +4527,7 @@ value:
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_167'>panel</a>
 </td></tr></table>
@@ -4570,7 +4535,7 @@ value:
 <p><br></p>
 <p> <a name='panel_167'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4591,7 +4556,7 @@ warning: 99
 <h4 id="autoscaler_1"><a name='autoscaler_168'>autoscaler</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_169'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_170'>panel</a>
 </td></tr></table>
@@ -4602,13 +4567,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", job=~".+"}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", job=~".+"}) * 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (autoscaler_healthy{cluster=~\"$cluster|\", job=~\".+\"}) / sum by (job) (autoscaler_instances{cluster=~\"$cluster|\", job=~\".+\"}) * 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>autoscaler?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"autoscaler?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"ClusterApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterAppAutoscalerHealthLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterAppAutoscalerHealthLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 85
 lowest: 0
@@ -4620,7 +4585,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_170'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (autoscaler_healthy{cluster=~\"$cluster|\", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~\"$cluster|\", %(job)s}) * 100) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4642,7 +4607,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_172'>panel</a>
 </td></tr></table>
@@ -4650,7 +4615,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_172'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4672,7 +4637,7 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_174'>panel</a>
 </td></tr></table>
@@ -4680,9 +4645,9 @@ warning: 99
 <p><br></p>
 <p> <a name='panel_174'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>description</td><td>GenericApp template. Used when application monitoring is requested but appropriate template was not found.
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>description</td><td>"GenericApp template. Used when application monitoring is requested but appropriate template was not found."
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4697,7 +4662,7 @@ warning: 99
 <h4 id="javaactuator_1"><a name='javaActuator_175'>javaActuator</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_176'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_177'>panel</a>
 </td></tr></table>
@@ -4708,13 +4673,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", job=~".+", area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", job=~".+", area="heap"}))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"heap\"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"nonheap\"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"nonheap\"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"heap\"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"nonheap\"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", job=~\".+\", area=\"heap\"}))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>javaactuator?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"javaactuator?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"ClusterApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterAppJavaActuatorHeapHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterAppJavaActuatorHeapHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 90
 lowest: 0
@@ -4726,7 +4691,7 @@ warning: 75
 <p><br></p>
 <p> <a name='panel_177'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"})) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", %(job)s, area=\"heap\"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", %(job)s, area=\"nonheap\"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", %(job)s, area=\"nonheap\"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", %(job)s, area=\"heap\"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~\"$cluster|\", %(job)s, area=\"nonheap\"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~\"$cluster|\", %(job)s, area=\"heap\"})) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4747,7 +4712,7 @@ warning: 75
 <h4 id="nginxingress_1"><a name='nginxIngress_178'>nginxIngress</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_179'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_180'>panel</a>
 </td></tr></table>
@@ -4758,13 +4723,13 @@ warning: 75
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+", status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", job=~".+"}[5m])) + 100))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", job=~\".+\", status!~\"[4-5].*\"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", job=~\".+\"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", job=~\".+\"}[5m])) + 100))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nginxingress?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nginxingress?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ printf "%.0f" $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"ClusterApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ printf \"%.0f\" $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterAppNginxIngressSuccessRateLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterAppNginxIngressSuccessRateLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 85
 lowest: 0
@@ -4776,7 +4741,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_180'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s, status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", %(job)s, status!~\"[4-5].*\"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~\"$cluster|\", %(job)s}[5m])) + 100)) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4798,7 +4763,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_182'>panel</a>
 </td></tr></table>
@@ -4806,7 +4771,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_182'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4827,7 +4792,7 @@ warning: 99
 <h4 id="nginxvts_1"><a name='nginxVts_183'>nginxVts</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_184'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_185'>panel</a>
 </td></tr></table>
@@ -4838,13 +4803,13 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+", code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", job=~".+"}[5m])) + 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", job=~\".+\", code!~\"[4-5].*\", code!=\"total\"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", job=~\".+\", code!=\"total\"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", job=~\".+\"}[5m])) + 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>nginxvts?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"nginxvts?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterAppNginxVTSSuccessRateLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterAppNginxVTSSuccessRateLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 85
 lowest: 0
@@ -4856,7 +4821,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_185'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", %(job)s, code!~\"[4-5].*\", code!=\"total\"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", %(job)s, code!=\"total\"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~\"$cluster|\", %(job)s}[5m])) + 100) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4878,7 +4843,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_187'>panel</a>
 </td></tr></table>
@@ -4886,7 +4851,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_187'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4907,7 +4872,7 @@ warning: 99
 <h4 id="postfix_1"><a name='postfix_188'>postfix</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_189'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_190'>panel</a>
 </td></tr></table>
@@ -4918,18 +4883,18 @@ warning: 99
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (postfix_size{cluster=~"$cluster|", job=~".+"}))</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (postfix_size{cluster=~\"$cluster|\", job=~\".+\"}))"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>postfix?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"postfix?var-job={{ $labels.job }}"</code></div>
 </td></tr>
 <tr><td>mappings</td><td><div class='my-pre'><code>- text: '-'
   type: 1
   value: -1
 </code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Postfix Queue Size High {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"ClusterApp {{ $labels.job }}: Postfix Queue Size High {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterAppPostfixQueueSizeHigh</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterAppPostfixQueueSizeHigh"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 10
 lowest: 0
@@ -4941,7 +4906,7 @@ warning: 5
 <p><br></p>
 <p> <a name='panel_190'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (postfix_size{cluster=~"$cluster|", %(job)s})) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (postfix_size{cluster=~\"$cluster|\", %(job)s})) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4957,14 +4922,14 @@ operator: '>='
 warning: 5
 </code></div>
 </td></tr>
-<tr><td>unit</td><td><div class='my-pre'><code>mailq</code></div>
+<tr><td>unit</td><td><div class='my-pre'><code>"mailq"</code></div>
 </td></tr></table>
 
 <p><br></p>
 <h4 id="pythonflask_1"><a name='pythonFlask_191'>pythonFlask</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><a href='#alert_192'>alert</a>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_193'>panel</a>
 </td></tr></table>
@@ -4975,13 +4940,13 @@ warning: 5
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+",status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", job=~".+"}[5m])) + 100)</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", job=~\".+\",status!~\"[4-5].*\"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", job=~\".+\"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", job=~\".+\"}[5m])) + 100)"</code></div>
 </td></tr>
-<tr><td>link</td><td><div class='my-pre'><code>pythonflask?var-job={{ $labels.job }}</code></div>
+<tr><td>link</td><td><div class='my-pre'><code>"pythonflask?var-job={{ $labels.job }}"</code></div>
 </td></tr>
-<tr><td>message</td><td><div class='my-pre'><code>ClusterApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses) Low {{ $value }}%</code></div>
+<tr><td>message</td><td><div class='my-pre'><code>"ClusterApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses) Low {{ $value }}%"</code></div>
 </td></tr>
-<tr><td>name</td><td><div class='my-pre'><code>ClusterAppPythonFlaskSuccessRateLow</code></div>
+<tr><td>name</td><td><div class='my-pre'><code>"ClusterAppPythonFlaskSuccessRateLow"</code></div>
 </td></tr>
 <tr><td>thresholds</td><td><div class='my-pre'><code>critical: 85
 lowest: 0
@@ -4993,7 +4958,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_193'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s,status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) + 100) OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", %(job)s,status!~\"[4-5].*\"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~\"$cluster|\", %(job)s}[5m])) + 100) OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -5015,7 +4980,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
-<tr><td>default</td><td><div class='my-pre'><code>False</code></div>
+<tr><td>default</td><td><div class='my-pre'><code>false</code></div>
 </td></tr>
 <tr><td>panel</td><td><a href='#panel_195'>panel</a>
 </td></tr></table>
@@ -5023,7 +4988,7 @@ warning: 95
 <p><br></p>
 <p> <a name='panel_195'>panel</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)</code></div>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>expr</td><td><div class='my-pre'><code>"(sum(up{%(job)s}) / count(up{cluster=~\"$cluster|\", %(job)s}))*100 OR on() vector(-1)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
