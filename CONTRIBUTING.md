@@ -17,9 +17,10 @@ Before sending your pull requests, make sure you followed this list.
 - Include a [License](CONTRIBUTING.md#license-on-the-top-of-file) at the top of new files
 - Update the [Readme](README.md) with details of changes to the interface
 - In case the pull request would update the version number, please edit the version number in all appropriate
-  files e.g. [Chart.yaml](chart/Chart.yaml). The versioning scheme we use is [SemVer](http://semver.org/)
-- You may merge the Pull Request once you have the sign-off of two other developers, or if you
-  don't have the permission to do that, you may request the second reviewer to merge it for you
+  files e.g. [Chart.yaml](chart/Chart.yaml). Read more about our [chart versioning policy](#chart-versioning-policy).
+- Choose appropriate base branch for pull request. Read more about our [release policy](#release-policy).
+- You may merge the Pull Request once you have the sign-off of other developer, or if you
+  don't have the permission to do that, you may request the reviewer to merge it for you
 
 ## Developer Certificate of Origin (DCO)
 
@@ -58,3 +59,16 @@ document, granting the dNation Kubernetes Monitoring project to use your work.
   limitations under the License.
 */
 ```
+
+## Release policy
+
+- Release branch `vMajor.Minor.x` (e.g. `v1.1.x`) - all PRs with new functionality should target this branch
+- PRs with hot-fixes target `main` branch
+
+## Chart versioning policy
+
+Versioning scheme is [SemVer](https://semver.org/).
+
+- **version**: should increase when changes in chart are made
+- **appVersion**: should increase when changes in `jsonnet/` folder are made (when `appVersion` is increased, `version` has to be too)
+- **version** and **appVersion** in release branch are set to same version as new release will be
