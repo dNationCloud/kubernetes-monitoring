@@ -1207,5 +1207,60 @@
         },
       },
     },
+    layerL0: {
+      k8s: {
+        main: {
+          local expr = 'sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local maxWarnings = 10000,
+          local thresholds = {
+            operator: '>=',
+            warning: 1,
+            critical: maxWarnings
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+                  { from: 0, text: 'OK', to: 0, type: 2, value: '' },
+                  { from: 1, text: 'Warning', to: maxWarnings, type: 2, value: '' },
+                  { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+                  ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          }
+        },
+      },
+      host: {
+        main:{
+          local expr = 'sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="warning", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local maxWarnings = 10000,
+          local thresholds = {
+            operator: '>=',
+            warning: 1,
+            critical: maxWarnings
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+                  { from: 0, text: 'OK', to: 0, type: 2, value: '' },
+                  { from: 1, text: 'Warning', to: maxWarnings, type: 2, value: '' },
+                  { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+                  ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          }
+        },
+      }
+    },
   },
 }
+

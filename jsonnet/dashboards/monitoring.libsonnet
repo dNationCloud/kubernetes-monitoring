@@ -20,14 +20,10 @@ local template = grafana.template;
 local row = grafana.row;
 local link = grafana.link;
 
-
 local maxWarnings = 10000;
-local panelWidth = 4;
-local panelHeight = 3;
 local rowWidth = 24;
 
-
-local getGridX(index) =
+local getGridX(index, panelWidth) =
   /**
    * Compute element grid X coordinate based on index number
    *
@@ -36,7 +32,7 @@ local getGridX(index) =
   */
   (index * panelWidth) % rowWidth;
 
-local getGridY(offset, index) =
+local getGridY(offset, index, panelWidth, panelHeight) =
   /**
    * Compute element grid Y coordinate based on index number
    *
@@ -46,14 +42,14 @@ local getGridY(offset, index) =
   */
   std.floor((index * panelWidth) / rowWidth) * panelHeight + offset;
 
-local getClusterRowGridY(numOfClusters) =
+local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
   /**
    * Compute grid Y coordinate of host row based on number of clusters.
    *
    * @param index The index of host.
    * @return grid Y coordinate as number.
   */
-  getGridY(2 + panelHeight, numOfClusters - 1);
+  getGridY(2 + panelHeight, numOfClusters - 1, panelWidth, panelHeight);
 
 {
   grafanaDashboards+::
@@ -83,35 +79,54 @@ local getClusterRowGridY(numOfClusters) =
               targetBlank=true,
             );
 
-          local alertPanel(title, expr) =
+          local hostPanel(index, host) = [
 
-            local rangeMaps = [
-              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
-              { from: 1, text: 'Warning', to: maxWarnings, type: 2, value: '' },
-              { from: maxWarnings, text: 'Critical', to: $._config.grafanaDashboards.constants.infinity, type: 2, value: '' },
-            ];
+            local panelHeight = tpl.panel.gridPos.h;
+            local panelWidth = tpl.panel.gridPos.w;
+
+            local gridX =
+              if std.type(tpl.panel.gridPos.x) == 'number' then
+                tpl.panel.gridPos.x
+              else
+                getGridX(index, panelWidth);
+
+            local gridY =
+              if std.type(tpl.panel.gridPos.y) == 'number' then
+                tpl.panel.gridPos.y
+              else
+                getGridY(getClusterRowGridY(numOfClusters, panelWidth, panelHeight) + 1, index, panelWidth, panelHeight);
 
             statPanel.new(
-              title=title,
-              datasource='$datasource',
-              graphMode='none',
-              colorMode='background',
-            )
-            .addTarget({ type: 'single', instant: true, expr: expr })
-            .addThresholds($.grafanaThresholds({ operator: '>=', warning: 1, critical: maxWarnings }))
-            .addMappings(rangeMaps);
-
-          local hostAlertsPanel(host) =
-            alertPanel(
               title='Host %s' % host.name,
-              expr=|||
-                sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="warning", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) +
-                sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * %(maxWarnings)d
-              ||| % { job: std.join('|', $.getAlertJobs(host)), groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings },
+              datasource=tpl.panel.datasource,
+              graphMode=tpl.panel.graphMode,
+              colorMode=tpl.panel.colorMode,
             )
-            .addDataLink({ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] });
+            .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { job: std.join('|', $.getAlertJobs(host)), groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings } })
+            .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
+            .addMappings(tpl.panel.mappings)
+            .addDataLinks(
+              if tpl.panel.dataLinks != {} then
+                tpl.panel.dataLinks
+              else
+                [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] }]
+            )
+            {
+              gridPos: {
+                x: gridX,
+                y: gridY,
+                w: panelWidth,
+                h: panelHeight,
+              },
+            }
+            for tpl in $.getTemplates($._config.templates.layerL0.host, host)
+            if (std.objectHas(tpl, 'panel') && tpl.panel != {})
+          ];
 
-          local clusterAlertsPanel(cluster) =
+          local clusterPanel(index, cluster) = [
+
+            local panelHeight = tpl.panel.gridPos.h;
+            local panelWidth = tpl.panel.gridPos.w;
 
             // multiple cluster monitoring isn't supported yet, replace lines when adding support for multiple clusters
             local dataLinkCommonArgs = $._config.grafanaDashboards.dataLinkCommonArgs;
@@ -120,14 +135,44 @@ local getClusterRowGridY(numOfClusters) =
             // when multiple cluster will be supported, cluster variable will in expr will be cluster name
             local localCluster = { name: '' };
 
-            alertPanel(
+            local gridX =
+              if std.type(tpl.panel.gridPos.x) == 'number' then
+                tpl.panel.gridPos.x
+              else
+                getGridX(index, panelWidth);
+
+            local gridY =
+              if std.type(tpl.panel.gridPos.y) == 'number' then
+                tpl.panel.gridPos.y
+              else
+                getGridY(1, index, panelWidth, panelHeight);
+
+            statPanel.new(
               title='Cluster %s' % cluster.name,
-              expr=|||
-                sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) +
-                sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d
-              ||| % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings },
+              datasource=tpl.panel.datasource,
+              graphMode=tpl.panel.graphMode,
+              colorMode=tpl.panel.colorMode,
             )
-            .addDataLink({ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster), dataLinkCommonArgs] });
+            .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings} })
+            .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
+            .addMappings(tpl.panel.mappings)
+            .addDataLinks(
+              if std.length(tpl.panel.dataLinks) > 0 then
+                tpl.panel.dataLinks
+              else
+                [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster), dataLinkCommonArgs] }]
+            )
+            {
+              gridPos: {
+                x: gridX,
+                y: gridY,
+                w: panelWidth,
+                h: panelHeight,
+              },
+            }
+            for tpl in $.getTemplates($._config.templates.layerL0.k8s, cluster)
+            if (std.objectHas(tpl, 'panel') && tpl.panel != {})
+          ];
 
           local datasourceTemplate =
             template.datasource(
@@ -145,18 +190,6 @@ local getClusterRowGridY(numOfClusters) =
               label='AlertManager',
               hide='variable',
             );
-
-          local hostPanel(index, host) =
-            local gridX = getGridX(index);
-            local gridY = getGridY(getClusterRowGridY(numOfClusters) + 1, index);
-
-            [hostAlertsPanel(host) { gridPos: { x: gridX, y: gridY, w: panelWidth, h: panelHeight } }];
-
-          local clusterPanel(index, cluster) =
-            local gridX = getGridX(index);
-            local gridY = getGridY(1, index);
-
-            [clusterAlertsPanel(cluster) { gridPos: { x: gridX, y: gridY, w: panelWidth, h: panelHeight } }];
 
           local hostPanels =
             std.flattenArrays([
@@ -187,8 +220,8 @@ local getClusterRowGridY(numOfClusters) =
                [row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
              else []) +
             (if isHostMonitoring then
-               [row.new('Host Monitoring') { gridPos: { x: 0, y: getClusterRowGridY(numOfClusters), w: 24, h: 1 } }] + hostPanels
+               [row.new('Host Monitoring') { gridPos: { x: 0, y: getClusterRowGridY(numOfClusters, $._config.templates.layerL0.k8s.main.panel.gridPos.w, $._config.templates.layerL0.k8s.main.panel.gridPos.h), w: 24, h: 1 } }] + hostPanels
              else [])
           ),
-      } else {},
+      } else {}
 }
