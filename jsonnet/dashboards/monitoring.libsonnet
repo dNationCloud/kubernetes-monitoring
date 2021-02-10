@@ -106,7 +106,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
             .addMappings(tpl.panel.mappings)
             .addDataLinks(
-              if tpl.panel.dataLinks != {} then
+              if std.length(tpl.panel.dataLinks) > 0 then
                 tpl.panel.dataLinks
               else
                 [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] }]

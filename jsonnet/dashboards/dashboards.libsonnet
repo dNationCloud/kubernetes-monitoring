@@ -66,4 +66,4 @@
 (import 'apps/apache.libsonnet') +
 
 // Monitoring dashboards
-(import 'monitoring-old.libsonnet')
+(import 'monitoring.libsonnet')
