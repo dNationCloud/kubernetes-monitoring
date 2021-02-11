@@ -20,7 +20,6 @@ local template = grafana.template;
 local row = grafana.row;
 local link = grafana.link;
 
-local maxWarnings = 10000;
 local rowWidth = 24;
 
 local getGridX(index, panelWidth) =
@@ -53,6 +52,8 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
 
 {
   grafanaDashboards+::
+
+    local maxWarnings = $._config.grafanaDashboards.constants.maxWarnings;
 
     local isHostMonitoring =
       std.length($._config.hostMonitoring.hosts) > 0 && $._config.hostMonitoring.enabled;
@@ -94,7 +95,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if std.type(tpl.panel.gridPos.y) == 'number' then
                 tpl.panel.gridPos.y
               else
-                getGridY(getClusterRowGridY(numOfClusters, panelWidth, panelHeight) + 1, index, panelWidth, panelHeight);
+                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.layerL0.k8s.main.panel.gridPos.w, $._config.templates.layerL0.k8s.main.panel.gridPos.h), index, panelWidth, panelHeight);
 
             statPanel.new(
               title='Host %s' % host.name,
@@ -153,7 +154,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
             )
-            .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings} })
+            .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings } })
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
             .addMappings(tpl.panel.mappings)
             .addDataLinks(
@@ -220,8 +221,13 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                [row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
              else []) +
             (if isHostMonitoring then
-               [row.new('Host Monitoring') { gridPos: { x: 0, y: getClusterRowGridY(numOfClusters, $._config.templates.layerL0.k8s.main.panel.gridPos.w, $._config.templates.layerL0.k8s.main.panel.gridPos.h), w: 24, h: 1 } }] + hostPanels
+               [
+                 row.new('Host Monitoring') {
+                   local rowY = getClusterRowGridY(numOfClusters, $._config.templates.layerL0.k8s.main.panel.gridPos.w, $._config.templates.layerL0.k8s.main.panel.gridPos.h) - 1,
+                   gridPos: { x: 0, y: rowY, w: 24, h: 1 },
+                 },
+               ] + hostPanels
              else [])
           ),
-      } else {}
+      } else {},
 }
