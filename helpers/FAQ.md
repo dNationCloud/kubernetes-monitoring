@@ -192,7 +192,7 @@ clusterMonitoring:
     - name: app-example
       description: Example of App Monitoring
       jobName: flask-app  # The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `serviceMonitor` section
-      template:
+      templates:
         javaActuator:  # Application Exporter template
           enabled: true
       serviceMonitor:
