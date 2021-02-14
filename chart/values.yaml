@@ -80,7 +80,7 @@ clusterMonitoring:
     #  - name: app-example-service
     #    description: Example of App Monitoring by ServiceMonitor
     #    jobName: app-example-service  # The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `serviceMonitor` section
-    #    template:
+    #    templates:
     #      nginxIngress:  # Application Exporter template
     #        enabled: true
     #    serviceMonitor:
@@ -117,7 +117,7 @@ clusterMonitoring:
     #  - name: app-example-pod
     #    description: Example of App Monitoring by PodMonitor
     #    jobName: app-example-pod  # The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `podMonitor` section
-    #    template:
+    #    templates:
     #      nginxIngress:  # Application Exporter template
     #        enabled: true
     #    podMonitor:
