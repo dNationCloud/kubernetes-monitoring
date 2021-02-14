@@ -17,7 +17,7 @@
   defaultTemplate:: {
     local defaultTemplate = self,
 
-    getTemlatesApp(group, templates):: {
+    getTemplatesApp(group, templates):: {
       local alert =
         if std.objectHas(templates[template], 'alert') then
           {
@@ -775,8 +775,6 @@
         },
       },
     },
-    k8sApps: defaultTemplate.getTemlatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
-    hostApps: defaultTemplate.getTemlatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
     host: {
       local hostCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupHost },
 
@@ -1260,5 +1258,7 @@
         },
       },
     },
+    k8sApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
+    hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
   },
 }
