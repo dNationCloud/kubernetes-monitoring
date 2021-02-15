@@ -14,32 +14,34 @@
 /* K8s prometheus rules */
 
 {
-  prometheusRules+:: {
-    'hosts.rules': {
-      local alerts = std.set(
-        std.flattenArrays([
-          $.getTemplateAlerts($._config.templates.host, host)
-          for host in $._config.hostMonitoring.hosts
-        ]), function(o) o.name
-      ),
-      groups: [
-        $.newRuleGroup('host.rules')
-        .addRules(
-          std.flattenArrays(
-            [
-              $.newAlertPair(
-                name=alert.name,
-                message=alert.message,
-                expr=alert.expr,
-                thresholds=alert.thresholds,
-                link=alert.link,
-                customLables=alert.customLables,
-              )
-              for alert in alerts
-            ]
-          )
+  prometheusRules+::
+    if $.isHostMonitoring() then {
+      'hosts.rules': {
+        local alerts = std.set(
+          std.flattenArrays([
+            $.getTemplateAlerts($._config.templates.L1.host, host)
+            for host in $._config.hostMonitoring.hosts
+          ]), function(o) o.name
         ),
-      ],
-    },
-  },
+        groups: [
+          $.newRuleGroup('host.rules')
+          .addRules(
+            std.flattenArrays(
+              [
+                $.newAlertPair(
+                  name=alert.name,
+                  message=alert.message,
+                  expr=alert.expr,
+                  thresholds=alert.thresholds,
+                  link=alert.link,
+                  customLables=alert.customLables,
+                )
+                for alert in alerts
+              ]
+            )
+          ),
+        ],
+      },
+    }
+    else {},
 }

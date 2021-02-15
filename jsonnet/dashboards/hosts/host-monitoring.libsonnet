@@ -24,7 +24,7 @@ local text = grafana.text;
 
 {
   grafanaDashboards+::
-    local hostDashboard(hostUid, alertJobs, dashboardName, hostTemplates, hostApps=[]) = {
+    local hostDashboard(hostUid, dashboardName, alertJobs, hostTemplates, hostApps=[]) = {
       local monitoringLink =
         link.dashboards(
           title='Monitoring',
@@ -211,19 +211,22 @@ local text = grafana.text;
         ] + hostStatsPanels + applicationPanels(hostApps)
       ),
     };
-    if $._config.hostMonitoring.enabled && std.length($._config.hostMonitoring.hosts) > 0 then
+    if $.isHostMonitoring() then
       {
-        local getUid(obj) = '%s%s' % [$._config.grafanaDashboards.ids.hostMonitoring, std.asciiLower(obj.name)],
-        local getName(obj) = 'Host Monitoring %s' % obj.name,
-        local alertJobs(obj) = $.getAlertJobs(obj),
-
-        ['host-monitoring-%s' % host.name]: hostDashboard(getUid(host), alertJobs(host), getName(host), $.getTemplates($._config.templates.host, host), $.getApps($._config.templates.hostApps, host)).dashboard
+        ['host-monitoring-%s' % host.name]:
+          hostDashboard(
+            $.getCustomUid([$._config.grafanaDashboards.ids.hostMonitoring, host.name]),
+            $.getCustomName(['Host Monitoring' ,host.name]),
+            $.getAlertJobs(host),
+            $.getTemplates($._config.templates.L1.host, host),
+            $.getApps($._config.templates.L1.hostApps, host)
+          ).dashboard
         for host in $._config.hostMonitoring.hosts
-        if (std.objectHas(host, 'apps') || std.objectHas(host, 'templates'))
+        if (std.objectHas(host, 'apps') || !$.hasDefaultTemplates(host, $._config.templates.L1.k8s))
       } +
-      if $.isAnyDefault($._config.hostMonitoring.hosts) then
+      if $.isAnyDefault($._config.hostMonitoring.hosts, $._config.templates.L1.host) then
         {
-          'host-monitoring': hostDashboard($._config.grafanaDashboards.ids.hostMonitoring, ['$job'], 'Host Monitoring', $.getTemplates($._config.templates.host)).dashboard,
+          'host-monitoring': hostDashboard($._config.grafanaDashboards.ids.hostMonitoring, 'Host Monitoring', ['$job'], $.getTemplates($._config.templates.L1.host)).dashboard,
         }
       else
         {}

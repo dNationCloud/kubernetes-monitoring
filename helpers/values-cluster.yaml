@@ -62,13 +62,14 @@ clusterMonitoring:
           path: /actuator/prometheus
 
 templates:
-  k8s:
-    # Override title for etcd health panel
-    etcdHealth:
-      panel:
-        title: "Override Title"
-    # Override warning threshold for running pods panel
-    runningPods:
-      panel:
-        thresholds:
-          warning: 95
+  L1:
+    k8s:
+      # Override title for etcd health panel
+      etcdHealth:
+        panel:
+          title: "Override Title"
+      # Override warning threshold for running pods panel
+      runningPods:
+        panel:
+          thresholds:
+            warning: 95
