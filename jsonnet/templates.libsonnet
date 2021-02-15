@@ -1228,8 +1228,8 @@
               { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
             ],
             gridPos: {
-              w: 10,
-              h: 10,
+              w: 4,
+              h: 3,
             },
           },
         },

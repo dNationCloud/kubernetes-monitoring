@@ -22,14 +22,18 @@ local link = grafana.link;
 
 local rowWidth = 24;
 
+
 local getGridX(index, panelWidth) =
   /**
    * Compute element grid X coordinate based on index number
    *
    * @param index The index of element.
+   * @param panelWidth Width of panels.
    * @return grid X coordinate as number.
   */
-  (index * panelWidth) % rowWidth;
+  local panelsInRow = std.floor(rowWidth / panelWidth);
+  local columnIndex = index % panelsInRow;
+  columnIndex * panelWidth;
 
 local getGridY(offset, index, panelWidth, panelHeight) =
   /**
@@ -37,9 +41,13 @@ local getGridY(offset, index, panelWidth, panelHeight) =
    *
    * @param offset Offset of Y position.
    * @param index The index of element.
+   * @param panelWidth Width of panels.
+   * @param panelHeight Height of panels.
    * @return grid Y coordinate as number.
   */
-  std.floor((index * panelWidth) / rowWidth) * panelHeight + offset;
+  local panelsInRow = std.floor(rowWidth / panelWidth);
+  local rowIndex = std.floor(index / panelsInRow);
+  (rowIndex * panelHeight) + offset;
 
 local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
   /**
