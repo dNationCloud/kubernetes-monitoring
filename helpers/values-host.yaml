@@ -37,12 +37,13 @@ hostMonitoring:
           path: /metrics
 
 templates:
-  host:
-    # Override warning thresholds for node disk panel and alert
-    overallUtilizationDisk:
-      panel:
-        thresholds:
-          warning: 50
-      alert:
-        thresholds:
-          warning: 50
+  L1:
+    host:
+      # Override warning thresholds for node disk panel and alert
+      overallUtilizationDisk:
+        panel:
+          thresholds:
+            warning: 50
+        alert:
+          thresholds:
+            warning: 50

@@ -17,14 +17,13 @@ local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
 local statPanel = grafana.statPanel;
-local template = grafana.template;
 local row = grafana.row;
 local link = grafana.link;
 local text = grafana.text;
 
 {
   grafanaDashboards+::
-    local clusterDashboard(clusterUid, dashboardName, clusterTemplates, clusterApps=[]) = {
+    local clusterDashboard(cluster, dashboardUid, dashboardName, clusterTemplates, clusterApps=[]) = {
       local explorerLink =
         link.dashboards(
           title='Logs',
@@ -78,7 +77,7 @@ local text = grafana.text;
         )
         .addTarget(prometheus.target(tpl.panel.expr))
         .addMappings(tpl.panel.mappings)
-        .addDataLinks(tpl.panel.dataLinks)
+        .addDataLinks($.finalizeDataLinksUrl(cluster, tpl))
         .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
         {
           gridPos: {
@@ -150,99 +149,61 @@ local text = grafana.text;
           ])
         else
           [],
-      local datasourceTemplate =
-        template.datasource(
-          query='prometheus',
-          name='datasource',
-          current=null,
-          label='Datasource',
-        ),
-      local alertManagerTemplate =
-        template.datasource(
-          query='camptocamp-prometheus-alertmanager-datasource',
-          name='alertmanager',
-          current=null,
-          label='AlertManager',
-          hide='variable',
-        ),
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(kube_node_info, cluster)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        ),
-      local jobTemplate =
-        template.new(
-          name='job',
-          query='label_values(node_exporter_build_info{cluster=~"$cluster", pod!~""}, job)',
-          label='Job',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        ),
-      local datasourceLogsTemplate =
-        template.datasource(
-          name='datasource_logs',
-          label='Logs datasource',
-          query='loki',
-          current=null,
-          hide='variable',
-        ),
+
       local links = (if $._config.grafanaDashboards.isLoki then [explorerLink] else [])
-                    + [
-                      dNationLink,
-                    ],
-      local varTemplates = [
-                             datasourceTemplate,
-                             alertManagerTemplate,
-                             clusterTemplate,
-                             jobTemplate,
-                           ]
-                           + if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [],
+                    + [dNationLink],
 
-      dashboard: dashboard.new(
-        dashboardName,
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sMonitoring,
-        uid=clusterUid,
-      )
-                 .addLinks(links)
-                 .addTemplates(varTemplates)
-                 .addPanels(
+      local varTemplates =
         [
-          row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-          criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
-          warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
-          row.new('Overview') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
-          row.new('Control Plane Components Health') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
-          row.new('Node Metrics (including Master)') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
-          text.new('CPU') { gridPos: { x: 0, y: 16, w: 6, h: 1 } },
-          text.new('RAM') { gridPos: { x: 6, y: 16, w: 6, h: 1 } },
-          text.new('Disk') { gridPos: { x: 12, y: 16, w: 6, h: 1 } },
-          text.new('Network') { gridPos: { x: 18, y: 16, w: 6, h: 1 } },
-        ] + k8sStatsPanels + applicationPanels(clusterApps)
-      ),
-    };
-    if $._config.clusterMonitoring.enabled && std.length($._config.clusterMonitoring.clusters) > 0 then
-      {
-        local getUid(obj) = '%s%s' % [$._config.grafanaDashboards.ids.k8sMonitoring, std.asciiLower(obj.name)],
-        local getName(obj) = 'Kubernetes Monitoring %s' % obj.name,
+          $.grafanaTemplates.datasourceTemplate(),
+          $.grafanaTemplates.alertManagerTemplate(),
+          $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
+        ]
+        + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [],
 
-        ['k8s-monitoring-%s' % cluster.name]: clusterDashboard(getUid(cluster), getName(cluster), $.getTemplates($._config.templates.k8s, cluster), $.getApps($._config.templates.k8sApps, cluster)).dashboard
+      dashboard:
+        dashboard.new(
+          dashboardName,
+          editable=$._config.grafanaDashboards.editable,
+          graphTooltip=$._config.grafanaDashboards.tooltip,
+          refresh=$._config.grafanaDashboards.refresh,
+          time_from=$._config.grafanaDashboards.time_from,
+          tags=$._config.grafanaDashboards.tags.k8sMonitoring,
+          uid=dashboardUid,
+        )
+        .addLinks(links)
+        .addTemplates(varTemplates)
+        .addPanels(
+          [
+            row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+            criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
+            warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
+            row.new('Overview') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+            row.new('Control Plane Components Health') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
+            row.new('Node Metrics (including Master)') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
+            text.new('CPU') { gridPos: { x: 0, y: 16, w: 6, h: 1 } },
+            text.new('RAM') { gridPos: { x: 6, y: 16, w: 6, h: 1 } },
+            text.new('Disk') { gridPos: { x: 12, y: 16, w: 6, h: 1 } },
+            text.new('Network') { gridPos: { x: 18, y: 16, w: 6, h: 1 } },
+          ] + k8sStatsPanels + applicationPanels(clusterApps)
+        ),
+    };
+    if $.isClusterMonitoring() then
+      {
+        ['k8s-monitoring-%s' % cluster.name]:
+          clusterDashboard(
+            cluster,
+            $.getCustomUid([$._config.grafanaDashboards.ids.k8sMonitoring, cluster.name]),
+            $.getCustomName(['Kubernetes Monitoring', cluster.name]),
+            $.getTemplates($._config.templates.L1.k8s, cluster),
+            $.getApps($._config.templates.L1.k8sApps, cluster),
+          ).dashboard
         for cluster in $._config.clusterMonitoring.clusters
-        if (std.objectHas(cluster, 'apps') || std.objectHas(cluster, 'templates'))
+        if (std.objectHas(cluster, 'apps') || !$.hasDefaultTemplates(cluster, $._config.templates.L1.k8s))
       } +
-      if $.isAnyDefault($._config.clusterMonitoring.clusters) then
+      if $.isAnyDefault($._config.clusterMonitoring.clusters, $._config.templates.L1.k8s) then
         {
-          'k8s-monitoring': clusterDashboard($._config.grafanaDashboards.ids.k8sMonitoring, 'Kubernetes Monitoring', $.getTemplates($._config.templates.k8s)).dashboard,
+          'k8s-monitoring': clusterDashboard({}, $._config.grafanaDashboards.ids.k8sMonitoring, 'Kubernetes Monitoring', $.getTemplates($._config.templates.L1.k8s)).dashboard,
         }
       else
         {}

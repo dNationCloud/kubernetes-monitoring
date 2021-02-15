@@ -24,8 +24,8 @@ function(customConfig={})
    * @param customConfig custom configuration variables taken from the command line top-level arguments.
    * @return grafana dashboards.
   */
-  local data = (dashboards + config.mergeConfig(config.defaultConfig, customConfig)).grafanaDashboards; {
+    local data = (dashboards + config.mergeConfig(config.defaultConfig, customConfig)).grafanaDashboards; {
 
-    ['%s.json' % name]: data[name]
-    for name in std.objectFields(data)
-  }
+      ['%s.json' % name]: data[name]
+      for name in std.objectFields(data)
+    }

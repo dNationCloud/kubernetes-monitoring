@@ -22,7 +22,7 @@
     ]);
     local k8sAppAlerts = std.set(
       std.flattenArrays([
-        $.getTemplateAlerts($._config.templates.k8sApps, app)
+        $.getTemplateAlerts($._config.templates.L1.k8sApps, app)
         for app in k8sApps
       ]), function(o) o.name
     );
@@ -33,7 +33,7 @@
     ]);
     local hostAppAlerts = std.set(
       std.flattenArrays([
-        $.getTemplateAlerts($._config.templates.hostApps, app)
+        $.getTemplateAlerts($._config.templates.L1.hostApps, app)
         for app in hostApps
       ]), function(o) o.name
     );
