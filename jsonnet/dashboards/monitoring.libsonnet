@@ -16,7 +16,6 @@
 local grafana = (import 'grafonnet/grafana.libsonnet');
 local dashboard = grafana.dashboard;
 local statPanel = grafana.statPanel;
-local template = grafana.template;
 local row = grafana.row;
 local link = grafana.link;
 
@@ -63,19 +62,13 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
 
     local maxWarnings = $._config.grafanaDashboards.constants.maxWarnings;
 
-    local isHostMonitoring =
-      std.length($._config.hostMonitoring.hosts) > 0 && $._config.hostMonitoring.enabled;
-
-    local isClusterMonitoring =
-      std.length($._config.clusterMonitoring.clusters) > 0 && $._config.clusterMonitoring.enabled;
-
     local numOfClusters =
-      if isClusterMonitoring then std.length($._config.clusterMonitoring.clusters) else 0;
+      if $.isClusterMonitoring() then std.length($._config.clusterMonitoring.clusters) else 0;
 
-    local getUid(defaultId, obj) =
-      if $.isAnyDefault([obj]) then defaultId else defaultId + std.asciiLower(obj.name);
+    local getUid(defaultUid, obj, templateGroup) =
+      if $.isAnyDefault([obj], templateGroup) then defaultUid else $.getCustomUid([defaultUid, obj.name]);
 
-    if isHostMonitoring || isClusterMonitoring then
+    if $.isHostMonitoring() || $.isClusterMonitoring() then
       {
         monitoring:
           local dNationLink =
@@ -103,7 +96,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if std.type(tpl.panel.gridPos.y) == 'number' then
                 tpl.panel.gridPos.y
               else
-                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.layerL0.k8s.main.panel.gridPos.w, $._config.templates.layerL0.k8s.main.panel.gridPos.h), index, panelWidth, panelHeight);
+                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h), index, panelWidth, panelHeight);
 
             statPanel.new(
               title='Host %s' % host.name,
@@ -120,7 +113,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if std.length(tpl.panel.dataLinks) > 0 then
                 tpl.panel.dataLinks % { job: host.jobName }
               else
-                [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] }]
+                [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host, $._config.templates.L1.host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] }]
             )
             {
               gridPos: {
@@ -130,7 +123,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 h: panelHeight,
               },
             }
-            for tpl in $.getTemplates($._config.templates.layerL0.host, host)
+            for tpl in $.getTemplates($._config.templates.L0.host, host)
             if (std.objectHas(tpl, 'panel') && tpl.panel != {})
           ];
 
@@ -173,7 +166,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if std.length(tpl.panel.dataLinks) > 0 then
                 tpl.panel.dataLinks
               else
-                [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster), dataLinkCommonArgs] }]
+                [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
             )
             {
               gridPos: {
@@ -183,26 +176,9 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 h: panelHeight,
               },
             }
-            for tpl in $.getTemplates($._config.templates.layerL0.k8s, cluster)
+            for tpl in $.getTemplates($._config.templates.L0.k8s, cluster)
             if (std.objectHas(tpl, 'panel') && tpl.panel != {})
           ];
-
-          local datasourceTemplate =
-            template.datasource(
-              query='prometheus',
-              name='datasource',
-              current=null,
-              label='Datasource',
-            );
-
-          local alertManagerTemplate =
-            template.datasource(
-              query='camptocamp-prometheus-alertmanager-datasource',
-              name='alertmanager',
-              current=null,
-              label='AlertManager',
-              hide='variable',
-            );
 
           local hostPanels =
             std.flattenArrays([
@@ -227,19 +203,26 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             uid=$._config.grafanaDashboards.ids.monitoring,
           )
           .addLink(dNationLink)
-          .addTemplates([datasourceTemplate, alertManagerTemplate])
+          .addTemplates([
+            $.grafanaTemplates.datasourceTemplate(),
+            $.grafanaTemplates.alertManagerTemplate(),
+          ])
           .addPanels(
-            (if isClusterMonitoring then
-               [row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
-             else []) +
-            (if isHostMonitoring then
-               [
-                 row.new('Host Monitoring') {
-                   local rowY = getClusterRowGridY(numOfClusters, $._config.templates.layerL0.k8s.main.panel.gridPos.w, $._config.templates.layerL0.k8s.main.panel.gridPos.h) - 1,
-                   gridPos: { x: 0, y: rowY, w: 24, h: 1 },
-                 },
-               ] + hostPanels
-             else [])
+            (
+              if $.isClusterMonitoring() then
+                [row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
+              else []
+            ) +
+            (
+              if $.isHostMonitoring() then
+                [
+                  row.new('Host Monitoring') {
+                    local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
+                    gridPos: { x: 0, y: rowY, w: 24, h: 1 },
+                  },
+                ] + hostPanels
+              else []
+            )
           ),
       } else {},
 }

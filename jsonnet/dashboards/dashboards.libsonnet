@@ -12,27 +12,21 @@
 */
 
 (import '../util.libsonnet') +
+(import 'grafana-templates.libsonnet') +
 
 // dNation dashboards
 (import 'k8s/k8s-monitoring.libsonnet') +
 (import 'k8s/alert-overview.libsonnet') +
-(import 'k8s/node-overview.libsonnet') +
-(import 'k8s/job-overview.libsonnet') +
-(import 'k8s/statefulset-overview.libsonnet') +
-(import 'k8s/pvc-overview.libsonnet') +
 (import 'k8s/node-exporter.libsonnet') +
-(import 'k8s/container-overview.libsonnet') +
-(import 'k8s/deployment-overview.libsonnet') +
-(import 'k8s/daemonset-overview.libsonnet') +
 (import 'k8s/disk-overview.libsonnet') +
 (import 'k8s/memory-overview.libsonnet') +
 (import 'k8s/memory-namespace-overview.libsonnet') +
 (import 'k8s/network-overview.libsonnet') +
 (import 'k8s/network-namespace-overview.libsonnet') +
 (import 'k8s/cpu-overview.libsonnet') +
-(import 'k8s/pod-overview.libsonnet') +
 (import 'k8s/container-detail.libsonnet') +
 (import 'k8s/cpu-namespace-overview.libsonnet') +
+(import 'k8s/overview-dashboards.libsonnet') +
 
 // Kube system dashboards
 (import 'k8s/controller-manager.libsonnet') +

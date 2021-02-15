@@ -45,7 +45,7 @@ local graphPanel = grafana.graphPanel;
           min=0,
           max=100,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.k8s.mostUtilizedPVC.panel.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.L1.k8s.mostUtilizedPVC.panel.thresholds))
         .addTarget(prometheus.target(expr));
 
       local volSpaceUsageGraphPanel =
