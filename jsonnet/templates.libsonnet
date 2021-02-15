@@ -1061,6 +1061,31 @@
           thresholds: thresholds,
         },
       },
+      nginxIngressCertificateExpiry: {
+        local expr = '(min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster|", %(job)s}) by (host) - time()) / 24 / 60 / 60)',
+        local thresholds = {
+          operator: '<',
+          warning: 8,
+          critical: 0,
+          lowest: -999999999,  // invalid range is always from minus infinity to 'lowest' thredhold
+        },
+        default: false,
+        panel: {
+          expr: '%s OR on() vector(-1000000000)' % expr,
+          thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: -1 }],
+          gridPos: {
+            w: 4,
+          },
+        },
+        alert: {
+          name: '%(prefix)sNginxIngressCertificateExpiry',
+          message: '%(prefix)s {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf "%%.2f" $value }} days',
+          expr: expr % { job: 'job=~".+"' },
+          link: '%s?var-job={{ $labels.job }}' % $.defaultConfig.grafanaDashboards.ids.nginxIngress,
+          thresholds: thresholds,
+        },
+      },
       nginxVts: {
         local expr = '(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
         local thresholds = {
