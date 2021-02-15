@@ -14,32 +14,34 @@
 /* K8s prometheus rules */
 
 {
-  prometheusRules+:: {
-    'k8s.rules': {
-      local alerts = std.set(
-        std.flattenArrays([
-          $.getTemplateAlerts($._config.templates.k8s, cluster)
-          for cluster in $._config.clusterMonitoring.clusters
-        ]), function(o) o.name
-      ),
-      groups: [
-        $.newRuleGroup('k8s.rules')
-        .addRules(
-          std.flattenArrays(
-            [
-              $.newAlertPair(
-                name=alert.name,
-                message=alert.message,
-                expr=alert.expr,
-                thresholds=alert.thresholds,
-                link=alert.link,
-                customLables=alert.customLables,
-              )
-              for alert in alerts
-            ]
-          )
+  prometheusRules+::
+    if $.isClusterMonitoring() then {
+      'k8s.rules': {
+        local alerts = std.set(
+          std.flattenArrays([
+            $.getTemplateAlerts($._config.templates.L1.k8s, cluster)
+            for cluster in $._config.clusterMonitoring.clusters
+          ]), function(o) o.name
         ),
-      ],
-    },
-  },
+        groups: [
+          $.newRuleGroup('k8s.rules')
+          .addRules(
+            std.flattenArrays(
+              [
+                $.newAlertPair(
+                  name=alert.name,
+                  message=alert.message,
+                  expr=alert.expr,
+                  thresholds=alert.thresholds,
+                  link=alert.link,
+                  customLables=alert.customLables,
+                )
+                for alert in alerts
+              ]
+            )
+          ),
+        ],
+      },
+    }
+    else {},
 }
