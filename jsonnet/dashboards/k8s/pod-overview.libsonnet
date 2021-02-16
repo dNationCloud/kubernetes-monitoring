@@ -42,6 +42,30 @@ local row = grafana.row;
           hide='variable',
         );
 
+      local namespaceTemplate =
+        template.new(
+          name='namespace',
+          label='Namespace',
+          query='label_values(kube_pod_info{cluster=~"$cluster"}, namespace)',
+          datasource='$datasource',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local podTemplate =
+        template.new(
+          name='pod',
+          label='Pod',
+          datasource='$datasource',
+          query='label_values(kube_pod_info{cluster=~"$cluster", namespace=~"$namespace"}, pod)',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local valueMaps = [
         { text: 'Running', value: 1 },
@@ -65,11 +89,11 @@ local row = grafana.row;
         )
         .addTarget(
           prometheus.target(format='table', instant=true, expr=|||
-            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Running"} * 1) +
-            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Succeeded"} * 2) +
-            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Unknown"} * 3) +
-            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Failed"} * 4) +
-            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", phase="Pending"} * 5)
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", namespace=~"$namespace", phase="Running"} * 1) +
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", namespace=~"$namespace", phase="Succeeded"} * 2) +
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", namespace=~"$namespace", phase="Unknown"} * 3) +
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", namespace=~"$namespace", phase="Failed"} * 4) +
+            sum by (namespace, pod) (kube_pod_status_phase{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", phase="Pending"} * 5)
           |||)
         );
 
@@ -82,7 +106,7 @@ local row = grafana.row;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.podOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, podTemplate])
       .addPanels(
         [
           row.new('Pods') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

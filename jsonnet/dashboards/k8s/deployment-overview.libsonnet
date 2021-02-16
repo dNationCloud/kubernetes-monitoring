@@ -42,6 +42,30 @@ local table = grafana.tablePanel;
           hide='variable',
         );
 
+      local namespaceTemplate =
+        template.new(
+          name='namespace',
+          label='Namespace',
+          query='label_values(kube_deployment_status_replicas{cluster=~"$cluster"}, namespace)',
+          datasource='$datasource',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local deploymentTemplate =
+        template.new(
+          name='deployment',
+          label='Deployment',
+          query='label_values(kube_deployment_status_replicas{cluster=~"$cluster", namespace=~"$namespace"}, deployment)',
+          datasource='$datasource',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local thresholds = [1, 1];
       local rangeMaps = [
@@ -64,8 +88,8 @@ local table = grafana.tablePanel;
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster"}) - sum by (deployment, namespace) (kube_deployment_status_replicas_updated{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster"}) - sum by (deployment, namespace) (kube_deployment_status_replicas_available{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment"}) - sum by (deployment, namespace) (kube_deployment_status_replicas_updated{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment"}) - sum by (deployment, namespace) (kube_deployment_status_replicas_available{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment"})'),
           ]
         );
 
@@ -78,7 +102,7 @@ local table = grafana.tablePanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.deploymentOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, deploymentTemplate])
       .addPanels(
         [
           row.new('Deployments') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

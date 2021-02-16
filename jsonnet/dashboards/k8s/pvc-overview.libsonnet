@@ -42,6 +42,30 @@ local table = grafana.tablePanel;
           hide='variable',
         );
 
+      local namespaceTemplate =
+        template.new(
+          name='namespace',
+          label='Namespace',
+          query='label_values(kube_persistentvolumeclaim_info{cluster=~"$cluster"}, namespace)',
+          datasource='$datasource',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local pvcTemplate =
+        template.new(
+          name='pvc',
+          label='PVC',
+          query='label_values(kube_persistentvolumeclaim_info{cluster=~"$cluster", namespace=~"$namespace"}, persistentvolumeclaim)',
+          datasource='$datasource',
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          multi=true,
+          includeAll=true,
+        );
+
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local valueMaps = [
         { text: 'Bound', value: 1 },
@@ -65,11 +89,11 @@ local table = grafana.tablePanel;
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (persistentvolumeclaim, namespace) (((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster"}) * 100)'),
+            prometheus.target(format='table', instant=true, expr='sum by (persistentvolumeclaim, namespace) (((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc"}) * 100)'),
             prometheus.target(format='table', instant=true, expr=|||
-              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Bound"} * 1) +
-              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Lost"} * 2) +
-              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", phase="Pending"} * 3)
+              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc", phase="Bound"} * 1) +
+              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc", phase="Lost"} * 2) +
+              sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~"$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc", phase="Pending"} * 3)
             |||),
           ]
         );
@@ -83,7 +107,7 @@ local table = grafana.tablePanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.pvcOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, pvcTemplate])
       .addPanels(
         [
           row.new('Persistent Volumes') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
