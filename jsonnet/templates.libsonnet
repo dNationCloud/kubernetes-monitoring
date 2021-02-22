@@ -45,6 +45,7 @@
         colorMode: 'background',
         graphMode: 'area',
         unit: 'percent',
+        decimals: null,
         dataLinks: [],
         mappings: [],
         expr: '',
@@ -1062,18 +1063,23 @@
         },
       },
       nginxIngressCertificateExpiry: {
-        local expr = '(min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster|", %(job)s}) by (host) - time()) / 24 / 60 / 60)',
+        local expr = 'min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster|", %(job)s}) by (host) - time())',
+        local minusInfinity = -$.defaultConfig.grafanaDashboards.constants.infinity,
+        local invalid = minusInfinity - 1,
         local thresholds = {
           operator: '<',
-          warning: 8,
+          warning: 8 * 24 * 60 * 60,
           critical: 0,
-          lowest: -999999999,  // invalid range is always from minus infinity to 'lowest' thredhold
+          lowest: minusInfinity,  // invalid range is always from minus infinity to 'lowest' thredhold
         },
         default: false,
         panel: {
-          expr: '%s OR on() vector(-1000000000)' % expr,
+          expr: '%s OR on() vector(%s)' % [expr, invalid],
           thresholds: thresholds,
-          mappings: [{ text: '-', type: 1, value: -1 }],
+          mappings: [{ text: '-', type: 1, value: invalid }],
+          unit: 's',
+          decimals: 0,
+          dataLinks: [{ title: 'Detail', url: '/d/%s?var-job=%(job)s&%s' % [$.defaultConfig.grafanaDashboards.ids.nginxIngress, '%(job)s', $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
           gridPos: {
             w: 4,
           },
@@ -1081,9 +1087,12 @@
         alert: {
           name: '%(prefix)sNginxIngressCertificateExpiry',
           message: '%(prefix)s {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf "%%.2f" $value }} days',
-          expr: expr % { job: 'job=~".+"' },
+          expr: '%s / 60 / 60 / 24' % (expr % { job: 'job=~".+"' }),
           link: '%s?var-job={{ $labels.job }}' % $.defaultConfig.grafanaDashboards.ids.nginxIngress,
-          thresholds: thresholds,
+          thresholds: thresholds {
+            warning: thresholds.warning / 60 / 60 / 24,
+            critical: thresholds.critical / 60 / 60 / 24,
+          },
         },
       },
       nginxVts: {
