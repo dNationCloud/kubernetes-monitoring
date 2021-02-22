@@ -42,6 +42,30 @@ local table = grafana.tablePanel;
           hide='variable',
         );
 
+      local namespaceTemplate =
+        template.new(
+          name='namespace',
+          label='Namespace',
+          datasource='$datasource',
+          query='label_values(kube_job_info{cluster=~"$cluster"}, namespace)',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local jobTemplate =
+        template.new(
+          name='job',
+          label='Job',
+          datasource='$datasource',
+          query='label_values(kube_job_info{cluster=~"$cluster", namespace=~"$namespace"}, job)',
+          sort=$._config.grafanaDashboards.templateSort,
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          includeAll=true,
+          multi=true,
+        );
+
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local valueMaps = [
         { text: 'Succeeded', value: 1 },
@@ -65,9 +89,9 @@ local table = grafana.tablePanel;
         .addTargets(
           [
             prometheus.target(format='table', instant=true, expr=|||
-              sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster"} * 1) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"} +
-              sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster"} * 2) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"} +
-              sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster"} * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster"}
+              sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} * 1) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} +
+              sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} * 2) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} +
+              sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"}
             |||),
           ]
         );
@@ -81,7 +105,7 @@ local table = grafana.tablePanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.jobOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, jobTemplate])
       .addPanels(
         [
           row.new('Jobs') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
