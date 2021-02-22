@@ -110,13 +110,15 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
+              unit=tpl.panel.unit,
+              decimals=tpl.panel.decimals,
             )
             .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { job: std.join('|', $.getAlertJobs(host)), groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings } })
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
             .addMappings(tpl.panel.mappings)
             .addDataLinks(
               if std.length(tpl.panel.dataLinks) > 0 then
-                tpl.panel.dataLinks
+                tpl.panel.dataLinks % { job: host.jobName }
               else
                 [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] }]
             )
@@ -161,6 +163,8 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
+              unit=tpl.panel.unit,
+              decimals=tpl.panel.decimals,
             )
             .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings } })
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
