@@ -55,7 +55,7 @@ local getNextIndex(arrays) =
           name='cluster',
           label='Cluster',
           datasource='$datasource',
-          query='label_values(kube_pod_container_info{cluster=~"$cluster"}, cluster)',
+          query='label_values(kube_pod_container_info, cluster)',
           sort=$._config.grafanaDashboards.templateSort,
           refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
@@ -78,7 +78,7 @@ local getNextIndex(arrays) =
           name='pod',
           label='Pod',
           datasource='$datasource',
-          query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace", container=~"$container"}, pod)',
+          query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace"}, pod)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -90,7 +90,7 @@ local getNextIndex(arrays) =
           name='container',
           label='Container',
           datasource='$datasource',
-          query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace"}, container)',
+          query='label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, container)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -115,7 +115,7 @@ local getNextIndex(arrays) =
       local valueMaps = std.flattenArrays([valueMapsOk, valueMapsWaitingErrors, valueMapsTerminatedErrors]);
 
       local okQueries = [
-        'sum by (container, namespace, pod) (kube_pod_container_status_terminated_reason{cluster=~"$cluster", pod=~"$pod", reason="Completed"} * 1)',
+        'sum by (container, namespace, pod) (kube_pod_container_status_terminated_reason{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container", reason="Completed"} * 1)',
         'sum by (container, namespace, pod) (kube_pod_container_status_running{cluster=~"$cluster"} * 2)',
         'sum by (container, namespace, pod) (kube_pod_container_status_waiting_reason{cluster=~"$cluster", reason="ContainerCreating"} * 3)',
       ];
@@ -141,7 +141,7 @@ local getNextIndex(arrays) =
         .addTargets(
           [
             prometheus.target(format='table', instant=true, expr=statusExpr),
-            prometheus.target(format='table', instant=true, expr='sum by (container, namespace, pod) (kube_pod_container_status_restarts_total{cluster=~"$cluster", pod=~"$pod"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (container, namespace, pod) (kube_pod_container_status_restarts_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"})'),
           ]
         );
 
@@ -154,7 +154,7 @@ local getNextIndex(arrays) =
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.containerOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, containerTemplate, podTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, podTemplate, containerTemplate])
       .addPanels(
         [
           row.new('Containers') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

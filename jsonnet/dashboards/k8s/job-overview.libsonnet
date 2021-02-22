@@ -47,7 +47,7 @@ local table = grafana.tablePanel;
           name='namespace',
           label='Namespace',
           datasource='$datasource',
-          query='label_values(kube_job_info{cluster=~"$cluster", job=~"$job"}, namespace)',
+          query='label_values(kube_job_info{cluster=~"$cluster"}, namespace)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -59,7 +59,7 @@ local table = grafana.tablePanel;
           name='job',
           label='Job',
           datasource='$datasource',
-          query='label_values(kube_job_info{cluster=~"$cluster"}, job)',
+          query='label_values(kube_job_info{cluster=~"$cluster", namespace=~"$namespace"}, job)',
           sort=$._config.grafanaDashboards.templateSort,
           refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
@@ -105,7 +105,7 @@ local table = grafana.tablePanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.jobOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate, jobTemplate, namespaceTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, jobTemplate])
       .addPanels(
         [
           row.new('Jobs') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
