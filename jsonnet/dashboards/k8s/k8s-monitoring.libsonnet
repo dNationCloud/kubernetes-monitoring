@@ -25,27 +25,12 @@ local text = grafana.text;
 {
   grafanaDashboards+::
     local clusterDashboard(clusterUid, dashboardName, clusterTemplates, clusterApps=[]) = {
-      local containerLink =
-        link.dashboards(
-          title=if $._config.grafanaDashboards.isLoki then 'Logs Container' else 'Container Detail',
-          tags=[],
-          icon='dashboard',
-          url='/d/%s' % $._config.grafanaDashboards.ids.containerDetail,
-          type='link',
-        ),
       local explorerLink =
         link.dashboards(
-          title='Logs Explorer',
+          title='Logs',
           tags=[],
           icon='doc',
           url='/explore?orgId=1&left=%5B%22now-7d%22,%22now%22,%22$datasource_logs%22,%7B%22expr%22:%22%7Bnamespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
-          type='link',
-        ),
-      local monitoringLink =
-        link.dashboards(
-          title='Monitoring',
-          tags=[],
-          url='/d/%s' % $._config.grafanaDashboards.ids.monitoring,
           type='link',
         ),
       local dNationLink =
@@ -89,6 +74,7 @@ local text = grafana.text;
           colorMode=tpl.panel.colorMode,
           graphMode=tpl.panel.graphMode,
           unit=tpl.panel.unit,
+          decimals=tpl.panel.decimals,
         )
         .addTarget(prometheus.target(tpl.panel.expr))
         .addMappings(tpl.panel.mappings)
@@ -125,12 +111,18 @@ local text = grafana.text;
           colorMode=tpl.panel.colorMode,
           graphMode=tpl.panel.graphMode,
           unit=tpl.panel.unit,
+          decimals=tpl.panel.decimals,
         )
         .addTarget(prometheus.target(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName }))
         .addMappings(tpl.panel.mappings)
         .addDataLinks(
           if std.length(tpl.panel.dataLinks) > 0 then
-            tpl.panel.dataLinks
+            [
+              dataLink {
+                url: dataLink.url % { job: app.jobName },
+              }
+              for dataLink in tpl.panel.dataLinks
+            ]
           else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
             [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
           else
@@ -201,12 +193,8 @@ local text = grafana.text;
           current=null,
           hide='variable',
         ),
-      local links = [
-                      containerLink,
-                    ]
-                    + (if $._config.grafanaDashboards.isLoki then [explorerLink] else [])
+      local links = (if $._config.grafanaDashboards.isLoki then [explorerLink] else [])
                     + [
-                      monitoringLink,
                       dNationLink,
                     ],
       local varTemplates = [

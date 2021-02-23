@@ -32,9 +32,9 @@ local statPanel = grafana.statPanel;
         .addThresholds($.grafanaThresholds($._config.templates.k8s.etcdHealth.panel.thresholds))
         .addTarget(prometheus.target($._config.templates.k8s.etcdHealth.panel.expr));
 
-      local rpcRate =
+      local grpcRate =
         graphPanel.new(
-          title='RPC Rate',
+          title='GRPC Rate',
           datasource='$datasource',
           linewidth=2,
           format='reqps',
@@ -43,8 +43,8 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(grpc_server_started_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_type="unary"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='RPC_Rate'),
-            prometheus.target('sum(rate(grpc_server_handled_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_type="unary", grpc_code!="OK"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='RPC Failed Rate'),
+            prometheus.target('sum(rate(grpc_server_started_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_type="unary"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='GRPC_Rate'),
+            prometheus.target('sum(rate(grpc_server_handled_total{cluster=~"$cluster", %(etcd)s, instance=~"$instance", grpc_type="unary", grpc_code!="OK"}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='GRPC Failed Rate'),
           ]
         );
 
@@ -193,7 +193,7 @@ local statPanel = grafana.statPanel;
       .addPanels(
         [
           health { gridPos: { h: 7, w: 6, x: 0, y: 0 } },
-          rpcRate { gridPos: { h: 7, w: 10, x: 6, y: 0 } },
+          grpcRate { gridPos: { h: 7, w: 10, x: 6, y: 0 } },
           activeStreams { gridPos: { h: 7, w: 8, x: 16, y: 0 } },
           dbSize { gridPos: { h: 7, w: 8, x: 0, y: 7 } },
           diskSyncDuration { gridPos: { h: 7, w: 8, x: 8, y: 7 } },

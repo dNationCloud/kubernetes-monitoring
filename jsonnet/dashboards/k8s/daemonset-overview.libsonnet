@@ -42,6 +42,30 @@ local table = grafana.tablePanel;
           hide='variable',
         );
 
+      local namespaceTemplate =
+        template.new(
+          name='namespace',
+          label='Namespace',
+          query='label_values(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}, namespace)',
+          datasource='$datasource',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
+      local daemonSetTemplate =
+        template.new(
+          name='daemonset',
+          label='DaemonSet',
+          query='label_values(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster", namespace=~"$namespace"}, daemonset)',
+          datasource='$datasource',
+          refresh=$._config.grafanaDashboards.templateRefresh,
+          sort=$._config.grafanaDashboards.templateSort,
+          includeAll=true,
+          multi=true,
+        );
+
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local thresholds = [1, 1];
       local rangeMaps = [
@@ -66,10 +90,10 @@ local table = grafana.tablePanel;
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_number_misscheduled{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_updated_number_scheduled{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_status_number_available{cluster=~"$cluster"})'),
-            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}) - sum by (daemonset, namespace) (kube_daemonset_status_number_ready{cluster=~"$cluster"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_number_misscheduled{cluster=~"$cluster", namespace=~"$namespace", daemonset=~"$daemonset"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster", namespace=~"$namespace", daemonset=~"$daemonset"}) - sum by (daemonset, namespace) (kube_daemonset_updated_number_scheduled{cluster=~"$cluster", namespace=~"$namespace", daemonset=~"$daemonset"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster", namespace=~"$namespace", daemonset=~"$daemonset"}) - sum by (daemonset, namespace) (kube_daemonset_status_number_available{cluster=~"$cluster", namespace=~"$namespace", daemonset=~"$daemonset"})'),
+            prometheus.target(format='table', instant=true, expr='sum by (daemonset, namespace) (kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster", namespace=~"$namespace", daemonset=~"$daemonset"}) - sum by (daemonset, namespace) (kube_daemonset_status_number_ready{cluster=~"$cluster", namespace=~"$namespace", daemonset=~"$daemonset"})'),
           ]
         );
 
@@ -82,7 +106,7 @@ local table = grafana.tablePanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.daemonSetOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate])
+      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, daemonSetTemplate])
       .addPanels(
         [
           row.new('DaemonSets') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

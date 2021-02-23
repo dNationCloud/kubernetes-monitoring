@@ -71,6 +71,7 @@ local text = grafana.text;
           colorMode=tpl.panel.colorMode,
           graphMode=tpl.panel.graphMode,
           unit=tpl.panel.unit,
+          decimals=tpl.panel.decimals,
         )
         .addTarget(prometheus.target(tpl.panel.expr))
         .addMappings(tpl.panel.mappings)
@@ -107,12 +108,18 @@ local text = grafana.text;
           colorMode=tpl.panel.colorMode,
           graphMode=tpl.panel.graphMode,
           unit=tpl.panel.unit,
+          decimals=tpl.panel.decimals,
         )
         .addTarget(prometheus.target(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName }))
         .addMappings(tpl.panel.mappings)
         .addDataLinks(
           if std.length(tpl.panel.dataLinks) > 0 then
-            tpl.panel.dataLinks
+            [
+              dataLink {
+                url: dataLink.url % { job: app.jobName },
+              }
+              for dataLink in tpl.panel.dataLinks
+            ]
           else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
             [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
           else

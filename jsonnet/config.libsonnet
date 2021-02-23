@@ -129,6 +129,7 @@
       },
       constants: {
         infinity: 999999999,
+        maxWarnings: 10000,
       },
     },
     templates: $.defaultTemplate,

@@ -17,7 +17,7 @@
   defaultTemplate:: {
     local defaultTemplate = self,
 
-    getTemlatesApp(group, templates):: {
+    getTemplatesApp(group, templates):: {
       local alert =
         if std.objectHas(templates[template], 'alert') then
           {
@@ -45,6 +45,7 @@
         colorMode: 'background',
         graphMode: 'area',
         unit: 'percent',
+        decimals: null,
         dataLinks: [],
         mappings: [],
         expr: '',
@@ -775,8 +776,6 @@
         },
       },
     },
-    k8sApps: defaultTemplate.getTemlatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
-    hostApps: defaultTemplate.getTemlatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
     host: {
       local hostCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupHost },
 
@@ -1063,6 +1062,39 @@
           thresholds: thresholds,
         },
       },
+      nginxIngressCertificateExpiry: {
+        local expr = 'min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster|", %(job)s}) by (host) - time())',
+        local minusInfinity = -$.defaultConfig.grafanaDashboards.constants.infinity,
+        local invalid = minusInfinity - 1,
+        local thresholds = {
+          operator: '<',
+          warning: 8 * 24 * 60 * 60,
+          critical: 0,
+          lowest: minusInfinity,  // invalid range is always from minus infinity to 'lowest' thredhold
+        },
+        default: false,
+        panel: {
+          expr: '%s OR on() vector(%s)' % [expr, invalid],
+          thresholds: thresholds,
+          mappings: [{ text: '-', type: 1, value: invalid }],
+          unit: 's',
+          decimals: 0,
+          dataLinks: [{ title: 'Detail', url: '/d/%s?var-job=%(job)s&%s' % [$.defaultConfig.grafanaDashboards.ids.nginxIngress, '%(job)s', $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
+          gridPos: {
+            w: 4,
+          },
+        },
+        alert: {
+          name: '%(prefix)sNginxIngressCertificateExpiry',
+          message: '%(prefix)s {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf "%%.2f" $value }} days',
+          expr: '%s / 60 / 60 / 24' % (expr % { job: 'job=~".+"' }),
+          link: '%s?var-job={{ $labels.job }}' % $.defaultConfig.grafanaDashboards.ids.nginxIngress,
+          thresholds: thresholds {
+            warning: thresholds.warning / 60 / 60 / 24,
+            critical: thresholds.critical / 60 / 60 / 24,
+          },
+        },
+      },
       nginxVts: {
         local expr = '(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
         local thresholds = {
@@ -1207,5 +1239,60 @@
         },
       },
     },
+    layerL0: {
+      local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
+      k8s: {
+        main: {
+          local expr = 'sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local thresholds = {
+            operator: '>=',
+            warning: 1,
+            critical: maxWarnings,
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
+              { from: 1, text: 'Warning', to: maxWarnings, type: 2, value: '' },
+              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+            ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          },
+        },
+      },
+      host: {
+        main: {
+          local expr = 'sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="warning", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="critical", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local thresholds = {
+            operator: '>=',
+            warning: 1,
+            critical: maxWarnings,
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
+              { from: 1, text: 'Warning', to: maxWarnings, type: 2, value: '' },
+              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+            ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          },
+        },
+      },
+    },
+    k8sApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
+    hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
   },
 }

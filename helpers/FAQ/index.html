@@ -500,6 +500,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-l2-table-item-has-different-background-color-as-corresponding-l1-stat-panel" class="md-nav__link">
+    Why L2 table item has different background color as corresponding L1 stat panel?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kubernetes-monitoring-shows-down-state-for-some-control-plane-components-are-control-plane-components-working-correctly" class="md-nav__link">
     Kubernetes Monitoring shows DOWN state for some control plane components. Are control plane components working correctly?
   </a>
@@ -795,6 +802,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-l2-table-item-has-different-background-color-as-corresponding-l1-stat-panel" class="md-nav__link">
+    Why L2 table item has different background color as corresponding L1 stat panel?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kubernetes-monitoring-shows-down-state-for-some-control-plane-components-are-control-plane-components-working-correctly" class="md-nav__link">
     Kubernetes Monitoring shows DOWN state for some control plane components. Are control plane components working correctly?
   </a>
@@ -1014,7 +1028,7 @@ To enable it just create application monitoring definition as follows:
     <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app-example</span>
       <span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Example of App Monitoring</span>
       <span class="nt">jobName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flask-app</span>  <span class="c1"># The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `serviceMonitor` section</span>
-      <span class="nt">template</span><span class="p">:</span>
+      <span class="nt">templates</span><span class="p">:</span>
         <span class="nt">javaActuator</span><span class="p">:</span>  <span class="c1"># Application Exporter template</span>
           <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
       <span class="nt">serviceMonitor</span><span class="p">:</span>
@@ -1125,6 +1139,16 @@ override some of these parameters see the <code>chart/templates/hosts</code> dir
 <div class="highlight"><pre><span></span><code>helm upgrade <span class="o">[</span>RELEASE<span class="o">]</span> <span class="o">[</span>CHART<span class="o">]</span> -f apps.yaml
 </code></pre></div>
 - If you want to customize the default application template see the <a href="#how-to-customize-my-host-monitoring">How to customize my host monitoring?</a> section.</p>
+<h2 id="why-l2-table-item-has-different-background-color-as-corresponding-l1-stat-panel">Why L2 table item has different background color as corresponding L1 stat panel?</h2>
+<p>If you <a href="#how-to-customize-my-k8s-monitoring">customized your k8s monitoring</a>, you can see that some
+table items on L2 layer dashboard may have different background color as corresponding L1 stat panel.</p>
+<p>Example:
+- Define custom L1 PVC utilization panel with custom thresholds for ELK PVCs
+<img alt="l1_k8s_elk_pvc.png" src="../../docs/images/l1_k8s_elk_pvc.png" />
+- If you drill down, you can see that corresponding PVC capacity is in <em>Critical</em> state (orange background color)
+<img alt="l2_k8s_elk_pvc.png" src="../../docs/images/l2_k8s_elk_pvc.png" /></p>
+<p>Currently only first layer is customizable, which caused this unexpected behaviour.
+Templating of other layers is under development and is planned in <a href="https://github.com/issues?q=is%3Aopen+is%3Aissue+author%3Amatofeder+archived%3Afalse+label%3Av1.1.x">v1.1.x release</a>.</p>
 <h2 id="kubernetes-monitoring-shows-down-state-for-some-control-plane-components-are-control-plane-components-working-correctly">Kubernetes Monitoring shows <code>DOWN</code> state for some control plane components. Are control plane components working correctly?</h2>
 <p>Control plane components work probably well, but their metrics server might be disabled or misconfigured.
 You should want  to check address bindings of control plane components' metrics as follows:</p>
