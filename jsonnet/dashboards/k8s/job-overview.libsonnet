@@ -56,10 +56,10 @@ local table = grafana.tablePanel;
 
       local jobTemplate =
         template.new(
-          name='job',
-          label='Job',
+          name='job_name',
+          label='Job name',
           datasource='$datasource',
-          query='label_values(kube_job_info{cluster=~"$cluster", namespace=~"$namespace"}, job)',
+          query='label_values(kube_job_info{cluster=~"$cluster", namespace=~"$namespace"}, job_name)',
           sort=$._config.grafanaDashboards.templateSort,
           refresh=$._config.grafanaDashboards.templateRefresh,
           includeAll=true,
@@ -89,9 +89,9 @@ local table = grafana.tablePanel;
         .addTargets(
           [
             prometheus.target(format='table', instant=true, expr=|||
-              sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} * 1) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} +
-              sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} * 2) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} +
-              sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"}
+              sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} * 1) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} +
+              sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} * 2) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} +
+              sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"}
             |||),
           ]
         );
