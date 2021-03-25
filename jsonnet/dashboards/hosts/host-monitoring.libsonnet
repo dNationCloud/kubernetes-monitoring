@@ -216,7 +216,7 @@ local text = grafana.text;
         ['host-monitoring-%s' % host.name]:
           hostDashboard(
             $.getCustomUid([$._config.grafanaDashboards.ids.hostMonitoring, host.name]),
-            $.getCustomName(['Host Monitoring' ,host.name]),
+            $.getCustomName(['Host Monitoring', host.name]),
             $.getAlertJobs(host),
             $.getTemplates($._config.templates.L1.host, host),
             $.getApps($._config.templates.L1.hostApps, host)
