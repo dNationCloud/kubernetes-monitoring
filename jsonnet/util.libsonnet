@@ -459,7 +459,7 @@
     else
       {},
 
-  createOverviewDashboards(jsonName, dashboardFunction, dashboardUid, dashboardName, templateName, rowName, grafanaTemplates=[])::
+  createOverviewDashboards(jsonName, dashboardFunction, dashboardUid, dashboardName, templateName, rowName, customizableGrafanaTemplateFunction=null, grafanaTemplates=[])::
     /**
      * Create custom overview dashboard for each cluster and custom template.
      * And/or default dashboard if there is at least 1 cluster with default template.
@@ -474,6 +474,12 @@
      * @param grafanaTemplates
      * @return object with dashboards.
      */
+    local getCustomizableGrafanaTemplate(tpl, grafanaTemplateFunc) =
+      if grafanaTemplateFunc != null && std.objectHas(tpl, 'dashboardInfo') && std.objectHas(tpl.dashboardInfo, 'grafanaTemplateQuery') then
+        [grafanaTemplateFunc(tpl.dashboardInfo.grafanaTemplateQuery)]
+      else
+        [];
+
     local templateGroup = utils.dashboardTemplateMapping()[dashboardUid];
     if utils.isClusterMonitoring() then
       {
@@ -483,7 +489,7 @@
             dashboardName=utils.getCustomName([dashboardName, cluster.name, tpl.templateName]),
             tableTemplate=tpl,
             rowName=rowName,
-            grafanaTemplates=grafanaTemplates,
+            grafanaTemplates=grafanaTemplates + getCustomizableGrafanaTemplate(tpl, customizableGrafanaTemplateFunction),
           ).dashboard
         for cluster in $._config.clusterMonitoring.clusters
         for tpl in utils.getSpecificTemplates(utils.getTemplates(templateGroup, cluster), templateName)
@@ -492,12 +498,13 @@
       if utils.isAnyDefaultTemplate($._config.clusterMonitoring.clusters, templateName) then
         {
           [jsonName]:
+            local tpl = utils.getSpecificTemplate(utils.getTemplates(templateGroup), templateName);
             dashboardFunction(
               dashboardUid=dashboardUid,
               dashboardName=dashboardName,
-              tableTemplate=utils.getSpecificTemplate(utils.getTemplates(templateGroup), templateName),
+              tableTemplate=tpl,
               rowName=rowName,
-              grafanaTemplates=grafanaTemplates,
+              grafanaTemplates=grafanaTemplates + getCustomizableGrafanaTemplate(tpl, customizableGrafanaTemplateFunction),
             ).dashboard,
         }
       else

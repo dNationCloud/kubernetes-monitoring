@@ -11,7 +11,7 @@ local template = grafana.template;
       datasource='$datasource',
       refresh=$._config.grafanaDashboards.templateRefresh,
       sort=$._config.grafanaDashboards.templateSort,
-      hide=0,
+      hide='',
       includeAll=true,
       multi=true,
     )::
