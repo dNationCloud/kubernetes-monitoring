@@ -31,6 +31,7 @@ local table = grafana.tablePanel;
           description=templatePanel.description,
           styles=templatePanel.styles,
         )
+        .addTransformations(templatePanel.transformations)
         .addTargets(
           [
             prometheus.target(format='table', instant=true, expr=expr)
