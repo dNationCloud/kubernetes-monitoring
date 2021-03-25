@@ -326,9 +326,10 @@
             critical: 97,
             lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
           },
+          linkTo: ['pvcOverviewTable'],
           panel: {
             title: 'Most Utilized PVC',
-            dataLinks: [{ title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.pvcOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
+            dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: 'max(%s) OR on() vector(-1)' % expr,
             thresholds: thresholds,
             mappings: [{ text: '-', type: 1, value: -1 }],
@@ -353,7 +354,6 @@
           linkTo: [$.defaultConfig.grafanaDashboards.ids.apiServer],
           panel: {
             title: 'API Server',
-            //dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs, dashboard:: $.defaultConfig.grafanaDashboards.ids.apiServer }],
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: expr,
             thresholds: thresholds,
@@ -1335,6 +1335,9 @@
     L2: {
       pvcOverview: {
         pvcOverviewTable: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(kube_persistentvolumeclaim_info{cluster=~"$cluster", namespace=~"$namespace"}, persistentvolumeclaim)',
+          },
           base: 'baseTableTemplate',
           panel: {
             local colors = [$.defaultConfig.grafanaDashboards.color.green, $.defaultConfig.grafanaDashboards.color.orange, $.defaultConfig.grafanaDashboards.color.red],
@@ -1366,6 +1369,7 @@
       },
       nodeOverview: {
         nodeOverviewTable: {
+          dashboardInfo: {},
           base: 'baseTableTemplate',
           panel: {
             local colors = [$.defaultConfig.grafanaDashboards.color.green, $.defaultConfig.grafanaDashboards.color.orange, $.defaultConfig.grafanaDashboards.color.red],
@@ -1396,6 +1400,9 @@
       },
       statefulSetOverview: {
         statefulSetOverviewTable: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(kube_statefulset_status_replicas{cluster=~"$cluster", namespace=~"$namespace"}, statefulset)',
+          },
           base: 'baseTableTemplate',
           panel: {
             local colors = [$.defaultConfig.grafanaDashboards.color.green, $.defaultConfig.grafanaDashboards.color.orange, $.defaultConfig.grafanaDashboards.color.red],
@@ -1422,6 +1429,9 @@
       },
       podOverview: {
         podOverviewTable: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(kube_pod_info{cluster=~"$cluster", namespace=~"$namespace"}, pod)',
+          },
           base: 'baseTableTemplate',
           panel: {
             local colors = [$.defaultConfig.grafanaDashboards.color.green, $.defaultConfig.grafanaDashboards.color.orange, $.defaultConfig.grafanaDashboards.color.red],
@@ -1454,6 +1464,9 @@
       },
       deploymentOverview: {
         deploymentOverviewTable: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(kube_deployment_status_replicas{cluster=~"$cluster", namespace=~"$namespace"}, deployment)',
+          },
           base: 'baseTableTemplate',
           panel: {
             local colors = [$.defaultConfig.grafanaDashboards.color.green, $.defaultConfig.grafanaDashboards.color.orange, $.defaultConfig.grafanaDashboards.color.red],
@@ -1480,6 +1493,9 @@
       },
       daemonSetOverview: {
         daemonSetOverviewTable: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster", namespace=~"$namespace"}, daemonset)',
+          },
           base: 'baseTableTemplate',
           panel: {
             local colors = [$.defaultConfig.grafanaDashboards.color.green, $.defaultConfig.grafanaDashboards.color.orange, $.defaultConfig.grafanaDashboards.color.red],
@@ -1510,6 +1526,9 @@
       },
       containerOverview: {
         containerOverviewTable: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, container)',
+          },
           base: 'baseTableTemplate',
           panel: {
             local colors = [$.defaultConfig.grafanaDashboards.color.green, $.defaultConfig.grafanaDashboards.color.orange, $.defaultConfig.grafanaDashboards.color.red],
@@ -1557,6 +1576,9 @@
       },
       jobOverview: {
         jobOverviewTable: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(kube_job_info{cluster=~"$cluster", namespace=~"$namespace"}, job_name)',
+          },
           base: 'baseTableTemplate',
           panel: {
             local colors = [$.defaultConfig.grafanaDashboards.color.green, $.defaultConfig.grafanaDashboards.color.orange, $.defaultConfig.grafanaDashboards.color.red],
