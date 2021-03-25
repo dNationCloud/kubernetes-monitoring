@@ -70,6 +70,7 @@
           datasource: '$datasource',
           styles: [],
           sort: {},
+          transformations: [],
           expr: [],
           gridPos: {
             x: 0,
@@ -1484,6 +1485,28 @@
               { alias: 'Deployment', pattern: 'deployment', type: 'string' },
               { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
+            transformations: [
+              {
+                id: 'merge',
+                options: {},
+              },
+              {
+                id: 'organize',
+                options: {
+                  excludeByName: {
+                    Time: true,
+                  },
+                  indexByName: {
+                    Time: 0,
+                    'Value #A': 3,
+                    'Value #B': 4,
+                    deployment: 2,
+                    namespace: 1,
+                  },
+                  renameByName: {},
+                },
+              },
+            ],
             expr: [
               'sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment"}) - sum by (deployment, namespace) (kube_deployment_status_replicas_updated{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment"})',
               'sum by (deployment, namespace) (kube_deployment_status_replicas{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment"}) - sum by (deployment, namespace) (kube_deployment_status_replicas_available{cluster=~"$cluster", namespace=~"$namespace", deployment=~"$deployment"})',
@@ -1514,6 +1537,30 @@
               { alias: 'Ready', pattern: 'Value #D', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
               { alias: 'DaemonSet', pattern: 'daemonset', type: 'string' },
               { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+            ],
+            transformations: [
+              {
+                id: 'merge',
+                options: {},
+              },
+              {
+                id: 'organize',
+                options: {
+                  excludeByName: {
+                    Time: true,
+                  },
+                  indexByName: {
+                    Time: 0,
+                    'Value #A': 3,
+                    'Value #B': 4,
+                    'Value #C': 5,
+                    'Value #D': 6,
+                    daemonset: 2,
+                    namespace: 1,
+                  },
+                  renameByName: {},
+                },
+              },
             ],
             expr: [
               'sum by (daemonset, namespace) (kube_daemonset_status_number_misscheduled{cluster=~"$cluster", namespace=~"$namespace", daemonset=~"$daemonset"})',
@@ -1567,6 +1614,29 @@
               { alias: 'Namespace', pattern: 'namespace', type: 'string' },
               { alias: 'Pod', pattern: 'pod', type: 'string' },
             ],
+            transformations: [
+              {
+                id: 'merge',
+                options: {},
+              },
+              {
+                id: 'organize',
+                options: {
+                  excludeByName: {
+                    Time: false,
+                  },
+                  indexByName: {
+                    Time: 0,
+                    'Value #A': 4,
+                    'Value #B': 5,
+                    container: 3,
+                    namespace: 1,
+                    pod: 2,
+                  },
+                  renameByName: {},
+                },
+              },
+            ],
             expr: [
               statusExpr,
               'sum by (container, namespace, pod) (kube_pod_container_status_restarts_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"})',
@@ -1595,6 +1665,24 @@
               { alias: 'Job name', pattern: 'job_name', type: 'string' },
               { alias: 'Owner', pattern: 'owner_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_3}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
               { alias: 'Namespace', pattern: 'namespace', type: 'string' },
+            ],
+            transformations: [
+              {
+                id: 'organize',
+                options: {
+                  excludeByName: {
+                    Time: true,
+                  },
+                  indexByName: {
+                    Time: 0,
+                    Value: 4,
+                    job_name: 2,
+                    namespace: 1,
+                    owner_name: 3,
+                  },
+                  renameByName: {},
+                },
+              }
             ],
             expr: [
               |||
