@@ -158,8 +158,9 @@ local text = grafana.text;
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
           $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
+          $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~""}, job)', hide='variable'),
         ]
-        + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [],
+        + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate(hide='variable')] else [],
 
       dashboard:
         dashboard.new(
