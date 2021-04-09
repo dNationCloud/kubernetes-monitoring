@@ -16,7 +16,6 @@
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
-local template = grafana.template;
 local row = grafana.row;
 local table = grafana.tablePanel;
 local graphPanel = grafana.graphPanel;
@@ -24,87 +23,6 @@ local graphPanel = grafana.graphPanel;
 {
   grafanaDashboards+:: {
     'memory-namespace-overview':
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(kube_pod_info, cluster)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local instanceTemplate =
-        template.new(
-          name='instance',
-          label='Node',
-          query='label_values(kube_pod_info{cluster=~"$cluster"}, node)',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local namespaceTemplate =
-        template.new(
-          name='namespace',
-          label='Namespace',
-          datasource='$datasource',
-          query='label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance"}, namespace)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local workloadTemplate =
-        template.new(
-          name='workload',
-          label='Workload',
-          datasource='$datasource',
-          query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local workloadTypeTemplate =
-        template.new(
-          name='workload_type',
-          label='Workload Type',
-          datasource='$datasource',
-          query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, workload_type)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-          allValues='workaround',  // workaround for pods without workload type
-        );
-
-      local podTemplate =
-        template.new(
-          name='pod',
-          label='Pod',
-          datasource='$datasource',
-          query='label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-          hide='variable',
-        );
-
       local memUsageGraphPanel =
         graphPanel.new(
           title='Memory Usage',
@@ -154,7 +72,15 @@ local graphPanel = grafana.graphPanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.memoryNamespaceOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate, namespaceTemplate, workloadTypeTemplate, workloadTemplate, podTemplate])
+      .addTemplates([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(kube_pod_info, cluster)'),
+        $.grafanaTemplates.instanceTemplate('label_values(kube_pod_info{cluster=~"$cluster"}, node)', label='Node'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance"}, namespace)'),
+        $.grafanaTemplates.podTemplate('label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)', hide='variable'),
+        $.grafanaTemplates.workloadTypeTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)'),
+        $.grafanaTemplates.workloadTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)'),
+      ])
       .addPanels(
         [
           row.new('Memory Usage') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

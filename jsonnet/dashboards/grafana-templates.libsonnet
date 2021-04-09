@@ -1,3 +1,17 @@
+/*
+  Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+      http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Common grafana templates */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local template = grafana.template;
 
@@ -14,6 +28,7 @@ local template = grafana.template;
       hide='',
       includeAll=true,
       multi=true,
+      allValues=null,
     )::
       template.new(
         name=name,
@@ -25,6 +40,7 @@ local template = grafana.template;
         hide=hide,
         includeAll=includeAll,
         multi=multi,
+        allValues=allValues,
       ),
 
     local baseTemplate = $.grafanaTemplates.baseTemplate,
@@ -46,13 +62,29 @@ local template = grafana.template;
         hide='variable',
       ),
 
-    datasourceLogsTemplate()::
+    datasourceLogsTemplate(hide='')::
       template.datasource(
         name='datasource_logs',
         label='Logs datasource',
         query='loki',
         current=null,
-        hide='variable',
+        hide=hide,
+      ),
+
+    alertGroupTemplate(query)::
+      baseTemplate(
+        datasource='$alertmanager',
+        query=query,
+        name='alertgroup',
+        label='Alert Group',
+      ),
+
+    severityTemplate(query)::
+      baseTemplate(
+        datasource='$alertmanager',
+        query=query,
+        name='severity',
+        label='Severity',
       ),
 
     clusterTemplate(query)::
@@ -65,14 +97,11 @@ local template = grafana.template;
         multi=false,
       ),
 
-    instanceTemplate(query)::
+    instanceTemplate(query, label='Instance')::
       baseTemplate(
         name='instance',
-        label='Instance',
+        label=label,
         query=query,
-        hide='variable',
-        includeAll=false,
-        multi=false,
       ),
 
     namespaceTemplate(query)::
@@ -82,11 +111,12 @@ local template = grafana.template;
         query=query,
       ),
 
-    podTemplate(query)::
+    podTemplate(query, hide='')::
       baseTemplate(
         name='pod',
         label='Pod',
         query=query,
+        hide=hide,
       ),
 
     containerTemplate(query)::
@@ -110,11 +140,19 @@ local template = grafana.template;
         query=query,
       ),
 
-    jobTemplate(query)::
+    jobNameTemplate(query)::
       baseTemplate(
         name='job_name',
         label='Job name',
         query=query,
+      ),
+
+    jobTemplate(query, hide='')::
+      baseTemplate(
+        name='job',
+        label='Job',
+        query=query,
+        hide=hide,
       ),
 
     pvcTemplate(query)::
@@ -129,6 +167,35 @@ local template = grafana.template;
         name='statefulset',
         label='StatefulSet',
         query=query,
+      ),
+
+    workloadTemplate(query)::
+      baseTemplate(
+        name='workload',
+        label='Workload',
+        query=query,
+      ),
+
+    workloadTypeTemplate(query)::
+      baseTemplate(
+        name='workload_type',
+        label='Workload Type',
+        query=query,
+        allValues='workaround',  // workaround for pods without workload type
+      ),
+
+    searchTemplate()::
+      template.text(
+        name='search',
+        label='Logs Search',
+      ),
+
+    viewByTemplate(query)::
+      template.custom(
+        name='view',
+        label='View by',
+        query=query,
+        current='container',
       ),
   },
 }
