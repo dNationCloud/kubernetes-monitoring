@@ -15,44 +15,12 @@
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
-local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local row = grafana.row;
 
 {
   grafanaDashboards+:: {
     autoscaler:
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(node_uname_info, cluster)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local jobTemplate =
-        template.new(
-          name='job',
-          label='Job',
-          datasource='$datasource',
-          query='label_values(autoscaler_instances{cluster=~"$cluster"}, job)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          includeAll=true,
-          multi=true,
-        );
-
       local managedObjects =
         graphPanel.new(
           title='Autoscaler Managed Objects',
@@ -65,8 +33,6 @@ local row = grafana.row;
             prometheus.target('sum(autoscaler_groups{cluster=~"$cluster", job=~"$job"})', legendFormat='groups'),
           ],
         );
-
-      local templates = [datasourceTemplate, clusterTemplate, jobTemplate];
 
       local panels = [
         row.new('Autoscaler Managed Objects') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
@@ -82,7 +48,11 @@ local row = grafana.row;
         tags=$._config.grafanaDashboards.tags.k8sApps,
         uid=$._config.grafanaDashboards.ids.autoscaler,
       )
-      .addTemplates(templates)
+      .addTemplates([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+        $.grafanaTemplates.jobTemplate('label_values(autoscaler_instances{cluster=~"$cluster"}, job)'),
+      ])
       .addPanels(panels),
   },
 }

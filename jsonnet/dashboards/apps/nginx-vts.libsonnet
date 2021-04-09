@@ -14,9 +14,9 @@
 /* K8s nginx vts dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
+local template = grafana.template;
 local prometheus = grafana.prometheus;
 local loki = grafana.loki;
-local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local logPanel = grafana.logPanel;
 local row = grafana.row;
@@ -24,69 +24,6 @@ local row = grafana.row;
 {
   grafanaDashboards+:: {
     'nginx-vts':
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local datasourceLogsTemplate =
-        template.datasource(
-          name='datasource_logs',
-          label='Logs datasource',
-          query='loki',
-          current=null,
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(node_uname_info, cluster)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local jobTemplate =
-        template.new(
-          name='job',
-          label='Job',
-          datasource='$datasource',
-          query='label_values(nginx_server_bytes{cluster=~"$cluster"}, job)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          includeAll=true,
-          multi=true,
-        );
-
-      local namespaceTemplate =
-        template.new(
-          name='namespace',
-          label='Namespace',
-          datasource='$datasource',
-          query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job"}, namespace)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local podTemplate =
-        template.new(
-          name='pod',
-          label='Pod',
-          datasource='$datasource',
-          query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
       local hostTemplate =
         template.new(
           name='host',
@@ -109,12 +46,6 @@ local row = grafana.row;
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
-        );
-
-      local searchTemplate =
-        template.text(
-          name='search',
-          label='Logs Search',
         );
 
       local cpu =
@@ -273,19 +204,20 @@ local row = grafana.row;
         )
         .addTarget(prometheus.target('sum(nginx_upstream_responseMsec{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}) by (backend)', legendFormat='{{backend}}'));
 
-      local templates = [
-                          datasourceTemplate,
-                        ]
-                        + (if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [])
-                        + [
-                          clusterTemplate,
-                          jobTemplate,
-                          namespaceTemplate,
-                          podTemplate,
-                          hostTemplate,
-                          upstreamTemplate,
-                        ]
-                        + if $._config.grafanaDashboards.isLoki then [searchTemplate] else [];
+      local templates =
+        [
+          $.grafanaTemplates.datasourceTemplate(),
+        ]
+        + (if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [])
+        + [
+          $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+          $.grafanaTemplates.jobTemplate('label_values(nginx_server_bytes{cluster=~"$cluster"}, job)'),
+          $.grafanaTemplates.namespaceTemplate('label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job"}, namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
+          hostTemplate,
+          upstreamTemplate,
+        ]
+        + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.searchTemplate()] else [];
 
       local logsPanels = [
         row.new('Logs', collapse=true) { gridPos: { x: 0, y: 4, w: 24, h: 1 } }

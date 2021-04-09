@@ -17,7 +17,6 @@ local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
 local statPanel = grafana.statPanel;
-local template = grafana.template;
 local row = grafana.row;
 local link = grafana.link;
 local text = grafana.text;
@@ -32,6 +31,7 @@ local text = grafana.text;
           url='/d/%s' % $._config.grafanaDashboards.ids.monitoring,
           type='link',
         ),
+
       local dNationLink =
         link.dashboards(
           title='dNation - Making Cloud Easy',
@@ -41,6 +41,7 @@ local text = grafana.text;
           type='link',
           targetBlank=true,
         ),
+
       local alertPanel(title, expr) =
         statPanel.new(
           title=title,
@@ -49,6 +50,7 @@ local text = grafana.text;
           colorMode='background',
         )
         .addTarget({ type: 'single', expr: expr }),
+
       local criticalPanel =
         alertPanel(
           title='Critical',
@@ -56,6 +58,7 @@ local text = grafana.text;
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
+
       local warningPanel =
         alertPanel(
           title='Warning',
@@ -63,6 +66,7 @@ local text = grafana.text;
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
+
       local hostStatsPanels = [
         statPanel.new(
           title=tpl.panel.title,
@@ -88,6 +92,7 @@ local text = grafana.text;
         for tpl in hostTemplates
         if (std.objectHas(tpl, 'panel') && tpl.panel != {})
       ],
+
       local hostAppStatsPanels(index, app) = [
         local tpl = template.item;
         local tplIndex = template.index;
@@ -136,6 +141,7 @@ local text = grafana.text;
         }
         for template in $.zipWithIndex(app.templates)
       ],
+
       local applicationPanels(apps) =
         if std.length(apps) > 0 then
           [
@@ -147,69 +153,41 @@ local text = grafana.text;
           ])
         else
           [],
-      local datasourceTemplate =
-        template.datasource(
-          query='prometheus',
-          name='datasource',
-          current=null,
-          label='Datasource',
+
+      dashboard:
+        dashboard.new(
+          dashboardName,
+          editable=$._config.grafanaDashboards.editable,
+          graphTooltip=$._config.grafanaDashboards.tooltip,
+          refresh=$._config.grafanaDashboards.refresh,
+          time_from=$._config.grafanaDashboards.time_from,
+          tags=$._config.grafanaDashboards.tags.k8sHostsMain,
+          uid=hostUid,
+        )
+        .addLinks(
+          [
+            monitoringLink,
+            dNationLink,
+          ]
+        )
+        .addTemplates([
+          $.grafanaTemplates.datasourceTemplate(),
+          $.grafanaTemplates.alertManagerTemplate(),
+          $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
+          $.grafanaTemplates.jobTemplate('label_values(node_uname_info, job)', hide='variable'),
+        ])
+        .addPanels(
+          [
+            row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+            criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
+            warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
+            row.new('Host') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+            text.new('CPU') { gridPos: { x: 0, y: 5, w: 6, h: 1 } },
+            text.new('RAM') { gridPos: { x: 6, y: 5, w: 6, h: 1 } },
+            text.new('Disk') { gridPos: { x: 12, y: 5, w: 6, h: 1 } },
+            text.new('Network') { gridPos: { x: 18, y: 5, w: 6, h: 1 } },
+          ] + hostStatsPanels + applicationPanels(hostApps)
         ),
-      local jobTemplate =
-        template.new(
-          name='job',
-          query='label_values(node_uname_info, job)',
-          label='Job',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        ),
-      local alertManagerTemplate =
-        template.datasource(
-          query='camptocamp-prometheus-alertmanager-datasource',
-          name='alertmanager',
-          current=null,
-          label='AlertManager',
-          hide='variable',
-        ),
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(kube_node_info, cluster)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        ),
-      dashboard: dashboard.new(
-        dashboardName,
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sHostsMain,
-        uid=hostUid,
-      )
-                 .addLinks(
-        [
-          monitoringLink,
-          dNationLink,
-        ]
-      )
-                 .addTemplates([datasourceTemplate, jobTemplate, alertManagerTemplate, clusterTemplate])
-                 .addPanels(
-        [
-          row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-          criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
-          warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
-          row.new('Host') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
-          text.new('CPU') { gridPos: { x: 0, y: 5, w: 6, h: 1 } },
-          text.new('RAM') { gridPos: { x: 6, y: 5, w: 6, h: 1 } },
-          text.new('Disk') { gridPos: { x: 12, y: 5, w: 6, h: 1 } },
-          text.new('Network') { gridPos: { x: 18, y: 5, w: 6, h: 1 } },
-        ] + hostStatsPanels + applicationPanels(hostApps)
-      ),
     };
     if $.isHostMonitoring() then
       {

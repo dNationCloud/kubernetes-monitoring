@@ -15,75 +15,19 @@
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
-local template = grafana.template;
 local row = grafana.row;
 local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
     'alert-host-overview':
-      local datasourceTemplate =
-        template.datasource(
-          query='prometheus',
-          name='datasource',
-          current=null,
-          label='Datasource',
-        );
-
-      local alertManagerTemplate =
-        template.datasource(
-          query='camptocamp-prometheus-alertmanager-datasource',
-          name='alertmanager',
-          current=null,
-          label='AlertManager',
-          hide='variable',
-        );
-
-      local alertGroup =
-        template.new(
-          datasource='$alertmanager',
-          query='label_values(ALERTS, alertgroup)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          name='alertgroup',
-          label='Alert Group',
-          multi=true,
-          includeAll=true,
-        );
-
-      local severityTemplate =
-        template.new(
-          datasource='$alertmanager',
-          query='label_values(ALERTS, severity)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          name='severity',
-          label='Severity',
-          multi=true,
-          includeAll=true,
-        );
-
-      local jobTemplate =
-        template.new(
-          name='job',
-          query='label_values(up, job)',
-          label='Job',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-          multi=true,
-          includeAll=true,
-        );
-
-
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
-
       local valueMaps =
         [
           { text: 'Critical', value: 4 },
           { text: 'Warning', value: 2 },
           { text: 'Info', value: 1 },
         ];
-
       local thresholds = [2, 4];
 
       local alertsInfoTable =
@@ -111,7 +55,13 @@ local table = grafana.tablePanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.alertHostOverview,
       )
-      .addTemplates([datasourceTemplate, alertManagerTemplate, alertGroup, severityTemplate, jobTemplate])
+      .addTemplates([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.alertManagerTemplate(),
+        $.grafanaTemplates.alertGroupTemplate('label_values(ALERTS, alertgroup)'),
+        $.grafanaTemplates.severityTemplate('label_values(ALERTS, severity)'),
+        $.grafanaTemplates.jobTemplate('label_values(up, job)', hide='variable'),
+      ])
       .addPanels(
         [
           row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
