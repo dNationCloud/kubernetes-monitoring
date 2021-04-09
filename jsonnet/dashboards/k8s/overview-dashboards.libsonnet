@@ -83,7 +83,7 @@ local table = grafana.tablePanel;
       dashboardName='Job',
       rowName='Jobs',
       templateName='jobOverviewTable',
-      customizableGrafanaTemplateFunction=$.grafanaTemplates.jobTemplate,
+      customizableGrafanaTemplateFunction=$.grafanaTemplates.jobNameTemplate,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_job_info, cluster)'),
         $.grafanaTemplates.namespaceTemplate('label_values(kube_job_info{cluster=~"$cluster"}, namespace)'),
