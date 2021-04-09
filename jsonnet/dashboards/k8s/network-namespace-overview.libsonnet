@@ -23,14 +23,6 @@ local graphPanel = grafana.graphPanel;
 {
   grafanaDashboards+:: {
     'network-namespace-overview':
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
       local resolutionTemplate =
         template.interval(
           name='resolution',
@@ -45,17 +37,6 @@ local graphPanel = grafana.graphPanel;
           label='Interval',
           query='4h',
           current='4h',
-          hide='variable',
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          query='label_values(node_uname_info, cluster)',
-          label='Cluster',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
           hide='variable',
         );
 
@@ -139,7 +120,12 @@ local graphPanel = grafana.graphPanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.networkNamespaceOverview,
       )
-      .addTemplates([datasourceTemplate, resolutionTemplate, intervalTemplate, clusterTemplate])
+      .addTemplates([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+        intervalTemplate,
+        resolutionTemplate,
+      ])
       .addPanels(
         [
           row.new('Errors') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

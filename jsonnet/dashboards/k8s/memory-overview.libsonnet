@@ -17,7 +17,6 @@ local grafana = (import 'grafonnet/grafana.libsonnet')
                 + (import 'grafonnet-polystat-panel/plugin.libsonnet');
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
-local template = grafana.template;
 local row = grafana.row;
 local graphPanel = grafana.graphPanel;
 local polystatPanel = grafana.polystatPanel;
@@ -25,48 +24,6 @@ local polystatPanel = grafana.polystatPanel;
 {
   grafanaDashboards+:: {
     'memory-overview':
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local instanceTemplate =
-        template.new(
-          name='instance',
-          label='Nodes',
-          query='label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local jobTemplate =
-        template.new(
-          name='job',
-          query='label_values(node_exporter_build_info{cluster=~"$cluster", pod!~""}, job)',
-          label='Job',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          query='label_values(node_uname_info, cluster)',
-          label='Cluster',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
       local polystatThresholds =
         [
           { color: $._config.grafanaDashboards.color.green, state: 0, value: 0 },
@@ -129,7 +86,12 @@ local polystatPanel = grafana.polystatPanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.memoryOverview,
       )
-      .addTemplates([datasourceTemplate, instanceTemplate, jobTemplate, clusterTemplate])
+      .addTemplates([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~""}, job)', hide='variable'),
+        $.grafanaTemplates.instanceTemplate('label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)', label='Nodes'),
+      ])
       .addPanels(
         [
           memPerNodePolystat { gridPos: { x: 0, y: 0, w: 24, h: 6 } },

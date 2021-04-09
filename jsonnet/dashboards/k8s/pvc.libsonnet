@@ -16,7 +16,6 @@
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
-local template = grafana.template;
 local gaugePanel = grafana.gaugePanel;
 local graphPanel = grafana.graphPanel;
 

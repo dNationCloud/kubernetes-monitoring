@@ -14,9 +14,9 @@
 /* K8s nginx ingress dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
+local template = grafana.template;
 local prometheus = grafana.prometheus;
 local loki = grafana.loki;
-local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local logPanel = grafana.logPanel;
 local statPanel = grafana.statPanel;
@@ -26,89 +26,6 @@ local table = grafana.tablePanel;
 {
   grafanaDashboards+:: {
     'nginx-ingress':
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local datasourceLogsTemplate =
-        template.datasource(
-          name='datasource_logs',
-          label='Logs datasource',
-          query='loki',
-          current=null,
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(node_uname_info, cluster)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local jobTemplate =
-        template.new(
-          name='job',
-          label='Job',
-          datasource='$datasource',
-          query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster"}, job)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          includeAll=true,
-          multi=true,
-        );
-
-      local viewByTemplate =
-        template.custom(
-          name='view',
-          label='View by',
-          query='pod,container',
-          current='pod',
-        );
-
-      local namespaceTemplate =
-        template.new(
-          name='namespace',
-          label='Namespace',
-          datasource='$datasource',
-          query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job"}, controller_namespace)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local podTemplate =
-        template.new(
-          name='pod',
-          label='Pod',
-          datasource='$datasource',
-          query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local containerTemplate =
-        template.new(
-          name='container',
-          label='Container',
-          datasource='$datasource',
-          query='label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
       local ingressTemplate =
         template.new(
           name='ingress',
@@ -119,12 +36,6 @@ local table = grafana.tablePanel;
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
           multi=true,
-        );
-
-      local searchTemplate =
-        template.text(
-          name='search',
-          label='Logs Search',
         );
 
       local cpu =
@@ -351,20 +262,21 @@ local table = grafana.tablePanel;
         )
         .addTarget(prometheus.target(format='table', instant=true, expr='avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster", job=~"$job", pod=~"$pod", namespace=~"$namespace", container=~"$container"}) by (host) - time()'));
 
-      local templates = [
-                          datasourceTemplate,
-                        ]
-                        + (if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [])
-                        + [
-                          clusterTemplate,
-                          jobTemplate,
-                          viewByTemplate,
-                          namespaceTemplate,
-                          podTemplate,
-                          containerTemplate,
-                          ingressTemplate,
-                        ]
-                        + if $._config.grafanaDashboards.isLoki then [searchTemplate] else [];
+      local templates =
+        [
+          $.grafanaTemplates.datasourceTemplate(),
+        ]
+        + (if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [])
+        + [
+          $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+          $.grafanaTemplates.jobTemplate('label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster"}, job)'),
+          $.grafanaTemplates.viewByTemplate('pod,container'),
+          $.grafanaTemplates.namespaceTemplate('label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job"}, controller_namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
+          $.grafanaTemplates.containerTemplate('label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)'),
+          ingressTemplate,
+        ]
+        + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.searchTemplate()] else [];
 
       local logsPanels = [
         row.new('Logs', collapse=true) { gridPos: { x: 0, y: 4, w: 24, h: 1 } }

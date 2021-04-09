@@ -19,7 +19,6 @@ local prometheus = grafana.prometheus;
 local statPanel = grafana.statPanel;
 local gaugePanel = grafana.gaugePanel;
 local graphPanel = grafana.graphPanel;
-local template = grafana.template;
 local row = grafana.row;
 local table = grafana.tablePanel;
 

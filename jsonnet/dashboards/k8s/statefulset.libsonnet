@@ -18,7 +18,6 @@ local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
 local statPanel = grafana.statPanel;
 local graphPanel = grafana.graphPanel;
-local template = grafana.template;
 
 {
   grafanaDashboards+:: {
@@ -92,49 +91,6 @@ local template = grafana.template;
           ]
         );
 
-      local datasourceTemplate =
-        template.datasource(
-          query='prometheus',
-          name='datasource',
-          current=null,
-          label='Datasource',
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          query='label_values(kube_statefulset_metadata_generation, cluster)',
-          label='Cluster',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local namespaceTemplate =
-        template.new(
-          name='namespace',
-          query='label_values(kube_statefulset_metadata_generation{cluster=~"$cluster"}, namespace)',
-          label='Namespace',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local statefulsetTemplate =
-        template.new(
-          name='statefulset',
-          query='label_values(kube_statefulset_metadata_generation{cluster=~"$cluster", namespace=~"$namespace"}, statefulset)',
-          label='StatefulSet',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
       dashboard.new(
         'StatefulSet Detail',
         editable=$._config.grafanaDashboards.editable,
@@ -144,7 +100,12 @@ local template = grafana.template;
         tags=$._config.grafanaDashboards.tags.k8sStatefulSet,
         uid=$._config.grafanaDashboards.ids.statefulSet,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate, namespaceTemplate, statefulsetTemplate])
+      .addTemplates([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(kube_statefulset_metadata_generation, cluster)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_statefulset_metadata_generation{cluster=~"$cluster"}, namespace)'),
+        $.grafanaTemplates.statefulsetTemplate('label_values(kube_statefulset_metadata_generation{cluster=~"$cluster", namespace=~"$namespace"}, statefulset)'),
+      ])
       .addPanels(
         [
           cpuPanel { gridPos: { x: 0, y: 0, w: 8, h: 7 } },
