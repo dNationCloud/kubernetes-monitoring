@@ -105,6 +105,7 @@
         postfix: 'postfix',
         autoscaler: 'autoscaler',
         apache: 'apache',
+        mysqlExporter: 'mysqlexporter',
         //Monitoring dashboard
         monitoring: 'monitoring',
       },
