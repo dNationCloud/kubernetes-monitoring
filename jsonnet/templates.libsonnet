@@ -80,6 +80,32 @@
           },
         },
       },
+      basePolystatTemplate: {
+        enabled: true,
+        default: true,
+        panel: {
+          title: 'error must be overwritten',
+          description: '',
+          expr: '',
+          datasource: '$datasource',
+          default_click_through: '',
+          global_unit_format: '',
+          global_thresholds: {},
+          hexagon_sort_by_direction: 2,
+          hexagon_sort_by_field: 'value',
+          polygon_border_size: 0,
+          tooltip_timestamp_enabled: false,
+          globalDecimals: null,
+          fontAutoColor: false,
+          fontColor: 'white',
+          gridPos: {
+            x: 0,
+            y: 0,
+            w: 24,
+            h: 6,
+          },
+        },
+      },
       baseAlert: {
         name: 'error must be overwritten',
         message: '',
@@ -602,11 +628,11 @@
         overallUtilizationCPU: {
           local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
-          linkTo: [$.defaultConfig.grafanaDashboards.ids.cpuOverview],
+          linkTo: ['cpuPerNodePolystat'],
           panel: {
             title: 'Overall Utilization',
             dataLinks: [
-              { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$.defaultConfig.grafanaDashboards.ids.cpuOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
               { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.cpuNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
             expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
@@ -628,12 +654,12 @@
         overallUtilizationRAM: {
           local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
-          linkTo: [$.defaultConfig.grafanaDashboards.ids.memoryOverview],
+          linkTo: ['memoryPerNodePolystat'],
           panel: {
             title: 'Overall Utilization',
             description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
             dataLinks: [
-              { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$.defaultConfig.grafanaDashboards.ids.memoryOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' %  $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
               { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.memoryNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
             expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
@@ -655,11 +681,11 @@
         overallUtilizationDisk: {
           local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
           local thresholds = defaultTemplate.commonThresholds.node,
-          linkTo: [$.defaultConfig.grafanaDashboards.ids.diskOverview],
+          linkTo: ['diskPerNodePolystat'],
           panel: {
             title: 'Overall Utilization',
             description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
-            dataLinks: [{ title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$.defaultConfig.grafanaDashboards.ids.diskOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
+            dataLinks: [{ title: 'System Overview', url: '/d/{}?%s&var-instance=All' %  $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
             thresholds: thresholds,
             gridPos: {
@@ -683,11 +709,11 @@
             warning: 10,
             critical: 15,
           },
-          linkTo: [$.defaultConfig.grafanaDashboards.ids.networkOverview],
+          linkTo: ['networkPerNodePolystat'],
           panel: {
             title: 'Overall Errors',
             dataLinks: [
-              { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$.defaultConfig.grafanaDashboards.ids.networkOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
               { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.networkNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
             expr: 'sum(%s)' % expr % { job: 'job=~"$job"' },
@@ -1682,7 +1708,7 @@
                   },
                   renameByName: {},
                 },
-              }
+              },
             ],
             expr: [
               |||
@@ -1691,6 +1717,96 @@
                 sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster", namespace=~"$namespace", job=~"$job"} * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"}
               |||,
             ],
+          },
+        },
+      },
+      networkPerNode: {
+        networkPerNodePolystat: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)',
+          },
+          base: 'basePolystatTemplate',
+          panel: {
+            local polystatThresholds =
+              [
+                { color: $.defaultConfig.grafanaDashboards.color.green, state: 0, value: 0 },
+                { color: $.defaultConfig.grafanaDashboards.color.orange, state: 1, value: 10 },
+                { color: $.defaultConfig.grafanaDashboards.color.red, state: 2, value: 30 },
+              ],
+            title: 'Network Errors per Node',
+            expr: '(sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]))  by (instance) \n   + sum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])) by (instance))\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}',
+            default_click_through: '/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$.defaultConfig.grafanaDashboards.ids.nodeExporter, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs],
+            global_unit_format: 'pps',
+            global_thresholds: polystatThresholds,
+            fontColor: $.defaultConfig.grafanaDashboards.color.white,
+          },
+        },
+      },
+      memoryPerNode: {
+        memoryPerNodePolystat: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)',
+          },
+          base: 'basePolystatTemplate',
+          panel: {
+            local polystatThresholds =
+              [
+                { color: $.defaultConfig.grafanaDashboards.color.green, state: 0, value: 0 },
+                { color: $.defaultConfig.grafanaDashboards.color.orange, state: 1, value: 75 },
+                { color: $.defaultConfig.grafanaDashboards.color.red, state: 2, value: 90 },
+              ],
+            title: 'Memory per Node',
+            description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
+            expr: 'round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}) by (instance) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}) by (instance) )) * 100)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}',
+            default_click_through: '/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$.defaultConfig.grafanaDashboards.ids.nodeExporter, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs],
+            global_unit_format: 'percent',
+            global_thresholds: polystatThresholds,
+            fontColor: $.defaultConfig.grafanaDashboards.color.white,
+          },
+        },
+      },
+      diskPerNode: {
+        diskPerNodePolystat: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)',
+          },
+          base: 'basePolystatTemplate',
+          panel: {
+            local polystatThresholds =
+              [
+                { color: $.defaultConfig.grafanaDashboards.color.green, state: 0, value: 0 },
+                { color: $.defaultConfig.grafanaDashboards.color.orange, state: 1, value: 75 },
+                { color: $.defaultConfig.grafanaDashboards.color.red, state: 2, value: 90 },
+              ],
+            title: 'Disk per Node',
+            description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
+            expr: 'max(round(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device))\n * 100\n) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (nodename)',
+            default_click_through: '/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$.defaultConfig.grafanaDashboards.ids.nodeExporter, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs],
+            global_unit_format: 'percent',
+            global_thresholds: polystatThresholds,
+            fontColor: $.defaultConfig.grafanaDashboards.color.white,
+          },
+        },
+      },
+      cpuPerNode: {
+        cpuPerNodePolystat: {
+          dashboardInfo: {
+            grafanaTemplateQuery: 'label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)',
+          },
+          base: 'basePolystatTemplate',
+          panel: {
+            local polystatThresholds =
+              [
+                { color: $.defaultConfig.grafanaDashboards.color.green, state: 0, value: 0 },
+                { color: $.defaultConfig.grafanaDashboards.color.orange, state: 1, value: 75 },
+                { color: $.defaultConfig.grafanaDashboards.color.red, state: 2, value: 90 },
+              ],
+            title: 'CPU per Node',
+            expr: 'round((1 - (avg by (instance) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])))) * 100)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}',
+            default_click_through: '/d/%s?var-job=$job&var-instance=${__cell_name}&%s' % [$.defaultConfig.grafanaDashboards.ids.nodeExporter, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs],
+            global_unit_format: 'percent',
+            global_thresholds: polystatThresholds,
+            fontColor: $.defaultConfig.grafanaDashboards.color.white,
           },
         },
       },

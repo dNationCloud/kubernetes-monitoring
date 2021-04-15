@@ -11,7 +11,7 @@
   limitations under the License.
 */
 
-/* K8s L2 overview dashboards */
+/* K8s L2 k8s overview dashboards */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -21,9 +21,9 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+::
-    local overviewDashboard(dashboardUid, dashboardName, tableTemplate, rowName, grafanaTemplates) = {
+    local overviewDashboard(dashboardUid, dashboardName, mainTemplate, grafanaTemplates, customParams) = {
       local overviewTable =
-        local templatePanel = tableTemplate.panel;
+        local templatePanel = mainTemplate.panel;
         table.new(
           title=templatePanel.title,
           datasource=templatePanel.datasource,
@@ -55,7 +55,7 @@ local table = grafana.tablePanel;
         ] + grafanaTemplates)
         .addPanels(
           [
-            row.new(rowName) { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+            row.new(customParams.rowName) { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
             overviewTable,
           ]
         ),

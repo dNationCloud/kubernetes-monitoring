@@ -84,6 +84,10 @@
     [$._config.grafanaDashboards.ids.deploymentOverview]: $._config.templates.L2.deploymentOverview,
     [$._config.grafanaDashboards.ids.daemonSetOverview]: $._config.templates.L2.daemonSetOverview,
     [$._config.grafanaDashboards.ids.jobOverview]: $._config.templates.L2.jobOverview,
+    [$._config.grafanaDashboards.ids.networkOverview]: $._config.templates.L2.networkPerNode,
+    [$._config.grafanaDashboards.ids.memoryOverview]: $._config.templates.L2.memoryPerNode,
+    [$._config.grafanaDashboards.ids.cpuOverview]: $._config.templates.L2.cpuPerNode,
+    [$._config.grafanaDashboards.ids.diskOverview]: $._config.templates.L2.diskPerNode,
     [$._config.grafanaDashboards.ids.apiServer]: utils.getControlPlaneTemplates('apiServerHealth'),
     [$._config.grafanaDashboards.ids.controllerManager]: utils.getControlPlaneTemplates('controllerManagerHealth'),
     [$._config.grafanaDashboards.ids.etcd]: utils.getControlPlaneTemplates('etcdHealth'),
@@ -459,19 +463,22 @@
     else
       {},
 
-  createOverviewDashboards(jsonName, dashboardFunction, dashboardUid, dashboardName, templateName, rowName, customizableGrafanaTemplateFunction=null, grafanaTemplates=[])::
+  createOverviewDashboards(jsonName, dashboardFunction, dashboardUid, dashboardName, templateName, rowName=null, customizableGrafanaTemplateFunction=null, grafanaTemplates=[], instancePanels=[])::
     /**
-     * Create custom overview dashboard for each cluster and custom template.
+     * Create custom overview dashboards for each cluster and custom template.
      * And/or default dashboard if there is at least 1 cluster with default template.
      * (From each custom template is created separate dashboard)
+     * Common function for tableOverviews (nodesHealth, runninContainers...) and polystatOverviews (cpuOverview, diskOverview...)
      *
      * @param jsonName Default name of file with dashboard.
      * @param dashboardFunction Function that generates dashboard.
      * @param dashboardUid
      * @param dashboardName
      * @param templateName Default template for this specific dashboard.
-     * @param rowName
+     * @param rowName Name of first row. (Only for tableOverviews)
+     * @param customizableGrafanaTemplateFunction Function from grafanaTemplates, which will be used for dashboardInfo.grafanaTemplateQuery.
      * @param grafanaTemplates
+     * @param instancePanels Panels repeated for instance. (Only for polystatOverviews)
      * @return object with dashboards.
      */
     local getCustomizableGrafanaTemplate(tpl, grafanaTemplateFunc) =
@@ -487,9 +494,9 @@
           dashboardFunction(
             dashboardUid=utils.getCustomUid([dashboardUid, cluster.name, tpl.templateName]),
             dashboardName=utils.getCustomName([dashboardName, cluster.name, tpl.templateName]),
-            tableTemplate=tpl,
-            rowName=rowName,
+            mainTemplate=tpl,
             grafanaTemplates=grafanaTemplates + getCustomizableGrafanaTemplate(tpl, customizableGrafanaTemplateFunction),
+            customParams={ rowName: rowName, instancePanels: instancePanels }  //params that are different for tableOverview and polystatOverview
           ).dashboard
         for cluster in $._config.clusterMonitoring.clusters
         for tpl in utils.getSpecificTemplates(utils.getTemplates(templateGroup, cluster), templateName)
@@ -502,9 +509,9 @@
             dashboardFunction(
               dashboardUid=dashboardUid,
               dashboardName=dashboardName,
-              tableTemplate=tpl,
-              rowName=rowName,
+              mainTemplate=tpl,
               grafanaTemplates=grafanaTemplates + getCustomizableGrafanaTemplate(tpl, customizableGrafanaTemplateFunction),
+              customParams={ rowName: rowName, instancePanels: instancePanels }
             ).dashboard,
         }
       else
