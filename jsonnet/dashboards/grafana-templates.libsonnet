@@ -104,6 +104,13 @@ local template = grafana.template;
         query=query,
       ),
 
+    nodeTemplate(query)::
+      baseTemplate(
+        name='instance',
+        label='Nodes',
+        query=query,
+      ),
+
     namespaceTemplate(query)::
       baseTemplate(
         name='namespace',
