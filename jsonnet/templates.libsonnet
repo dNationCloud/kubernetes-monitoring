@@ -1063,7 +1063,7 @@
         },
       },
       nginxIngressCertificateExpiry: {
-        local expr = 'min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster|", %(job)s}) by (host) - time())',
+        local expr = 'bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster|", %(job)s} - time())',
         local minusInfinity = -$.defaultConfig.grafanaDashboards.constants.infinity,
         local invalid = minusInfinity - 1,
         local thresholds = {
