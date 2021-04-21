@@ -2944,7 +2944,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: HostApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>"min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster|\", job=~\".+\"}) by (host) - time()) / 60 / 60 / 24"</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster|\", job=~\".+\"} - time()) / 60 / 60 / 24"</code></div>
 </td></tr>
 <tr><td>link</td><td><div class='my-pre'><code>"nginxingress?var-job={{ $labels.job }}"</code></div>
 </td></tr>
@@ -2968,7 +2968,7 @@ warning: 8
 </td></tr>
 <tr><td>decimals</td><td><div class='my-pre'><code>0</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>"min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster|\", %(job)s}) by (host) - time()) OR on() vector(-1000000000)"</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster|\", %(job)s} - time()) OR on() vector(-1000000000)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
@@ -4941,7 +4941,7 @@ warning: 95
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>alertgroup: ClusterApp
 </code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>"min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster|\", job=~\".+\"}) by (host) - time()) / 60 / 60 / 24"</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster|\", job=~\".+\"} - time()) / 60 / 60 / 24"</code></div>
 </td></tr>
 <tr><td>link</td><td><div class='my-pre'><code>"nginxingress?var-job={{ $labels.job }}"</code></div>
 </td></tr>
@@ -4965,7 +4965,7 @@ warning: 8
 </td></tr>
 <tr><td>decimals</td><td><div class='my-pre'><code>0</code></div>
 </td></tr>
-<tr><td>expr</td><td><div class='my-pre'><code>"min(avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster|\", %(job)s}) by (host) - time()) OR on() vector(-1000000000)"</code></div>
+<tr><td>expr</td><td><div class='my-pre'><code>"bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster|\", %(job)s} - time()) OR on() vector(-1000000000)"</code></div>
 </td></tr>
 <tr><td>gridPos</td><td><div class='my-pre'><code>w: 4
 </code></div>
