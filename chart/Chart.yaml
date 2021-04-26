@@ -27,7 +27,7 @@ sources:
 - https://github.com/dNationCloud/kubernetes-monitoring
 dependencies:
 - name: dnation-kubernetes-jsonnet-translator
-  version: "0.3.*"
+  version: "0.4.*"
   repository: https://dnationcloud.github.io/helm-hub/
   condition: dnation-kubernetes-jsonnet-translator.enabled
 icon: https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png
