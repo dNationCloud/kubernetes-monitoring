@@ -304,7 +304,7 @@
       [
         local templates = utils.getTemplates(objTemplates, app);
         if std.length(std.prune(templates)) == 0 then
-          app { templates: [std.mergePatch($._config.templates.baseStatsTemplate, objTemplates.genericApp) + { templateName: 'genericApp' }] }
+          app { templates: [std.mergePatch($._config.templates.templateBases.baseStatsTemplate, objTemplates.genericApp) + { templateName: 'genericApp' }] }
         else
           app { templates: templates }
         for app in obj.apps
