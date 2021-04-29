@@ -104,7 +104,7 @@ local text = grafana.text;
           if std.type(tpl.panel.gridPos.y) == 'number' then
             tpl.panel.gridPos.y
           else
-            23;  // `23` -> init Y position in application row;
+            29;  // `29` -> init Y position in application row;
         statPanel.new(
           title='%s %s' % [tpl.templateName, app.name],
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
@@ -143,7 +143,7 @@ local text = grafana.text;
       local applicationPanels(apps) =
         if std.length(apps) > 0 then
           [
-            row.new('Applications') { gridPos: { x: 0, y: 22, w: 24, h: 1 } },
+            row.new('Applications') { gridPos: { x: 0, y: 28, w: 24, h: 1 } },
           ] +
           std.flattenArrays([
             k8sAppStatsPanels(app.index, app.item)
@@ -161,6 +161,8 @@ local text = grafana.text;
           $.grafanaTemplates.alertManagerTemplate(),
           $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
           $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~""}, job)', hide='variable'),
+          $.grafanaTemplates.masterNameTemplate(),
+          $.grafanaTemplates.masterInstanceTemplate(),
         ]
         + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate(hide='variable')] else [],
 
@@ -181,13 +183,18 @@ local text = grafana.text;
             row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
             criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
             warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
-            row.new('Overview') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
-            row.new('Control Plane Components Health') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
-            row.new('Node Metrics (including Master)') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
+            row.new('Control Plane') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+            row.new('Overview') { gridPos: { x: 0, y: 8, w: 24, h: 1 } },
+            row.new('Master Nodes Metrics') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
             text.new('CPU') { gridPos: { x: 0, y: 16, w: 6, h: 1 } },
             text.new('RAM') { gridPos: { x: 6, y: 16, w: 6, h: 1 } },
             text.new('Disk') { gridPos: { x: 12, y: 16, w: 6, h: 1 } },
             text.new('Network') { gridPos: { x: 18, y: 16, w: 6, h: 1 } },
+            row.new('Worker Nodes Metrics') { gridPos: { x: 0, y: 22, w: 24, h: 1 } },
+            text.new('CPU') { gridPos: { x: 0, y: 23, w: 6, h: 1 } },
+            text.new('RAM') { gridPos: { x: 6, y: 23, w: 6, h: 1 } },
+            text.new('Disk') { gridPos: { x: 12, y: 23, w: 6, h: 1 } },
+            text.new('Network') { gridPos: { x: 18, y: 23, w: 6, h: 1 } },
           ] + k8sStatsPanels + applicationPanels(clusterApps)
         ),
     };

@@ -515,8 +515,9 @@
             thresholds: thresholds,
           },
         },
-        mostUtilizedNodeCPU: {
-          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
+        /* Master Nodes Metrics */
+        mostUtilizedMasterNodeCPU: {
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle", instance=~"$masterInstance"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -534,16 +535,16 @@
             },
           },
           alert: {
-            name: 'ClusterNodeCPUUtilizationHigh',
-            message: 'Cluster {{ $labels.nodename }}: High CPU Utilization {{ $value }}%',
+            name: 'ClusterMasterNodeCPUUtilizationHigh',
+            message: 'Cluster master node {{ $labels.nodename }}: High CPU Utilization {{ $value }}%',
             customLables: k8sCustomLables,
             expr: expr % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
             thresholds: thresholds,
           },
         },
-        mostUtilizedNodeRAM: {
-          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info))) * 100)',
+        mostUtilizedMasterNodeRAM: {
+          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -562,16 +563,16 @@
             },
           },
           alert: {
-            name: 'ClusterNodesRAMUtilizationHigh',
-            message: 'Cluster node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%',
+            name: 'ClusterMasterNodesRAMUtilizationHigh',
+            message: 'Cluster master node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%',
             customLables: k8sCustomLables,
             expr: expr % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
             thresholds: thresholds,
           },
         },
-        mostUtilizedNodeDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100)',
+        mostUtilizedMasterNodeDisk: {
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -588,15 +589,15 @@
           },
           alert: {
             name: 'ClusterHostDiskUtilizationHigh',
-            message: 'Cluster node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%',
+            message: 'Cluster master node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%',
             customLables: k8sCustomLables,
             expr: expr % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
             thresholds: thresholds,
           },
         },
-        mostUtilizedNodeNetworkErrors: {
-          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)',
+        mostUtilizedMasterNodeNetworkErrors: {
+          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+", instance=~"$masterInstance"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+", instance=~"$masterInstance"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)',
           local thresholds = {
             operator: '>=',
             warning: 10,
@@ -620,15 +621,15 @@
           },
           alert: {
             name: 'ClusterHostNetworkErrorsHigh',
-            message: 'Cluster node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%',
+            message: 'Cluster master node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%',
             customLables: k8sCustomLables,
             expr: expr % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
             thresholds: thresholds,
           },
         },
-        overallUtilizationCPU: {
-          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
+        overallUtilizationMasterNodesCPU: {
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle", instance=~"$masterInstance"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['cpuPerNodePolystat'],
           panel: {
@@ -646,22 +647,22 @@
             },
           },
           alert: {
-            name: 'ClusterCPUOverallHigh',
-            message: 'Cluster High CPU Overall Utilization {{ $value }}%',
+            name: 'ClusterMasterNodesCPUOverallHigh',
+            message: 'Cluster Master Nodes High CPU Overall Utilization {{ $value }}%',
             expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
             customLables: k8sCustomLables,
             thresholds: thresholds,
           },
         },
-        overallUtilizationRAM: {
-          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info))) * 100)',
+        overallUtilizationMasterNodesRAM: {
+          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['memoryPerNodePolystat'],
           panel: {
             title: 'Overall Utilization',
             description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
             dataLinks: [
-              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' %  $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
+              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
               { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.memoryNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
             expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
@@ -673,21 +674,21 @@
             },
           },
           alert: {
-            name: 'ClusterRAMOverallHigh',
-            message: 'Cluster High RAM Overall Utilization {{ $value }}%',
+            name: 'ClusterMasterNodesRAMOverallHigh',
+            message: 'Cluster Master Nodes High RAM Overall Utilization {{ $value }}%',
             expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
             customLables: k8sCustomLables,
             thresholds: thresholds,
           },
         },
-        overallUtilizationDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
+        overallUtilizationMasterNodesDisk: {
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s, instance=~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['diskPerNodePolystat'],
           panel: {
             title: 'Overall Utilization',
             description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
-            dataLinks: [{ title: 'System Overview', url: '/d/{}?%s&var-instance=All' %  $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
+            dataLinks: [{ title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
             thresholds: thresholds,
             gridPos: {
@@ -697,15 +698,15 @@
             },
           },
           alert: {
-            name: 'ClusterDiskOverallHigh',
-            message: 'Cluster High Disk Overall Utilization {{ $value }}%',
+            name: 'ClusterMasterNodesDiskOverallHigh',
+            message: 'Cluster Master Nodes High Disk Overall Utilization {{ $value }}%',
             expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
             customLables: k8sCustomLables,
             thresholds: thresholds,
           },
         },
-        overallNetworkErrors: {
-          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)',
+        overallMasterNodesNetworkErrors: {
+          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+", instance=~"$masterInstance"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+", instance=~"$masterInstance"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)',
           local thresholds = {
             operator: '>=',
             warning: 10,
@@ -728,20 +729,20 @@
             },
           },
           alert: {
-            name: 'ClusterNetworkOverallErrorsHigh',
-            message: 'Cluster High Overall Network Errors Count {{ $value }}%',
+            name: 'ClusterMasterNodesNetworkOverallErrorsHigh',
+            message: 'Cluster Master Nodes High Overall Network Errors Count {{ $value }}%',
             expr: 'sum(%s)' % expr % { job: 'job=~"node-exporter"' },
             customLables: k8sCustomLables,
             thresholds: thresholds,
           },
         },
-        usedCores: {
+        usedCoresMasterNodes: {
           panel: {
             title: 'Used Cores',
             colorMode: 'value',
             graphMode: 'none',
             unit: 'none',
-            expr: '(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
+            expr: '(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="idle", instance=~"$masterInstance"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 0,
@@ -751,13 +752,13 @@
             },
           },
         },
-        totalCores: {
+        totalCoresMasterNodes: {
           panel: {
             title: 'Total Cores',
             colorMode: 'value',
             graphMode: 'none',
             unit: 'none',
-            expr: 'count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
+            expr: 'count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system", instance=~"$masterInstance"})' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 3,
@@ -767,13 +768,13 @@
             },
           },
         },
-        usedRAM: {
+        usedRAMMasterNodes: {
           panel: {
             title: 'Used',
             colorMode: 'value',
             graphMode: 'none',
             unit: 'bytes',
-            expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", %(job)s}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s}))))' % { job: 'job=~"$job"' },
+            expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}))))' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 6,
@@ -783,13 +784,13 @@
             },
           },
         },
-        totalRAM: {
+        totalRAMMasterNodes: {
           panel: {
             title: 'Total',
             colorMode: 'value',
             graphMode: 'none',
             unit: 'bytes',
-            expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
+            expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"})' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 9,
@@ -799,13 +800,13 @@
             },
           },
         },
-        usedDisk: {
+        usedDiskMasterNodes: {
           panel: {
             title: 'Used',
             colorMode: 'value',
             graphMode: 'none',
             unit: 'bytes',
-            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", %(job)s}) by (device)) > 0\n)))' % { job: 'job=~"$job"' },
+            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"}) by (device)) > 0\n)))' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 12,
@@ -815,17 +816,334 @@
             },
           },
         },
-        totalDisk: {
+        totalDiskMasterNodes: {
           panel: {
             title: 'Total',
             colorMode: 'value',
             graphMode: 'none',
             unit: 'bytes',
-            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
+            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, instance=~"$masterInstance"})' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 15,
               y: 20,
+              w: 3,
+              h: 2,
+            },
+          },
+        },
+        /* Worker Nodes Metrics */
+        mostUtilizedWorkerNodeCPU: {
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle", instance!~"$masterInstance"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
+          local thresholds = defaultTemplate.commonThresholds.node,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
+          panel: {
+            title: 'Most Utilized Node',
+            dataLinks: [
+              { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$.defaultConfig.grafanaDashboards.ids.cpuOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+              { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.cpuNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+            ],
+            expr: 'max(%s)' % expr % { job: 'job=~"$job"' },
+            thresholds: thresholds,
+            gridPos: {
+              x: 3,
+              y: 24,
+              w: 3,
+            },
+          },
+          alert: {
+            name: 'ClusterWorkerNodeCPUUtilizationHigh',
+            message: 'Cluster Worker Node {{ $labels.nodename }}: High CPU Utilization {{ $value }}%',
+            customLables: k8sCustomLables,
+            expr: expr % { job: 'job=~"node-exporter"' },
+            linkGetParams: 'var-instance={{ $labels.nodename }}',
+            thresholds: thresholds,
+          },
+        },
+        mostUtilizedWorkerNodeRAM: {
+          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info))) * 100)',
+          local thresholds = defaultTemplate.commonThresholds.node,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
+          panel: {
+            title: 'Most Utilized Node',
+            description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
+            dataLinks: [
+              { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$.defaultConfig.grafanaDashboards.ids.memoryOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+              { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.memoryNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+            ],
+            expr: 'max(%s)' % expr % { job: 'job=~"$job"' },
+            thresholds: thresholds,
+            gridPos: {
+              x: 9,
+              y: 24,
+              w: 3,
+            },
+          },
+          alert: {
+            name: 'ClusterWorkerNodesRAMUtilizationHigh',
+            message: 'Cluster Worker Node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%',
+            customLables: k8sCustomLables,
+            expr: expr % { job: 'job=~"node-exporter"' },
+            linkGetParams: 'var-instance={{ $labels.nodename }}',
+            thresholds: thresholds,
+          },
+        },
+        mostUtilizedWorkerNodeDisk: {
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100)',
+          local thresholds = defaultTemplate.commonThresholds.node,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
+          panel: {
+            title: 'Most Utilized Node',
+            description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
+            dataLinks: [{ title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$.defaultConfig.grafanaDashboards.ids.diskOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
+            expr: 'max(%s)' % expr % { job: 'job=~"$job"' },
+            thresholds: thresholds,
+            gridPos: {
+              x: 15,
+              y: 24,
+              w: 3,
+            },
+          },
+          alert: {
+            name: 'ClusterHostDiskUtilizationHigh',
+            message: 'Cluster Worker Node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%',
+            customLables: k8sCustomLables,
+            expr: expr % { job: 'job=~"node-exporter"' },
+            linkGetParams: 'var-instance={{ $labels.nodename }}',
+            thresholds: thresholds,
+          },
+        },
+        mostUtilizedWorkerNodeNetworkErrors: {
+          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+", instance!~"$masterInstance"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+", instance!~"$masterInstance"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)',
+          local thresholds = {
+            operator: '>=',
+            warning: 10,
+            critical: 15,
+          },
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
+          panel: {
+            title: 'Most Affected Node',
+            dataLinks: [
+              { title: 'System Overview', url: '/d/%s?%s&var-instance=All' % [$.defaultConfig.grafanaDashboards.ids.networkOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+              { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.networkNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+            ],
+            expr: 'max(%s)' % expr % { job: 'job=~"$job"' },
+            unit: 'pps',
+            thresholds: thresholds,
+            gridPos: {
+              x: 21,
+              y: 24,
+              w: 3,
+            },
+          },
+          alert: {
+            name: 'ClusterHostNetworkErrorsHigh',
+            message: 'Cluster Worker Node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%',
+            customLables: k8sCustomLables,
+            expr: expr % { job: 'job=~"node-exporter"' },
+            linkGetParams: 'var-instance={{ $labels.nodename }}',
+            thresholds: thresholds,
+          },
+        },
+        overallUtilizationWorkerNodesCPU: {
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle", instance!~"$masterInstance"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
+          local thresholds = defaultTemplate.commonThresholds.node,
+          linkTo: ['cpuPerNodePolystat'],
+          panel: {
+            title: 'Overall Utilization',
+            dataLinks: [
+              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
+              { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.cpuNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+            ],
+            expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
+            thresholds: thresholds,
+            gridPos: {
+              x: 0,
+              y: 24,
+              w: 3,
+            },
+          },
+          alert: {
+            name: 'ClusterWorkerNodesCPUOverallHigh',
+            message: 'Cluster Worker Nodes High CPU Overall Utilization {{ $value }}%',
+            expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
+            customLables: k8sCustomLables,
+            thresholds: thresholds,
+          },
+        },
+        overallUtilizationWorkerNodesRAM: {
+          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info))) * 100)',
+          local thresholds = defaultTemplate.commonThresholds.node,
+          linkTo: ['memoryPerNodePolystat'],
+          panel: {
+            title: 'Overall Utilization',
+            description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
+            dataLinks: [
+              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
+              { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.memoryNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+            ],
+            expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
+            thresholds: thresholds,
+            gridPos: {
+              x: 6,
+              y: 24,
+              w: 3,
+            },
+          },
+          alert: {
+            name: 'ClusterWorkerNodesRAMOverallHigh',
+            message: 'Cluster Worker Nodes High RAM Overall Utilization {{ $value }}%',
+            expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
+            customLables: k8sCustomLables,
+            thresholds: thresholds,
+          },
+        },
+        overallUtilizationWorkerNodesDisk: {
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s, instance!~"$masterInstance"} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
+          local thresholds = defaultTemplate.commonThresholds.node,
+          linkTo: ['diskPerNodePolystat'],
+          panel: {
+            title: 'Overall Utilization',
+            description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
+            dataLinks: [{ title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
+            expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
+            thresholds: thresholds,
+            gridPos: {
+              x: 12,
+              y: 24,
+              w: 3,
+            },
+          },
+          alert: {
+            name: 'ClusterWorkerNodesDiskOverallHigh',
+            message: 'Cluster Worker Nodes High Disk Overall Utilization {{ $value }}%',
+            expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
+            customLables: k8sCustomLables,
+            thresholds: thresholds,
+          },
+        },
+        overallWorkerNodesNetworkErrors: {
+          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+", instance!~"$masterInstance"} [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+", instance!~"$masterInstance"}[5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)',
+          local thresholds = {
+            operator: '>=',
+            warning: 10,
+            critical: 15,
+          },
+          linkTo: ['networkPerNodePolystat'],
+          panel: {
+            title: 'Overall Errors',
+            dataLinks: [
+              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
+              { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.networkNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+            ],
+            expr: 'sum(%s)' % expr % { job: 'job=~"$job"' },
+            unit: 'pps',
+            thresholds: thresholds,
+            gridPos: {
+              x: 18,
+              y: 24,
+              w: 3,
+            },
+          },
+          alert: {
+            name: 'ClusterWorkerNodesNetworkOverallErrorsHigh',
+            message: 'Cluster Worker Nodes High Overall Network Errors Count {{ $value }}%',
+            expr: 'sum(%s)' % expr % { job: 'job=~"node-exporter"' },
+            customLables: k8sCustomLables,
+            thresholds: thresholds,
+          },
+        },
+        usedCoresWorkerNodes: {
+          panel: {
+            title: 'Used Cores',
+            colorMode: 'value',
+            graphMode: 'none',
+            unit: 'none',
+            expr: '(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="idle", instance!~"$masterInstance"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            gridPos: {
+              x: 0,
+              y: 27,
+              w: 3,
+              h: 2,
+            },
+          },
+        },
+        totalCoresWorkerNodes: {
+          panel: {
+            title: 'Total Cores',
+            colorMode: 'value',
+            graphMode: 'none',
+            unit: 'none',
+            expr: 'count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system", instance!~"$masterInstance"})' % { job: 'job=~"$job"' },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            gridPos: {
+              x: 3,
+              y: 27,
+              w: 3,
+              h: 2,
+            },
+          },
+        },
+        usedRAMWorkerNodes: {
+          panel: {
+            title: 'Used',
+            colorMode: 'value',
+            graphMode: 'none',
+            unit: 'bytes',
+            expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}))))' % { job: 'job=~"$job"' },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            gridPos: {
+              x: 6,
+              y: 27,
+              w: 3,
+              h: 2,
+            },
+          },
+        },
+        totalRAMWorkerNodes: {
+          panel: {
+            title: 'Total',
+            colorMode: 'value',
+            graphMode: 'none',
+            unit: 'bytes',
+            expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"})' % { job: 'job=~"$job"' },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            gridPos: {
+              x: 9,
+              y: 27,
+              w: 3,
+              h: 2,
+            },
+          },
+        },
+        usedDiskWorkerNodes: {
+          panel: {
+            title: 'Used',
+            colorMode: 'value',
+            graphMode: 'none',
+            unit: 'bytes',
+            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"}) by (device)) > 0\n)))' % { job: 'job=~"$job"' },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            gridPos: {
+              x: 12,
+              y: 27,
+              w: 3,
+              h: 2,
+            },
+          },
+        },
+        totalDiskWorkerNodes: {
+          panel: {
+            title: 'Total',
+            colorMode: 'value',
+            graphMode: 'none',
+            unit: 'bytes',
+            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s, instance!~"$masterInstance"})' % { job: 'job=~"$job"' },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            gridPos: {
+              x: 15,
+              y: 27,
               w: 3,
               h: 2,
             },

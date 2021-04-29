@@ -206,5 +206,25 @@ local template = grafana.template;
         query=query,
         current='container',
       ),
+
+    masterNameTemplate()::
+      baseTemplate(
+        name='masterName',
+        label='Master Name',
+        query='label_values(kube_node_role{cluster=~"$cluster", role="master"}, node)',
+        hide='variable',
+        includeAll=false,
+        multi=false,
+      ),
+
+    masterInstanceTemplate()::
+      baseTemplate(
+        name='masterInstance',
+        label='Master Instance',
+        query='label_values(node_uname_info{cluster=~"$cluster", nodename=~"$masterName"}, instance)',
+        hide='variable',
+        includeAll=false,
+        multi=false,
+      ),
   },
 }
