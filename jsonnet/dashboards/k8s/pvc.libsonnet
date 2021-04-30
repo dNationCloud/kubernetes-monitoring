@@ -46,7 +46,8 @@ local graphPanel = grafana.graphPanel;
           min=0,
           max=100,
         )
-        .addTarget(prometheus.target(expr));
+        .addTarget(prometheus.target(expr))
+        .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local volSpaceUsageGraphPanel =
         usageGraphPanel(title='Volume Space Usage', format='bytes')
