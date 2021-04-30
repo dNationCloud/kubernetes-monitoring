@@ -35,7 +35,9 @@ local table = grafana.tablePanel;
           decimals=0,
           unit='s',
         )
-        .addTarget(prometheus.target('avg(time() - node_boot_time_seconds{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
+        .addTarget(prometheus.target('avg(time() - node_boot_time_seconds{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'))
+        .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
+
 
       local ipTable =
         table.new(
@@ -56,7 +58,8 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           unit='short',
         )
-        .addTarget(prometheus.target('count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
+        .addTarget(prometheus.target('count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'))
+        .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local memoryPanel =
         statPanel.new(
@@ -65,14 +68,16 @@ local table = grafana.tablePanel;
           decimals=0,
           unit='bytes',
         )
-        .addTarget(prometheus.target('sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
+        .addTarget(prometheus.target('sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'))
+        .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local cpuUtilPanel =
         gaugePanel.new(
           title='CPU Utilization',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'));
+        .addTarget(prometheus.target('round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'))
+        .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local memUtilPanel =
         gaugePanel.new(
@@ -82,7 +87,8 @@ local table = grafana.tablePanel;
           min=0,
           max=100,
         )
-        .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'));
+        .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'))
+        .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local mostUtilDiskPanel =
         gaugePanel.new(
@@ -92,7 +98,8 @@ local table = grafana.tablePanel;
           min=0,
           max=100,
         )
-        .addTarget(prometheus.target('round(\nmax(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device))\n * 100 \n * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}\n)\n)'));
+        .addTarget(prometheus.target('round(\nmax(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device))\n * 100 \n * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}\n)\n)'))
+        .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local networkErrPanel =
         gaugePanel.new(
@@ -102,7 +109,8 @@ local table = grafana.tablePanel;
           min=0,
           max=100,
         )
-        .addTarget(prometheus.target('sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'));
+        .addTarget(prometheus.target('sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'))
+        .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local cpuUtilGraphPanel =
         graphPanel.new(
