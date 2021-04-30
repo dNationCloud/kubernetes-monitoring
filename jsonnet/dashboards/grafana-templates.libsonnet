@@ -226,5 +226,15 @@ local template = grafana.template;
         includeAll=false,
         multi=false,
       ),
+    diskFileSystemsTemplate()::
+      template.custom(
+        name='diskfs',
+        label='Disk FileSystems',
+        query='ext2,ext3,ext4,btrfs,vfat,fuseblk,jfs,zfs,reiserfs,f2fs,xfs',
+        hide='variable',
+        includeAll=true,
+        multi=false,
+        current='All',
+      ),
   },
 }

@@ -158,7 +158,7 @@ local table = grafana.tablePanel;
       local diskUtilGraphPanel =
         graphPanel.new(
           title='Disk Utilization',
-          description='The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
+          description='The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of types of displayed disk filesystems [here](https://github.com/dNationCloud/kubernetes-monitoring/blob/main/jsonnet/dashboards/grafana-templates.libsonnet) and list of explicitly ignored mount points and file systems at node-exporter level [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
           datasource='$datasource',
           formatY1='bytes',
           formatY2='percent',
@@ -169,10 +169,32 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/utilization/', yaxis: 2, lines: false, legend: false, pointradius: 0 })
         .addTargets(
           [
-            prometheus.target(legendFormat='disk used {{device}}  {{nodename}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
-            prometheus.target(legendFormat='disk size {{device}} {{nodename}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
-            prometheus.target(legendFormat='disk available {{device}} {{nodename}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
-            prometheus.target(legendFormat='disk utilization {{device}} {{nodename}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+            prometheus.target(legendFormat='disk used {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename, mountpoint)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename, mountpoint)'),
+            prometheus.target(legendFormat='disk size {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename, mountpoint)'),
+            prometheus.target(legendFormat='disk available {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename, mountpoint)'),
+            prometheus.target(legendFormat='disk utilization {{device}} {{nodename}} {{mountpoint}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename, mountpoint)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+          ]
+        ) { yaxes: std.mapWithIndex(function(i, item) if (i == 1) then item { show: false } else item, super.yaxes) };  // Hide second Y axis
+
+
+      local virtualFilesystemsUtilGraphPanel =
+        graphPanel.new(
+          title='Virtual Filesystems Utilization',
+          description='The percentage of the virtual filesystems utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems at grafana level [here](https://github.com/dNationCloud/kubernetes-monitoring/blob/main/jsonnet/dashboards/grafana-templates.libsonnet) and at node-exporter level [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
+          datasource='$datasource',
+          formatY1='bytes',
+          formatY2='percent',
+          min=0,
+        )
+        .addSeriesOverride({ alias: '/size/', fill: 0, linewidth: 2 })
+        .addSeriesOverride({ alias: '/available/', hiddenSeries: true })
+        .addSeriesOverride({ alias: '/utilization/', yaxis: 2, lines: false, legend: false, pointradius: 0 })
+        .addTargets(
+          [
+            prometheus.target(legendFormat='disk used {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk size {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk available {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk utilization {{device}} {{nodename}} {{mountpoint}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
           ]
         ) { yaxes: std.mapWithIndex(function(i, item) if (i == 1) then item { show: false } else item, super.yaxes) };  // Hide second Y axis
 
@@ -244,6 +266,7 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(node_uname_info{cluster=~"$cluster"}, job)'),
         $.grafanaTemplates.instanceTemplate('label_values(node_uname_info{cluster=~"$cluster", job=~"$job"}, nodename)'),
+        $.grafanaTemplates.diskFileSystemsTemplate(),
       ])
       .addPanels(
         [
@@ -263,7 +286,8 @@ local table = grafana.tablePanel;
           .addPanel(memUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 27, w: 24, h: 7 }),
           row.new('Disk Utilization', collapse=true) { gridPos: { x: 0, y: 28, w: 24, h: 1 } }
           .addPanel(diskUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 29, w: 24, h: 7 })
-          .addPanel(diskIOGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 36, w: 24, h: 7 }),
+          .addPanel(virtualFilesystemsUtilGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 36, w: 24, h: 7 })
+          .addPanel(diskIOGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 43, w: 24, h: 7 }),
           row.new('Network', collapse=true) { gridPos: { x: 0, y: 29, w: 24, h: 1 } }
           .addPanel(transRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 30, w: 24, h: 7 })
           .addPanel(netRecGraphPanel { tooltip+: { sort: 2 } }, { x: 0, y: 37, w: 24, h: 7 })

@@ -57,6 +57,7 @@
 (import 'apps/postfix.libsonnet') +
 (import 'apps/autoscaler.libsonnet') +
 (import 'apps/apache.libsonnet') +
+(import 'apps/mysql-exporter.libsonnet') +
 
 // Monitoring dashboards
 (import 'monitoring.libsonnet')
