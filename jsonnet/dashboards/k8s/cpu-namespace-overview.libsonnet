@@ -3,7 +3,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-      http://www.apache.org/licenses/LICENSE-2.0
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +18,6 @@
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
-local template = grafana.template;
 local row = grafana.row;
 local table = grafana.tablePanel;
 local graphPanel = grafana.graphPanel;
@@ -24,86 +25,6 @@ local graphPanel = grafana.graphPanel;
 {
   grafanaDashboards+:: {
     'cpu-namespace-overview':
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(kube_pod_info, cluster)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local instanceTemplate =
-        template.new(
-          name='instance',
-          label='Node',
-          query='label_values(kube_pod_info{cluster=~"$cluster"}, node)',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local namespaceTemplate =
-        template.new(
-          name='namespace',
-          label='Namespace',
-          datasource='$datasource',
-          query='label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance"}, namespace)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local workloadTemplate =
-        template.new(
-          name='workload',
-          label='Workload',
-          datasource='$datasource',
-          query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local workloadTypeTemplate =
-        template.new(
-          name='workload_type',
-          label='Workload Type',
-          datasource='$datasource',
-          query='label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, workload_type)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-          allValues='workaround',  // workaround for pods without workload type
-        );
-
-      local podTemplate =
-        template.new(
-          name='pod',
-          label='Pod',
-          datasource='$datasource',
-          query='label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-          hide='variable',
-        );
-
       local cpuUsageGraphPanel =
         graphPanel.new(
           title='CPU Usage',
@@ -158,7 +79,15 @@ local graphPanel = grafana.graphPanel;
         tags=$._config.grafanaDashboards.tags.k8sOverview,
         uid=$._config.grafanaDashboards.ids.cpuNamespaceOverview,
       )
-      .addTemplates([datasourceTemplate, clusterTemplate, instanceTemplate, namespaceTemplate, workloadTypeTemplate, workloadTemplate, podTemplate])
+      .addTemplates([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(kube_pod_info, cluster)'),
+        $.grafanaTemplates.instanceTemplate('label_values(kube_pod_info{cluster=~"$cluster"}, node)', label='Node'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance"}, namespace)'),
+        $.grafanaTemplates.podTemplate('label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)', hide='variable'),
+        $.grafanaTemplates.workloadTypeTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, workload_type)'),
+        $.grafanaTemplates.workloadTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)'),
+      ])
       .addPanels(
         [
           row.new('CPU Usage') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },

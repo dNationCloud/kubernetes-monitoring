@@ -3,7 +3,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-      http://www.apache.org/licenses/LICENSE-2.0
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -12,27 +14,18 @@
 */
 
 (import '../util.libsonnet') +
+(import 'grafana-templates.libsonnet') +
 
 // dNation dashboards
 (import 'k8s/k8s-monitoring.libsonnet') +
 (import 'k8s/alert-overview.libsonnet') +
-(import 'k8s/node-overview.libsonnet') +
-(import 'k8s/job-overview.libsonnet') +
-(import 'k8s/statefulset-overview.libsonnet') +
-(import 'k8s/pvc-overview.libsonnet') +
 (import 'k8s/node-exporter.libsonnet') +
-(import 'k8s/container-overview.libsonnet') +
-(import 'k8s/deployment-overview.libsonnet') +
-(import 'k8s/daemonset-overview.libsonnet') +
-(import 'k8s/disk-overview.libsonnet') +
-(import 'k8s/memory-overview.libsonnet') +
 (import 'k8s/memory-namespace-overview.libsonnet') +
-(import 'k8s/network-overview.libsonnet') +
 (import 'k8s/network-namespace-overview.libsonnet') +
-(import 'k8s/cpu-overview.libsonnet') +
-(import 'k8s/pod-overview.libsonnet') +
 (import 'k8s/container-detail.libsonnet') +
 (import 'k8s/cpu-namespace-overview.libsonnet') +
+(import 'k8s/k8s-overview-dashboards.libsonnet') +
+(import 'k8s/node-overview-dashboards.libsonnet') +
 
 // Kube system dashboards
 (import 'k8s/controller-manager.libsonnet') +
@@ -64,6 +57,7 @@
 (import 'apps/postfix.libsonnet') +
 (import 'apps/autoscaler.libsonnet') +
 (import 'apps/apache.libsonnet') +
+(import 'apps/mysql-exporter.libsonnet') +
 
 // Monitoring dashboards
 (import 'monitoring.libsonnet')

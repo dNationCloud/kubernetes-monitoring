@@ -1,0 +1,125 @@
+#
+# Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Example of cluster monitoring configuration for L1 and L2 (Prom templates)
+
+clusterMonitoring:
+  enabled: true
+  clusters:
+  - name: K8sCluster
+    description: 'Kubernetes cluster monitoring'
+    templates:
+      pvcBound:
+        linkTo: ['pvcOverviewTableProm', 'pvcOverviewTableExceptProm']
+        panel:
+          dataLinks: [
+            { title: 'K8s Overview Except Pro,', url: '/d/{}?%s&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to' },
+            { title: 'K8s Overview Prom', url: '/d/{}?%s&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to' },
+          ]
+      mostUtilizedPVCProm:
+        enabled: true
+        linkTo: ['pvcOverviewTableProm']
+      mostUtilizedPVCExceptProm:
+        enable: true
+        linkTo: ['pvcOverviewTableExceptProm']
+      mostUtilizedPVC:
+        enabled: false
+      pvcOverviewTable:
+        enabled: false
+      pvcOverviewTableExceptProm:
+        enabled: true
+      pvcOverviewTableProm:
+        enabled: true
+
+templates:
+  L1:
+    k8s:
+      # Create custom template for PVC Utilization of Prom PVCs
+      mostUtilizedPVCProm:
+        # Use `mostUtilizedPVC` as a parent template and inherit its template values
+        parent: 'mostUtilizedPVC'
+        default: false
+        panel:
+          title: 'Most Utilized Prom PVC'
+          expr: 'max(sum(((kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"prometheus.*\"} - kubelet_volume_stats_available_bytes{persistentvolumeclaim=~\"prometheus.*\"}) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"prometheus.*\"}) * 100) by (persistentvolumeclaim))'
+          thresholds:
+            critical: 97
+            warning: 95
+          gridPos:
+            x: 18
+            y: 10
+            w: 6
+            h: 3
+        alert:
+          name: 'PromPVCUtilizationHigh'
+          message: '\"{{ $labels.persistentvolumeclaim }}\": High Prom PVC Utilization {{ $value }}%'
+          expr: 'sum(((kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"prometheus.*\"} - kubelet_volume_stats_available_bytes{persistentvolumeclaim=~\"prometheus.*\"}) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~\"prometheus.*\"}) * 100) by (persistentvolumeclaim)'
+          thresholds:
+            critical: 97
+            warning: 95
+      # Create custom template for PVC Utilization except ELK PVCs
+      mostUtilizedPVCExceptProm:
+        parent: 'mostUtilizedPVC'
+        default: false
+        panel:
+          title: 'Most Utilized PVC (except Prom)'
+          expr: 'max(sum(((kubelet_volume_stats_capacity_bytes{persistentvolumeclaim!~\"prometheus.*\"} - kubelet_volume_stats_available_bytes{persistentvolumeclaim!~\"prometheus.*\"}) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim!~\"prometheus.*\"}) * 100) by (persistentvolumeclaim))'
+        alert:
+          name: 'ExceptPromPVCUtilizationHigh'
+          message: '\"{{ $labels.persistentvolumeclaim }}\": High PVC Utilization (except Prom) {{ $value }}%'
+          expr: 'sum(((kubelet_volume_stats_capacity_bytes{persistentvolumeclaim!~\"prometheus.*\"} - kubelet_volume_stats_available_bytes{persistentvolumeclaim!~\"prometheus.*\"}) / kubelet_volume_stats_capacity_bytes{persistentvolumeclaim!~\"prometheus.*\"}) * 100) by (persistentvolumeclaim)'
+
+  L2:
+    pvcOverview:
+      pvcOverviewTableProm:
+        dashboardInfo:
+          grafanaTemplateQuery: 'label_values(kube_persistentvolumeclaim_info{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"prometheus.*\"}, persistentvolumeclaim)'
+        parent: 'pvcOverviewTable'
+        default: false
+        panel:
+          title: 'PVC only Prom'
+          styles: [
+            { pattern: 'Time', type: 'hidden' },
+            { alias: 'Capacity', pattern: 'Value #A', colors: ['green', 'orange', 'red'], colorMode: 'cell', type: 'number', unit: 'percent', thresholds: [30, 40] },
+            { alias: 'Status', pattern: 'Value #B', colors: ['green', 'orange', 'red'], colorMode: 'cell', type: 'string', thresholds: [2, 2], valueMaps: [{ text: 'Bound', value: 1 }, { text: 'Lost', value: 2 }, { text: 'Pending', value: 3 }], mappingType: 1 },
+            { alias: 'PVC', pattern: 'persistentvolumeclaim', link: true, linkTooltip: 'Detail', linkUrl: '/d/persistentvolumes?var-namespace=${__cell_1}&var-volume=${__cell_2}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to'},
+            { alias: 'Namespace', pattern: 'namespace', type: 'string' },
+          ]
+          expr: [
+              'sum by (persistentvolumeclaim, namespace) (((kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\", persistentvolumeclaim=~\"prometheus.*\"} - kubelet_volume_stats_available_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\"}) / kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\"}) * 100)',
+              '
+                sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\", persistentvolumeclaim=~\"prometheus.*\", phase=\"Bound\"} * 1) +
+                sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\", phase=\"Lost\"} * 2) +
+                sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\", phase=\"Pending\"} * 3)
+              ',
+          ]
+
+      pvcOverviewTableExceptProm:
+        dashboardInfo:
+          grafanaTemplateQuery: 'label_values(kube_persistentvolumeclaim_info{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim!~\"prometheus.*\"}, persistentvolumeclaim)'
+        parent: 'pvcOverviewTable'
+        default: false
+        panel:
+          title: 'PVC except Prom'
+          expr: [
+              'sum by (persistentvolumeclaim, namespace) (((kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\", persistentvolumeclaim!~\"prometheus.*\"} - kubelet_volume_stats_available_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\"}) / kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\"}) * 100)',
+              '
+                sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\", persistentvolumeclaim!~\"prometheus.*\", phase=\"Bound\"} * 1) +
+                sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\", phase=\"Lost\"} * 2) +
+                sum by (persistentvolumeclaim, namespace) (kube_persistentvolumeclaim_status_phase{cluster=~\"$cluster\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$pvc\", phase=\"Pending\"} * 3)
+              ',
+          ]
+
+

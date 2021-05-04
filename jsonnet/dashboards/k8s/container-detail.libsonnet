@@ -3,7 +3,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-      http://www.apache.org/licenses/LICENSE-2.0
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +19,6 @@ local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
 local loki = grafana.loki;
-local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local logPanel = grafana.logPanel;
 local row = grafana.row;
@@ -126,108 +127,20 @@ local row = grafana.row;
         )
         .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
 
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local datasourceLogsTemplate =
-        template.datasource(
-          name='datasource_logs',
-          label='Logs datasource',
-          query='loki',
-          current=null,
-        );
-
-      local viewByTemplate =
-        template.custom(
-          name='view',
-          label='View by',
-          query='pod,container',
-          current='container',
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes, cluster)',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local instanceTemplate =
-        template.new(
-          name='instance',
-          label='Node',
-          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster"}, node)',
-          datasource='$datasource',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          multi=true,
-          includeAll=true,
-        );
-
-      local namespaceTemplate =
-        template.new(
-          name='namespace',
-          label='Namespace',
-          datasource='$datasource',
-          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance"}, namespace)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local podTemplate =
-        template.new(
-          name='pod',
-          label='Pod',
-          datasource='$datasource',
-          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local containerTemplate =
-        template.new(
-          name='container',
-          label='Container',
-          datasource='$datasource',
-          query='label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", pod=~"$pod"}, container)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local searchTemplate =
-        template.text(
-          name='search',
-          label='Logs Search',
-        );
-
-      local templates = [
-                          datasourceTemplate,
-                        ]
-                        + (if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [])
-                        + [
-                          viewByTemplate,
-                          clusterTemplate,
-                          instanceTemplate,
-                          namespaceTemplate,
-                          podTemplate,
-                          containerTemplate,
-                        ]
-                        + if $._config.grafanaDashboards.isLoki then [searchTemplate] else [];
+      local templates =
+        [
+          $.grafanaTemplates.datasourceTemplate(),
+        ]
+        + (if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [])
+        + [
+          $.grafanaTemplates.viewByTemplate('pod,container'),
+          $.grafanaTemplates.clusterTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes, cluster)'),
+          $.grafanaTemplates.instanceTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster"}, node)', label='Node'),
+          $.grafanaTemplates.namespaceTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance"}, namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)'),
+          $.grafanaTemplates.containerTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", pod=~"$pod"}, container)'),
+        ]
+        + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.searchTemplate()] else [];
 
       local logsPanels = [
         row.new('Logs') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },

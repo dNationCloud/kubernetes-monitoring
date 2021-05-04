@@ -3,7 +3,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-      http://www.apache.org/licenses/LICENSE-2.0
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,9 +16,9 @@
 /* K8s java actuator dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
+local template = grafana.template;
 local prometheus = grafana.prometheus;
 local loki = grafana.loki;
-local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local logPanel = grafana.logPanel;
 local statPanel = grafana.statPanel;
@@ -25,95 +27,6 @@ local row = grafana.row;
 {
   grafanaDashboards+:: {
     'java-actuator':
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local datasourceLogsTemplate =
-        template.datasource(
-          name='datasource_logs',
-          label='Logs datasource',
-          query='loki',
-          current=null,
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(node_uname_info, cluster)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local jobTemplate =
-        template.new(
-          name='job',
-          label='Job',
-          datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster"}, job)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          includeAll=true,
-          multi=true,
-        );
-
-      local viewByTemplate =
-        template.custom(
-          name='view',
-          label='View by',
-          query='pod,container',
-          current='container',
-        );
-
-      local namespaceTemplate =
-        template.new(
-          name='namespace',
-          label='Namespace',
-          datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job"}, namespace)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local podTemplate =
-        template.new(
-          name='pod',
-          label='Pod',
-          datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local containerTemplate =
-        template.new(
-          name='container',
-          label='Container',
-          datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local searchTemplate =
-        template.text(
-          name='search',
-          label='Logs Search',
-        );
-
       local memoryPoolsHeap =
         template.new(
           name='jvm_memory_pool_heap',
@@ -290,7 +203,7 @@ local row = grafana.row;
           unit='percent',
           decimals=2,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.k8sApps.javaActuator.panel.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.L1.k8sApps.javaActuator.panel.thresholds))
         .addTarget(
           prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})'),
         );
@@ -302,7 +215,7 @@ local row = grafana.row;
           unit='percent',
           decimals=2,
         )
-        .addThresholds($.grafanaThresholds($._config.templates.k8sApps.javaActuator.panel.thresholds))
+        .addThresholds($.grafanaThresholds($._config.templates.L1.k8sApps.javaActuator.panel.thresholds))
         .addTarget(
           prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})'),
         );
@@ -609,21 +522,22 @@ local row = grafana.row;
         )
         .addTarget(prometheus.target('sum(jvm_buffer_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='count - {{$view}}'));
 
-      local templates = [
-                          datasourceTemplate,
-                        ]
-                        + (if $._config.grafanaDashboards.isLoki then [datasourceLogsTemplate] else [])
-                        + [
-                          clusterTemplate,
-                          jobTemplate,
-                          viewByTemplate,
-                          namespaceTemplate,
-                          podTemplate,
-                          containerTemplate,
-                          memoryPoolsHeap,
-                          memoryPoolsNonHeap,
-                        ]
-                        + if $._config.grafanaDashboards.isLoki then [searchTemplate] else [];
+      local templates =
+        [
+          $.grafanaTemplates.datasourceTemplate(),
+        ]
+        + (if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [])
+        + [
+          $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+          $.grafanaTemplates.jobTemplate('label_values(jvm_memory_used_bytes{cluster=~"$cluster"}, job)'),
+          $.grafanaTemplates.viewByTemplate('pod,container'),
+          $.grafanaTemplates.namespaceTemplate('label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job"}, namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
+          $.grafanaTemplates.containerTemplate('label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)'),
+          memoryPoolsHeap,
+          memoryPoolsNonHeap,
+        ]
+        + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.searchTemplate()] else [];
 
       local logsPanels = [
         row.new('Logs', collapse=true) { gridPos: { x: 0, y: 5, w: 24, h: 1 } }

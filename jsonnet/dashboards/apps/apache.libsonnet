@@ -3,7 +3,9 @@
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-      http://www.apache.org/licenses/LICENSE-2.0
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,44 +17,12 @@
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local prometheus = grafana.prometheus;
-local template = grafana.template;
 local graphPanel = grafana.graphPanel;
 local row = grafana.row;
 
 {
   grafanaDashboards+:: {
     apache:
-      local datasourceTemplate =
-        template.datasource(
-          name='datasource',
-          label='Datasource',
-          query='prometheus',
-          current=null,
-        );
-
-      local clusterTemplate =
-        template.new(
-          name='cluster',
-          label='Cluster',
-          datasource='$datasource',
-          query='label_values(node_uname_info, cluster)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          hide='variable',
-        );
-
-      local jobTemplate =
-        template.new(
-          name='job',
-          label='Job',
-          datasource='$datasource',
-          query='label_values(apache__c_p_u_load{cluster=~"$cluster"}, job)',
-          sort=$._config.grafanaDashboards.templateSort,
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          includeAll=true,
-          multi=true,
-        );
-
       local requests =
         graphPanel.new(
           title='Apache Requests per second',
@@ -104,8 +74,6 @@ local row = grafana.row;
           ],
         );
 
-      local templates = [datasourceTemplate, clusterTemplate, jobTemplate];
-
       local panels = [
         row.new('Requests') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
         requests { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
@@ -127,7 +95,11 @@ local row = grafana.row;
         tags=$._config.grafanaDashboards.tags.k8sApps,
         uid=$._config.grafanaDashboards.ids.apache,
       )
-      .addTemplates(templates)
+      .addTemplates([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+        $.grafanaTemplates.jobTemplate('label_values(apache__c_p_u_load{cluster=~"$cluster"}, job)'),
+      ])
       .addPanels(panels),
   },
 }
