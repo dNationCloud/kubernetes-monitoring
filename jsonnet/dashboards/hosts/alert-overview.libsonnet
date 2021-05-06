@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-/* K8s alert overview dashboard */
+/* Host alert overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -62,7 +62,7 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.alertManagerTemplate(),
         $.grafanaTemplates.alertGroupTemplate('label_values(ALERTS, alertgroup)'),
         $.grafanaTemplates.severityTemplate('label_values(ALERTS, severity)'),
-        $.grafanaTemplates.jobTemplate('label_values(up, job)', hide='variable'),
+        $.grafanaTemplates.jobTemplate('label_values(ALERTS, job)', hide='variable'),
       ])
       .addPanels(
         [

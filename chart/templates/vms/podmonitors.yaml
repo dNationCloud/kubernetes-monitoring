@@ -1,0 +1,72 @@
+#
+# Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+{{- if and .Values.clusterMonitoring.enabled }}
+  {{ $vm_pod_monitors := dict }}
+  {{- range .Values.clusterMonitoring.clusters }}
+    {{ if hasKey . "vms" }}
+      {{- range .vms }}
+        {{ if hasKey . "podMonitor" }}
+          {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+          {{ $_ := set $vm_pod_monitors $name .podMonitor }}
+        {{- end }}
+        {{ if hasKey . "apps" }}
+          {{- range .apps }}
+            {{ if hasKey . "podMonitor" }}
+              {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+              {{ $_ := set $vm_pod_monitors $name .podMonitor }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
+{{- if $vm_pod_monitors }}
+apiVersion: v1
+kind: List
+items:
+{{- range $name, $podMonitor := $vm_pod_monitors }}
+- apiVersion: monitoring.coreos.com/v1
+  kind: PodMonitor
+  metadata:
+    namespace: {{ include "k8s-monitoring.namespace" $ }}
+    name: {{ $name }}
+    labels:
+{{ include "k8s-monitoring.labels" $ | indent 6 }}
+      app: {{ include "k8s-monitoring.name" $ }}
+      release: {{ include "k8s-monitoring.release" $ }}
+  spec:
+    podMetricsEndpoints:
+{{ toYaml $podMonitor.podMetricsEndpoints | indent 4 }}
+  {{- if $podMonitor.jobLabel }}
+    jobLabel: {{ $podMonitor.jobLabel }}
+  {{- end }}
+  {{- if $podMonitor.namespaceSelector }}
+    namespaceSelector:
+{{ toYaml $podMonitor.namespaceSelector | indent 6 }}
+  {{- end }}
+    selector:
+{{ toYaml $podMonitor.selector | indent 6 }}
+  {{- if $podMonitor.targetLabels }}
+    podTargetLabels:
+{{ toYaml $podMonitor.targetLabels | indent 6 }}
+  {{- end }}
+  {{- if $podMonitor.sampleLimit }}
+    sampleLimit: {{ $podMonitor.sampleLimit }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
