@@ -6,17 +6,17 @@
 
 [Amazon Web Services](https://aws.amazon.com/) (AWS) provides a number of different cloud and container services, including the [Amazon Elastic Container Service for Kubernetes](https://aws.amazon.com/eks/) (EKS), which allows users to quickly and easily create Kubernetes clusters in the cloud. But starting up a cluster is just the beginning: the next step is to deploy applications on it.
 
-That’s where this tutorial comes in. It will walk you, step by step, through the process of using the [AWS Marketplace](https://aws.amazon.com/marketplace) to deploy applications on a running EKS cluster.
+That’s where this tutorial comes in. It will walk you, step by step, through the process of using the [AWS Marketplace](https://aws.amazon.com/marketplace) to deploy dnation Kubernetes monitoring on a running EKS cluster.
 
 
 
 ### Overview
 
-This guide will walk you through the process of deploying and managing applications in an EKS cluster using the [AWS Marketplace](https://aws.amazon.com/marketplace) and [Helm](https://helm.sh/). For illustrative purposes, this guide will show you the steps to deploy the [dNation Kubernetes Monitoring Helm chart](https://github.com/dNationCloud/kubernetes-monitoring) on your EKS cluster with Helm. 
+This guide will walk you through the process of deploying and managing applications in an EKS cluster using the [AWS Marketplace](https://aws.amazon.com/marketplace) and [Helm](https://helm.sh/). This guide will show you the steps to deploy the [dNation Kubernetes Monitoring Helm chart](https://github.com/dNationCloud/kubernetes-monitoring) on your EKS cluster with Helm.
 
 Here are the steps you’ll follow in this tutorial:
 
-- Subscribe to the dNation Kubernetes Monitoring container using the AWS Marketplace
+- Subscribe to the dNation Kubernetes Monitoring using the AWS Marketplace
 - Deploy the dNation Kubernetes Monitoring Helm chart on EKS through Helm
 - Log in and start using dNation Kubernetes Monitoring
 
@@ -33,9 +33,9 @@ This guide assumes that:
 
 
 
-### Step 1: Subscribe To The dNation Kubernetes Monitoring Container Using The AWS Marketplace
+### Step 1: Subscribe To The dNation Kubernetes Monitoring Using The AWS Marketplace
 
-At the end of this step, you will have subscribed to the dNation Kubernetes Monitoring container solution in the AWS Marketplace and obtained the details of the registry.
+At the end of this step, you will have subscribed to the dNation Kubernetes Monitoring  solution in the AWS Marketplace.
 
 Follow these steps:
 
@@ -43,11 +43,11 @@ Follow these steps:
 
 ![log_in](images/aws_log_in.png)
 
-- Search for the dNation Kubernetes Monitoring container by entering the search term “dNation kubernetes monitoring container” in the search bar at the top.
+- Search for the dNation Kubernetes Monitoring by entering the search term “dNation kubernetes monitoring” in the search bar at the top.
 
   
 
-- Select the dNation Kubernetes Monitoring  container in the list of search results.
+- Select the dNation Kubernetes Monitoring in the list of search results.
 
   
 
@@ -69,17 +69,9 @@ Follow these steps:
 
   
 
-- On the launch page, you can review your configuration and see the instruction to the given software. By clicking on "View container image details", u will see pull command instructions
+- On the launch page, you can review your configuration and see the instruction to the given software.
 
-  ![launch_page](images/launch_page.png)
-
-  
-
-- On the pull command instructions page, follow the steps to pull docker image.
-
-  ![pull_commands](images/pull_command.png)
-
-
+  ![launch_page](images/launch.png)
 
 
 
@@ -103,11 +95,19 @@ Follow these steps:
 
   
 
+- It is a good practice to install new packages in a separate namespace, as it is easier to manage it this way. Create a new namespace, for example called it "monitoring"
+
+  ```bash
+  kubectl create namespace monitoring
+  ```
+
+  
+
 - In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install dNation Kubernetes Monitoring Stack helm chart (recommended) with dNation Kubernetes Monitoring Chart
 
   ```bash
   # Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart
-  helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack
+  helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring
   ```
 
   
@@ -116,7 +116,7 @@ Follow these steps:
 
   ```bash
   # Install dNation Kubernetes Monitoring
-  helm install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring
+  helm install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring
   ```
   
   
@@ -124,7 +124,7 @@ Follow these steps:
 - Check its status by running
 
   ```bash
-  kubectl --namespace <your-namespace> get pods
+  kubectl get pods --namespace monitoring 
   ```
 
 
@@ -140,7 +140,7 @@ To log in to the dNation Kubernetes Monitoring dashboard, follow these steps:
 - Get your 'admin' user password by running
 
   ```bash
-  kubectl --namespace default get secret dnation-kubernetes-monitoring-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+  kubectl --namespace monitoring get secret dnation-kubernetes-monitoring-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
   ```
 
   
@@ -149,7 +149,7 @@ To log in to the dNation Kubernetes Monitoring dashboard, follow these steps:
 
   ```bash
   export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack" -o jsonpath="{.items[0].metadata.name}")
-  kubectl --namespace default port-forward $POD_NAME 3000
+  kubectl --namespace monitoring port-forward $POD_NAME 3000
   ```
 
   
@@ -162,11 +162,19 @@ To log in to the dNation Kubernetes Monitoring dashboard, follow these steps:
 
 - Login with the password you obtained at the first bullet point and the username: 'admin', then you should arrive at 'Home' page
 
-  ![](images/home.png)
+  ![home_page](images/home.png)
 
   
 
-- Click on the "Search" icon on left hand side and search for `Monitoring` dashboard in the `dNation` directory. The fun starts here :)
+- Click on the "Search" icon on left hand side and search for `Monitoring` dashboard in the `dNation` directory and you will see "L0 layer", where your cluster and hosts will be displayed. 
+
+  ![L0_layer](images/l0.png)
+
+  
+
+- If you want to see more information about your cluster, just drill down by left-clicking on the state panel. The fun starts here :)
+
+  ![L1_layer](images/l1_k8s.png)
 
 
 
