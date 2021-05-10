@@ -49,6 +49,7 @@ local graphPanel = grafana.graphPanel;
           format=format,
           min=0,
           stack=true,
+          nullPointMode='null as zero',
           fill=2,
           linewidth=2,
           legend_alignAsTable=true,

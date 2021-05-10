@@ -30,6 +30,7 @@ local graphPanel = grafana.graphPanel;
           title='CPU Usage',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
           min=0,
         )
         .addTarget(

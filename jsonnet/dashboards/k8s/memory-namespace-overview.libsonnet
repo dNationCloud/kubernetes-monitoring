@@ -29,6 +29,7 @@ local graphPanel = grafana.graphPanel;
         graphPanel.new(
           title='Memory Usage',
           stack=true,
+          nullPointMode='null as zero',
           datasource='$datasource',
           format='bytes',
           min=0,

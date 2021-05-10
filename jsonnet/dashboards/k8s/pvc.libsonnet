@@ -31,6 +31,7 @@ local graphPanel = grafana.graphPanel;
           format=format,
           min=0,
           stack=true,
+          nullPointMode='null as zero',
           legend_alignAsTable=true,
           legend_avg=true,
           legend_current=true,
