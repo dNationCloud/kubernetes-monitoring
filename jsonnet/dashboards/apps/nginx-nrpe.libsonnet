@@ -28,6 +28,7 @@ local row = grafana.row;
           title='Nginx connections',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTargets(
           [
@@ -42,6 +43,7 @@ local row = grafana.row;
           title='Nginx connections',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTargets(
           [
@@ -56,6 +58,7 @@ local row = grafana.row;
           title='Nginx requests',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTarget(prometheus.target('rate(nginx_requests_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='requests'));
 
