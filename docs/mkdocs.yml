@@ -24,6 +24,7 @@ edit_uri: ""
 nav:
 - Home: README.md
 - Docs: docs/documentation.md
+- AWS: docs/AWS_doc.md
 - FAQ: helpers/FAQ.md
 
 # https://squidfunk.github.io/mkdocs-material/

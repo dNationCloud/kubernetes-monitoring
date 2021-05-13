@@ -1,0 +1,633 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.7">
+    
+    
+      
+        <title>AWS - dNation Kubernetes Monitoring</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.19753c6b.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.196e0c26.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../docs.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#get-started-with-dnation-cloud-chart-using-amazon-eks-and-the-aws-marketplace" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="dNation Kubernetes Monitoring" class="md-header-nav__button md-logo" aria-label="dNation Kubernetes Monitoring">
+      
+  <img src="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png" alt="logo">
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            dNation Kubernetes Monitoring
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              AWS
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/dNationCloud/kubernetes-monitoring" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dNationCloud/kubernetes-monitoring
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="dNation Kubernetes Monitoring" class="md-nav__button md-logo" aria-label="dNation Kubernetes Monitoring">
+      
+  <img src="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png" alt="logo">
+
+    </a>
+    dNation Kubernetes Monitoring
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/dNationCloud/kubernetes-monitoring" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dNationCloud/kubernetes-monitoring
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../documentation/" class="md-nav__link">
+      Docs
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        AWS
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      AWS
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#get-started-with-dnation-cloud-chart-using-amazon-eks-and-the-aws-marketplace" class="md-nav__link">
+    Get Started With dNation Cloud Chart Using Amazon EKS And The AWS Marketplace
+  </a>
+  
+    <nav class="md-nav" aria-label="Get Started With dNation Cloud Chart Using Amazon EKS And The AWS Marketplace">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assumptions-and-prerequisites" class="md-nav__link">
+    Assumptions And Prerequisites
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-subscribe-to-the-dnation-kubernetes-monitoring-using-the-aws-marketplace" class="md-nav__link">
+    Step 1: Subscribe To The dNation Kubernetes Monitoring Using The AWS Marketplace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-deploy-dnation-kubernetes-monitoring-helm-chart-on-eks" class="md-nav__link">
+    Step 2: Deploy dNation Kubernetes Monitoring Helm Chart On EKS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-log-in-and-start-using-dnation-kubernetes-monitoring" class="md-nav__link">
+    Step 3: Log In And Start Using dNation Kubernetes Monitoring
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useful-links" class="md-nav__link">
+    Useful Links
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../helpers/FAQ/" class="md-nav__link">
+      FAQ
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#get-started-with-dnation-cloud-chart-using-amazon-eks-and-the-aws-marketplace" class="md-nav__link">
+    Get Started With dNation Cloud Chart Using Amazon EKS And The AWS Marketplace
+  </a>
+  
+    <nav class="md-nav" aria-label="Get Started With dNation Cloud Chart Using Amazon EKS And The AWS Marketplace">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assumptions-and-prerequisites" class="md-nav__link">
+    Assumptions And Prerequisites
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-subscribe-to-the-dnation-kubernetes-monitoring-using-the-aws-marketplace" class="md-nav__link">
+    Step 1: Subscribe To The dNation Kubernetes Monitoring Using The AWS Marketplace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-deploy-dnation-kubernetes-monitoring-helm-chart-on-eks" class="md-nav__link">
+    Step 2: Deploy dNation Kubernetes Monitoring Helm Chart On EKS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-log-in-and-start-using-dnation-kubernetes-monitoring" class="md-nav__link">
+    Step 3: Log In And Start Using dNation Kubernetes Monitoring
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useful-links" class="md-nav__link">
+    Useful Links
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>AWS</h1>
+                
+                <h2 id="get-started-with-dnation-cloud-chart-using-amazon-eks-and-the-aws-marketplace">Get Started With dNation Cloud Chart Using Amazon EKS And The AWS Marketplace</h2>
+<h3 id="introduction">Introduction</h3>
+<p><a href="https://aws.amazon.com/">Amazon Web Services</a> (AWS) provides a number of different cloud and container services, including the <a href="https://aws.amazon.com/eks/">Amazon Elastic Container Service for Kubernetes</a> (EKS), which allows users to quickly and easily create Kubernetes clusters in the cloud. But starting up a cluster is just the beginning: the next step is to deploy applications and monitor them.</p>
+<p>That’s where this tutorial comes in. It will walk you, step by step, through the process of using the <a href="https://aws.amazon.com/marketplace">AWS Marketplace</a> to deploy dNation Kubernetes monitoring on a running EKS cluster.</p>
+<h3 id="overview">Overview</h3>
+<p>This guide will walk you through the process of deploying and managing applications in an EKS cluster using the <a href="https://aws.amazon.com/marketplace">AWS Marketplace</a> and <a href="https://helm.sh/">Helm</a>. This guide will show you the steps to deploy the <a href="https://github.com/dNationCloud/kubernetes-monitoring">dNation Kubernetes Monitoring Helm chart</a> on your EKS cluster with Helm.</p>
+<p>Here are the steps you’ll follow in this tutorial:</p>
+<ul>
+<li>Subscribe to the dNation Kubernetes Monitoring using the AWS Marketplace</li>
+<li>Deploy the dNation Kubernetes Monitoring Helm chart on EKS through Helm</li>
+<li>Log in and start using dNation Kubernetes Monitoring</li>
+</ul>
+<p>The next sections will walk you through these steps in detail.</p>
+<h3 id="assumptions-and-prerequisites">Assumptions And Prerequisites</h3>
+<p>This guide assumes that:</p>
+<ul>
+<li>You have an active AWS account. If you don’t have this, <a href="https://aws.amazon.com/">create a new account</a>.</li>
+<li>You have a running EKS cluster with Helm 3.x and <em>kubectl</em> installed. </li>
+</ul>
+<h3 id="step-1-subscribe-to-the-dnation-kubernetes-monitoring-using-the-aws-marketplace">Step 1: Subscribe To The dNation Kubernetes Monitoring Using The AWS Marketplace</h3>
+<p>At the end of this step, you will have subscribed to the dNation Kubernetes Monitoring  solution in the AWS Marketplace.</p>
+<p>Follow these steps:</p>
+<ul>
+<li>Log in to the <a href="https://aws.amazon.com/marketplace">AWS Marketplace</a>.</li>
+</ul>
+<p><img alt="log_in" src="../images/aws_log_in.png" /></p>
+<ul>
+<li>
+<p>Search for the dNation Kubernetes Monitoring by entering the search term “dNation kubernetes monitoring” in the search bar at the top.</p>
+</li>
+<li>
+<p>Select the dNation Kubernetes Monitoring in the list of search results.</p>
+</li>
+<li>
+<p>On the product detail page, review the details of the solution and click the “Continue to subscribe” button.</p>
+</li>
+</ul>
+<p><img alt="continue_to_subscribe" src="../images/continue_to_subscribe.png" /></p>
+<ul>
+<li>On the product subscription page, select “Continue to configuration” as accept the terms and pricing.</li>
+</ul>
+<p><img alt="continue_to_configuration" src="../images/continue_to_conf.png" /></p>
+<ul>
+<li>On the product configuration page, select delivery method as “Container” , select Software version and click the "Continue to Launch".</li>
+</ul>
+<p><img alt="configuration_page" src="../images/conf_page.png" /></p>
+<ul>
+<li>On the launch page, you can review your configuration and see the instruction to the given software.</li>
+</ul>
+<p><img alt="launch_page" src="../images/launch.png" /></p>
+<h3 id="step-2-deploy-dnation-kubernetes-monitoring-helm-chart-on-eks">Step 2: Deploy dNation Kubernetes Monitoring Helm Chart On EKS</h3>
+<p>At the end of this step, you will have deployed dNation Kubernetes Monitoring  on your EKS cluster.</p>
+<p>The next step is to deploy dNation Kubernetes Monitoring on your EKS cluster. The easiest way to do this is with a Helm chart.</p>
+<p>Follow these steps:</p>
+<ul>
+<li>Add dNation helm repository and update it.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add dNation helm repository</span>
+helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
+helm repo update
+</code></pre></div>
+<ul>
+<li>It is a good practice to install new packages in a separate namespace, as it is easier to manage it this way. Create a new namespace, for example call it "monitoring"</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl create namespace monitoring
+</code></pre></div>
+<ul>
+<li>In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install dNation Kubernetes Monitoring Stack helm chart (recommended) with dNation Kubernetes Monitoring Chart</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart</span>
+helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring
+</code></pre></div>
+<ul>
+<li>If your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow this</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring</span>
+helm install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring
+</code></pre></div>
+<ul>
+<li>Check its status by running</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl get pods --namespace monitoring 
+</code></pre></div>
+<h3 id="step-3-log-in-and-start-using-dnation-kubernetes-monitoring">Step 3: Log In And Start Using dNation Kubernetes Monitoring</h3>
+<p>At the end of this step, you will have logged in to the dNation Kubernetes Monitoring.</p>
+<p>To log in to the dNation Kubernetes Monitoring dashboard, follow these steps:</p>
+<ul>
+<li>Get your 'admin' user password by running</li>
+</ul>
+<div class="highlight"><pre><span></span><code>kubectl --namespace monitoring get secret dnation-kubernetes-monitoring-stack-grafana -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.admin-password}&quot;</span> <span class="p">|</span> base64 --decode <span class="p">;</span> <span class="nb">echo</span>
+</code></pre></div>
+<ul>
+<li>Use Port Forwarding if you want to access the Grafana server from outside your cluster</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace default -l <span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
+kubectl --namespace monitoring port-forward <span class="nv">$POD_NAME</span> <span class="m">3000</span>
+</code></pre></div>
+<ul>
+<li>If you didn't modify the default values the Grafana server is exposed by ClusterIP service and can be accessed via port 80 on the DNS name. Usually at the URL <em>http://DNS/</em> or if you used Port Forwarding at <em>http://localhost:3000/</em></li>
+</ul>
+<p><img alt="log_in" src="../images/log_in.png" /></p>
+<ul>
+<li>Login with the password you obtained at the first bullet point and the username: 'admin', then you should arrive at 'Home' page</li>
+</ul>
+<p><img alt="home_page" src="../images/home.png" /></p>
+<ul>
+<li>Click on the "Search" icon on left hand side and search for <code>Monitoring</code> dashboard in the <code>dNation</code> directory and you will see "L0 layer", where your cluster and hosts will be displayed. </li>
+</ul>
+<p><img alt="L0_layer" src="../images/l0.png" /></p>
+<ul>
+<li>If you want to see more information about your cluster, just drill down by left-clicking on the state panel. The fun starts here :)</li>
+</ul>
+<p><img alt="L1_layer" src="../images/l1_k8s.png" /></p>
+<p>If you want to set the <code>Monitoring</code> dashboard as a home dashboard follow <a href="https://grafana.com/docs/grafana/latest/administration/change-home-dashboard/#set-the-default-dashboard-through-preferences">here</a>. If you're experiencing issues please read the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation">documentation</a> and <a href="https://dnationcloud.github.io/kubernetes-monitoring/helpers/FAQ/">FAQ</a>.</p>
+<h3 id="useful-links">Useful Links</h3>
+<p>To learn more about the topics discussed in this tutorial, use the links below:</p>
+<ul>
+<li>
+<p><a href="https://aws.amazon.com/eks/">Amazon EKS</a></p>
+</li>
+<li>
+<p><a href="https://kubernetes.io/">Kubernetes</a></p>
+</li>
+<li>
+<p><a href="https://helm.sh/">Helm</a></p>
+</li>
+<li>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring">dNation Kubernetes Monitoring</a></p>
+</li>
+<li>
+<p><a href="https://dnation.cloud/">dNation Cloud</a></p>
+</li>
+</ul>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../documentation/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Docs
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../../helpers/FAQ/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                FAQ
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.0ac82a11.min.js"></script>
+      <script src="../../assets/javascripts/bundle.f81dfb4d.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.4ac00218.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
