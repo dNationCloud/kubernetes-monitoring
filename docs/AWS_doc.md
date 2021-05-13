@@ -6,11 +6,7 @@
 
 [Amazon Web Services](https://aws.amazon.com/) (AWS) provides a number of different cloud and container services, including the [Amazon Elastic Container Service for Kubernetes](https://aws.amazon.com/eks/) (EKS), which allows users to quickly and easily create Kubernetes clusters in the cloud. But starting up a cluster is just the beginning: the next step is to deploy applications and monitor them.
 
-<<<<<<< HEAD
 That’s where this tutorial comes in. It will walk you, step by step, through the process of using the [AWS Marketplace](https://aws.amazon.com/marketplace) to deploy dNation Kubernetes monitoring on a running EKS cluster.
-=======
-That’s where this tutorial comes in. It will walk you, step by step, through the process of using the [AWS Marketplace](https://aws.amazon.com/marketplace) to deploy dnation Kubernetes monitoring on a running EKS cluster.
->>>>>>> 641021c165fd983abdd9137b797ce01df16f7544
 
 
 
@@ -99,11 +95,7 @@ Follow these steps:
 
   
 
-<<<<<<< HEAD
 - It is a good practice to install new packages in a separate namespace, as it is easier to manage it this way. Create a new namespace, for example call it "monitoring"
-=======
-- It is a good practice to install new packages in a separate namespace, as it is easier to manage it this way. Create a new namespace, for example called it "monitoring"
->>>>>>> 641021c165fd983abdd9137b797ce01df16f7544
 
   ```bash
   kubectl create namespace monitoring
