@@ -57,6 +57,7 @@ local table = grafana.tablePanel;
           min=0,
           max=100,
           stack=true,
+          nullPointMode='null as zero',
           linewidth=2,
           fill=2,
         )
@@ -108,6 +109,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           format='Bps',
           stack=true,
+          nullPointMode='null as zero',
           linewidth=2,
           fill=2,
         )
@@ -126,6 +128,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           format='pps',
           stack=true,
+          nullPointMode='null as zero',
           linewidth=2,
           fill=2,
         )
@@ -144,6 +147,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           format='pps',
           stack=true,
+          nullPointMode='null as zero',
           linewidth=2,
           fill=2,
         )

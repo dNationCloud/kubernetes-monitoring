@@ -28,6 +28,7 @@ local row = grafana.row;
           title='PHP FPM accepted connections',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTarget(prometheus.target('rate(fpm_accepted_conn_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='connections'));
 
@@ -36,6 +37,7 @@ local row = grafana.row;
           title='PHP FPM slow requests',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTarget(prometheus.target('rate(fpm_slow_requests_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='requests'));
 

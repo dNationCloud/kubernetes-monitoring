@@ -56,6 +56,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='reqps',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addSeriesOverride({ alias: '/2../i', color: '#56A64B' })
         .addSeriesOverride({ alias: '/3../i', color: '#F2CC0C' })
@@ -94,6 +95,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='reqps',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addSeriesOverride({ alias: '/2../i', color: '#56A64B' })
         .addSeriesOverride({ alias: '/3../i', color: '#F2CC0C' })

@@ -28,6 +28,7 @@ local row = grafana.row;
           title='Apache Requests per second',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTarget(prometheus.target('rate(apache__req_per_sec{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='requests'));
 
@@ -36,6 +37,7 @@ local row = grafana.row;
           title='Apache CPU Load',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTarget(prometheus.target('rate(apache__c_p_u_load{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='load'));
 
@@ -45,6 +47,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='bytes',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTarget(prometheus.target('rate(apache__total_k_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='total'));
 
@@ -54,6 +57,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='bytes',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTargets(
           [
