@@ -661,7 +661,7 @@
             title: 'Overall Utilization',
             description: 'The percentage of the memory utilization is calculated by:\n```\n1 - (<memory available>/<memory total>)\n```',
             dataLinks: [
-              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' %  $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
+              { title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs },
               { title: 'K8s Overview', url: '/d/%s?%s' % [$.defaultConfig.grafanaDashboards.ids.memoryNamespaceOverview, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
             expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
@@ -687,7 +687,7 @@
           panel: {
             title: 'Overall Utilization',
             description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
-            dataLinks: [{ title: 'System Overview', url: '/d/{}?%s&var-instance=All' %  $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
+            dataLinks: [{ title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
             thresholds: thresholds,
             gridPos: {

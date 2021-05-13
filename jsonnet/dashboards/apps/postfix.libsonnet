@@ -28,6 +28,7 @@ local row = grafana.row;
           title='Postfix Queue Size',
           datasource='$datasource',
           stack=true,
+          nullPointMode='null as zero',
         )
         .addTarget(prometheus.target('sum(postfix_size{cluster=~"$cluster", job=~"$job"})', legendFormat='queue size'));
 

@@ -33,6 +33,7 @@ local row = grafana.row;
           min=0,
           format='cores',
           stack=true,
+          nullPointMode='null as zero',
           linewidth=2,
           fill=2,
         )
@@ -53,6 +54,7 @@ local row = grafana.row;
           min=0,
           format='bytes',
           stack=true,
+          nullPointMode='null as zero',
           linewidth=2,
           fill=2,
         )
@@ -72,6 +74,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='Bps',
           stack=true,
+          nullPointMode='null as zero',
           linewidth=2,
           fill=2,
         )
@@ -90,6 +93,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='pps',
           stack=true,
+          nullPointMode='null as zero',
           linewidth=2,
           fill=2,
         )
@@ -109,6 +113,7 @@ local row = grafana.row;
           format='logs',
           min=0,
           stack=true,
+          nullPointMode='null as zero',
           legend_alignAsTable=true,
           legend_current=true,
           legend_rightSide=true,
