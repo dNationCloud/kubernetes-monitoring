@@ -99,6 +99,7 @@
         cAdvisor: 'cadvisor',
         phpFpm: 'phpfpm',
         nginxVts: 'nginxvts',
+        nginxVtsEnhanced: 'nginxvtsenhanced',
         nginxNrpe: 'nginxnrpe',
         nginxIngress: 'nginxingress',
         rabbitmq: 'rabbitmq',
