@@ -1,0 +1,483 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "datasource": "$datasource",
+         "gridPos": {
+            "h": 6,
+            "w": 24,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "mappingTypes": [
+            {
+               "name": "value to text",
+               "value": 1
+            },
+            {
+               "name": "range to text",
+               "value": 2
+            }
+         ],
+         "polystat": {
+            "defaultClickThrough": "/d/nodeexporter?var-job=$job&var-instance=${__cell_name}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to",
+            "fontAutoColor": false,
+            "fontColor": "#ffffff",
+            "globalDecimals": null,
+            "globalThresholds": [
+               {
+                  "color": "#56a64b",
+                  "state": 0,
+                  "value": 0
+               },
+               {
+                  "color": "#ff780a",
+                  "state": 1,
+                  "value": 10
+               },
+               {
+                  "color": "#e02f44",
+                  "state": 2,
+                  "value": 30
+               }
+            ],
+            "globalUnitFormat": "pps",
+            "hexagonSortByDirection": 2,
+            "hexagonSortByField": "value",
+            "polygonBorderSize": 0,
+            "tooltipTimestampEnabled": false
+         },
+         "targets": [
+            {
+               "expr": "(sum(rate(node_network_transmit_errs_total{cluster=~\"$cluster\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m]))  by (instance) \n   + sum(rate(node_network_receive_errs_total{cluster=~\"$cluster\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m])) by (instance))\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~\"$cluster\", nodename=~\"$instance\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{nodename}}",
+               "refId": "A"
+            }
+         ],
+         "title": "Network Errors per Node",
+         "type": "grafana-polystat-panel"
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 6
+         },
+         "id": 3,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 0,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 7
+               },
+               "id": 4,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 1,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/Rx_/",
+                     "stack": "B",
+                     "transform": "negative-Y"
+                  },
+                  {
+                     "alias": "/Tx_/",
+                     "stack": "A"
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": false,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "rate(node_network_transmit_errs_total{cluster=~\"$cluster\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~\"$cluster\", nodename=~\"$instance\"}",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Tx_{{device}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "rate(node_network_receive_errs_total{cluster=~\"$cluster\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~\"$cluster\", nodename=~\"$instance\"}",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Rx_{{device}}",
+                     "refId": "B"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Transmit/Receive Errors",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "pps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  },
+                  {
+                     "format": "pps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  }
+               ]
+            },
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 0,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 14
+               },
+               "id": 5,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 1,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [ ],
+               "spaceLength": 10,
+               "stack": false,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "rate(node_network_receive_bytes_total{cluster=~\"$cluster\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~\"$cluster\", nodename=~\"$instance\"}",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "{{device}}",
+                     "refId": "A"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Network Received",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "bytes",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  },
+                  {
+                     "format": "bytes",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  }
+               ]
+            },
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 0,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 21
+               },
+               "id": 6,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 1,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [ ],
+               "spaceLength": 10,
+               "stack": false,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "rate(node_network_transmit_bytes_total{cluster=~\"$cluster\", job=~\"$job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~\"$cluster\", nodename=~\"$instance\"}",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "{{device}}",
+                     "refId": "A"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Network Transmitted",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "bytes",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  },
+                  {
+                     "format": "bytes",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": "instance",
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "$instance",
+         "titleSize": "h6",
+         "type": "row"
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "overview",
+      "L2"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Nodes",
+            "multi": true,
+            "name": "instance",
+            "options": [ ],
+            "query": "label_values(node_uname_info{cluster=~\"$cluster\", job=~\"$job\"}, nodename)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Job",
+            "multi": false,
+            "name": "job",
+            "options": [ ],
+            "query": "label_values(node_exporter_build_info{cluster=~\"$cluster\", pod!~\"\"}, job)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Cluster",
+            "multi": false,
+            "name": "cluster",
+            "options": [ ],
+            "query": "label_values(node_uname_info, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Network per Node",
+   "uid": "networkoverview",
+   "version": 0
+}

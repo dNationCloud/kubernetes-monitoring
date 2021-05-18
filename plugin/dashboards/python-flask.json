@@ -1,0 +1,1423 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 1
+               },
+               "id": 3,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 2,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/PodRequests/",
+                     "color": "#e02f44",
+                     "dashes": true,
+                     "fill": 0,
+                     "hideTooltip": true,
+                     "stack": false
+                  },
+                  {
+                     "alias": "/PodLimits/",
+                     "color": "#ff780a",
+                     "dashes": true,
+                     "fill": 0,
+                     "hideTooltip": true,
+                     "stack": false
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container!=\"POD\", container=~\"$container\"}) by ($view)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "{{$view}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "sum(\nkube_pod_container_resource_requests_cpu_cores{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}) by ($view)\n",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "PodRequests - {{$view}}",
+                     "refId": "B"
+                  },
+                  {
+                     "expr": "sum(\nkube_pod_container_resource_limits_cpu_cores{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}) by ($view)\n",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "PodLimits - {{$view}}",
+                     "refId": "C"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "CPU Usage",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "core",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  },
+                  {
+                     "format": "core",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "CPU Usage",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 1
+         },
+         "id": 4,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 2
+               },
+               "id": 5,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 2,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/PodRequests/",
+                     "color": "#e02f44",
+                     "dashes": true,
+                     "fill": 0,
+                     "hideTooltip": true,
+                     "stack": false
+                  },
+                  {
+                     "alias": "/PodLimits/",
+                     "color": "#ff780a",
+                     "dashes": true,
+                     "fill": 0,
+                     "hideTooltip": true,
+                     "stack": false
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(container_memory_working_set_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", id!=\"\", container!=\"POD\", container=~\"$container\"}) by ($view)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "{{$view}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "sum(\nkube_pod_container_resource_requests_memory_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}) by ($view)\n",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "PodRequests - {{$view}}",
+                     "refId": "B"
+                  },
+                  {
+                     "expr": "sum(\nkube_pod_container_resource_limits_memory_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}) by ($view)\n",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "PodLimits - {{$view}}",
+                     "refId": "C"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Memory Usage",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "bytes",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  },
+                  {
+                     "format": "bytes",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Memory Usage",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 2
+         },
+         "id": 6,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 3
+               },
+               "id": 7,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 2,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/Rx_/",
+                     "stack": "B",
+                     "transform": "negative-Y"
+                  },
+                  {
+                     "alias": "/Tx_/",
+                     "stack": "A"
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(irate(container_network_transmit_bytes_total{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Tx_{{pod}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "sum(irate(container_network_receive_bytes_total{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Rx_{{pod}}",
+                     "refId": "B"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Transmit/Receive Bandwidth",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "Bps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  },
+                  {
+                     "format": "Bps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Network Bandwidth",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 3
+         },
+         "id": 8,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 4
+               },
+               "id": 9,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 2,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/Rx_/",
+                     "stack": "B",
+                     "transform": "negative-Y"
+                  },
+                  {
+                     "alias": "/Tx_/",
+                     "stack": "A"
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(irate(container_network_transmit_packets_dropped_total{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Tx_{{pod}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "sum(irate(container_network_receive_packets_dropped_total{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Rx_{{pod}}",
+                     "refId": "B"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Transmit/Receive Drops",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "pps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  },
+                  {
+                     "format": "pps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Network Drops",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 5
+         },
+         "id": 10,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Server",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 2,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 6
+         },
+         "id": 11,
+         "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "max": true,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "HTTP 500",
+               "color": "#e02f44"
+            }
+         ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum(increase(\n  flask_http_request_total{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}[1m]\n) / 2) by (status, $view)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "HTTP {{status}} - {{$view}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Total requests per minute",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 2,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 6
+         },
+         "id": 12,
+         "legend": {
+            "alignAsTable": true,
+            "avg": false,
+            "current": true,
+            "max": true,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [
+            {
+               "alias": "errors",
+               "color": "#ff780a"
+            }
+         ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum(\n  rate(\n    flask_http_request_duration_seconds_count{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", status!=\"200\"}[1m]\n)\n) by (status, $view)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "HTTP {{status}} - {{$view}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Errors per minute",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 2,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 13
+         },
+         "id": 13,
+         "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "sideWidth": null,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "avg(rate(\n  flask_http_request_duration_seconds_sum{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", status=\"200\"}[1m]\n)\n /\nrate(\n  flask_http_request_duration_seconds_count{job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", status=\"200\"}[1m]\n) >= 0)  by (status, $view)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "HTTP 200 - {{$view}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Average response time [1m]",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "s",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "s",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 2,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 13
+         },
+         "id": 14,
+         "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "sideWidth": null,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum(increase(\n  flask_http_request_duration_seconds_bucket{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", status=\"200\",le=\"0.25\"}[1m]\n)\n / ignoring (le)\nincrease(\n  flask_http_request_duration_seconds_count{job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", status=\"200\"}[1m]\n) >= 0) by (status, $view)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "HTTP 200 - {{$view}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Requests under 250ms",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "none",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "none",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "description": "The 50th percentile of request durations over the last 60 seconds. In other words, half of the requests finish in (min/max/avg) these times.",
+         "fill": 2,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 20
+         },
+         "id": 15,
+         "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "sideWidth": null,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "avg(histogram_quantile(\n  0.5,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", status=\"200\"}[1m]\n  )\n)>=0) by (status, $view)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "HTTP 200 - {{$view}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Request duration [s] - p50",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "description": "The 90th percentile of request durations over the last 60 seconds. In other words, 90 percent of the requests finish in (min/max/avg) these times.",
+         "fill": 2,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 20
+         },
+         "id": 16,
+         "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "sideWidth": null,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "avg(histogram_quantile(\n  0.9,\n  rate(\n    flask_http_request_duration_seconds_bucket{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\", status=\"200\"}[1m]\n  )\n)>=0) by (status, $view)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "HTTP 200 - {{$view}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Request duration [s] - p90",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 4
+         },
+         "id": 17,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource_logs",
+               "fill": 1,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 5,
+                  "w": 24,
+                  "x": 0,
+                  "y": 5
+               },
+               "id": 18,
+               "legend": {
+                  "alignAsTable": true,
+                  "avg": false,
+                  "current": true,
+                  "max": false,
+                  "min": false,
+                  "rightSide": true,
+                  "show": true,
+                  "sideWidth": null,
+                  "sort": "current",
+                  "sortDesc": true,
+                  "total": false,
+                  "values": true
+               },
+               "lines": true,
+               "linewidth": 1,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "Value #A",
+                     "hiddenSeries": true,
+                     "legend": false
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(count_over_time({cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"} |~ \"(?i)$search\"[10s])) by ($view)",
+                     "legendFormat": "{{$view}}",
+                     "refId": "A"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Count (avg for 10s intervals)",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "logs",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  },
+                  {
+                     "format": "logs",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  }
+               ]
+            },
+            {
+               "datasource": "$datasource_logs",
+               "gridPos": {
+                  "h": 13,
+                  "w": 24,
+                  "x": 0,
+                  "y": 10
+               },
+               "id": 19,
+               "options": {
+                  "showLabels": true,
+                  "showTime": true,
+                  "sortOrder": "Descending",
+                  "wrapLogMessage": true
+               },
+               "span": 12,
+               "targets": [
+                  {
+                     "expr": "{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"} |~ \"(?i)$search\"",
+                     "legendFormat": "",
+                     "refId": "A"
+                  }
+               ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Logs",
+               "type": "logs"
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Logs",
+         "titleSize": "h6",
+         "type": "row"
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "app",
+      "L1"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Logs datasource",
+            "name": "datasource_logs",
+            "options": [ ],
+            "query": "loki",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Cluster",
+            "multi": false,
+            "name": "cluster",
+            "options": [ ],
+            "query": "label_values(node_uname_info, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Job",
+            "multi": true,
+            "name": "job",
+            "options": [ ],
+            "query": "label_values(flask_exporter_info{cluster=~\"$cluster\"}, job)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": {
+               "text": "container",
+               "value": "container"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "label": "View by",
+            "multi": false,
+            "name": "view",
+            "options": [
+               {
+                  "text": "pod",
+                  "value": "pod"
+               },
+               {
+                  "text": "container",
+                  "value": "container"
+               }
+            ],
+            "query": "pod,container",
+            "refresh": 0,
+            "type": "custom"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Namespace",
+            "multi": true,
+            "name": "namespace",
+            "options": [ ],
+            "query": "label_values(flask_exporter_info{cluster=~\"$cluster\", job=~\"$job\"}, namespace)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Pod",
+            "multi": true,
+            "name": "pod",
+            "options": [ ],
+            "query": "label_values(flask_exporter_info{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\"}, pod)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Container",
+            "multi": true,
+            "name": "container",
+            "options": [ ],
+            "query": "label_values(flask_exporter_info{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\"}, container)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "current": {
+               "selected": false,
+               "text": "",
+               "value": ""
+            },
+            "label": "Logs Search",
+            "name": "search",
+            "query": "",
+            "type": "textbox"
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Python Flask",
+   "uid": "pythonflask",
+   "version": 0
+}

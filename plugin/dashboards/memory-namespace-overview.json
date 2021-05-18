@@ -1,0 +1,452 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Memory Usage",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 1
+         },
+         "id": 3,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum(\ncontainer_memory_working_set_bytes{cluster=~\"$cluster\", node=~\"$instance\", namespace=~\"$namespace\", container!~\"POD|\", id!=\"\"}\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=~\"$cluster\", namespace=~\"$namespace\", workload=~\"$workload\", workload_type=~\"$workload_type\"}\n) by (pod) or on() sum(container_memory_working_set_bytes{cluster=~\"$cluster\", node=~\"$instance\", namespace=~\"$namespace\", container!~\"POD|\", id!=\"\"}) by (pod)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Memory Usage",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      },
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 9
+         },
+         "id": 4,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Memory Request/Limit",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "columns": [ ],
+         "datasource": "$datasource",
+         "description": "* `Memory Request` defines sum of container memory request in selected namespace for selected node\n* `Memory Usage (only defined request)` defines memory consumption of containers with defined memory requests\n* `Memory Limit` defines sum of container memory limit in selected namespace for selected node\n* `Memory Usage (only defined limit)` defines memory consumption of containers with defined memory limits\n* `Memory Usage (total)` defines memory consumption of all pods living in selected namespace for selected node",
+         "gridPos": {
+            "h": 12,
+            "w": 24,
+            "x": 0,
+            "y": 10
+         },
+         "id": 5,
+         "links": [ ],
+         "sort": {
+            "col": 8,
+            "desc": true
+         },
+         "styles": [
+            {
+               "pattern": "Time",
+               "type": "hidden"
+            },
+            {
+               "alias": "Pods",
+               "pattern": "Value #A",
+               "type": "number"
+            },
+            {
+               "alias": "Workloads",
+               "pattern": "Value #B",
+               "type": "number"
+            },
+            {
+               "alias": "Memory Request",
+               "decimals": 2,
+               "pattern": "Value #C",
+               "type": "number",
+               "unit": "bytes"
+            },
+            {
+               "alias": "Memory Usage (only defined request)",
+               "decimals": 2,
+               "pattern": "Value #D",
+               "type": "number",
+               "unit": "bytes"
+            },
+            {
+               "alias": "Memory Limit",
+               "decimals": 2,
+               "pattern": "Value #E",
+               "type": "number",
+               "unit": "bytes"
+            },
+            {
+               "alias": "Memory Usage (only defined limit)",
+               "decimals": 2,
+               "pattern": "Value #F",
+               "type": "number",
+               "unit": "bytes"
+            },
+            {
+               "alias": "Memory Usage (total)",
+               "decimals": 2,
+               "pattern": "Value #G",
+               "type": "number",
+               "unit": "bytes"
+            },
+            {
+               "alias": "Namespace",
+               "link": true,
+               "linkTooltip": "Detail",
+               "linkUrl": "./d/containerdetail?var-namespace=$__cell&var-instance=${instance:text}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to",
+               "pattern": "namespace"
+            }
+         ],
+         "targets": [
+            {
+               "expr": "count(sum(container_memory_working_set_bytes{cluster=~\"$cluster\", node=~\"$instance\", namespace=~\"$namespace\", container!~\"POD|\", id!=\"\"}) by (namespace, pod)) by (namespace)",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            },
+            {
+               "expr": "count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=~\"$cluster\", namespace=~\"$namespace\"} * on(pod) group_left(node) node_namespace_pod:kube_pod_info:{cluster=~\"$cluster\", namespace=~\"$namespace\", node=~\"$instance\"}) by (workload, namespace)) by (namespace)",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "B"
+            },
+            {
+               "expr": "sum(kube_pod_container_resource_requests_memory_bytes{cluster=~\"$cluster\", node=~\"$instance\", namespace=~\"$namespace\"}) by (namespace)",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "C"
+            },
+            {
+               "expr": "sum by (namespace) (sum(container_memory_working_set_bytes{cluster=~\"$cluster\", node=~\"$instance\", container!~\"POD|\", id!=\"\", namespace=~\"$namespace\"}) by (namespace, pod, container) * group(kube_pod_container_resource_requests_memory_bytes{cluster=~\"$cluster\", node=~\"$instance\", namespace=~\"$namespace\"}) by (namespace, pod, container))",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "D"
+            },
+            {
+               "expr": "sum(kube_pod_container_resource_limits_memory_bytes{cluster=~\"$cluster\", node=~\"$instance\", namespace=~\"$namespace\"}) by (namespace)",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "E"
+            },
+            {
+               "expr": "sum by (namespace) (sum(container_memory_working_set_bytes{cluster=~\"$cluster\", node=~\"$instance\", container!~\"POD|\", id!=\"\", namespace=~\"$namespace\"}) by (namespace, pod, container) * group(kube_pod_container_resource_limits_memory_bytes{cluster=~\"$cluster\", node=~\"$instance\", namespace=~\"$namespace\"}) by (namespace, pod, container))",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "F"
+            },
+            {
+               "expr": "sum(container_memory_working_set_bytes{cluster=~\"$cluster\", node=~\"$instance\", container!~\"POD|\", id!=\"\", namespace=~\"$namespace\"}) by (namespace)",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "G"
+            }
+         ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Memory Request/Limit",
+         "type": "table"
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "overview",
+      "L2"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Cluster",
+            "multi": false,
+            "name": "cluster",
+            "options": [ ],
+            "query": "label_values(kube_pod_info, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Node",
+            "multi": true,
+            "name": "instance",
+            "options": [ ],
+            "query": "label_values(kube_pod_info{cluster=~\"$cluster\"}, node)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Namespace",
+            "multi": true,
+            "name": "namespace",
+            "options": [ ],
+            "query": "label_values(kube_pod_info{cluster=~\"$cluster\", node=~\"$instance\"}, namespace)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": "workaround",
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Workload Type",
+            "multi": true,
+            "name": "workload_type",
+            "options": [ ],
+            "query": "label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}, workload_type)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Workload",
+            "multi": true,
+            "name": "workload",
+            "options": [ ],
+            "query": "label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", workload_type=~\"$workload_type\"}, workload)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": true,
+            "label": "Pod",
+            "multi": true,
+            "name": "pod",
+            "options": [ ],
+            "query": "label_values(kube_pod_info{cluster=~\"$cluster\", node=~\"$instance\", namespace=~\"$namespace\"}, pod)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Memory per Namespace",
+   "uid": "memorynamespaceoverview",
+   "version": 0
+}

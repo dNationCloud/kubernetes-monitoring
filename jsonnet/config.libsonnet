@@ -144,7 +144,13 @@
     //multiple cluster monitoring isn't supported yet
     clusterMonitoring: {
       enabled: true,
-      clusters: [],
+      clusters: [
+         {
+            name: 'K8sCluster',
+            description: 'Kubernetes cluster monitoring',
+            apps: []
+         }
+      ],
     },
     hostMonitoring: {
       enabled: false,

@@ -1,0 +1,980 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "links": [ ],
+               "mappings": [ ],
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                     {
+                        "color": "#e02f44",
+                        "value": null
+                     },
+                     {
+                        "color": "#ff780a",
+                        "value": 95
+                     },
+                     {
+                        "color": "#56a64b",
+                        "value": 99
+                     }
+                  ]
+               },
+               "unit": "percent"
+            }
+         },
+         "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "links": [ ],
+         "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            }
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "(sum(up{cluster=~\"$cluster|\", job=\"kube-etcd\"}) / count(up{cluster=~\"$cluster|\", job=\"kube-etcd\"})) * 100",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "title": "Health",
+         "transparent": false,
+         "type": "stat"
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 0,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 10,
+            "x": 6,
+            "y": 0
+         },
+         "id": 3,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum(rate(grpc_server_started_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\", grpc_type=\"unary\"}[5m]))",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "GRPC_Rate",
+               "refId": "A"
+            },
+            {
+               "expr": "sum(rate(grpc_server_handled_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\", grpc_type=\"unary\", grpc_code!=\"OK\"}[5m]))",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "GRPC Failed Rate",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "GRPC Rate",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "reqps",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "reqps",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 0,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 0
+         },
+         "id": 4,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum(grpc_server_started_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\", grpc_service=\"etcdserverpb.Watch\", grpc_type=\"bidi_stream\"}) - sum(grpc_server_handled_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\", grpc_service=\"etcdserverpb.Watch\", grpc_type=\"bidi_stream\"})",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Watch Streams",
+               "refId": "A"
+            },
+            {
+               "expr": "sum(grpc_server_started_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\", grpc_service=\"etcdserverpb.Lease\", grpc_type=\"bidi_stream\"}) - sum(grpc_server_handled_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\", grpc_service=\"etcdserverpb.Lease\", grpc_type=\"bidi_stream\"})",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Lease Streams",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Active Streams",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 0,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 0,
+            "y": 7
+         },
+         "id": 5,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "etcd_mvcc_db_total_size_in_bytes{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{instance}} DB Size",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "DB Size",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 0,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 8,
+            "y": 7
+         },
+         "id": 6,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": true,
+         "targets": [
+            {
+               "expr": "histogram_quantile(0.99, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}[5m])) by (instance, le))",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{instance}} WAL fsync",
+               "refId": "A"
+            },
+            {
+               "expr": "histogram_quantile(0.99, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}[5m])) by (instance, le))",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{instance}} DB fsync",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Disk Sync Duration",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "s",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "s",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 0,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 8,
+            "x": 16,
+            "y": 7
+         },
+         "id": 7,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "process_resident_memory_bytes{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{instance}} Resident Memory",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Memory",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 5,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 0,
+            "y": 14
+         },
+         "id": 8,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "rate(etcd_network_client_grpc_sent_bytes_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}[5m])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{instance}} Client Traffic In",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Client Traffic In",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "Bps",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "Bps",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 5,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 6,
+            "y": 14
+         },
+         "id": 9,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "rate(etcd_network_client_grpc_sent_bytes_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}[5m])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{instance}} Client Traffic Out",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Client Traffic Out",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "Bps",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "Bps",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 0,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 12,
+            "y": 14
+         },
+         "id": 10,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "changes(etcd_server_leader_changes_seen_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}[1d])",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Total Leader Elections Per Day",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Total Leader Elections PerDay",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 0,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 21
+         },
+         "id": 11,
+         "legend": {
+            "alignAsTable": false,
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "rightSide": false,
+            "show": false,
+            "sideWidth": null,
+            "total": false,
+            "values": false
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum(rate(etcd_server_proposals_failed_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}[5m]))",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Proposal Failure Rate",
+               "refId": "A"
+            },
+            {
+               "expr": "sum(etcd_server_proposals_pending{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"})",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "etcd_server_proposals_pending",
+               "refId": "B"
+            },
+            {
+               "expr": "sum(rate(etcd_server_proposals_committed_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}[5m]))",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Proposal Commit Rate",
+               "refId": "C"
+            },
+            {
+               "expr": "sum(rate(etcd_server_proposals_applied_total{cluster=~\"$cluster\", job=\"kube-etcd\", instance=~\"$instance\"}[5m]))",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Proposal Apply Rate",
+               "refId": "D"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Raft Proposal",
+         "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "system",
+      "L2"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Instance",
+            "multi": true,
+            "name": "instance",
+            "options": [ ],
+            "query": "label_values(etcd_server_has_leader{cluster=~\"$cluster\", job=\"kube-etcd\"}, instance)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Cluster",
+            "multi": false,
+            "name": "cluster",
+            "options": [ ],
+            "query": "label_values(etcd_server_has_leader, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Etcd",
+   "uid": "etcd",
+   "version": 0
+}

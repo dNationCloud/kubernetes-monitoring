@@ -1,0 +1,246 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Alerts",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "columns": [ ],
+         "datasource": "$alertmanager",
+         "gridPos": {
+            "h": 22,
+            "w": 24,
+            "x": 0,
+            "y": 1
+         },
+         "id": 3,
+         "links": [ ],
+         "styles": [
+            {
+               "alias": "Starts At",
+               "pattern": "Time",
+               "type": "date"
+            },
+            {
+               "alias": "Severity",
+               "colorMode": "row",
+               "colors": [
+                  "#56a64b",
+                  "#ff780a",
+                  "#e02f44"
+               ],
+               "mappingType": 1,
+               "pattern": "severity",
+               "thresholds": [
+                  2,
+                  4
+               ],
+               "type": "string",
+               "valueMaps": [
+                  {
+                     "text": "Critical",
+                     "value": 4
+                  },
+                  {
+                     "text": "Warning",
+                     "value": 2
+                  },
+                  {
+                     "text": "Info",
+                     "value": 1
+                  }
+               ]
+            },
+            {
+               "alias": "Alertname",
+               "pattern": "alertname",
+               "type": "string"
+            },
+            {
+               "alias": "Job",
+               "pattern": "job",
+               "type": "string"
+            },
+            {
+               "alias": "Node",
+               "pattern": "nodename",
+               "type": "string"
+            },
+            {
+               "pattern": "prometheus",
+               "type": "hidden"
+            },
+            {
+               "alias": "Message",
+               "pattern": "message",
+               "type": "string"
+            }
+         ],
+         "targets": [
+            {
+               "expr": "ALERTS{alertname!=\"Watchdog\", severity=~\"$severity\", alertgroup=~\"$alertgroup\", job=~\"$job\"}",
+               "refId": "A",
+               "type": "table"
+            }
+         ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Alerts Info",
+         "type": "table"
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "overview",
+      "L2"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "current": { },
+            "hide": 2,
+            "label": "AlertManager",
+            "name": "alertmanager",
+            "options": [ ],
+            "query": "camptocamp-prometheus-alertmanager-datasource",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$alertmanager",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Alert Group",
+            "multi": true,
+            "name": "alertgroup",
+            "options": [ ],
+            "query": "label_values(ALERTS, alertgroup)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$alertmanager",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Severity",
+            "multi": true,
+            "name": "severity",
+            "options": [ ],
+            "query": "label_values(ALERTS, severity)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": true,
+            "label": "Job",
+            "multi": true,
+            "name": "job",
+            "options": [ ],
+            "query": "label_values(up, job)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "AlertHost",
+   "uid": "alerthostoverview",
+   "version": 0
+}

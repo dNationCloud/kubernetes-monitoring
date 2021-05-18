@@ -1,0 +1,205 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [
+      {
+         "asDropdown": true,
+         "icon": "cloud",
+         "includeVars": false,
+         "keepTime": false,
+         "tags": [ ],
+         "targetBlank": true,
+         "title": "dNation - Making Cloud Easy",
+         "type": "link",
+         "url": "https://www.dNation.cloud/"
+      }
+   ],
+   "panels": [
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Kubernetes Monitoring",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "links": [
+                  {
+                     "title": "Kubernetes Monitoring",
+                     "url": "/d/k8smonitoringk8scluster?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to"
+                  }
+               ],
+               "mappings": [
+                  {
+                     "from": 0,
+                     "id": 0,
+                     "text": "OK",
+                     "to": 0,
+                     "type": 2,
+                     "value": ""
+                  },
+                  {
+                     "from": 1,
+                     "id": 1,
+                     "text": "Warning",
+                     "to": 10000,
+                     "type": 2,
+                     "value": ""
+                  },
+                  {
+                     "from": 10000,
+                     "id": 2,
+                     "text": "Critical",
+                     "to": 999999999,
+                     "type": 2,
+                     "value": ""
+                  }
+               ],
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                     {
+                        "color": "#56a64b",
+                        "value": null
+                     },
+                     {
+                        "color": "#ff780a",
+                        "value": 1
+                     },
+                     {
+                        "color": "#e02f44",
+                        "value": 10000
+                     }
+                  ]
+               },
+               "unit": "none"
+            }
+         },
+         "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 0,
+            "y": 1
+         },
+         "id": 3,
+         "links": [ ],
+         "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            }
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "sum(ALERTS{alertname!=\"Watchdog\", cluster=~\"\", alertstate=\"firing\", severity=\"warning\", alertgroup=~\"Cluster|ClusterApp\"} OR on() vector(0)) + sum(ALERTS{alertname!=\"Watchdog\", cluster=~\"\", alertstate=\"firing\", severity=\"critical\", alertgroup=~\"Cluster|ClusterApp\"} OR on() vector(0)) * 10000",
+               "instant": true,
+               "refId": "A",
+               "type": "single"
+            }
+         ],
+         "title": "Cluster K8sCluster",
+         "transparent": false,
+         "type": "stat"
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "cluster",
+      "host",
+      "L0"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "current": { },
+            "hide": 2,
+            "label": "AlertManager",
+            "name": "alertmanager",
+            "options": [ ],
+            "query": "camptocamp-prometheus-alertmanager-datasource",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Monitoring",
+   "uid": "monitoring",
+   "version": 0
+}

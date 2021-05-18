@@ -32,11 +32,19 @@ helm-lint:
 
 json-dashboards:
 	@echo "[Building grafana dashboards]"
-	docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m json jsonnet/dashboards.jsonnet
+	docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m plugin/dashboards jsonnet/dashboards.jsonnet
 
 json-rules:
 	@echo "[Building prometheus rules]"
 	docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m json jsonnet/rules.jsonnet
+
+json-rules-translate:
+	@echo "[Translating prometheus rules to yaml format]"
+	python3 helpers/prometheus_rule_translator.py json/k8s.rules.json
+
+json-rules-generate-and-translate:
+	make json-rules
+	make json-rules-translate
 
 docs-generate:
 	@echo "[Generating documentation]"

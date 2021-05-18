@@ -1,0 +1,446 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 18,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "(\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n  -\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_available_bytes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Used Space {{persistentvolumeclaim}}",
+               "refId": "A"
+            },
+            {
+               "expr": "sum by (persistentvolumeclaim) (kubelet_volume_stats_available_bytes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Free Space {{persistentvolumeclaim}}",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Volume Space Usage",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "bytes",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      },
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "links": [ ],
+               "mappings": [ ],
+               "max": 100,
+               "min": 0,
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                     {
+                        "color": "#000000",
+                        "value": null
+                     },
+                     {
+                        "color": "#56a64b",
+                        "value": 0
+                     },
+                     {
+                        "color": "#ff780a",
+                        "value": 85
+                     },
+                     {
+                        "color": "#e02f44",
+                        "value": 97
+                     }
+                  ]
+               },
+               "unit": "percent"
+            }
+         },
+         "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 18,
+            "y": 0
+         },
+         "id": 3,
+         "links": [ ],
+         "options": {
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "(\n  sum(kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n  -\n  sum(kubelet_volume_stats_available_bytes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n)\n/\nsum(kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n* 100",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "title": "Volume Space Usage",
+         "transparent": false,
+         "type": "gauge"
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 7,
+            "w": 18,
+            "x": 0,
+            "y": 7
+         },
+         "id": 4,
+         "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": true,
+            "rightSide": false,
+            "show": true,
+            "sideWidth": null,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": true,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes_used{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Used inodes {{persistentvolumeclaim}}",
+               "refId": "A"
+            },
+            {
+               "expr": "(\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n  -\n  sum by (persistentvolumeclaim) (kubelet_volume_stats_inodes_used{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "Free inodes {{persistentvolumeclaim}}",
+               "refId": "B"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Volume inodes Usage",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "format": "none",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            },
+            {
+               "format": "none",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": 0,
+               "show": true
+            }
+         ]
+      },
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "links": [ ],
+               "mappings": [ ],
+               "max": 100,
+               "min": 0,
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                     {
+                        "color": "#000000",
+                        "value": null
+                     },
+                     {
+                        "color": "#56a64b",
+                        "value": 0
+                     },
+                     {
+                        "color": "#ff780a",
+                        "value": 85
+                     },
+                     {
+                        "color": "#e02f44",
+                        "value": 97
+                     }
+                  ]
+               },
+               "unit": "percent"
+            }
+         },
+         "gridPos": {
+            "h": 7,
+            "w": 6,
+            "x": 18,
+            "y": 7
+         },
+         "id": 5,
+         "links": [ ],
+         "options": {
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "sum(kubelet_volume_stats_inodes_used{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n/\nsum(kubelet_volume_stats_inodes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\", persistentvolumeclaim=~\"$volume\"})\n* 100",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "title": "Volume inodes Usage",
+         "transparent": false,
+         "type": "gauge"
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "pvc",
+      "L3"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Cluster",
+            "multi": false,
+            "name": "cluster",
+            "options": [ ],
+            "query": "label_values(kubelet_volume_stats_capacity_bytes, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Namespace",
+            "multi": true,
+            "name": "namespace",
+            "options": [ ],
+            "query": "label_values(kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\"}, namespace)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "PVC",
+            "multi": true,
+            "name": "volume",
+            "options": [ ],
+            "query": "label_values(kubelet_volume_stats_capacity_bytes{cluster=~\"$cluster\", job=\"kubelet\", metrics_path=\"/metrics\", namespace=~\"$namespace\"}, persistentvolumeclaim)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Persistent Volumes",
+   "uid": "persistentvolumes",
+   "version": 0
+}

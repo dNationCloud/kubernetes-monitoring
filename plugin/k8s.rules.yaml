@@ -1,0 +1,643 @@
+groups:
+- name: k8s.rules
+  rules:
+  - alert: KubernetesMonitoringClusterApiServerHealthLow
+    annotations:
+      link: apiserver?refresh=10s
+      message: Cluster Api Server Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="apiserver"}) / count(up{cluster=~"$cluster|",
+      job="apiserver"})) * 100 < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterApiServerHealthLow
+  - alert: KubernetesMonitoringClusterApiServerHealthLow
+    annotations:
+      link: apiserver?refresh=10s
+      message: Cluster Api Server Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="apiserver"}) / count(up{cluster=~"$cluster|",
+      job="apiserver"})) * 100 < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterApiServerHealthLow
+  - alert: KubernetesMonitoringClusterCPUOverallHigh
+    annotations:
+      link: cpuoverview?refresh=10s
+      message: Cluster High CPU Overall Utilization {{ $value }}%
+    expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"node-exporter",
+      mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by
+      (job, nodename) )) * 100)) >= 90
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterCPUOverallHigh
+  - alert: KubernetesMonitoringClusterCPUOverallHigh
+    annotations:
+      link: cpuoverview?refresh=10s
+      message: Cluster High CPU Overall Utilization {{ $value }}%
+    expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"node-exporter",
+      mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by
+      (job, nodename) )) * 100)) >= 75
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterCPUOverallHigh
+  - alert: KubernetesMonitoringClusterControllerManagerHealthLow
+    annotations:
+      link: controllermanager?refresh=10s
+      message: Cluster Controller Manager Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kube-controller-manager"}) / count(up{cluster=~"$cluster|",
+      job="kube-controller-manager"})) * 100 < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterControllerManagerHealthLow
+  - alert: KubernetesMonitoringClusterControllerManagerHealthLow
+    annotations:
+      link: controllermanager?refresh=10s
+      message: Cluster Controller Manager Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kube-controller-manager"}) / count(up{cluster=~"$cluster|",
+      job="kube-controller-manager"})) * 100 < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterControllerManagerHealthLow
+  - alert: KubernetesMonitoringClusterDiskOverallHigh
+    annotations:
+      link: diskoverview?refresh=10s
+      message: Cluster High Disk Overall Utilization {{ $value }}%
+    expr: avg(round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+      - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+      - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      * 100 > 0)) >= 90
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterDiskOverallHigh
+  - alert: KubernetesMonitoringClusterDiskOverallHigh
+    annotations:
+      link: diskoverview?refresh=10s
+      message: Cluster High Disk Overall Utilization {{ $value }}%
+    expr: avg(round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+      - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+      - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      * 100 > 0)) >= 75
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterDiskOverallHigh
+  - alert: KubernetesMonitoringClusterEtcdHealthLow
+    annotations:
+      link: etcd?refresh=10s
+      message: Cluster Etcd Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kube-etcd"}) / count(up{cluster=~"$cluster|",
+      job="kube-etcd"})) * 100 < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterEtcdHealthLow
+  - alert: KubernetesMonitoringClusterEtcdHealthLow
+    annotations:
+      link: etcd?refresh=10s
+      message: Cluster Etcd Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kube-etcd"}) / count(up{cluster=~"$cluster|",
+      job="kube-etcd"})) * 100 < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterEtcdHealthLow
+  - alert: KubernetesMonitoringClusterHostDiskUtilizationHigh
+    annotations:
+      link: nodeexporter?var-instance={{ $labels.nodename }}&refresh=10s
+      message: 'Cluster node {{ $labels.nodename }}: High Disk Utilization {{ $value
+        }}%'
+    expr: round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+      - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+      - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      * 100) >= 90
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterHostDiskUtilizationHigh
+  - alert: KubernetesMonitoringClusterHostDiskUtilizationHigh
+    annotations:
+      link: nodeexporter?var-instance={{ $labels.nodename }}&refresh=10s
+      message: 'Cluster node {{ $labels.nodename }}: High Disk Utilization {{ $value
+        }}%'
+    expr: round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+      - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+      - sum(node_filesystem_free_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
+      * 100) >= 75
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterHostDiskUtilizationHigh
+  - alert: KubernetesMonitoringClusterHostNetworkErrorsHigh
+    annotations:
+      link: nodeexporter?var-instance={{ $labels.nodename }}&refresh=10s
+      message: 'Cluster node {{ $labels.nodename }}: High Network Errors Count {{
+        $value }}%'
+    expr: sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"node-exporter",
+      device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance)
+      group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|",
+      job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+      * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) >=
+      15
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterHostNetworkErrorsHigh
+  - alert: KubernetesMonitoringClusterHostNetworkErrorsHigh
+    annotations:
+      link: nodeexporter?var-instance={{ $labels.nodename }}&refresh=10s
+      message: 'Cluster node {{ $labels.nodename }}: High Network Errors Count {{
+        $value }}%'
+    expr: sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"node-exporter",
+      device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance)
+      group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|",
+      job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+      * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename) >=
+      10
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterHostNetworkErrorsHigh
+  - alert: KubernetesMonitoringClusterKubeletHealthLow
+    annotations:
+      link: kubelet?refresh=10s
+      message: Cluster Kubelet Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"}) /
+      count(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"})) * 100
+      < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterKubeletHealthLow
+  - alert: KubernetesMonitoringClusterKubeletHealthLow
+    annotations:
+      link: kubelet?refresh=10s
+      message: Cluster Kubelet Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"}) /
+      count(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"})) * 100
+      < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterKubeletHealthLow
+  - alert: KubernetesMonitoringClusterNetworkOverallErrorsHigh
+    annotations:
+      link: networkoverview?refresh=10s
+      message: Cluster High Overall Network Errors Count {{ $value }}%
+    expr: sum(sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"node-exporter",
+      device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance)
+      group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|",
+      job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+      * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))
+      >= 15
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterNetworkOverallErrorsHigh
+  - alert: KubernetesMonitoringClusterNetworkOverallErrorsHigh
+    annotations:
+      link: networkoverview?refresh=10s
+      message: Cluster High Overall Network Errors Count {{ $value }}%
+    expr: sum(sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", job=~"node-exporter",
+      device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance)
+      group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|",
+      job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+      * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))
+      >= 10
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterNetworkOverallErrorsHigh
+  - alert: KubernetesMonitoringClusterNodeCPUUtilizationHigh
+    annotations:
+      link: nodeexporter?var-instance={{ $labels.nodename }}&refresh=10s
+      message: 'Cluster {{ $labels.nodename }}: High CPU Utilization {{ $value }}%'
+    expr: round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"node-exporter",
+      mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by
+      (job, nodename) )) * 100) >= 90
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterNodeCPUUtilizationHigh
+  - alert: KubernetesMonitoringClusterNodeCPUUtilizationHigh
+    annotations:
+      link: nodeexporter?var-instance={{ $labels.nodename }}&refresh=10s
+      message: 'Cluster {{ $labels.nodename }}: High CPU Utilization {{ $value }}%'
+    expr: round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", job=~"node-exporter",
+      mode="idle"}[5m]) * on(instance) group_left(nodename) (node_uname_info)) by
+      (job, nodename) )) * 100) >= 75
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterNodeCPUUtilizationHigh
+  - alert: KubernetesMonitoringClusterNodesRAMUtilizationHigh
+    annotations:
+      link: nodeexporter?var-instance={{ $labels.nodename }}&refresh=10s
+      message: 'Cluster node {{ $labels.nodename }}: High RAM Utilization {{ $value
+        }}%'
+    expr: round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|",
+      job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))
+      / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info))) * 100) >= 90
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterNodesRAMUtilizationHigh
+  - alert: KubernetesMonitoringClusterNodesRAMUtilizationHigh
+    annotations:
+      link: nodeexporter?var-instance={{ $labels.nodename }}&refresh=10s
+      message: 'Cluster node {{ $labels.nodename }}: High RAM Utilization {{ $value
+        }}%'
+    expr: round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|",
+      job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))
+      / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info))) * 100) >= 75
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterNodesRAMUtilizationHigh
+  - alert: KubernetesMonitoringClusterProxyHealthLow
+    annotations:
+      link: proxy?refresh=10s
+      message: Cluster Proxy Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kube-proxy"}) / count(up{cluster=~"$cluster|",
+      job="kube-proxy"})) * 100 < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterProxyHealthLow
+  - alert: KubernetesMonitoringClusterProxyHealthLow
+    annotations:
+      link: proxy?refresh=10s
+      message: Cluster Proxy Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kube-proxy"}) / count(up{cluster=~"$cluster|",
+      job="kube-proxy"})) * 100 < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterProxyHealthLow
+  - alert: KubernetesMonitoringClusterRAMOverallHigh
+    annotations:
+      link: memoryoverview?refresh=10s
+      message: Cluster High RAM Overall Utilization {{ $value }}%
+    expr: avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|",
+      job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))
+      / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info))) * 100)) >= 90
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterRAMOverallHigh
+  - alert: KubernetesMonitoringClusterRAMOverallHigh
+    annotations:
+      link: memoryoverview?refresh=10s
+      message: Cluster High RAM Overall Utilization {{ $value }}%
+    expr: avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|",
+      job=~"node-exporter"} * on(instance) group_left(nodename) (node_uname_info))
+      / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", job=~"node-exporter"}
+      * on(instance) group_left(nodename) (node_uname_info))) * 100)) >= 75
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterRAMOverallHigh
+  - alert: KubernetesMonitoringClusterSchedulerHealthLow
+    annotations:
+      link: scheduler?refresh=10s
+      message: Cluster Scheduler Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kube-scheduler"}) / count(up{cluster=~"$cluster|",
+      job="kube-scheduler"})) * 100 < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterSchedulerHealthLow
+  - alert: KubernetesMonitoringClusterSchedulerHealthLow
+    annotations:
+      link: scheduler?refresh=10s
+      message: Cluster Scheduler Health Low {{ $value }}%
+    expr: (sum(up{cluster=~"$cluster|", job="kube-scheduler"}) / count(up{cluster=~"$cluster|",
+      job="kube-scheduler"})) * 100 < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterSchedulerHealthLow
+  - alert: KubernetesMonitoringClusterTargetDown
+    annotations:
+      message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service
+        }} targets in {{ $labels.namespace }} namespace are down.'
+    expr: 100 * (count by(job, namespace, service) (up{alertGroup!="Host"} == 0) /
+      count by(job, namespace, service) (up{alertGroup!="Host"})) >= 90
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: ClusterTargetDown
+  - alert: KubernetesMonitoringClusterTargetDown
+    annotations:
+      message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service
+        }} targets in {{ $labels.namespace }} namespace are down.'
+    expr: 100 * (count by(job, namespace, service) (up{alertGroup!="Host"} == 0) /
+      count by(job, namespace, service) (up{alertGroup!="Host"})) >= 10
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: ClusterTargetDown
+  - alert: KubernetesMonitoringNodesHealthLow
+    annotations:
+      link: nodeoverview?refresh=10s
+      message: Nodes Health Low {{ $value }}%
+    expr: round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"})
+      + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|",
+      condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  +
+      sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"})
+      ) * 100) < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: NodesHealthLow
+  - alert: KubernetesMonitoringNodesHealthLow
+    annotations:
+      link: nodeoverview?refresh=10s
+      message: Nodes Health Low {{ $value }}%
+    expr: round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"})
+      + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|",
+      condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  +
+      sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"})
+      ) * 100) < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: NodesHealthLow
+  - alert: KubernetesMonitoringPVCBoundRateLow
+    annotations:
+      link: pvcoverview?refresh=10s
+      message: PVC Bound Rate Low {{ $value }}%
+    expr: 'round(sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|",
+      phase="Bound"}) / (
+
+      sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"})
+      + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Pending"})
+      +
+
+      sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Lost"})
+
+      ) * 100) < 95'
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: PVCBoundRateLow
+  - alert: KubernetesMonitoringPVCBoundRateLow
+    annotations:
+      link: pvcoverview?refresh=10s
+      message: PVC Bound Rate Low {{ $value }}%
+    expr: 'round(sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|",
+      phase="Bound"}) / (
+
+      sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"})
+      + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Pending"})
+      +
+
+      sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Lost"})
+
+      ) * 100) < 99'
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: PVCBoundRateLow
+  - alert: KubernetesMonitoringPVCUtilizationHigh
+    annotations:
+      link: pvcoverview?var-volume={{ $labels.persistentvolumeclaim }}&refresh=10s
+      message: '"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value
+        }}%'
+    expr: sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"})
+      / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100) by (persistentvolumeclaim)
+      >= 97
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: PVCUtilizationHigh
+  - alert: KubernetesMonitoringPVCUtilizationHigh
+    annotations:
+      link: pvcoverview?var-volume={{ $labels.persistentvolumeclaim }}&refresh=10s
+      message: '"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value
+        }}%'
+    expr: sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"})
+      / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100) by (persistentvolumeclaim)
+      >= 85
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: PVCUtilizationHigh
+  - alert: KubernetesMonitoringRunningContainersHealthLow
+    annotations:
+      link: containeroverview?refresh=10s
+      message: Running Containers Health Low {{ $value }}%
+    expr: round(sum(kube_pod_container_status_running{cluster=~"$cluster|"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|"})
+      + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|", reason!="Completed"})
+      + sum(kube_pod_container_status_waiting{cluster=~"$cluster|"})) * 100) < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: RunningContainersHealthLow
+  - alert: KubernetesMonitoringRunningContainersHealthLow
+    annotations:
+      link: containeroverview?refresh=10s
+      message: Running Containers Health Low {{ $value }}%
+    expr: round(sum(kube_pod_container_status_running{cluster=~"$cluster|"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|"})
+      + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|", reason!="Completed"})
+      + sum(kube_pod_container_status_waiting{cluster=~"$cluster|"})) * 100) < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: RunningContainersHealthLow
+  - alert: KubernetesMonitoringRunningDaemonSetsHealthLow
+    annotations:
+      link: daemonsetoverview?refresh=10s
+      message: DaemonSets Health Low {{ $value }}%
+    expr: round((sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster|"})
+      + sum(kube_daemonset_status_number_available{cluster=~"$cluster|"})) / (2 *
+      sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|"})) *
+      100) < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: RunningDaemonSetsHealthLow
+  - alert: KubernetesMonitoringRunningDaemonSetsHealthLow
+    annotations:
+      link: daemonsetoverview?refresh=10s
+      message: DaemonSets Health Low {{ $value }}%
+    expr: round((sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster|"})
+      + sum(kube_daemonset_status_number_available{cluster=~"$cluster|"})) / (2 *
+      sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|"})) *
+      100) < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: RunningDaemonSetsHealthLow
+  - alert: KubernetesMonitoringRunningDeploymentsHealthLow
+    annotations:
+      link: deploymentoverview?refresh=10s
+      message: Running Deployments Health Low {{ $value }}%
+    expr: round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster|"})
+      + sum(kube_deployment_status_replicas_available{cluster=~"$cluster|"})) / (2
+      * sum(kube_deployment_status_replicas{cluster=~"$cluster|"})) * 100) < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: RunningDeploymentsHealthLow
+  - alert: KubernetesMonitoringRunningDeploymentsHealthLow
+    annotations:
+      link: deploymentoverview?refresh=10s
+      message: Running Deployments Health Low {{ $value }}%
+    expr: round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster|"})
+      + sum(kube_deployment_status_replicas_available{cluster=~"$cluster|"})) / (2
+      * sum(kube_deployment_status_replicas{cluster=~"$cluster|"})) * 100) < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: RunningDeploymentsHealthLow
+  - alert: KubernetesMonitoringRunningPodsHealthLow
+    annotations:
+      link: podoverview?refresh=10s
+      message: Pods Health Low {{ $value }}%
+    expr: round(sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"})
+      / (sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster|",
+      phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Failed"})
+      + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Unknown"})) * 100)
+      < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: RunningPodsHealthLow
+  - alert: KubernetesMonitoringRunningPodsHealthLow
+    annotations:
+      link: podoverview?refresh=10s
+      message: Pods Health Low {{ $value }}%
+    expr: round(sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"})
+      / (sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster|",
+      phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Failed"})
+      + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Unknown"})) * 100)
+      < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: RunningPodsHealthLow
+  - alert: KubernetesMonitoringRunningStatefulSetsHealthLow
+    annotations:
+      link: statefulsetoverview?refresh=10s
+      message: StatefulSets Health Low {{ $value }}%
+    expr: round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster|"})
+      / sum(kube_statefulset_status_replicas{cluster=~"$cluster|"}) * 100) < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: RunningStatefulSetsHealthLow
+  - alert: KubernetesMonitoringRunningStatefulSetsHealthLow
+    annotations:
+      link: statefulsetoverview?refresh=10s
+      message: StatefulSets Health Low {{ $value }}%
+    expr: round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster|"})
+      / sum(kube_statefulset_status_replicas{cluster=~"$cluster|"}) * 100) < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: RunningStatefulSetsHealthLow
+  - alert: KubernetesMonitoringSucceededJobsRateLow
+    annotations:
+      link: joboverview?refresh=10s
+      message: Succeeded Jobs Rate Low {{ $value }}%
+    expr: round(sum(kube_job_status_succeeded{cluster=~"$cluster|"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster|"})
+      + sum(kube_job_status_failed{cluster=~"$cluster|"})) * 100) < 95
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: critical
+    name: SucceededJobsRateLow
+  - alert: KubernetesMonitoringSucceededJobsRateLow
+    annotations:
+      link: joboverview?refresh=10s
+      message: Succeeded Jobs Rate Low {{ $value }}%
+    expr: round(sum(kube_job_status_succeeded{cluster=~"$cluster|"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster|"})
+      + sum(kube_job_status_failed{cluster=~"$cluster|"})) * 100) < 99
+    for: 5m
+    labels:
+      alertgroup: Cluster
+      severity: warning
+    name: SucceededJobsRateLow

@@ -1,0 +1,1560 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 1
+               },
+               "id": 3,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 2,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/PodRequests/",
+                     "color": "#e02f44",
+                     "dashes": true,
+                     "fill": 0,
+                     "hideTooltip": true,
+                     "stack": false
+                  },
+                  {
+                     "alias": "/PodLimits/",
+                     "color": "#ff780a",
+                     "dashes": true,
+                     "fill": 0,
+                     "hideTooltip": true,
+                     "stack": false
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container!=\"POD\", container=~\"$container\"}) by ($view)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "{{$view}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "sum(\nkube_pod_container_resource_requests_cpu_cores{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}) by ($view)\n",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "PodRequests - {{$view}}",
+                     "refId": "B"
+                  },
+                  {
+                     "expr": "sum(\nkube_pod_container_resource_limits_cpu_cores{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}) by ($view)\n",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "PodLimits - {{$view}}",
+                     "refId": "C"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "CPU Usage",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "core",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  },
+                  {
+                     "format": "core",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "CPU Usage",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 1
+         },
+         "id": 4,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 2
+               },
+               "id": 5,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 2,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/PodRequests/",
+                     "color": "#e02f44",
+                     "dashes": true,
+                     "fill": 0,
+                     "hideTooltip": true,
+                     "stack": false
+                  },
+                  {
+                     "alias": "/PodLimits/",
+                     "color": "#ff780a",
+                     "dashes": true,
+                     "fill": 0,
+                     "hideTooltip": true,
+                     "stack": false
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(container_memory_working_set_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", id!=\"\", container!=\"POD\", container=~\"$container\"}) by ($view)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "{{$view}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "sum(\nkube_pod_container_resource_requests_memory_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}) by ($view)\n",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "PodRequests - {{$view}}",
+                     "refId": "B"
+                  },
+                  {
+                     "expr": "sum(\nkube_pod_container_resource_limits_memory_bytes{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"}) by ($view)\n",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "PodLimits - {{$view}}",
+                     "refId": "C"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Memory Usage",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "bytes",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  },
+                  {
+                     "format": "bytes",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Memory Usage",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 2
+         },
+         "id": 6,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 3
+               },
+               "id": 7,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 2,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/Rx_/",
+                     "stack": "B",
+                     "transform": "negative-Y"
+                  },
+                  {
+                     "alias": "/Tx_/",
+                     "stack": "A"
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(irate(container_network_transmit_bytes_total{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Tx_{{pod}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "sum(irate(container_network_receive_bytes_total{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Rx_{{pod}}",
+                     "refId": "B"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Transmit/Receive Bandwidth",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "Bps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  },
+                  {
+                     "format": "Bps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Network Bandwidth",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 3
+         },
+         "id": 8,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource",
+               "fill": 2,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 7,
+                  "w": 24,
+                  "x": 0,
+                  "y": 4
+               },
+               "id": 9,
+               "legend": {
+                  "alignAsTable": false,
+                  "avg": false,
+                  "current": false,
+                  "max": false,
+                  "min": false,
+                  "rightSide": false,
+                  "show": true,
+                  "sideWidth": null,
+                  "total": false,
+                  "values": false
+               },
+               "lines": true,
+               "linewidth": 2,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "/Rx_/",
+                     "stack": "B",
+                     "transform": "negative-Y"
+                  },
+                  {
+                     "alias": "/Tx_/",
+                     "stack": "A"
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(irate(container_network_transmit_packets_dropped_total{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Tx_{{pod}}",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "sum(irate(container_network_receive_packets_dropped_total{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\"}[5m])) by (pod)",
+                     "format": "time_series",
+                     "intervalFactor": 2,
+                     "legendFormat": "Rx_{{pod}}",
+                     "refId": "B"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Transmit/Receive Drops",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "pps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  },
+                  {
+                     "format": "pps",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": null,
+                     "show": true
+                  }
+               ]
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Network Drops",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 5
+         },
+         "id": 10,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Ingress overview",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "links": [ ],
+               "mappings": [ ],
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [ ]
+               },
+               "unit": "reqps"
+            }
+         },
+         "gridPos": {
+            "h": 3,
+            "w": 6,
+            "x": 0,
+            "y": 6
+         },
+         "id": 11,
+         "links": [ ],
+         "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            }
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "round(sum(irate(nginx_ingress_controller_requests{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\", namespace=~\"$namespace\", container=~\"$container\"}[5m])), 0.001)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "title": "Controller Request Volume",
+         "transparent": false,
+         "type": "stat"
+      },
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "decimals": 0,
+               "links": [ ],
+               "mappings": [ ],
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [ ]
+               },
+               "unit": "none"
+            }
+         },
+         "gridPos": {
+            "h": 3,
+            "w": 6,
+            "x": 6,
+            "y": 6
+         },
+         "id": 12,
+         "links": [ ],
+         "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            }
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "avg(nginx_ingress_controller_success{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\", controller_namespace=~\"$namespace\", container=~\"$container\"})",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "title": "Config Reloads",
+         "transparent": false,
+         "type": "stat"
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "decimals": 2,
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 12,
+            "y": 6
+         },
+         "id": 13,
+         "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": false,
+            "hideZero": true,
+            "max": false,
+            "min": false,
+            "rightSide": true,
+            "show": true,
+            "sideWidth": null,
+            "sort": "avg",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 2,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "round(sum(irate(nginx_ingress_controller_requests{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\", controller_namespace=~\"$namespace\", ingress=~\"$ingress\", container=~\"$container\"}[5m])) by (ingress), 0.001)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{ingress}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Ingress Request Volume",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "decimals": 2,
+               "format": "reqps",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "decimals": 2,
+               "format": "reqps",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "links": [ ],
+               "mappings": [ ],
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [ ]
+               },
+               "unit": "none"
+            }
+         },
+         "gridPos": {
+            "h": 3,
+            "w": 6,
+            "x": 0,
+            "y": 9
+         },
+         "id": 14,
+         "links": [ ],
+         "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            }
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\", controller_namespace=~\"$namespace\", container=~\"$container\"}[5m]))",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "title": "Controller Connections",
+         "transparent": false,
+         "type": "stat"
+      },
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "links": [ ],
+               "mappings": [
+                  {
+                     "id": 0,
+                     "text": "0",
+                     "type": 1,
+                     "value": null
+                  }
+               ],
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [ ]
+               },
+               "unit": "none"
+            }
+         },
+         "gridPos": {
+            "h": 3,
+            "w": 6,
+            "x": 6,
+            "y": 9
+         },
+         "id": 15,
+         "links": [ ],
+         "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            }
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "count(nginx_ingress_controller_config_last_reload_successful{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\",controller_namespace=~\"$namespace\", container=~\"$container\"} == 0)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "title": "Last Config Failed",
+         "transparent": false,
+         "type": "stat"
+      },
+      {
+         "datasource": "$datasource",
+         "fieldConfig": {
+            "defaults": {
+               "links": [ ],
+               "mappings": [ ],
+               "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                     {
+                        "color": "#e02f44",
+                        "value": null
+                     },
+                     {
+                        "color": "#ff780a",
+                        "value": 75
+                     },
+                     {
+                        "color": "#56a64b",
+                        "value": 90
+                     }
+                  ]
+               },
+               "unit": "percent"
+            }
+         },
+         "gridPos": {
+            "h": 3,
+            "w": 24,
+            "x": 0,
+            "y": 12
+         },
+         "id": 16,
+         "links": [ ],
+         "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+               "calcs": [
+                  "mean"
+               ],
+               "fields": "",
+               "values": false
+            }
+         },
+         "pluginVersion": "7",
+         "targets": [
+            {
+               "expr": "sum(rate(nginx_ingress_controller_requests{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\",namespace=~\"$namespace\",status!~\"[4-5].*\", container=~\"$container\"}[5m])) / sum(rate(nginx_ingress_controller_requests{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\", namespace=~\"$namespace\", container=~\"$container\"}[5m])) * 100",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "title": "Controller Success Rate (non-4|5xx responses)",
+         "transparent": false,
+         "type": "stat"
+      },
+      {
+         "aliasColors": { },
+         "bars": false,
+         "dashLength": 10,
+         "dashes": false,
+         "datasource": "$datasource",
+         "decimals": 2,
+         "fill": 1,
+         "fillGradient": 0,
+         "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 15
+         },
+         "id": 17,
+         "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": true,
+            "max": true,
+            "min": true,
+            "rightSide": true,
+            "show": true,
+            "sideWidth": null,
+            "sort": "current",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+         },
+         "lines": true,
+         "linewidth": 1,
+         "links": [ ],
+         "nullPointMode": "null",
+         "percentage": false,
+         "pointradius": 5,
+         "points": false,
+         "renderer": "flot",
+         "repeat": null,
+         "seriesOverrides": [ ],
+         "spaceLength": 10,
+         "stack": false,
+         "steppedLine": false,
+         "targets": [
+            {
+               "expr": "sum(rate(nginx_ingress_controller_requests{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\",namespace=~\"$namespace\",ingress=~\"$ingress\",status!~\"[4-5].*\",  container=~\"$container\"}[5m])) by (ingress) / sum(rate(nginx_ingress_controller_requests{cluster=~\"$cluster\", job=~\"$job\", controller_pod=~\"$pod\",namespace=~\"$namespace\",  container=~\"$container\", ingress=~\"$ingress\"}[5m])) by (ingress)",
+               "format": "time_series",
+               "intervalFactor": 2,
+               "legendFormat": "{{ingress}}",
+               "refId": "A"
+            }
+         ],
+         "thresholds": [ ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Ingress Success Rate (non-4|5xx responses)",
+         "tooltip": {
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+         },
+         "type": "graph",
+         "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": [ ]
+         },
+         "yaxes": [
+            {
+               "decimals": 2,
+               "format": "percentunit",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            },
+            {
+               "decimals": 2,
+               "format": "percentunit",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+            }
+         ]
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 24
+         },
+         "id": 18,
+         "panels": [
+            {
+               "columns": [ ],
+               "datasource": "$datasource",
+               "gridPos": {
+                  "h": 8,
+                  "w": 24,
+                  "x": 0,
+                  "y": 25
+               },
+               "id": 19,
+               "links": [ ],
+               "sort": {
+                  "col": 1,
+                  "desc": true
+               },
+               "styles": [
+                  {
+                     "pattern": "Time",
+                     "type": "hidden"
+                  },
+                  {
+                     "alias": "Ingress",
+                     "pattern": "ingress",
+                     "type": "string"
+                  },
+                  {
+                     "alias": "P50 Latency",
+                     "decimals": 0,
+                     "pattern": "Value #A",
+                     "type": "number",
+                     "unit": "dtdurations"
+                  },
+                  {
+                     "alias": "P90 Latency",
+                     "decimals": 0,
+                     "pattern": "Value #B",
+                     "type": "number",
+                     "unit": "dtdurations"
+                  },
+                  {
+                     "alias": "P99 Latency",
+                     "decimals": 0,
+                     "pattern": "Value #C",
+                     "type": "number",
+                     "unit": "dtdurations"
+                  },
+                  {
+                     "alias": "IN",
+                     "decimals": 2,
+                     "pattern": "Value #D",
+                     "type": "number",
+                     "unit": "Bps"
+                  },
+                  {
+                     "alias": "OUT",
+                     "decimals": 2,
+                     "pattern": "Value #E",
+                     "type": "number",
+                     "unit": "Bps"
+                  }
+               ],
+               "targets": [
+                  {
+                     "expr": "histogram_quantile(0.50, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~\"$cluster\", job=~\"$job\", ingress!=\"\", controller_pod=~\"$pod\",  container=~\"$container\", controller_namespace=~\"$namespace\", ingress=~\"$ingress\"}[5m])) by (le, ingress))",
+                     "format": "table",
+                     "instant": true,
+                     "intervalFactor": 2,
+                     "legendFormat": "",
+                     "refId": "A"
+                  },
+                  {
+                     "expr": "histogram_quantile(0.90, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~\"$cluster\", job=~\"$job\", ingress!=\"\", controller_pod=~\"$pod\",  container=~\"$container\", controller_namespace=~\"$namespace\", ingress=~\"$ingress\"}[5m])) by (le, ingress))",
+                     "format": "table",
+                     "instant": true,
+                     "intervalFactor": 2,
+                     "legendFormat": "",
+                     "refId": "B"
+                  },
+                  {
+                     "expr": "histogram_quantile(0.99, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~\"$cluster\", job=~\"$job\", ingress!=\"\", controller_pod=~\"$pod\",  container=~\"$container\", controller_namespace=~\"$namespace\", ingress=~\"$ingress\"}[5m])) by (le, ingress))",
+                     "format": "table",
+                     "instant": true,
+                     "intervalFactor": 2,
+                     "legendFormat": "",
+                     "refId": "C"
+                  },
+                  {
+                     "expr": "sum(irate(nginx_ingress_controller_request_size_sum{cluster=~\"$cluster\", job=~\"$job\", ingress!=\"\", controller_pod=~\"$pod\",  container=~\"$container\", controller_namespace=~\"$namespace\", ingress=~\"$ingress\"}[5m])) by (ingress)",
+                     "format": "table",
+                     "instant": true,
+                     "intervalFactor": 2,
+                     "legendFormat": "",
+                     "refId": "D"
+                  },
+                  {
+                     "expr": "sum(irate(nginx_ingress_controller_response_size_sum{cluster=~\"$cluster\", job=~\"$job\", ingress!=\"\", controller_pod=~\"$pod\",  container=~\"$container\", controller_namespace=~\"$namespace\", ingress=~\"$ingress\"}[5m])) by (ingress)",
+                     "format": "table",
+                     "instant": true,
+                     "intervalFactor": 2,
+                     "legendFormat": "",
+                     "refId": "E"
+                  }
+               ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Ingress Percentile Response Times and Transfer Rates",
+               "type": "table"
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Ingress Percentile Response Times and Transfer Rates",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 25
+         },
+         "id": 20,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Ingress Certificate Expiry",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "columns": [ ],
+         "datasource": "$datasource",
+         "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 6,
+            "y": 26
+         },
+         "id": 21,
+         "links": [ ],
+         "sort": {
+            "col": 2
+         },
+         "styles": [
+            {
+               "pattern": "Time",
+               "type": "hidden"
+            },
+            {
+               "alias": "Host",
+               "pattern": "host",
+               "type": "string"
+            },
+            {
+               "alias": "TTL",
+               "colorMode": "cell",
+               "colors": [
+                  "#e02f44",
+                  "#ff780a",
+                  "#56a64b"
+               ],
+               "decimals": 0,
+               "pattern": "Value",
+               "thresholds": [
+                  0,
+                  691200
+               ],
+               "type": "number",
+               "unit": "s"
+            }
+         ],
+         "targets": [
+            {
+               "expr": "avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~\"$cluster\", job=~\"$job\", pod=~\"$pod\", namespace=~\"$namespace\", container=~\"$container\"}) by (host) - time()",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            }
+         ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "Ingress Certificate Expiry",
+         "type": "table"
+      },
+      {
+         "collapse": true,
+         "collapsed": true,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 4
+         },
+         "id": 22,
+         "panels": [
+            {
+               "aliasColors": { },
+               "bars": false,
+               "dashLength": 10,
+               "dashes": false,
+               "datasource": "$datasource_logs",
+               "fill": 1,
+               "fillGradient": 0,
+               "gridPos": {
+                  "h": 5,
+                  "w": 24,
+                  "x": 0,
+                  "y": 5
+               },
+               "id": 23,
+               "legend": {
+                  "alignAsTable": true,
+                  "avg": false,
+                  "current": true,
+                  "max": false,
+                  "min": false,
+                  "rightSide": true,
+                  "show": true,
+                  "sideWidth": null,
+                  "sort": "current",
+                  "sortDesc": true,
+                  "total": false,
+                  "values": true
+               },
+               "lines": true,
+               "linewidth": 1,
+               "links": [ ],
+               "nullPointMode": "null",
+               "percentage": false,
+               "pointradius": 5,
+               "points": false,
+               "renderer": "flot",
+               "repeat": null,
+               "seriesOverrides": [
+                  {
+                     "alias": "Value #A",
+                     "hiddenSeries": true,
+                     "legend": false
+                  }
+               ],
+               "spaceLength": 10,
+               "stack": true,
+               "steppedLine": false,
+               "targets": [
+                  {
+                     "expr": "sum(count_over_time({cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"} |~ \"(?i)$search\"[10s])) by ($view)",
+                     "legendFormat": "{{$view}}",
+                     "refId": "A"
+                  }
+               ],
+               "thresholds": [ ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Count (avg for 10s intervals)",
+               "tooltip": {
+                  "shared": true,
+                  "sort": 2,
+                  "value_type": "individual"
+               },
+               "type": "graph",
+               "xaxis": {
+                  "buckets": null,
+                  "mode": "time",
+                  "name": null,
+                  "show": true,
+                  "values": [ ]
+               },
+               "yaxes": [
+                  {
+                     "format": "logs",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  },
+                  {
+                     "format": "logs",
+                     "label": null,
+                     "logBase": 1,
+                     "max": null,
+                     "min": 0,
+                     "show": true
+                  }
+               ]
+            },
+            {
+               "datasource": "$datasource_logs",
+               "gridPos": {
+                  "h": 13,
+                  "w": 24,
+                  "x": 0,
+                  "y": 10
+               },
+               "id": 24,
+               "options": {
+                  "showLabels": true,
+                  "showTime": true,
+                  "sortOrder": "Descending",
+                  "wrapLogMessage": true
+               },
+               "span": 12,
+               "targets": [
+                  {
+                     "expr": "{cluster=~\"$cluster\", namespace=~\"$namespace\", pod=~\"$pod\", container=~\"$container\"} |~ \"(?i)$search\"",
+                     "legendFormat": "",
+                     "refId": "A"
+                  }
+               ],
+               "timeFrom": null,
+               "timeShift": null,
+               "title": "Logs",
+               "type": "logs"
+            }
+         ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "Logs",
+         "titleSize": "h6",
+         "type": "row"
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "app",
+      "L1"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Logs datasource",
+            "name": "datasource_logs",
+            "options": [ ],
+            "query": "loki",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Cluster",
+            "multi": false,
+            "name": "cluster",
+            "options": [ ],
+            "query": "label_values(node_uname_info, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Job",
+            "multi": true,
+            "name": "job",
+            "options": [ ],
+            "query": "label_values(nginx_ingress_controller_config_hash{cluster=~\"$cluster\"}, job)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": {
+               "text": "pod",
+               "value": "pod"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "label": "View by",
+            "multi": false,
+            "name": "view",
+            "options": [
+               {
+                  "text": "pod",
+                  "value": "pod"
+               },
+               {
+                  "text": "container",
+                  "value": "container"
+               }
+            ],
+            "query": "pod,container",
+            "refresh": 0,
+            "type": "custom"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Namespace",
+            "multi": true,
+            "name": "namespace",
+            "options": [ ],
+            "query": "label_values(nginx_ingress_controller_config_hash{cluster=~\"$cluster\", job=~\"$job\"}, controller_namespace)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Pod",
+            "multi": true,
+            "name": "pod",
+            "options": [ ],
+            "query": "label_values(nginx_ingress_controller_config_hash{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\"}, pod)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Container",
+            "multi": true,
+            "name": "container",
+            "options": [ ],
+            "query": "label_values(nginx_ingress_controller_config_hash{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\"}, container)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Ingress",
+            "multi": true,
+            "name": "ingress",
+            "options": [ ],
+            "query": "label_values(nginx_ingress_controller_requests{cluster=~\"$cluster\", job=~\"$job\", namespace=~\"$namespace\", pod=~\"$pod\"}, ingress)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "current": {
+               "selected": false,
+               "text": "",
+               "value": ""
+            },
+            "label": "Logs Search",
+            "name": "search",
+            "query": "",
+            "type": "textbox"
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "Nginx Ingress",
+   "uid": "nginxingress",
+   "version": 0
+}

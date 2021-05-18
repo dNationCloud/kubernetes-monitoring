@@ -1,0 +1,242 @@
+{
+   "__inputs": [ ],
+   "__requires": [ ],
+   "annotations": {
+      "list": [ ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 1,
+   "hideControls": false,
+   "id": null,
+   "links": [ ],
+   "panels": [
+      {
+         "collapse": false,
+         "collapsed": false,
+         "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 0
+         },
+         "id": 2,
+         "panels": [ ],
+         "repeat": null,
+         "repeatIteration": null,
+         "repeatRowId": null,
+         "showTitle": true,
+         "title": "StatefulSets",
+         "titleSize": "h6",
+         "type": "row"
+      },
+      {
+         "columns": [ ],
+         "datasource": "$datasource",
+         "gridPos": {
+            "h": 26,
+            "w": 24,
+            "x": 0,
+            "y": 1
+         },
+         "id": 3,
+         "links": [ ],
+         "sort": {
+            "col": 4,
+            "desc": true
+         },
+         "styles": [
+            {
+               "pattern": "Time",
+               "type": "hidden"
+            },
+            {
+               "alias": "Updated",
+               "pattern": "Value #A",
+               "type": "number"
+            },
+            {
+               "alias": "Ready",
+               "colorMode": "cell",
+               "colors": [
+                  "#56a64b",
+                  "#ff780a",
+                  "#e02f44"
+               ],
+               "mappingType": 2,
+               "pattern": "Value #B",
+               "rangeMaps": [
+                  {
+                     "from": 0,
+                     "text": "OK",
+                     "to": 0
+                  },
+                  {
+                     "from": 1,
+                     "text": "Failed",
+                     "to": 999999999
+                  }
+               ],
+               "thresholds": [
+                  1,
+                  1
+               ],
+               "type": "string"
+            },
+            {
+               "alias": "StatefulSet",
+               "link": true,
+               "linkTooltip": "Detail",
+               "linkUrl": "/d/statefulset?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to",
+               "pattern": "statefulset"
+            },
+            {
+               "alias": "Namespace",
+               "link": true,
+               "linkTooltip": "Detail",
+               "linkUrl": "/d/containerdetail?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to",
+               "pattern": "namespace"
+            }
+         ],
+         "targets": [
+            {
+               "expr": "sum by (statefulset, namespace) (kube_statefulset_status_replicas_updated{cluster=~\"$cluster\", namespace=~\"$namespace\", statefulset=~\"$statefulset\"})",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "A"
+            },
+            {
+               "expr": "sum by (statefulset, namespace) (kube_statefulset_status_replicas{cluster=~\"$cluster\", namespace=~\"$namespace\", statefulset=~\"$statefulset\"}) - sum by (statefulset, namespace) (kube_statefulset_status_replicas_ready{cluster=~\"$cluster\", namespace=~\"$namespace\", statefulset=~\"$statefulset\"})",
+               "format": "table",
+               "instant": true,
+               "intervalFactor": 2,
+               "legendFormat": "",
+               "refId": "B"
+            }
+         ],
+         "timeFrom": null,
+         "timeShift": null,
+         "title": "StatefulSets",
+         "type": "table"
+      }
+   ],
+   "refresh": "10s",
+   "rows": [ ],
+   "schemaVersion": 14,
+   "style": "dark",
+   "tags": [
+      "k8s",
+      "overview",
+      "L2"
+   ],
+   "templating": {
+      "list": [
+         {
+            "current": { },
+            "hide": 0,
+            "label": "Datasource",
+            "name": "datasource",
+            "options": [ ],
+            "query": "prometheus",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 2,
+            "includeAll": false,
+            "label": "Cluster",
+            "multi": false,
+            "name": "cluster",
+            "options": [ ],
+            "query": "label_values(kube_statefulset_status_replicas, cluster)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Namespace",
+            "multi": true,
+            "name": "namespace",
+            "options": [ ],
+            "query": "label_values(kube_statefulset_status_replicas{cluster=~\"$cluster\"}, namespace)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         },
+         {
+            "allValue": null,
+            "current": { },
+            "datasource": "$datasource",
+            "hide": 0,
+            "includeAll": true,
+            "label": "StatefulSet",
+            "multi": true,
+            "name": "statefulset",
+            "options": [ ],
+            "query": "label_values(kube_statefulset_status_replicas{cluster=~\"$cluster\", namespace=~\"$namespace\"}, statefulset)",
+            "refresh": 2,
+            "regex": "",
+            "sort": 5,
+            "tagValuesQuery": "",
+            "tags": [ ],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+         }
+      ]
+   },
+   "time": {
+      "from": "now-5m",
+      "to": "now"
+   },
+   "timepicker": {
+      "refresh_intervals": [
+         "5s",
+         "10s",
+         "30s",
+         "1m",
+         "5m",
+         "15m",
+         "30m",
+         "1h",
+         "2h",
+         "1d"
+      ],
+      "time_options": [
+         "5m",
+         "15m",
+         "1h",
+         "6h",
+         "12h",
+         "24h",
+         "2d",
+         "7d",
+         "30d"
+      ]
+   },
+   "timezone": "browser",
+   "title": "StatefulSet",
+   "uid": "statefulsetoverview",
+   "version": 0
+}
