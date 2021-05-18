@@ -18,10 +18,7 @@ local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local template = grafana.template;
 local prometheus = grafana.prometheus;
-local loki = grafana.loki;
 local graphPanel = grafana.graphPanel;
-local logPanel = grafana.logPanel;
-local row = grafana.row;
 
 {
   grafanaDashboards+:: {
@@ -38,124 +35,6 @@ local row = grafana.row;
           multi=true,
         );
 
-      local upstreamTemplate =
-        template.new(
-          name='upstream',
-          label='Upstream',
-          datasource='$datasource',
-          query='label_values(nginx_upstream_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, upstream)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
-
-      local cpu =
-        graphPanel.new(
-          title='CPU Usage',
-          datasource='$datasource',
-          format='core',
-          min=0,
-          stack=true,
-          nullPointMode='null as zero',
-          linewidth=2,
-          fill=2,
-        )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addTargets(
-          [
-            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!~"POD|"}) by (container)', legendFormat='{{container}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"})', legendFormat='PodRequests'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"})', legendFormat='PodLimits'),
-          ],
-        );
-
-      local memory =
-        graphPanel.new(
-          title='Memory Usage',
-          datasource='$datasource',
-          format='bytes',
-          min=0,
-          stack=true,
-          nullPointMode='null as zero',
-          linewidth=2,
-          fill=2,
-        )
-        .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
-        .addTargets(
-          [
-            prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!~"POD|"}) by (container)', legendFormat='{{container}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}) by (container)', legendFormat='PodRequests - {{container}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}) by (container)', legendFormat='PodLimits - {{container}}'),
-          ],
-        );
-
-      local bandwidth =
-        graphPanel.new(
-          title='Transmit/Receive Bandwidth',
-          datasource='$datasource',
-          format='Bps',
-          stack=true,
-          nullPointMode='null as zero',
-          linewidth=2,
-          fill=2,
-        )
-        .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
-        .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
-        .addTargets(
-          [
-            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
-          ],
-        );
-
-      local drops =
-        graphPanel.new(
-          title='Transmit/Receive Drops',
-          datasource='$datasource',
-          format='pps',
-          stack=true,
-          nullPointMode='null as zero',
-          linewidth=2,
-          fill=2,
-        )
-        .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
-        .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
-        .addTargets(
-          [
-            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
-          ],
-        );
-
-      local count =
-        graphPanel.new(
-          title='Count (avg for 10s intervals)',
-          datasource='$datasource_logs',
-          format='logs',
-          min=0,
-          stack=true,
-          nullPointMode='null as zero',
-          legend_alignAsTable=true,
-          legend_current=true,
-          legend_rightSide=true,
-          legend_sort='current',
-          legend_sortDesc=true,
-          legend_values=true,
-        )
-        .addSeriesOverride({ alias: 'Value #A', legend: false, hiddenSeries: true })
-        .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"} |~ "(?i)$search"[10s])) by (pod)', legendFormat='{{pod}}'));
-
-      local logs =
-        logPanel.new(
-          title='Logs',
-          datasource='$datasource_logs',
-          showLabels=true,
-        )
-        .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"} |~ "(?i)$search"'));
-
       local serverConnections =
         graphPanel.new(
           title='Server Connections',
@@ -163,20 +42,12 @@ local row = grafana.row;
         )
         .addTarget(prometheus.target('sum(nginx_server_connections{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"active|writing|reading|waiting"}) by (status)', legendFormat='{{status}}'));
 
-      local serverCache =
-        graphPanel.new(
-          title='Server Cache',
-          datasource='$datasource',
-          min=0,
-        )
-        .addTarget(prometheus.target('sum(irate(nginx_server_cache{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (status)', legendFormat='{{status}}'));
-
       local serverRequests =
         graphPanel.new(
           title='Server Requests',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('sum(irate(nginx_server_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_server_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
 
       local serverBytes =
         graphPanel.new(
@@ -187,70 +58,21 @@ local row = grafana.row;
         )
         .addTarget(prometheus.target('sum(irate(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (direction)', legendFormat='{{direction}}'));
 
-      local upstreamRequests =
-        graphPanel.new(
-          title='Upstream Requests',
-          datasource='$datasource',
-          description="This one is providing aggregated error codes, but it's still possible to graph these per upstream.",
-        )
-        .addTarget(prometheus.target('sum(irate(nginx_upstream_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
-
-      local upstreamBytes =
-        graphPanel.new(
-          title='Upstream Bytes',
-          datasource='$datasource',
-          format='bytes',
-          min=0,
-        )
-        .addTarget(prometheus.target('sum(irate(nginx_upstream_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}[5m])) by (direction)', legendFormat='{{direction}}'));
-
-      local upstreamBackendResponse =
-        graphPanel.new(
-          title='Upstream Backend Response',
-          datasource='$datasource',
-        )
-        .addTarget(prometheus.target('sum(nginx_upstream_responseMsec{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}) by (backend)', legendFormat='{{backend}}'));
-
       local templates =
         [
           $.grafanaTemplates.datasourceTemplate(),
-        ]
-        + (if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [])
-        + [
           $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
           $.grafanaTemplates.jobTemplate('label_values(nginx_server_bytes{cluster=~"$cluster"}, job)'),
           $.grafanaTemplates.namespaceTemplate('label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job"}, namespace)'),
           $.grafanaTemplates.podTemplate('label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
           hostTemplate,
-          upstreamTemplate,
-        ]
-        + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.searchTemplate()] else [];
-
-      local logsPanels = [
-        row.new('Logs', collapse=true) { gridPos: { x: 0, y: 4, w: 24, h: 1 } }
-        .addPanel(count { tooltip+: { sort: 2 } }, { x: 0, y: 5, w: 24, h: 5 })
-        .addPanel(logs, { x: 0, y: 10, w: 24, h: 13 }),
-      ];
+        ];
 
       local panels = [
-        row.new('CPU Usage', collapse=true) { gridPos: { x: 0, y: 0, w: 24, h: 1 } }
-        .addPanel(cpu { tooltip+: { sort: 2 } }, { x: 0, y: 1, w: 24, h: 7 }),
-        row.new('Memory Usage', collapse=true) { gridPos: { x: 0, y: 1, w: 24, h: 1 } }
-        .addPanel(memory { tooltip+: { sort: 2 } }, { x: 0, y: 2, w: 24, h: 7 }),
-        row.new('Network Bandwidth', collapse=true) { gridPos: { x: 0, y: 2, w: 24, h: 1 } }
-        .addPanel(bandwidth { tooltip+: { sort: 2 } }, { x: 0, y: 3, w: 24, h: 7 }),
-        row.new('Network Drops', collapse=true) { gridPos: { x: 0, y: 3, w: 24, h: 1 } }
-        .addPanel(drops { tooltip+: { sort: 2 } }, { x: 0, y: 4, w: 24, h: 7 }),
-        row.new('Server') { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
-        serverConnections { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 6, w: 12, h: 7 } },
-        serverCache { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 6, w: 12, h: 7 } },
-        serverRequests { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 13, w: 12, h: 7 } },
-        serverBytes { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 13, w: 12, h: 7 } },
-        row.new('Upstream', collapse=true) { gridPos: { x: 0, y: 20, w: 24, h: 1 } }
-        .addPanel(upstreamRequests { tooltip+: { sort: 2 } }, { x: 0, y: 21, w: 12, h: 7 })
-        .addPanel(upstreamBytes { tooltip+: { sort: 2 } }, { x: 12, y: 21, w: 12, h: 7 })
-        .addPanel(upstreamBackendResponse { tooltip+: { sort: 2 } }, { x: 0, y: 28, w: 24, h: 7 }),
-      ] + if $._config.grafanaDashboards.isLoki then logsPanels else [];
+        serverConnections { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 0, w: 24, h: 7 } },
+        serverRequests { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 7, w: 12, h: 7 } },
+        serverBytes { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 7, w: 12, h: 7 } },
+      ];
 
       dashboard.new(
         'Nginx VTS',

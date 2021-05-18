@@ -1184,6 +1184,7 @@
             thresholds: thresholds,
           },
         },
+        nginxVtsEnhanced: self.nginxVts { linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxVtsEnhanced] },
         autoscaler: {
           local expr = '(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100)',
           local thresholds = {
