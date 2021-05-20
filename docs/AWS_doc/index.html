@@ -510,7 +510,7 @@ helm install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monit
 <ul>
 <li>Use Port Forwarding if you want to access the Grafana server from outside your cluster</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace default -l <span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace monitoring -l <span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
 kubectl --namespace monitoring port-forward <span class="nv">$POD_NAME</span> <span class="m">3000</span>
 </code></pre></div>
 <ul>
