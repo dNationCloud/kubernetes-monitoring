@@ -29,7 +29,7 @@ The next sections will walk you through these steps in detail.
 This guide assumes that:
 
 - You have an active AWS account. If you don’t have this, [create a new account](https://aws.amazon.com/).
-- You have a running EKS cluster with Helm 3.x and *kubectl* installed. 
+- You have a running EKS cluster with a minimal two nodes with allocatable 11 pods per node and also Helm 3.x, *kubectl*  are installed. 
 
 
 
