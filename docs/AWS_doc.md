@@ -1,3 +1,5 @@
+
+
 ## Get Started With dNation Cloud Chart Using Amazon EKS And The AWS Marketplace
 
 
@@ -107,16 +109,31 @@ Follow these steps:
 
   ```bash
   # Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart
-  helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring
+helm upgrade dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.repository=709825985650.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag=<image-tag> --version=<helm-chart-version>
   ```
-
   
+  Example of installation for helm chart version `1.1.2` 
+  
+  ```bash
+  # Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart
+  helm upgrade dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.repository=709825985650.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag=0.2.0 --version=1.1.2
+  ```
+  
+  
+
 
 - If your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow this
 
   ```bash
   # Install dNation Kubernetes Monitoring
-  helm install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring
+  helm upgrade dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring --set dnation-kubernetes-jsonnet-translator.image.repository=709825985650.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag=<image-tag> --version=<helm-chart-version>
+  ```
+  
+  Example of installation for helm chart version `1.1.2`
+  
+  ```bash
+  # Install dNation Kubernetes Monitoring
+  helm upgrade dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring --set dnation-kubernetes-jsonnet-translator.image.repository=709825985650.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag=0.2.0 --version=1.1.2
   ```
   
   
@@ -126,6 +143,8 @@ Follow these steps:
   ```bash
   kubectl get pods --namespace monitoring 
   ```
+
+
 
 
 
