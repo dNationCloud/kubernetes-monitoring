@@ -69,7 +69,7 @@ Follow these steps:
 
 At the end of this step, you will have deployed dNation Kubernetes Monitoring on your EKS cluster.
 
-The next step is to deploy dNation Kubernetes Monitoring on your EKS cluster. The easiest way to do this is with a Helm chart.
+The next step is to deploy dNation Kubernetes Monitoring on your EKS cluster using AWS repository, which you obtained in a previous step. The easiest way to do this is with a Helm chart.
 
 Follow these steps:
 
