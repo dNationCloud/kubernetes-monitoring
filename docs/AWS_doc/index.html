@@ -436,85 +436,96 @@
 <li>You have a running EKS cluster with a minimal two nodes with allocatable 11 pods per node, e.g. instances like t2.small or t3.small and higher. And also Helm 3.x, <em>kubectl</em> are installed.</li>
 </ul>
 <h3 id="step-1-subscribe-to-the-dnation-kubernetes-monitoring-using-the-aws-marketplace">Step 1: Subscribe To The dNation Kubernetes Monitoring Using The AWS Marketplace</h3>
-<p>At the end of this step, you will have subscribed to the dNation Kubernetes Monitoring  solution in the AWS Marketplace.</p>
+<p>At the end of this step, you will have subscribed to the dNation Kubernetes Monitoring solution in the AWS Marketplace.</p>
 <p>Follow these steps:</p>
 <ul>
 <li>Log in to the <a href="https://aws.amazon.com/marketplace">AWS Marketplace</a>.</li>
 </ul>
 <p><img alt="log_in" src="../images/aws_log_in.png" /></p>
 <ul>
-<li>
-<p>Search for the dNation Kubernetes Monitoring by entering the search term “dNation kubernetes monitoring” in the search bar at the top.</p>
-</li>
-<li>
-<p>Select the dNation Kubernetes Monitoring in the list of search results.</p>
-</li>
-<li>
-<p>On the product detail page, review the details of the solution and click the “Continue to subscribe” button.</p>
-</li>
+<li>Search for the dNation Kubernetes Monitoring by entering the search term “dNation kubernetes monitoring” in the search bar at the top.</li>
+<li>Select the dNation Kubernetes Monitoring in the list of search results.</li>
+<li>On the product detail page, review the details of the solution and click the “Continue to subscribe” button.</li>
 </ul>
-<p><img alt="continue_to_subscribe" src="../images/continue_to_subscribe.png" /></p>
+<p><img alt="continue_to_subscribe" src="../images/aws_continue_to_subscribe.png" /></p>
 <ul>
 <li>On the product subscription page, select “Continue to configuration” as accept the terms and pricing.</li>
 </ul>
-<p><img alt="continue_to_configuration" src="../images/continue_to_conf.png" /></p>
+<p><img alt="continue_to_configuration" src="../images/aws_continue_to_conf.png" /></p>
 <ul>
-<li>On the product configuration page, select delivery method as “Container” , select Software version and click the "Continue to Launch".</li>
+<li>On the product configuration page, select delivery method as “Container” , select Software version and click the “Continue to Launch“.</li>
 </ul>
-<p><img alt="configuration_page" src="../images/conf_page.png" /></p>
+<p><img alt="configuration_page" src="../images/aws_conf_page.png" /></p>
 <ul>
-<li>On the launch page, you can review your configuration and see the instruction to the given software.</li>
+<li>On the launch page, select “View container image details“ and copy the URL to the AWS Marketplace registry.
+  You will need these details in installation.</li>
 </ul>
-<p><img alt="launch_page" src="../images/launch.png" /></p>
+<p><img alt="launch_page" src="../images/aws_containers.png" /></p>
+<ul>
+<li>Review your configuration, select “Deployment Guide“ and follow step-by-step instructions for installing dNation Kubernetes Monitoring.</li>
+</ul>
+<p><img alt="launch_page" src="../images/aws_launch.png" /></p>
 <h3 id="step-2-deploy-dnation-kubernetes-monitoring-helm-chart-on-eks">Step 2: Deploy dNation Kubernetes Monitoring Helm Chart On EKS</h3>
-<p>At the end of this step, you will have deployed dNation Kubernetes Monitoring  on your EKS cluster.</p>
-<p>The next step is to deploy dNation Kubernetes Monitoring on your EKS cluster. The easiest way to do this is with a Helm chart.</p>
+<p>At the end of this step, you will have deployed dNation Kubernetes Monitoring on your EKS cluster.</p>
+<p>The next step is to deploy dNation Kubernetes Monitoring on your EKS cluster using AWS repository, which you obtained in a previous step. The easiest way to do this is with a Helm chart.</p>
 <p>Follow these steps:</p>
 <ul>
-<li>Add dNation helm repository and update it.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Add dNation helm repository</span>
+<li>
+<p>Add dNation helm repository and update it.
+  <div class="highlight"><pre><span></span><code><span class="c1"># Add dNation helm repository</span>
 helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
 helm repo update
+</code></pre></div></p>
+</li>
+<li>
+<p>It is a good practice to install new packages in a separate namespace, as it is easier to manage it this way. Create a new namespace, for example call it "monitoring"
+  <div class="highlight"><pre><span></span><code>kubectl create namespace monitoring
+</code></pre></div></p>
+</li>
+<li>
+<p>In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install dNation Kubernetes Monitoring Stack helm chart (recommended) with dNation Kubernetes Monitoring Chart
+  <div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart</span>
+helm upgrade --install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span>&lt;image-tag&gt; --version<span class="o">=</span>&lt;helm-chart-version&gt;
 </code></pre></div>
-<ul>
-<li>It is a good practice to install new packages in a separate namespace, as it is easier to manage it this way. Create a new namespace, for example call it "monitoring"</li>
+  Example of installation for helm chart version <code>1.1.2</code>:
+  <div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart</span>
+helm upgrade --install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span><span class="m">0</span>.2.0 --version<span class="o">=</span><span class="m">1</span>.1.2
+</code></pre></div></p>
+</li>
+<li>
+<p>If your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow this
+  <div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring</span>
+helm upgrade --install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring --set dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span>&lt;image-tag&gt; --version<span class="o">=</span>&lt;helm-chart-version&gt;
+</code></pre></div>
+  Example of installation for helm chart version <code>1.1.2</code>:
+  <div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring</span>
+helm upgrade --install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring --set dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span><span class="m">0</span>.2.0 --version<span class="o">=</span><span class="m">1</span>.1.2
+</code></pre></div></p>
+</li>
+<li>
+<p>Check its status by running
+  <div class="highlight"><pre><span></span><code>kubectl get pods --namespace monitoring 
+</code></pre></div></p>
+</li>
 </ul>
-<div class="highlight"><pre><span></span><code>kubectl create namespace monitoring
-</code></pre></div>
-<ul>
-<li>In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install dNation Kubernetes Monitoring Stack helm chart (recommended) with dNation Kubernetes Monitoring Chart</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart</span>
-helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring
-</code></pre></div>
-<ul>
-<li>If your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow this</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring</span>
-helm install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring
-</code></pre></div>
-<ul>
-<li>Check its status by running</li>
-</ul>
-<div class="highlight"><pre><span></span><code>kubectl get pods --namespace monitoring 
-</code></pre></div>
 <h3 id="step-3-log-in-and-start-using-dnation-kubernetes-monitoring">Step 3: Log In And Start Using dNation Kubernetes Monitoring</h3>
 <p>At the end of this step, you will have logged in to the dNation Kubernetes Monitoring.</p>
 <p>To log in to the dNation Kubernetes Monitoring dashboard, follow these steps:</p>
 <ul>
-<li>Get your 'admin' user password by running</li>
-</ul>
-<div class="highlight"><pre><span></span><code>kubectl --namespace monitoring get secret dnation-kubernetes-monitoring-stack-grafana -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.admin-password}&quot;</span> <span class="p">|</span> base64 --decode <span class="p">;</span> <span class="nb">echo</span>
-</code></pre></div>
-<ul>
-<li>Use Port Forwarding if you want to access the Grafana server from outside your cluster</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace monitoring -l <span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
+<li>
+<p>Get your 'admin' user password by running
+  <div class="highlight"><pre><span></span><code>kubectl --namespace monitoring get secret dnation-kubernetes-monitoring-stack-grafana -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.admin-password}&quot;</span> <span class="p">|</span> base64 --decode <span class="p">;</span> <span class="nb">echo</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>Use Port Forwarding if you want to access the Grafana server from outside your cluster
+  <div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace monitoring -l <span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
 kubectl --namespace monitoring port-forward <span class="nv">$POD_NAME</span> <span class="m">3000</span>
-</code></pre></div>
-<ul>
-<li>If you didn't modify the default values the Grafana server is exposed by ClusterIP service and can be accessed via port 80 on the DNS name. Usually at the URL <em>http://DNS/</em> or if you used Port Forwarding at <em>http://localhost:3000/</em></li>
+</code></pre></div></p>
+</li>
+<li>
+<p>If you didn't modify the default values the Grafana server is exposed by ClusterIP service and can be accessed via port 80 on the DNS name. Usually at the URL <em>http://DNS/</em> or if you used Port Forwarding at <em>http://localhost:3000/</em></p>
+</li>
 </ul>
 <p><img alt="log_in" src="../images/log_in.png" /></p>
 <ul>
@@ -530,24 +541,15 @@ kubectl --namespace monitoring port-forward <span class="nv">$POD_NAME</span> <s
 </ul>
 <p><img alt="L1_layer" src="../images/l1_k8s.png" /></p>
 <p>If you want to set the <code>Monitoring</code> dashboard as a home dashboard follow <a href="https://grafana.com/docs/grafana/latest/administration/change-home-dashboard/#set-the-default-dashboard-through-preferences">here</a>. If you're experiencing issues please read the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation">documentation</a> and <a href="https://dnationcloud.github.io/kubernetes-monitoring/helpers/FAQ/">FAQ</a>.</p>
+<p><strong>Happy Monitoring !</strong></p>
 <h3 id="useful-links">Useful Links</h3>
 <p>To learn more about the topics discussed in this tutorial, use the links below:</p>
 <ul>
-<li>
-<p><a href="https://aws.amazon.com/eks/">Amazon EKS</a></p>
-</li>
-<li>
-<p><a href="https://kubernetes.io/">Kubernetes</a></p>
-</li>
-<li>
-<p><a href="https://helm.sh/">Helm</a></p>
-</li>
-<li>
-<p><a href="https://github.com/dNationCloud/kubernetes-monitoring">dNation Kubernetes Monitoring</a></p>
-</li>
-<li>
-<p><a href="https://dnation.cloud/">dNation Cloud</a></p>
-</li>
+<li><a href="https://aws.amazon.com/eks/">Amazon EKS</a></li>
+<li><a href="https://kubernetes.io/">Kubernetes</a></li>
+<li><a href="https://helm.sh/">Helm</a></li>
+<li><a href="https://github.com/dNationCloud/kubernetes-monitoring">dNation Kubernetes Monitoring</a></li>
+<li><a href="https://dnation.cloud/">dNation Cloud</a></li>
 </ul>
                 
               
