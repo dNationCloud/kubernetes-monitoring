@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-/* Host main dashboard */
+/* VM main dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -25,7 +25,7 @@ local text = grafana.text;
 
 {
   grafanaDashboards+::
-    local hostDashboard(hostUid, dashboardName, alertJobs, hostTemplates, hostApps=[]) = {
+    local vmDashboard(vmUid, dashboardName, alertJobs, vmTemplates, vmApps=[]) = {
       local monitoringLink =
         link.dashboards(
           title='Monitoring',
@@ -56,23 +56,23 @@ local text = grafana.text;
       local criticalPanel =
         alertPanel(
           title='Critical',
-          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
+          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"}' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
 
       local warningPanel =
         alertPanel(
           title='Warning',
-          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"}' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
+          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"}' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
 
-      local hostStatsPanels = [
+      local vmStatsPanels = [
         statPanel.new(
           title=tpl.panel.title,
-          description='%s\n\nHost monitoring template: _%s_' % [tpl.panel.description, tpl.templateName],
+          description='%s\n\nVM monitoring template: _%s_' % [tpl.panel.description, tpl.templateName],
           datasource=tpl.panel.datasource,
           colorMode=tpl.panel.colorMode,
           graphMode=tpl.panel.graphMode,
@@ -91,11 +91,11 @@ local text = grafana.text;
             h: tpl.panel.gridPos.h,
           },
         }
-        for tpl in hostTemplates
+        for tpl in vmTemplates
         if (std.objectHas(tpl, 'panel') && tpl.panel != {})
       ],
 
-      local hostAppStatsPanels(index, app) = [
+      local vmAppStatsPanels(index, app) = [
         local tpl = template.item;
         local tplIndex = template.index;
         local appGridX =
@@ -150,7 +150,7 @@ local text = grafana.text;
             row.new('Applications') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
           ] +
           std.flattenArrays([
-            hostAppStatsPanels(app.index, app.item)
+            vmAppStatsPanels(app.index, app.item)
             for app in $.zipWithIndex(apps)
           ])
         else
@@ -163,8 +163,8 @@ local text = grafana.text;
           graphTooltip=$._config.grafanaDashboards.tooltip,
           refresh=$._config.grafanaDashboards.refresh,
           time_from=$._config.grafanaDashboards.time_from,
-          tags=$._config.grafanaDashboards.tags.k8sHostsMain,
-          uid=hostUid,
+          tags=$._config.grafanaDashboards.tags.k8sVMs,
+          uid=vmUid,
         )
         .addLinks(
           [
@@ -176,40 +176,38 @@ local text = grafana.text;
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
           $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
-          $.grafanaTemplates.jobTemplate('label_values(node_uname_info{pod=~""}, job)', hide='variable'),
+          $.grafanaTemplates.jobTemplate('label_values(node_uname_info{cluster=~"$cluster", pod=~"virt-launcher.*"}, job)', hide='variable'),
         ])
         .addPanels(
           [
             row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
             criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
             warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
-            row.new('Host') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+            row.new('VM') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
             text.new('CPU') { gridPos: { x: 0, y: 5, w: 6, h: 1 } },
             text.new('RAM') { gridPos: { x: 6, y: 5, w: 6, h: 1 } },
             text.new('Disk') { gridPos: { x: 12, y: 5, w: 6, h: 1 } },
             text.new('Network') { gridPos: { x: 18, y: 5, w: 6, h: 1 } },
-          ] + hostStatsPanels + applicationPanels(hostApps)
+          ] + vmStatsPanels + applicationPanels(vmApps)
         ),
     };
-    if $.isHostMonitoring() then
+    if $.isClusterMonitoring() then
+      local isMulti = std.length($._config.clusterMonitoring.clusters) > 1;
       {
-        ['host-monitoring-%s' % host.name]:
-          hostDashboard(
-            $.getCustomUid([$._config.grafanaDashboards.ids.hostMonitoring, host.name]),
-            $.getCustomName(['Host Monitoring', host.name]),
-            $.getAlertJobs(host),
-            $.getTemplates($._config.templates.L1.host, host),
-            $.getApps($._config.templates.L1.hostApps, host)
+        [local fieldName = 'vm-monitoring-%s' % vm.name; if isMulti then cluster.name + fieldName else fieldName]:
+          vmDashboard(
+            local id = $._config.grafanaDashboards.ids.vmMonitoring;
+            if isMulti then $.getCustomUid([cluster.name, id, vm.name]) else $.getCustomUid([id, vm.name]),
+            local name = 'VM Monitoring';
+            if isMulti then $.getCustomName([cluster.name, name, vm.name]) else $.getCustomName([name, vm.name]),
+            $.getAlertJobs(vm),
+            $.getTemplates($._config.templates.L2.vm, vm),
+            $.getApps($._config.templates.L1.vmApps, vm)
           ).dashboard
-        for host in $._config.hostMonitoring.hosts
-        if (std.objectHas(host, 'apps') || !$.hasDefaultTemplates(host, $._config.templates.L1.k8s))
-      } +
-      if $.isAnyDefault($._config.hostMonitoring.hosts, $._config.templates.L1.host) then
-        {
-          'host-monitoring': hostDashboard($._config.grafanaDashboards.ids.hostMonitoring, 'Host Monitoring', ['$job'], $.getTemplates($._config.templates.L1.host)).dashboard,
-        }
-      else
-        {}
+        for cluster in $._config.clusterMonitoring.clusters
+        if (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0)
+        for vm in cluster.vms
+      }
     else
       {},
 }

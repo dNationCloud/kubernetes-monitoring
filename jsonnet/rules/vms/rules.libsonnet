@@ -13,34 +13,48 @@
   limitations under the License.
 */
 
-/* Host prometheus rules */
+/* VM prometheus rules */
 
 {
   prometheusRules+::
-    if $.isHostMonitoring() then {
-      'hosts.rules': {
+    if $.isClusterMonitoring() then {
+      'vms.rules': {
         local alerts = std.set(
           std.flattenArrays([
-            $.getTemplateAlerts($._config.templates.L1.host, host)
-            for host in $._config.hostMonitoring.hosts
+            $.getTemplateAlerts($._config.templates.L2.vm, vm)
+            for cluster in $._config.clusterMonitoring.clusters
+            if (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0)
+            for vm in cluster.vms
           ]), function(o) o.name
         ),
         groups: [
-          $.newRuleGroup('host.rules')
+          $.newRuleGroup('vm.rules')
           .addRules(
             std.flattenArrays(
               [
                 $.newAlertPair(
                   name=alert.name,
                   message=alert.message,
-                  expr=alert.expr % std.makeArray(std.length(std.findSubstr('job=~"%s"', alert.expr)), function(x) std.join('|', $.hostJobs)),
+                  expr=alert.expr % std.makeArray(std.length(std.findSubstr('job=~"%s"', alert.expr)), function(x) std.join('|', $.vmJobs)),
                   thresholds=alert.thresholds,
                   link=alert.link,
                   customLables=alert.customLables,
                 )
                 for alert in alerts
               ]
-            )
+            ) +
+            [
+              $.newAlert(
+                name='VMTargetAbsent',
+                message='VM job {{ $labels.job }}: Target is absent.',
+                expr='absent(up{job="%s"})' % vmJob,
+                operator='==',
+                threshold=1,
+                link='',
+                labels={ severity: 'critical', alertgroup: $._config.prometheusRules.alertGroupClusterVM },
+              )
+              for vmJob in $.vmJobs
+            ]
           ),
         ],
       },
