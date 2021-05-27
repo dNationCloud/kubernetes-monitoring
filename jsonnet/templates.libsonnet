@@ -175,7 +175,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 0,
-              y: 5,
+              y: 9,
             },
           },
           alert: {
@@ -197,7 +197,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 12,
-              y: 5,
+              y: 9,
             },
           },
           alert: {
@@ -219,7 +219,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 6,
-              y: 5,
+              y: 9,
             },
           },
           alert: {
@@ -241,7 +241,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 6,
-              y: 8,
+              y: 12,
             },
           },
           alert: {
@@ -266,7 +266,7 @@
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 18,
-              y: 8,
+              y: 12,
               w: 3,
             },
           },
@@ -289,7 +289,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 0,
-              y: 8,
+              y: 12,
             },
           },
           alert: {
@@ -311,7 +311,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 12,
-              y: 8,
+              y: 12,
             },
           },
           alert: {
@@ -336,7 +336,7 @@
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 18,
-              y: 5,
+              y: 9,
             },
           },
           alert: {
@@ -364,7 +364,7 @@
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 21,
-              y: 8,
+              y: 12,
               w: 3,
             },
           },
@@ -388,7 +388,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 0,
-              y: 12,
+              y: 5,
               w: 4,
             },
           },
@@ -411,7 +411,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 4,
-              y: 12,
+              y: 5,
               w: 4,
             },
           },
@@ -434,7 +434,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 8,
-              y: 12,
+              y: 5,
               w: 4,
             },
           },
@@ -457,7 +457,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 12,
-              y: 12,
+              y: 5,
               w: 4,
             },
           },
@@ -480,7 +480,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 16,
-              y: 12,
+              y: 5,
               w: 4,
             },
           },
@@ -503,7 +503,7 @@
             thresholds: thresholds,
             gridPos: {
               x: 20,
-              y: 12,
+              y: 5,
               w: 4,
             },
           },
