@@ -681,14 +681,14 @@
           },
         },
         overallUtilizationDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s})) / (sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s}) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s})) * 100 > 0)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['diskPerNodePolystat'],
           panel: {
             title: 'Overall Utilization',
             description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
             dataLinks: [{ title: 'System Overview', url: '/d/{}?%s&var-instance=All' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
-            expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
+            expr: expr % { job: 'job=~"$job"' },
             thresholds: thresholds,
             gridPos: {
               x: 12,
@@ -699,7 +699,7 @@
           alert: {
             name: 'ClusterDiskOverallHigh',
             message: 'Cluster High Disk Overall Utilization {{ $value }}%',
-            expr: 'avg(%s)' % expr % { job: 'job=~"node-exporter"' },
+            expr: expr % { job: 'job=~"node-exporter"' },
             customLables: k8sCustomLables,
             thresholds: thresholds,
           },
@@ -805,7 +805,7 @@
             colorMode: 'value',
             graphMode: 'none',
             unit: 'bytes',
-            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) * ((\navg(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s}) by (device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s}) by (device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", %(job)s}) by (device)) > 0\n)))' % { job: 'job=~"$job"' },
+            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 12,
@@ -1018,7 +1018,7 @@
             colorMode: 'value',
             graphMode: 'none',
             unit: 'bytes',
-            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) * ((max((sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s}) by (device)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s}) by (device) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", %(job)s}) by (device)))))' % { job: 'job=~"$job"' },
+            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 12,
@@ -1965,14 +1965,14 @@
           },
         },
         overallUtilizationDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s})) / (sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s}) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s})) * 100 > 0)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
             title: 'Overall Utilization',
             description: 'The percentage of the disk utilization is calculated using the fraction:\n```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free> is reduced by  5% of the available disk capacity, because   \nthe file system marks 5% of the available disk capacity as reserved. \nIf less than 5% is free, using the remaining reserved space requires root privileges.\nAny non-privileged users and processes are unable to write new data to the partition. See the list of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)',
             dataLinks: [{ title: 'System Overview', url: '/d/%s?var-job=$job&%s' % [$.defaultConfig.grafanaDashboards.ids.nodeExporter, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
-            expr: 'avg(%s)' % expr % { job: 'job=~"$job"' },
+            expr: expr % { job: 'job=~"$job"' },
             thresholds: thresholds,
             gridPos: {
               x: 12,
@@ -1983,7 +1983,7 @@
           alert: {
             name: 'VMDiskOverallHigh',
             message: 'VM High Disk Overall Utilization {{ $value }}%',
-            expr: 'avg(%s)' % expr % { job: 'job=~"%s"' },
+            expr: expr % { job: 'job=~"%s"' },
             customLables: vmCustomLables,
             thresholds: thresholds,
           },
@@ -2140,7 +2140,7 @@
             colorMode: 'value',
             graphMode: 'none',
             unit: 'bytes',
-            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) * ((avg((sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s}) by (device)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) by (device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s}) by (device) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", %(job)s}) by (device)) > 0)))' % { job: 'job=~"$job"' },
+            expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
             thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
             gridPos: {
               x: 12,
