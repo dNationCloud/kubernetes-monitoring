@@ -51,6 +51,8 @@
 (import 'apps/php-fpm.libsonnet') +
 (import 'apps/nginx-vts.libsonnet') +
 (import 'apps/nginx-vts-enhanced.libsonnet') +
+(import 'apps/nginx-vts-legacy.libsonnet') +
+(import 'apps/nginx-vts-enhanced-legacy.libsonnet') +
 (import 'apps/nginx-nrpe.libsonnet') +
 (import 'apps/nginx-ingress.libsonnet') +
 (import 'apps/cadvisor.libsonnet') +
