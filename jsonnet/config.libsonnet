@@ -103,6 +103,8 @@
         phpFpm: 'phpfpm',
         nginxVts: 'nginxvts',
         nginxVtsEnhanced: 'nginxvtsenhanced',
+        nginxVtsLegacy: 'nginxvtslegacy',
+        nginxVtsEnhancedLegacy: 'nginxvtsenhancedlegacy',
         nginxNrpe: 'nginxnrpe',
         nginxIngress: 'nginxingress',
         rabbitmq: 'rabbitmq',

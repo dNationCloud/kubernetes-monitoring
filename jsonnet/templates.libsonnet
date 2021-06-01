@@ -1185,7 +1185,7 @@
           },
         },
         nginxVts: {
-          local expr = '(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
+          local expr = '(sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
           local thresholds = {
             operator: '<',
             critical: 85,
@@ -1211,6 +1211,33 @@
           },
         },
         nginxVtsEnhanced: self.nginxVts { linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxVtsEnhanced] },
+        nginxVtsLegacy: {
+          local expr = '(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
+          local thresholds = {
+            operator: '<',
+            critical: 85,
+            warning: 95,
+            lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
+          },
+          default: false,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxVtsLegacy],
+          panel: {
+            expr: '%s OR on() vector(-1)' % expr,
+            thresholds: thresholds,
+            mappings: [{ text: '-', type: 1, value: -1 }],
+            gridPos: {
+              w: 4,
+            },
+          },
+          alert: {
+            name: '%(prefix)sNginxVTSSuccessRateLow',
+            message: '%(prefix)s {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%%',
+            expr: expr % { job: 'job=~".+"' },
+            linkGetParams: 'var-job={{ $labels.job }}',
+            thresholds: thresholds,
+          },
+        },
+        nginxVtsEnhancedLegacy: self.nginxVtsLegacy { linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxVtsEnhancedLegacy] },
         autoscaler: {
           local expr = '(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100)',
           local thresholds = {
