@@ -30,6 +30,10 @@
     $.newAlert(name, message, expr, thresholds.operator, thresholds.critical, link, { severity: 'critical' } + customLables),
     $.newAlert(name, message, expr, thresholds.operator, thresholds.warning, link, { severity: 'warning' } + customLables),
   ],
+  newRecord(expr, record):: {
+    expr: expr,
+    record: record,
+  },
   newRuleGroup(name):: {
     name: name,
     rules: [],

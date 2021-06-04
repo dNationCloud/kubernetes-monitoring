@@ -217,5 +217,21 @@ local template = grafana.template;
         multi=false,
         current='All',
       ),
+
+    masterInstanceTemplate()::
+      baseTemplate(
+        name='masterInstance',
+        label='Master Instance',
+        query='label_values(master_uname_info{cluster=~"$cluster"}, instance)',
+        hide='variable',
+      ),
+
+    workerInstanceTemplate()::
+      baseTemplate(
+        name='workerInstance',
+        label='Worker Instance',
+        query='label_values(worker_uname_info{cluster=~"$cluster"}, instance)',
+        hide='variable',
+      ),
   },
 }
