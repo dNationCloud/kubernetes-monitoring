@@ -25,6 +25,7 @@
             for cluster in $._config.clusterMonitoring.clusters
           ]), function(o) o.name
         ),
+        local records = $._config.templates.RecordRules,
         groups: [
           $.newRuleGroup('k8s.rules')
           .addRules(
@@ -41,7 +42,14 @@
                 for alert in alerts
               ]
             )
-          ),
+          )
+          .addRules([
+            $.newRecord(
+              expr=record.expr,
+              record=record.record,
+            )
+            for record in records
+          ]),
         ],
       },
     }
