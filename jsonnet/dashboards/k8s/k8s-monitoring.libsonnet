@@ -139,7 +139,7 @@ local getGridY(offset, index, panelWidth, panelHeight) =
           if std.type(tpl.panel.gridPos.y) == 'number' then
             tpl.panel.gridPos.y
           else
-            23;  // `23` -> init Y position in application row;
+            29;  // `23` -> init Y position in application row;
         statPanel.new(
           title='%s %s' % [tpl.templateName, app.name],
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
@@ -178,7 +178,7 @@ local getGridY(offset, index, panelWidth, panelHeight) =
       local applicationPanels(apps) =
         if std.length(apps) > 0 then
           [
-            row.new('Applications') { gridPos: { x: 0, y: 22, w: 24, h: 1 } },
+            row.new('Applications') { gridPos: { x: 0, y: 28, w: 24, h: 1 } },
           ] +
           std.flattenArrays([
             k8sAppStatsPanels(app.index, app.item)
@@ -266,6 +266,8 @@ local getGridY(offset, index, panelWidth, panelHeight) =
           $.grafanaTemplates.alertManagerTemplate(),
           $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
           $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
+          $.grafanaTemplates.masterInstanceTemplate(),
+          $.grafanaTemplates.workerInstanceTemplate(),
         ]
         + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate(hide='variable')] else [],
 
@@ -288,11 +290,16 @@ local getGridY(offset, index, panelWidth, panelHeight) =
             warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
             row.new('Control Plane') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
             row.new('Overview') { gridPos: { x: 0, y: 8, w: 24, h: 1 } },
-            row.new('Node Metrics (including Master)') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
+            row.new('Master Nodes Metrics') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
             text.new('CPU') { gridPos: { x: 0, y: 16, w: 6, h: 1 } },
             text.new('RAM') { gridPos: { x: 6, y: 16, w: 6, h: 1 } },
             text.new('Disk') { gridPos: { x: 12, y: 16, w: 6, h: 1 } },
             text.new('Network') { gridPos: { x: 18, y: 16, w: 6, h: 1 } },
+            row.new('Worker Nodes Metrics') { gridPos: { x: 0, y: 22, w: 24, h: 1 } },
+            text.new('CPU') { gridPos: { x: 0, y: 23, w: 6, h: 1 } },
+            text.new('RAM') { gridPos: { x: 6, y: 23, w: 6, h: 1 } },
+            text.new('Disk') { gridPos: { x: 12, y: 23, w: 6, h: 1 } },
+            text.new('Network') { gridPos: { x: 18, y: 23, w: 6, h: 1 } },
           ] + k8sStatsPanels + appPanels + vmPanels(clusterVMs)
         ),
     };
