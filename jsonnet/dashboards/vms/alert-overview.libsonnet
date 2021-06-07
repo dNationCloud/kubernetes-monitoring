@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-/* K8s alert overview dashboard */
+/* VM alert overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
@@ -22,7 +22,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'alert-cluster-overview':
+    'alert-vm-overview':
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local valueMaps =
         [
@@ -44,25 +44,25 @@ local table = grafana.tablePanel;
             { alias: 'Node', pattern: 'nodename', type: 'string' },
             { pattern: 'prometheus', type: 'hidden' },
             { alias: 'Message', pattern: 'message', type: 'string' },
-            { alias: 'Detailed link', pattern: 'link', type: 'string', link: true, linkUrl: '/d/${__cell:raw}&from=${__cell_0:raw}&to=now' },
           ]
         )
-        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup"}' });
+        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup", job=~"$job"}' });
 
       dashboard.new(
-        'AlertCluster',
+        'AlertVM',
         editable=$._config.grafanaDashboards.editable,
         graphTooltip=$._config.grafanaDashboards.tooltip,
         refresh=$._config.grafanaDashboards.refresh,
         time_from=$._config.grafanaDashboards.time_from,
         tags=$._config.grafanaDashboards.tags.k8sOverview,
-        uid=$._config.grafanaDashboards.ids.alertClusterOverview,
+        uid=$._config.grafanaDashboards.ids.alertVMOverview,
       )
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.alertManagerTemplate(),
         $.grafanaTemplates.alertGroupTemplate('label_values(ALERTS, alertgroup)'),
         $.grafanaTemplates.severityTemplate('label_values(ALERTS, severity)'),
+        $.grafanaTemplates.jobTemplate('label_values(ALERTS, job)', hide='variable'),
       ])
       .addPanels(
         [

@@ -153,6 +153,8 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               else
                 getGridY(1, index, panelWidth, panelHeight);
 
+            local isVM = (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0);
+
             statPanel.new(
               title='Cluster %s' % cluster.name,
               datasource=tpl.panel.datasource,
@@ -161,7 +163,21 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               unit=tpl.panel.unit,
               decimals=tpl.panel.decimals,
             )
-            .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { cluster: localCluster.name, groupCluster: $._config.prometheusRules.alertGroupCluster, groupApp: $._config.prometheusRules.alertGroupClusterApp, maxWarnings: maxWarnings } })
+            .addTarget(
+              {
+                type: 'single',
+                instant: true,
+                expr: tpl.panel.expr %
+                      {
+                        cluster: localCluster.name,
+                        groupCluster: $._config.prometheusRules.alertGroupCluster +
+                                      (if isVM then '|' + $._config.prometheusRules.alertGroupClusterVM else ''),
+                        groupApp: $._config.prometheusRules.alertGroupClusterApp +
+                                  (if isVM then '|' + $._config.prometheusRules.alertGroupClusterVMApp else ''),
+                        maxWarnings: maxWarnings,
+                      },
+              }
+            )
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
             .addMappings(tpl.panel.mappings)
             .addDataLinks(

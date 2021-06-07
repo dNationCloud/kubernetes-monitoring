@@ -39,7 +39,20 @@
         for app in hostApps
       ]), function(o) o.name
     );
-    if std.length(k8sAppAlerts) > 0 || std.length(hostAppAlerts) > 0 then
+    local vmApps = std.flattenArrays([
+      vm.apps
+      for cluster in $._config.clusterMonitoring.clusters
+      if (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0)
+      for vm in cluster.vms
+      if std.objectHas(vm, 'apps')
+    ]);
+    local vmAppAlerts = std.set(
+      std.flattenArrays([
+        $.getTemplateAlerts($._config.templates.L1.vmApps, app)
+        for app in vmApps
+      ]), function(o) o.name
+    );
+    if std.length(k8sAppAlerts) > 0 || std.length(hostAppAlerts) > 0 || std.length(vmAppAlerts) > 0 then
       {
         'apps.rules': {
           groups: [
@@ -74,6 +87,23 @@
                     customLables=alert.customLables,
                   )
                   for alert in hostAppAlerts
+                ]
+              )
+            ),
+            $.newRuleGroup('vmApps.rules')
+            .addRules(
+              // Add vm application rules
+              std.flattenArrays(
+                [
+                  $.newAlertPair(
+                    name=alert.name,
+                    message=alert.message,
+                    expr=alert.expr,
+                    thresholds=alert.thresholds,
+                    link=alert.link,
+                    customLables=alert.customLables,
+                  )
+                  for alert in vmAppAlerts
                 ]
               )
             ),
