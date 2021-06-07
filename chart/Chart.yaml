@@ -22,6 +22,7 @@ keywords:
 - dnation
 - kubernetes
 - monitoring
+- logging
 home: https://dnation.cloud
 sources:
 - https://github.com/dNationCloud/kubernetes-monitoring
