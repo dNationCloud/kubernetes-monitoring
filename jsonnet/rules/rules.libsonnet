@@ -48,4 +48,5 @@
 // dNation rules
 (import 'k8s/rules.libsonnet') +
 (import 'hosts/rules.libsonnet') +
-(import 'apps/rules.libsonnet')
+(import 'apps/rules.libsonnet') +
+(import 'vms/rules.libsonnet')

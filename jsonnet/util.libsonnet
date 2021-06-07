@@ -17,6 +17,26 @@
 
   local utils = self,
 
+  vmJobs::
+    if self.isClusterMonitoring() then
+      [
+        vm.jobName
+        for cluster in $._config.clusterMonitoring.clusters
+        if (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0)
+        for vm in cluster.vms
+      ]
+    else
+      [],
+
+  hostJobs::
+    if self.isHostMonitoring() then
+      [
+        host.jobName
+        for host in $._config.hostMonitoring.hosts
+      ]
+    else
+      [],
+
   zipWithIndex(arr)::
     /**
      * Enumarate array elements.
@@ -351,7 +371,7 @@
 
   isAnyDefault(objs, templateGroup)::
     /**
-     * Return true, if there is any obj, that has no apps and custom templates.
+     * Return true, if there is any obj, that has no apps, custom templates and vms.
      *
      * @param objs Array with clusters or hosts.
      * @param templateGroup Object with templates.
@@ -360,7 +380,7 @@
     std.length([
       true
       for item in objs
-      if !std.objectHas(item, 'apps') && utils.hasDefaultTemplates(item, templateGroup)
+      if !std.objectHas(item, 'apps') && utils.hasDefaultTemplates(item, templateGroup) && !std.objectHas(item, 'vms')
     ]) > 0,
 
   isCustomTemplate(obj, templateName)::

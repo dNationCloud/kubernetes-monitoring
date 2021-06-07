@@ -50,6 +50,7 @@
 (import 'apps/java-actuator.libsonnet') +
 (import 'apps/php-fpm.libsonnet') +
 (import 'apps/nginx-vts.libsonnet') +
+(import 'apps/nginx-vts-enhanced.libsonnet') +
 (import 'apps/nginx-nrpe.libsonnet') +
 (import 'apps/nginx-ingress.libsonnet') +
 (import 'apps/cadvisor.libsonnet') +
@@ -58,6 +59,10 @@
 (import 'apps/autoscaler.libsonnet') +
 (import 'apps/apache.libsonnet') +
 (import 'apps/mysql-exporter.libsonnet') +
+
+// VMs dashboards
+(import 'vms/vm-monitoring.libsonnet') +
+(import 'vms/alert-overview.libsonnet') +
 
 // Monitoring dashboards
 (import 'monitoring.libsonnet')
