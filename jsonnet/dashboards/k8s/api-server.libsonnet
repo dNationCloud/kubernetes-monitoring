@@ -148,7 +148,7 @@ local errorBudgetTarget = 0.99;
           title='Request duration 99th quantile',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", verb!="WATCH"}[5m])) by (verb, le))' % $._config.grafanaDashboards.selectors, legendFormat='5xx')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", verb!="WATCH"}[5m])) by (verb, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{verb}}')),
 
       local workQueueAddRate =
         graphPanel.new(
