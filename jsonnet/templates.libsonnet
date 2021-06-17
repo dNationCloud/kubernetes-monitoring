@@ -1753,9 +1753,9 @@
             ],
             expr: [
               |||
-                sum by (job_name, namespace) (kube_job_status_succeeded{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} * 1) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} +
-                sum by (job_name, namespace) (kube_job_status_active{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} * 2) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} +
-                sum by (job_name, namespace) (kube_job_status_failed{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"}
+                sum by (job_name, namespace) (clamp_max(kube_job_status_succeeded{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"}, 1) * 1) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} +
+                sum by (job_name, namespace) (clamp_max(kube_job_status_active{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"}, 1) * 2) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"} +
+                sum by (job_name, namespace) (clamp_max(kube_job_status_failed{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"}, 1) * 3) * on(job_name, namespace) group_left(owner_name) kube_job_owner{cluster=~"$cluster", namespace=~"$namespace", job_name=~"$job_name"}
               |||,
             ],
           },
