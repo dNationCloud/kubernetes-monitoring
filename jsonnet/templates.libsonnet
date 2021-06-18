@@ -1462,6 +1462,7 @@
               'sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="DiskPressure", status=~"true|unknown"})',
               'sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="MemoryPressure", status=~"true|unknown"})',
               'sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="PIDPressure", status=~"true|unknown"})',
+              'sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="Ready", status=~"false|unknown"})',
             ],
           },
         },
@@ -1544,7 +1545,7 @@
             ],
             local thresholds = [1, 1],
             title: 'Deployments',
-            sort: { col: 4, desc: true },
+            sort: { col: 3, desc: true },
             styles: [
               { pattern: 'Time', type: 'hidden' },
               { alias: 'Updated', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
@@ -1595,7 +1596,7 @@
             ],
             local thresholds = [1, 1],
             title: 'DaemonSets',
-            sort: { col: 6, desc: true },
+            sort: { col: 5, desc: true },
             styles: [
               { pattern: 'Time', type: 'hidden' },
               { alias: 'Scheduled', pattern: 'Value #A', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
@@ -1672,7 +1673,7 @@
             local statusExpr = std.join(' + \n', std.flattenArrays([okQueries, waitingErrorsQueries, terminatedErrorsQueries])),
 
             title: 'Containers',
-            sort: { col: 6, desc: true },
+            sort: { col: 5, desc: true },
             styles: [
               { pattern: 'Time', type: 'hidden' },
               { alias: 'Status', pattern: 'Value #A', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [4, 4], colorMode: 'cell', colors: colors },
@@ -1725,7 +1726,7 @@
               { text: 'Failed', value: 3 },
             ],
             title: 'Jobs',
-            sort: { col: 4, desc: true },
+            sort: { col: 3, desc: true },
             styles: [
               { pattern: 'Time', type: 'hidden' },
               { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
