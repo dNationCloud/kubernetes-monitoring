@@ -41,7 +41,7 @@ local row = grafana.row;
             { color: $._config.grafanaDashboards.color.green, value: 3600 },
           ]
         )
-        .addTarget(prometheus.target('mysql_global_status_uptime{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('avg(mysql_global_status_uptime{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='{{instance}}'));
 
       local currentQPS =
         statPanel.new(
@@ -58,7 +58,7 @@ local row = grafana.row;
             { color: $._config.grafanaDashboards.color.green, value: 75 },
           ]
         )
-        .addTarget(prometheus.target('rate(mysql_global_status_queries{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('avg(rate(mysql_global_status_queries{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='{{instance}}'));
 
       local innoDBBufferPool =
         statPanel.new(
@@ -76,7 +76,7 @@ local row = grafana.row;
             { color: $._config.grafanaDashboards.color.green, value: 95 },
           ]
         )
-        .addTarget(prometheus.target('mysql_global_variables_innodb_buffer_pool_size{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='{{instance}}'));
+        .addTarget(prometheus.target('avg(mysql_global_variables_innodb_buffer_pool_size{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='{{instance}}'));
 
       local mysqlConnections =
         graphPanel.new(
@@ -143,7 +143,7 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(mysql_global_status_questions{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='{{instance}}'),
+            prometheus.target('avg(rate(mysql_global_status_questions{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='{{instance}}'),
           ]
         );
 
@@ -474,8 +474,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('mysql_global_status_qcache_free_memory{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Free Memory'),
-            prometheus.target('mysql_global_variables_query_cache_size{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Query Cache Size'),
+            prometheus.target('avg(mysql_global_status_qcache_free_memory{cluster=~"$cluster", job=~"$job", instance=~"$instance"} by (instance)', legendFormat='Free Memory'),
+            prometheus.target('avg(mysql_global_variables_query_cache_size{cluster=~"$cluster", job=~"$job", instance=~"$instance"} by (instance)', legendFormat='Query Cache Size'),
           ]
         );
 
@@ -495,11 +495,11 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(mysql_global_status_qcache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_qcache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Hits'),
-            prometheus.target('rate(mysql_global_status_qcache_inserts{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_qcache_inserts{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Inserts'),
-            prometheus.target('rate(mysql_global_status_qcache_not_cached{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_qcache_not_cached{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Not Cached'),
-            prometheus.target('rate(mysql_global_status_qcache_lowmem_prunes{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_qcache_lowmem_prunes{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Prunes'),
-            prometheus.target('mysql_global_status_qcache_queries_in_cache{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Queries in Cache'),
+            prometheus.target('avg(rate(mysql_global_status_qcache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_qcache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Hits'),
+            prometheus.target('avg(rate(mysql_global_status_qcache_inserts{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_qcache_inserts{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Inserts'),
+            prometheus.target('avg(rate(mysql_global_status_qcache_not_cached{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_qcache_not_cached{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Not Cached'),
+            prometheus.target('avg(rate(mysql_global_status_qcache_lowmem_prunes{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_qcache_lowmem_prunes{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Prunes'),
+            prometheus.target('avg(mysql_global_status_qcache_queries_in_cache{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='Queries in Cache'),
           ]
         );
 
@@ -519,7 +519,7 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(mysql_global_status_opened_files{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_opened_files{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Openings'),
+            prometheus.target('avg(rate(mysql_global_status_opened_files{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_opened_files{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Openings'),
           ]
         );
 
@@ -539,9 +539,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('mysql_global_status_open_files{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Open Files'),
-            prometheus.target('mysql_global_variables_open_files_limit{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Open Files Limit'),
-            prometheus.target('mysql_global_status_innodb_num_open_files{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='InnoDB Open Files'),
+            prometheus.target('avg(mysql_global_status_open_files{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='Open Files'),
+            prometheus.target('avg(mysql_global_variables_open_files_limit{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='Open Files Limit'),
+            prometheus.target('avg(mysql_global_status_innodb_num_open_files{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='InnoDB Open Files'),
           ]
         );
 
@@ -564,11 +564,11 @@ local row = grafana.row;
         .addSeriesOverride({ alias: 'Table Open Cache Hit Ratio', yaxis: 2 })
         .addTargets(
           [
-            prometheus.target('rate(mysql_global_status_opened_tables{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_opened_tables{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Openings'),
-            prometheus.target('rate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Hits'),
-            prometheus.target('rate(mysql_global_status_table_open_cache_misses{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_table_open_cache_misses{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Misses'),
-            prometheus.target('rate(mysql_global_status_table_open_cache_overflows{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_table_open_cache_overflows{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Misses due to Overflows'),
-            prometheus.target('(rate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]))/((rate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]))+(rate(mysql_global_status_table_open_cache_misses{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_table_open_cache_misses{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])))', legendFormat='Table Open Cache Hit Ratio'),
+            prometheus.target('avg(rate(mysql_global_status_opened_tables{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_opened_tables{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Openings'),
+            prometheus.target('avg(rate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Hits'),
+            prometheus.target('avg(rate(mysql_global_status_table_open_cache_misses{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_table_open_cache_misses{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Misses'),
+            prometheus.target('avg(rate(mysql_global_status_table_open_cache_overflows{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_table_open_cache_overflows{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Misses due to Overflows'),
+            prometheus.target('(avg(rate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance))/((avg(rate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_table_open_cache_hits{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance))+(avg(rate(mysql_global_status_table_open_cache_misses{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_table_open_cache_misses{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)))', legendFormat='Table Open Cache Hit Ratio'),
           ]
         );
 
@@ -589,8 +589,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('mysql_global_status_open_tables{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Open Tables'),
-            prometheus.target('mysql_global_variables_table_open_cache{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Table Open Cache'),
+            prometheus.target('avg(mysql_global_status_open_tables{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='Open Tables'),
+            prometheus.target('avg(mysql_global_variables_table_open_cache{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='Table Open Cache'),
           ]
         );
 
@@ -612,9 +612,9 @@ local row = grafana.row;
         .addSeriesOverride({ alias: 'Opened Table Definitions', yaxis: 2 })
         .addTargets(
           [
-            prometheus.target('mysql_global_status_open_table_definitions{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Open Table Definitions'),
-            prometheus.target('mysql_global_variables_table_definition_cache{cluster=~"$cluster", job=~"$job", instance=~"$instance"}', legendFormat='Table Definitions Cache Size'),
-            prometheus.target('rate(mysql_global_status_opened_table_definitions{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m]) or irate(mysql_global_status_opened_table_definitions{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])', legendFormat='Opened Table Definitions'),
+            prometheus.target('avg(mysql_global_status_open_table_definitions{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='Open Table Definitions'),
+            prometheus.target('avg(mysql_global_variables_table_definition_cache{cluster=~"$cluster", job=~"$job", instance=~"$instance"}) by (instance)', legendFormat='Table Definitions Cache Size'),
+            prometheus.target('avg(rate(mysql_global_status_opened_table_definitions{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance) or avg(irate(mysql_global_status_opened_table_definitions{cluster=~"$cluster", job=~"$job", instance=~"$instance"}[5m])) by (instance)', legendFormat='Opened Table Definitions'),
           ]
         );
 
@@ -661,13 +661,13 @@ local row = grafana.row;
           .addPanel(mysqlNetworkTraffic { tooltip+: { sort: 2 } }, { x: 0, y: 25, w: 24, h: 7 }),
           row.new('Memory', collapse=true) { gridPos: { x: 0, y: 25, w: 24, h: 1 } }
           .addPanel(mysqlInternalMemoryOverview { tooltip+: { sort: 2 } }, { x: 0, y: 26, w: 24, h: 7 }),
-          row.new('Coomand,Handlers,Processes', collapse=true) { gridPos: { x: 0, y: 26, w: 24, h: 1 } }
+          row.new('Command,Handlers,Processes', collapse=true) { gridPos: { x: 0, y: 26, w: 24, h: 1 } }
           .addPanel(topCommandCounters { tooltip+: { sort: 2 } }, { x: 0, y: 27, w: 24, h: 7 })
           .addPanel(mysqlHandlers { tooltip+: { sort: 2 } }, { x: 0, y: 34, w: 24, h: 7 })
           .addPanel(mysqlTransactionHandlers { tooltip+: { sort: 2 } }, { x: 0, y: 41, w: 24, h: 7 })
           .addPanel(processStates { tooltip+: { sort: 2 } }, { x: 0, y: 48, w: 24, h: 7 })
           .addPanel(topProcessStatesHourly { tooltip+: { sort: 2 } }, { x: 0, y: 55, w: 24, h: 7 }),
-          row.new('Query cahce', collapse=true) { gridPos: { x: 0, y: 27, w: 24, h: 1 } }
+          row.new('Query cache', collapse=true) { gridPos: { x: 0, y: 27, w: 24, h: 1 } }
           .addPanel(mysqlQueryCacheMemory { tooltip+: { sort: 2 } }, { x: 0, y: 28, w: 12, h: 7 })
           .addPanel(mysqlQueryCacheActivity { tooltip+: { sort: 2 } }, { x: 12, y: 28, w: 12, h: 7 }),
           row.new('Files and Tables', collapse=true) { gridPos: { x: 0, y: 28, w: 24, h: 1 } }
