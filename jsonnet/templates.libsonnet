@@ -373,7 +373,7 @@
             message: '"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value }}%',
             customLables: k8sCustomLables,
             expr: expr,
-            linkGetParams: 'var-volume={{ $labels.persistentvolumeclaim }}',
+            linkGetParams: 'var-pvc={{ $labels.persistentvolumeclaim }}',
             thresholds: thresholds,
           },
         },
@@ -1421,7 +1421,7 @@
               { pattern: 'Time', type: 'hidden' },
               { alias: 'Capacity', pattern: 'Value #A', colors: colors, colorMode: 'cell', type: 'number', unit: 'percent', thresholds: [85, 97] },
               { alias: 'Status', pattern: 'Value #B', colors: colors, colorMode: 'cell', type: 'string', thresholds: [2, 2], valueMaps: valueMaps, mappingType: 1 },
-              { alias: 'PVC', pattern: 'persistentvolumeclaim', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-volume=${__cell_2}&%s' % [$.defaultConfig.grafanaDashboards.ids.persistentVolumes, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+              { alias: 'PVC', pattern: 'persistentvolumeclaim', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-pvc=${__cell_2}&%s' % [$.defaultConfig.grafanaDashboards.ids.persistentVolumes, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
               { alias: 'Namespace', pattern: 'namespace', type: 'string' },
             ],
             expr: [
@@ -1677,7 +1677,7 @@
               { pattern: 'Time', type: 'hidden' },
               { alias: 'Status', pattern: 'Value #A', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [4, 4], colorMode: 'cell', colors: colors },
               { alias: 'Restarts', pattern: 'Value #B', type: 'number', thresholds: [5, 10], colorMode: 'cell', colors: colors },
-              { alias: 'Container', pattern: 'container', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+              { alias: 'Container', pattern: 'container', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_3}&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-view=container&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
               { alias: 'Namespace', pattern: 'namespace', type: 'string' },
               { alias: 'Pod', pattern: 'pod', type: 'string' },
             ],
@@ -1730,8 +1730,8 @@
               { pattern: 'Time', type: 'hidden' },
               { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
               { alias: 'Job name', pattern: 'job_name', type: 'string' },
-              { alias: 'Owner', pattern: 'owner_name', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=${__cell_3}&var-namespace=${__cell_2}&var-view=container&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
-              { alias: 'Namespace', pattern: 'namespace', type: 'string' },
+              { alias: 'Owner', pattern: 'owner_name', type: 'string' },
+              { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-container=All&var-view=container&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
             transformations: [
               {

@@ -94,7 +94,7 @@ templates:
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Capacity', pattern: 'Value #A', colors: ['green', 'orange', 'red'], colorMode: 'cell', type: 'number', unit: 'percent', thresholds: [30, 40] },
             { alias: 'Status', pattern: 'Value #B', colors: ['green', 'orange', 'red'], colorMode: 'cell', type: 'string', thresholds: [2, 2], valueMaps: [{ text: 'Bound', value: 1 }, { text: 'Lost', value: 2 }, { text: 'Pending', value: 3 }], mappingType: 1 },
-            { alias: 'PVC', pattern: 'persistentvolumeclaim', link: true, linkTooltip: 'Detail', linkUrl: '/d/persistentvolumes?var-namespace=${__cell_1}&var-volume=${__cell_2}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to'},
+            { alias: 'PVC', pattern: 'persistentvolumeclaim', link: true, linkTooltip: 'Detail', linkUrl: '/d/persistentvolumes?var-namespace=${__cell_1}&var-pvc=${__cell_2}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to'},
             { alias: 'Namespace', pattern: 'namespace', type: 'string' },
           ]
           expr: [
