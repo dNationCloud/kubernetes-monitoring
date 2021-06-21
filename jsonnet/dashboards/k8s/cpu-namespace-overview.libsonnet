@@ -67,7 +67,6 @@ local graphPanel = grafana.graphPanel;
             prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
             prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace, pod, container) * group(kube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
             prometheus.target(format='table', instant=true, expr='sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace)'),
-
           ],
         );
 

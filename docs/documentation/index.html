@@ -2875,7 +2875,7 @@ title: Most Utilized Node
   alertgroup: Cluster
 expr: sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"})
   / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100) by (persistentvolumeclaim)
-linkGetParams: var-volume={{ $labels.persistentvolumeclaim }}
+linkGetParams: var-pvc={{ $labels.persistentvolumeclaim }}
 message: '"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value }}%'
 name: PVCUtilizationHigh
 thresholds:
@@ -4700,7 +4700,7 @@ thresholds:
 - sum by (container, namespace, pod) (kube_pod_container_status_restarts_total{cluster=~"$cluster",
   namespace=~"$namespace", pod=~"$pod", container=~"$container"})
 sort:
-  col: 6
+  col: 5
   desc: true
 styles:
 - pattern: Time
@@ -4762,7 +4762,7 @@ styles:
 - alias: Container
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-container=${__cell_1}&var-namespace=${__cell_2}&var-pod=${__cell_3}&var-view=container&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
+  linkUrl: /d/containerdetail?var-container=${__cell_3}&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-view=container&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
   pattern: container
 - alias: Namespace
   pattern: namespace
@@ -4853,7 +4853,7 @@ title: CPU per Node
   (kube_daemonset_status_number_ready{cluster=~"$cluster", namespace=~"$namespace",
   daemonset=~"$daemonset"})
 sort:
-  col: 6
+  col: 5
   desc: true
 styles:
 - pattern: Time
@@ -4986,7 +4986,7 @@ transformations:
   (kube_deployment_status_replicas_available{cluster=~"$cluster", namespace=~"$namespace",
   deployment=~"$deployment"})
 sort:
-  col: 4
+  col: 3
   desc: true
 styles:
 - pattern: Time
@@ -5127,7 +5127,7 @@ title: Disk per Node
   \ namespace) group_left(owner_name) kube_job_owner{cluster=~\"$cluster\", namespace=~\"\
   $namespace\", job_name=~\"$job_name\"}\n"
 sort:
-  col: 4
+  col: 3
   desc: true
 styles:
 - pattern: Time
@@ -5155,13 +5155,13 @@ styles:
   pattern: job_name
   type: string
 - alias: Owner
+  pattern: owner_name
+  type: string
+- alias: Namespace
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-container=${__cell_3}&var-namespace=${__cell_2}&var-view=container&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
-  pattern: owner_name
-- alias: Namespace
+  linkUrl: /d/containerdetail?var-namespace=$__cell&var-container=All&var-view=container&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
   pattern: namespace
-  type: string
 title: Jobs
 transformations:
 - id: organize
@@ -5273,6 +5273,8 @@ title: Network Errors per Node
   status=~"true|unknown"})
 - sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="PIDPressure",
   status=~"true|unknown"})
+- sum by (node) (kube_node_status_condition{cluster=~"$cluster", condition="Ready",
+  status=~"false|unknown"})
 sort:
   col: 6
   desc: true
@@ -5504,7 +5506,7 @@ styles:
 - alias: PVC
   link: true
   linkTooltip: Detail
-  linkUrl: /d/persistentvolumes?var-namespace=${__cell_1}&var-volume=${__cell_2}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
+  linkUrl: /d/persistentvolumes?var-namespace=${__cell_1}&var-pvc=${__cell_2}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
   pattern: persistentvolumeclaim
 - alias: Namespace
   pattern: namespace
