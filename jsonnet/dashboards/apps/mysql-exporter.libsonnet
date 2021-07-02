@@ -348,7 +348,7 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(mysql_global_status_innodb_page_size{cluster=~"$cluster", job=~"$job", instance=~"$instance"} * on (instance) mysql_global_status_buffer_pool_pages{cluster=~"$cluster", job=~"$job", instance=~"$instance", state="data"})', legendFormat='InnoDB Buffer Pool Data'),
+            prometheus.target('sum(mysql_global_status_innodb_page_size{cluster=~"$cluster", job=~"$job", instance=~"$instance"} * on (instance) group_left() avg(mysql_global_status_buffer_pool_pages{cluster=~"$cluster", job=~"$job", instance=~"$instance", state="data"}) by (instance))', legendFormat='InnoDB Buffer Pool Data'),
             prometheus.target('sum(mysql_global_variables_innodb_log_buffer_size{cluster=~"$cluster", job=~"$job", instance=~"$instance"})', legendFormat='InnoDB Log Buffer Size'),
             prometheus.target('sum(mysql_global_variables_innodb_additional_mem_pool_size{cluster=~"$cluster", job=~"$job", instance=~"$instance"})', legendFormat='InnoDB Additional Memory Pool Size'),
             prometheus.target('sum(mysql_global_status_innodb_mem_dictionary{cluster=~"$cluster", job=~"$job", instance=~"$instance"})', legendFormat='InnoDB Dictionary Size'),
