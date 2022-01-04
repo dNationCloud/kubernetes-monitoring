@@ -398,7 +398,7 @@ Manual setup in case of already running K8s deployment.
     # Edit bind-address and port command options
     ...
     - --bind-address=0.0.0.0
-    - --port=10251
+    - --secure-port=10259
     ...
     ```
 
@@ -410,6 +410,15 @@ Manual setup in case of already running K8s deployment.
     # Edit bind-address and port command options
     ...
     - --bind-address=0.0.0.0
-    - --port=10252
+    - --secure-port=10257
     ...
     ```
+  
+You should also check:
+* TLS configuration of prometheus components responsible for scraping `controller-manager` and `scheduler`.
+If you don't want to set up TLS, you can skip validation as shown [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/helpers/values-kind.yaml).
+
+* Authorization to access `controller-manager` and `scheduler`. You can skip authorization for some endpoints 
+  by setting `--authorization-always-allow-paths: "/healthz,/readyz,/livez,/metrics"` in `kubeadm_init.yaml` ([see example for kind cluster](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/helpers/kind_cluster_config.yaml)) or 
+  manually in already running K8s deployment by following same steps as above when setting metrics bind address.
+  

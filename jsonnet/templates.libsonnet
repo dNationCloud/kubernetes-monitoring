@@ -241,7 +241,7 @@
           },
         },
         daemonSetsHealth: {
-          local expr = 'round((sum(kube_daemonset_updated_number_scheduled{cluster=~"$cluster|"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster|"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|"})) * 100)',
+          local expr = 'round((sum(kube_daemonset_status_updated_number_scheduled{cluster=~"$cluster|"} OR kube_daemonset_updated_number_scheduled{cluster=~"$cluster|"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster|"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|"})) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s,
           linkTo: ['daemonSetOverviewTable'],
           panel: {
@@ -311,7 +311,7 @@
           },
         },
         runningContainers: {
-          local expr = 'round(sum(kube_pod_container_status_running{cluster=~"$cluster|"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|"}) + sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|", reason!="Completed"}) + sum(kube_pod_container_status_waiting{cluster=~"$cluster|"})) * 100)',
+          local expr = 'round(sum(kube_pod_container_status_running{cluster=~"$cluster|"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|"}) + (sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|", reason!="Completed"}) OR vector(0)) + sum(kube_pod_container_status_waiting{cluster=~"$cluster|"})) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s,
           linkTo: ['containerOverviewTable'],
           panel: {
@@ -2022,13 +2022,13 @@
             local valueMaps = std.flattenArrays([valueMapsOk, valueMapsWaitingErrors, valueMapsTerminatedErrors]),
 
             local okQueries = [
-              'sum by (container, namespace, pod) (kube_pod_container_status_terminated_reason{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container", reason="Completed"} * 1)',
+              'sum by (container, namespace, pod) ((kube_pod_container_status_terminated * 0 or kube_pod_container_status_terminated_reason{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container", reason="Completed"}) * 1)',
               'sum by (container, namespace, pod) (kube_pod_container_status_running{cluster=~"$cluster"} * 2)',
-              'sum by (container, namespace, pod) (kube_pod_container_status_waiting_reason{cluster=~"$cluster", reason="ContainerCreating"} * 3)',
+              'sum by (container, namespace, pod) ((kube_pod_container_status_waiting * 0 or kube_pod_container_status_waiting_reason{cluster=~"$cluster", reason="ContainerCreating"}) * 3)',
             ],
 
-            local waitingErrorsQueries = ['sum by (container, namespace, pod) (kube_pod_container_status_waiting_reason{cluster=~"$cluster", reason="%(err)s"} * %(value)d)' % map for map in writingErrorsValues],
-            local terminatedErrorsQueries = ['sum by (container, namespace, pod) (kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason="%(err)s"} * %(value)d)' % map for map in terminatedErrorsValues],
+            local waitingErrorsQueries = ['sum by (container, namespace, pod) ((kube_pod_container_status_waiting * 0 or kube_pod_container_status_waiting_reason{cluster=~"$cluster", reason="%(err)s"}) * %(value)d)' % map for map in writingErrorsValues],
+            local terminatedErrorsQueries = ['sum by (container, namespace, pod) ((kube_pod_container_status_terminated * 0 or kube_pod_container_status_terminated_reason{cluster=~"$cluster", reason="%(err)s"}) * %(value)d)' % map for map in terminatedErrorsValues],
             local statusExpr = std.join(' + \n', std.flattenArrays([okQueries, waitingErrorsQueries, terminatedErrorsQueries])),
 
             title: 'Containers',
