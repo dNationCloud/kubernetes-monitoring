@@ -46,6 +46,7 @@ local graphPanel = grafana.graphPanel;
           datasource='$datasource',
           min=0,
           max=100,
+          reducerFunction='lastNotNull',
         )
         .addTarget(prometheus.target(expr))
         .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });

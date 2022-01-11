@@ -990,12 +990,12 @@ See some examples from layer 2 of host monitoring:</p>
 <p>Install dNation k8s monitoring on k8s cluster. See installation steps <a href="https://github.com/dNationCloud/kubernetes-monitoring#full-installation">here</a>. </p>
 <h3 id="set-up">Set up</h3>
 <p>K8s cluster monitoring is enabled by default. See the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#clustermonitoring">docs</a>:
-<div class="highlight"><pre><span></span><code><span class="nt">clusterMonitoring</span><span class="p">:</span>
-  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">clusters</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">K8sCluster</span>
-    <span class="nt">description</span><span class="p">:</span> <span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
-    <span class="nt">apps</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+<div class="highlight"><pre><span></span><code><span class="nt">clusterMonitoring</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">  </span><span class="nt">clusters</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K8sCluster</span><span class="w"></span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">monitoring&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">apps</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w"></span>
 </code></pre></div>
 It means that your k8s cluster is being monitored right after installation of dNation k8s monitoring.
 If you want to customize k8s cluster monitoring see <a href="#how-to-customize-my-k8s-monitoring">How to customize my k8s monitoring?</a> section.</p>
@@ -1007,17 +1007,17 @@ fully customize the default state panels or alerts. You can also create your own
 Currently only first layer is customizable, however, the templating of other layers is under development.
 For full list of k8s templates see the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#templates">docs</a>.</p>
 <p>If you want to customize default layer 1 template in k8s monitoring just create a simple yaml file:
-<div class="highlight"><pre><span></span><code><span class="nt">templates</span><span class="p">:</span>
-  <span class="nt">k8s</span><span class="p">:</span>
-    <span class="c1"># Override stats panel title and warning thresholds for the etcd health panel</span>
-    <span class="nt">etcdHealth</span><span class="p">:</span>
-      <span class="nt">panel</span><span class="p">:</span>
-        <span class="nt">title</span><span class="p">:</span> <span class="s">&quot;Custom</span><span class="nv"> </span><span class="s">Title&quot;</span>
-        <span class="nt">thresholds</span><span class="p">:</span>
-          <span class="nt">warning</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">96</span>
-      <span class="nt">alert</span><span class="p">:</span>
-        <span class="nt">thresholds</span><span class="p">:</span>
-          <span class="nt">warning</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">96</span>
+<div class="highlight"><pre><span></span><code><span class="nt">templates</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">k8s</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># Override stats panel title and warning thresholds for the etcd health panel</span><span class="w"></span>
+<span class="w">    </span><span class="nt">etcdHealth</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">panel</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Custom</span><span class="nv"> </span><span class="s">Title&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="nt">thresholds</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">warning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">96</span><span class="w"></span>
+<span class="w">      </span><span class="nt">alert</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">thresholds</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">warning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">96</span><span class="w"></span>
 </code></pre></div>
 Each state panel that can be modified contains a template name in its description for easy navigation:</p>
 <p><img alt="l1_k8s_etcd_hover.png" src="../../docs/images/l1_k8s_etcd_hover.png" /></p>
@@ -1031,31 +1031,31 @@ If you want to create your own custom template see full examples in the <code>he
 <h3 id="set-up_1">Set up</h3>
 <p>K8s application monitoring is disabled by default. See the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#clustermonitoring">docs</a>.
 To enable it just create application monitoring definition as follows:
-<div class="highlight"><pre><span></span><code><span class="nt">clusterMonitoring</span><span class="p">:</span>
-  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">clusters</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">K8sCluster</span>
-    <span class="nt">description</span><span class="p">:</span> <span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
-    <span class="nt">apps</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app-example</span>
-      <span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Example of App Monitoring</span>
-      <span class="nt">jobName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flask-app</span>  <span class="c1"># The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `serviceMonitor` section</span>
-      <span class="nt">templates</span><span class="p">:</span>
-        <span class="nt">javaActuator</span><span class="p">:</span>  <span class="c1"># Application Exporter template</span>
-          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-      <span class="nt">serviceMonitor</span><span class="p">:</span>
-        <span class="nt">jobLabel</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app</span> <span class="c1"># The label to use to retrieve the job name from.</span>
-        <span class="nt">namespaceSelector</span><span class="p">:</span>  <span class="c1"># Namespaces to transfer from the kubernetes service to the target</span>
-          <span class="nt">matchNames</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">default</span>
-        <span class="nt">selector</span><span class="p">:</span>  <span class="c1"># Label selector for services to which this ServiceMonitor applies</span>
-          <span class="nt">matchLabels</span><span class="p">:</span>
-            <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flask-app</span>
-        <span class="c1"># Endpoints of the selected service to be monitored</span>
-        <span class="c1"># ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#endpoint</span>
-        <span class="nt">endpoints</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="nt">targetPort</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metrics</span>  <span class="c1"># Name or number of the endpoint&#39;s target port</span>
-          <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/metrics</span>  <span class="c1"># HTTP path to scrape for metrics</span>
+<div class="highlight"><pre><span></span><code><span class="nt">clusterMonitoring</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">  </span><span class="nt">clusters</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K8sCluster</span><span class="w"></span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">apps</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-example</span><span class="w"></span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Example of App Monitoring</span><span class="w"></span>
+<span class="w">      </span><span class="nt">jobName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flask-app</span><span class="w">  </span><span class="c1"># The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `serviceMonitor` section</span><span class="w"></span>
+<span class="w">      </span><span class="nt">templates</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">javaActuator</span><span class="p">:</span><span class="w">  </span><span class="c1"># Application Exporter template</span><span class="w"></span>
+<span class="w">          </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">serviceMonitor</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span><span class="w"> </span><span class="c1"># The label to use to retrieve the job name from.</span><span class="w"></span>
+<span class="w">        </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w">  </span><span class="c1"># Namespaces to transfer from the kubernetes service to the target</span><span class="w"></span>
+<span class="w">          </span><span class="nt">matchNames</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span><span class="w"></span>
+<span class="w">        </span><span class="nt">selector</span><span class="p">:</span><span class="w">  </span><span class="c1"># Label selector for services to which this ServiceMonitor applies</span><span class="w"></span>
+<span class="w">          </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flask-app</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># Endpoints of the selected service to be monitored</span><span class="w"></span>
+<span class="w">        </span><span class="c1"># ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#endpoint</span><span class="w"></span>
+<span class="w">        </span><span class="nt">endpoints</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span><span class="w">  </span><span class="c1"># Name or number of the endpoint&#39;s target port</span><span class="w"></span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/metrics</span><span class="w">  </span><span class="c1"># HTTP path to scrape for metrics</span><span class="w"></span>
 </code></pre></div></p>
 <p>Application monitoring definition contains two main sections: <code>template</code> and <code>serviceMonitor</code> or <code>podMonitor</code> respectively.
 The <code>template</code> section defines which template and pre-defined application dashboard will be used.
@@ -1074,18 +1074,18 @@ examples in <code>helpers</code> directory.</p>
 <h3 id="set-up_2">Set up</h3>
 <p>Host monitoring is disabled by default. See the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#hostmonitoring">docs</a>.
 To enable it just create host monitoring definition as follows:
-<div class="highlight"><pre><span></span><code><span class="nt">hostMonitoring</span><span class="p">:</span>
-  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">hosts</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host-01</span>
-    <span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Host 01</span>
-    <span class="nt">jobName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host-01</span>
-    <span class="nt">host</span><span class="p">:</span>
-      <span class="nt">address</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>  <span class="c1"># Host IP address</span>
-    <span class="nt">serviceMonitor</span><span class="p">:</span>
-      <span class="nt">endpoints</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">9100</span>  <span class="c1"># Node exporter port</span>
-        <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/metrics</span>  <span class="c1"># Node exporter metrics path</span>
+<div class="highlight"><pre><span></span><code><span class="nt">hostMonitoring</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host-01</span><span class="w"></span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Host 01</span><span class="w"></span>
+<span class="w">    </span><span class="nt">jobName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host-01</span><span class="w"></span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span><span class="w">  </span><span class="c1"># Host IP address</span><span class="w"></span>
+<span class="w">    </span><span class="nt">serviceMonitor</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">endpoints</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9100</span><span class="w">  </span><span class="c1"># Node exporter port</span><span class="w"></span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/metrics</span><span class="w">  </span><span class="c1"># Node exporter metrics path</span><span class="w"></span>
 </code></pre></div>
 Host monitoring definition contains two main sections: <code>host</code> and <code>serviceMonitor</code>.
 The <code>host</code> section simply defines the host IP address. The <code>serviceMonitor</code> defines <a href="https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#servicemonitor">service monitor</a>
@@ -1099,16 +1099,16 @@ override some of these parameters see the <code>chart/templates/hosts</code> dir
 fully customize the default state panels or alerts. You can also create your own to fulfill your host monitoring requirements.
 Currently, layer 1 customization is implemented. For full list of host templates see the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#templates">docs</a>.</p>
 <p>If you want to customize default layer 1 template in host monitoring just create a simple yaml file:
-<div class="highlight"><pre><span></span><code><span class="nt">templates</span><span class="p">:</span>
-  <span class="nt">host</span><span class="p">:</span>
-    <span class="c1"># Override warning thresholds for the CPU utilization panel</span>
-    <span class="nt">overallUtilizationCPU</span><span class="p">:</span>
-      <span class="nt">panel</span><span class="p">:</span>
-        <span class="nt">thresholds</span><span class="p">:</span>
-          <span class="nt">warning</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">50</span>
-      <span class="nt">alert</span><span class="p">:</span>
-        <span class="nt">thresholds</span><span class="p">:</span>
-          <span class="nt">warning</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">50</span>
+<div class="highlight"><pre><span></span><code><span class="nt">templates</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># Override warning thresholds for the CPU utilization panel</span><span class="w"></span>
+<span class="w">    </span><span class="nt">overallUtilizationCPU</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">panel</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">thresholds</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">warning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span><span class="w"></span>
+<span class="w">      </span><span class="nt">alert</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">thresholds</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">warning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span><span class="w"></span>
 </code></pre></div>
 Each state panel that can be modified contains a template name in its description for easy navigation:</p>
 <p><img alt="l1_host_cpu_hover.png" src="../../docs/images/l1_host_cpu_hover.png" /></p>
@@ -1122,24 +1122,24 @@ If you want to create your own custom template see full examples in the <code>he
 <h3 id="set-up_3">Set up</h3>
 <p>Hosts application monitoring is disabled by default. See the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/#hostmonitoring">docs</a>.
 To enable it just create application monitoring definition as follows:
-<div class="highlight"><pre><span></span><code><span class="nt">hostMonitoring</span><span class="p">:</span>
-  <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="nt">hosts</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host-01</span>
-    <span class="nt">description</span><span class="p">:</span> <span class="s">&#39;Host</span><span class="nv"> </span><span class="s">01</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
-    <span class="nt">host</span><span class="p">:</span>
-      <span class="nt">address</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1.2.3.4</span>
-    <span class="nt">apps</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host-01-docker</span>
-      <span class="nt">description</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Host 01 Docker Containers</span>
-      <span class="nt">jobName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host-01-docker</span>
-      <span class="nt">templates</span><span class="p">:</span>
-        <span class="nt">cAdvisor</span><span class="p">:</span>  <span class="c1"># Application Exporter template</span>
-          <span class="nt">enable</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-      <span class="nt">serviceMonitor</span><span class="p">:</span>
-        <span class="nt">endpoints</span><span class="p">:</span>
-        <span class="p p-Indicator">-</span> <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">9101</span>  <span class="c1"># Application exporter port</span>
-          <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/metrics</span>  <span class="c1"># Application exporter metrics path</span>
+<div class="highlight"><pre><span></span><code><span class="nt">hostMonitoring</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host-01</span><span class="w"></span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Host</span><span class="nv"> </span><span class="s">01</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2.3.4</span><span class="w"></span>
+<span class="w">    </span><span class="nt">apps</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host-01-docker</span><span class="w"></span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Host 01 Docker Containers</span><span class="w"></span>
+<span class="w">      </span><span class="nt">jobName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host-01-docker</span><span class="w"></span>
+<span class="w">      </span><span class="nt">templates</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">cAdvisor</span><span class="p">:</span><span class="w">  </span><span class="c1"># Application Exporter template</span><span class="w"></span>
+<span class="w">          </span><span class="nt">enable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
+<span class="w">      </span><span class="nt">serviceMonitor</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">endpoints</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9101</span><span class="w">  </span><span class="c1"># Application exporter port</span><span class="w"></span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/metrics</span><span class="w">  </span><span class="c1"># Application exporter metrics path</span><span class="w"></span>
 </code></pre></div></p>
 <p>Application monitoring definition contains two main sections: <code>template</code> and <code>serviceMonitor</code>.
 The <code>template</code> section defines which template and pre-defined application dashboard will be used.

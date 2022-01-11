@@ -742,7 +742,7 @@
             graphMode: 'none',
             unit: 'none',
             expr: '(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 0,
               y: 20,
@@ -758,7 +758,7 @@
             graphMode: 'none',
             unit: 'none',
             expr: 'count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 3,
               y: 20,
@@ -774,7 +774,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", %(job)s}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s}))))' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 6,
               y: 20,
@@ -790,7 +790,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 9,
               y: 20,
@@ -806,7 +806,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 12,
               y: 20,
@@ -822,7 +822,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 15,
               y: 20,
@@ -955,7 +955,7 @@
             graphMode: 'none',
             unit: 'none',
             expr: '(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 0,
               y: 9,
@@ -971,7 +971,7 @@
             graphMode: 'none',
             unit: 'none',
             expr: 'count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 3,
               y: 9,
@@ -987,7 +987,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", %(job)s}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s}))))' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 6,
               y: 9,
@@ -1003,7 +1003,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 9,
               y: 9,
@@ -1019,7 +1019,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 12,
               y: 9,
@@ -1035,7 +1035,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 15,
               y: 9,
@@ -2078,7 +2078,7 @@
             graphMode: 'none',
             unit: 'none',
             expr: '(1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="idle"}[5m])))) * count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 0,
               y: 9,
@@ -2094,7 +2094,7 @@
             graphMode: 'none',
             unit: 'none',
             expr: 'count(node_cpu_seconds_total{cluster=~"$cluster", %(job)s, mode="system"})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 3,
               y: 9,
@@ -2110,7 +2110,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", %(job)s}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s}))))' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 6,
               y: 9,
@@ -2126,7 +2126,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_memory_MemTotal_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 9,
               y: 9,
@@ -2142,7 +2142,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s}) - sum(node_filesystem_free_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 12,
               y: 9,
@@ -2158,7 +2158,7 @@
             graphMode: 'none',
             unit: 'bytes',
             expr: 'sum(node_filesystem_size_bytes{cluster=~"$cluster", %(job)s})' % { job: 'job=~"$job"' },
-            thresholds: { color: $.defaultConfig.grafanaDashboards.color.white, value: null },
+            thresholds: { color: $.defaultConfig.grafanaDashboards.color.gray, value: null },
             gridPos: {
               x: 15,
               y: 9,
