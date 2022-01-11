@@ -23,31 +23,46 @@ local table = grafana.tablePanel;
 {
   grafanaDashboards+:: {
     'alert-cluster-overview':
-      local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
-      local valueMaps =
-        [
-          { text: 'Critical', value: 4 },
-          { text: 'Warning', value: 2 },
-          { text: 'Info', value: 1 },
-        ];
-      local thresholds = [2, 4];
-
       local alertsInfoTable =
         table.new(
           title='Alerts Info',
           datasource='$alertmanager',
           styles=[
-            { alias: 'Starts At', pattern: 'Time', type: 'date' },
-            { alias: 'Severity', pattern: 'severity', colors: colors, colorMode: 'row', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
-            { alias: 'Alertname', pattern: 'alertname', type: 'string' },
-            { alias: 'Job', pattern: 'job', type: 'string' },
-            { alias: 'Node', pattern: 'nodename', type: 'string' },
-            { pattern: 'prometheus', type: 'hidden' },
-            { alias: 'Message', pattern: 'message', type: 'string' },
             { alias: 'Detailed link', pattern: 'link', type: 'string', link: true, linkUrl: '/d/${__cell:raw}&from=${__cell_0:raw}&to=now' },
+            { alias: 'Runbook url', pattern: 'runbook_url', type: 'string', link: true, linkUrl: '${__cell:raw}' },
           ]
         )
-        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup"}' });
+        .addTransformations([
+          {
+            id: 'organize',
+            options: {
+              excludeByName: {
+                alertstatus_code: true,
+                prometheus: true,
+              },
+              indexByName: {
+                Time: 0,
+                severity: 1,
+                alertname: 2,
+                message: 3,
+                link: 4,
+                alertstatus: 5,
+                job: 6,
+              },
+              renameByName: {
+                Time: 'Starts At',
+                nodename: 'node',
+              },
+            },
+          },
+        ])
+        {
+          targets: [{
+            active: true,
+            inhibited: true,
+            filters: 'severity=~"$severity", alertgroup=~"$alertgroup"',
+          }],
+        };
 
       dashboard.new(
         'AlertCluster',
