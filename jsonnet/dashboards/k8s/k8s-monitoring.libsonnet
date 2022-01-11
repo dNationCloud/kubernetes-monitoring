@@ -75,9 +75,10 @@ local getGridY(offset, index, panelWidth, panelHeight) =
       local alertPanel(title, expr) =
         statPanel.new(
           title=title,
-          datasource='$alertmanager',
+          datasource='$datasource',
           graphMode='none',
           colorMode='background',
+          reducerFunction='last',
         )
         .addTarget({ type: 'single', expr: expr }),
 
@@ -90,14 +91,15 @@ local getGridY(offset, index, panelWidth, panelHeight) =
       local criticalPanel =
         alertPanel(
           title='Critical',
-          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s"}' % std.join('|', alertGroups + alertVMGroups)
+          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate="firing", severity="critical", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
         )
         .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
+
       local warningPanel =
         alertPanel(
           title='Warning',
-          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s"}' % std.join('|', alertGroups + alertVMGroups)
+          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate="firing", severity="warning", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
         )
         .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),

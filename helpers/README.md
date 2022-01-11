@@ -21,9 +21,9 @@ If you want to test your local changes in local KinD k8s cluster use following s
 
 1. Create KinD cluster
 ```bash
-kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.20.2
+kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.22.1
 ```
-1. Install K8s-m8g-stack (without dNation Kubernetes Monitoring dependency)
+1. Install kubernetes-monitoring-stack (without dNation Kubernetes Monitoring dependency)
 K8s-m8g-stack is an umbrella helm chart which deploys Grafana, Loki and Prometheus Operator projects.
 ```bash
 # Add dNation helm repository
@@ -31,7 +31,7 @@ helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
 helm repo update
 
 # Install dNation Kubernetes Monitoring Stack without dNation Kubernetes Monitoring chart
-helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack  --set dnation-kubernetes-monitoring.enabled=false
+helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack -f https://raw.githubusercontent.com/dNationCloud/kubernetes-monitoring-stack/main/helpers/values-kind.yaml --set dnation-kubernetes-monitoring.enabled=false
 ```
 
 1. Follow installation notes and use Port Forwarding if you want to access the Grafana server from outside your KinD cluster

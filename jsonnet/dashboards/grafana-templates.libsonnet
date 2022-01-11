@@ -75,7 +75,6 @@ local template = grafana.template;
 
     alertGroupTemplate(query)::
       baseTemplate(
-        datasource='$alertmanager',
         query=query,
         name='alertgroup',
         label='Alert Group',
@@ -83,7 +82,6 @@ local template = grafana.template;
 
     severityTemplate(query)::
       baseTemplate(
-        datasource='$alertmanager',
         query=query,
         name='severity',
         label='Severity',
