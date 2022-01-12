@@ -45,7 +45,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { pattern: 'Value', type: 'hidden' },
+            { pattern: 'Value #A', type: 'hidden' },
             { alias: 'Instance', pattern: '_0_nodename', type: 'string' },
             { alias: 'IP Address', pattern: '_1_instance', type: 'string' },
           ]
