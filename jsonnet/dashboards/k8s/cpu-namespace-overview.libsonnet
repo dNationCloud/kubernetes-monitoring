@@ -55,19 +55,18 @@ local graphPanel = grafana.graphPanel;
             { alias: 'CPU Limit', pattern: 'Value #E', type: 'number', decimals: 2 },
             { alias: 'CPU Usage (only defined limit)', pattern: 'Value #F', type: 'number', decimals: 2 },
             { alias: 'CPU Usage (total)', pattern: 'Value #G', type: 'number', decimals: 2 },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: './d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s' % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s' % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
           [
             prometheus.target(format='table', instant=true, expr='count(sum(container_cpu_usage_seconds_total{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}) by (namespace, pod)) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace"} * on(pod) group_left(node) node_namespace_pod:kube_pod_info:{cluster=~"$cluster", namespace=~"$namespace", node=~"$instance"}) by (workload, namespace)) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace, pod, container) * group(kube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
-            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace, pod, container) * group(kube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
+            prometheus.target(format='table', instant=true, expr='count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace"} * on(pod, namespace) group_left(node) node_namespace_pod:kube_pod_info:{cluster=~"$cluster", namespace=~"$namespace", node=~"$instance"}) by (workload, namespace)) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_requests{resource="cpu", cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace, pod, container) * group(kube_pod_container_resource_requests{resource="cpu", cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
+            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_limits{resource="cpu", cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace, pod, container) * group(kube_pod_container_resource_limits{resource="cpu", cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
             prometheus.target(format='table', instant=true, expr='sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster", container!~"POD|", id!="", node=~"$instance", namespace=~"$namespace"}[5m])) by (namespace)'),
-
           ],
         );
 

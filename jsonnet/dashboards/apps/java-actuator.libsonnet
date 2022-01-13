@@ -66,9 +66,9 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
-            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits_cpu_cores{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="cpu", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="cpu", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
           ],
         );
 
@@ -88,8 +88,8 @@ local row = grafana.row;
         .addTargets(
           [
             prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits_memory_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="memory", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="memory", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
           ],
         );
 

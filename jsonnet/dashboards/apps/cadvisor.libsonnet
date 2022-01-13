@@ -44,7 +44,7 @@ local table = grafana.tablePanel;
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Name', pattern: 'name', type: 'string' },
             { alias: 'Image', pattern: 'image', type: 'string' },
-            { pattern: 'Value', type: 'hidden' },
+            { pattern: 'Value #A', type: 'hidden' },
           ]
         )
         .addTarget(prometheus.target(format='table', instant=true, expr='sum(container_cpu_user_seconds_total{cluster=~"$cluster", job=~"$job", image!="", name=~"$container"}) by (name,image)'));
