@@ -1875,7 +1875,7 @@
             sort: { col: 3, desc: true },
             styles: [
               { pattern: 'Time', type: 'hidden' },
-              { alias: 'Status', pattern: 'Value', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [3, 3], colorMode: 'cell', colors: colors },
+              { alias: 'Status', pattern: 'Value #A', type: 'string', mappingType: 1, valueMaps: valueMaps, thresholds: [3, 3], colorMode: 'cell', colors: colors },
               { alias: 'Namespace', pattern: 'namespace', type: 'string' },
               { alias: 'Pod', pattern: 'pod', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-container=All&var-view=pod&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
@@ -2089,7 +2089,7 @@
             sort: { col: 3, desc: true },
             styles: [
               { pattern: 'Time', type: 'hidden' },
-              { alias: 'Status', pattern: 'Value', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
+              { alias: 'Status', pattern: 'Value #A', colors: colors, colorMode: 'cell', type: 'string', thresholds: [3, 3], valueMaps: valueMaps, mappingType: 1 },
               { alias: 'Job name', pattern: 'job_name', type: 'string' },
               { alias: 'Owner', pattern: 'owner_name', type: 'string' },
               { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-container=All&var-view=container&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
