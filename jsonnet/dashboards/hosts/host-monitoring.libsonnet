@@ -25,7 +25,7 @@ local text = grafana.text;
 
 {
   grafanaDashboards+::
-    local hostDashboard(hostUid, dashboardName, alertJobs, hostTemplates, hostApps=[]) = {
+    local hostDashboard(hostUid, dashboardName, alertJobs, hostTemplates, hostApps=[], jobName=null) = {
       local monitoringLink =
         link.dashboards(
           title='Monitoring',
@@ -176,7 +176,7 @@ local text = grafana.text;
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
           $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
-          $.grafanaTemplates.jobTemplate('label_values(node_uname_info{pod=~""}, job)', hide='variable'),
+          $.grafanaTemplates.jobTemplate('label_values(node_uname_info{pod=~""}, job)', hide='variable', current=jobName),
         ])
         .addPanels(
           [
@@ -199,7 +199,8 @@ local text = grafana.text;
             $.getCustomName(['Host Monitoring', host.name]),
             $.getAlertJobs(host),
             $.getTemplates($._config.templates.L1.host, host),
-            $.getApps($._config.templates.L1.hostApps, host)
+            $.getApps($._config.templates.L1.hostApps, host),
+            host.jobName
           ).dashboard
         for host in $._config.hostMonitoring.hosts
         if (std.objectHas(host, 'apps') || !$.hasDefaultTemplates(host, $._config.templates.L1.k8s))
