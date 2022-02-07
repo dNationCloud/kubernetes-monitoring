@@ -31,6 +31,7 @@ local template = grafana.template;
       includeAll=true,
       multi=true,
       allValues=null,
+      current=null,
     )::
       template.new(
         name=name,
@@ -43,6 +44,7 @@ local template = grafana.template;
         includeAll=includeAll,
         multi=multi,
         allValues=allValues,
+        current=current,
       ),
 
     local baseTemplate = $.grafanaTemplates.baseTemplate,
@@ -154,12 +156,13 @@ local template = grafana.template;
         query=query,
       ),
 
-    jobTemplate(query, hide='')::
+    jobTemplate(query, hide='', current=null)::
       baseTemplate(
         name='job',
         label='Job',
         query=query,
         hide=hide,
+        current=current,
       ),
 
     pvcTemplate(query)::
