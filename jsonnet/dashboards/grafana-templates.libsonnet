@@ -113,11 +113,13 @@ local template = grafana.template;
         query=query,
       ),
 
-    namespaceTemplate(query)::
+    namespaceTemplate(query, includeAll=true, multi=true)::
       baseTemplate(
         name='namespace',
         label='Namespace',
         query=query,
+        includeAll=includeAll,
+        multi=multi,
       ),
 
     podTemplate(query, hide='')::

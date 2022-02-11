@@ -61,6 +61,7 @@
 (import 'apps/autoscaler.libsonnet') +
 (import 'apps/apache.libsonnet') +
 (import 'apps/mysql-exporter.libsonnet') +
+(import 'apps/websocket.libsonnet') +
 
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +
