@@ -289,17 +289,17 @@ Then the k8s configmap with compressed jsonnet is consumed by <a href="https://g
 <p>If you want to test your local changes in local KinD k8s cluster use following steps:</p>
 <ol>
 <li>Create KinD cluster
-<div class="highlight"><pre><span></span><code>kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.20.2
+<div class="highlight"><pre><span></span><code>kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.22.1
 </code></pre></div></li>
 <li>
-<p>Install K8s-m8g-stack (without dNation Kubernetes Monitoring dependency)
+<p>Install kubernetes-monitoring-stack (without dNation Kubernetes Monitoring dependency)
 K8s-m8g-stack is an umbrella helm chart which deploys Grafana, Loki and Prometheus Operator projects.
 <div class="highlight"><pre><span></span><code><span class="c1"># Add dNation helm repository</span>
 helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
 helm repo update
 
 <span class="c1"># Install dNation Kubernetes Monitoring Stack without dNation Kubernetes Monitoring chart</span>
-helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack  --set dnation-kubernetes-monitoring.enabled<span class="o">=</span><span class="nb">false</span>
+helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack -f https://raw.githubusercontent.com/dNationCloud/kubernetes-monitoring-stack/main/helpers/values-kind.yaml --set dnation-kubernetes-monitoring.enabled<span class="o">=</span><span class="nb">false</span>
 </code></pre></div></p>
 </li>
 <li>

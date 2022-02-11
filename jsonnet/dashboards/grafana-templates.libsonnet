@@ -31,6 +31,7 @@ local template = grafana.template;
       includeAll=true,
       multi=true,
       allValues=null,
+      current=null,
     )::
       template.new(
         name=name,
@@ -43,6 +44,7 @@ local template = grafana.template;
         includeAll=includeAll,
         multi=multi,
         allValues=allValues,
+        current=current,
       ),
 
     local baseTemplate = $.grafanaTemplates.baseTemplate,
@@ -75,7 +77,6 @@ local template = grafana.template;
 
     alertGroupTemplate(query)::
       baseTemplate(
-        datasource='$alertmanager',
         query=query,
         name='alertgroup',
         label='Alert Group',
@@ -83,7 +84,6 @@ local template = grafana.template;
 
     severityTemplate(query)::
       baseTemplate(
-        datasource='$alertmanager',
         query=query,
         name='severity',
         label='Severity',
@@ -156,12 +156,13 @@ local template = grafana.template;
         query=query,
       ),
 
-    jobTemplate(query, hide='')::
+    jobTemplate(query, hide='', current=null)::
       baseTemplate(
         name='job',
         label='Job',
         query=query,
         hide=hide,
+        current=current,
       ),
 
     pvcTemplate(query)::
@@ -216,6 +217,22 @@ local template = grafana.template;
         includeAll=true,
         multi=false,
         current='All',
+      ),
+
+    masterInstanceTemplate()::
+      baseTemplate(
+        name='masterInstance',
+        label='Master Instance',
+        query='label_values(master_uname_info{cluster=~"$cluster"}, instance)',
+        hide='variable',
+      ),
+
+    workerInstanceTemplate()::
+      baseTemplate(
+        name='workerInstance',
+        label='Worker Instance',
+        query='label_values(worker_uname_info{cluster=~"$cluster"}, instance)',
+        hide='variable',
       ),
   },
 }

@@ -35,7 +35,7 @@ local table = grafana.tablePanel;
           decimals=0,
           unit='s',
         )
-        .addTarget(prometheus.target('avg(time() - node_boot_time_seconds{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'))
+        .addTarget(prometheus.target('avg(time() - node_boot_time_seconds{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'))
         .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
 
@@ -45,7 +45,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           styles=[
             { pattern: 'Time', type: 'hidden' },
-            { pattern: 'Value', type: 'hidden' },
+            { pattern: 'Value #A', type: 'hidden' },
             { alias: 'Instance', pattern: '_0_nodename', type: 'string' },
             { alias: 'IP Address', pattern: '_1_instance', type: 'string' },
           ]
@@ -58,7 +58,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           unit='short',
         )
-        .addTarget(prometheus.target('count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'))
+        .addTarget(prometheus.target('count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="system"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'))
         .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local memoryPanel =
@@ -68,7 +68,7 @@ local table = grafana.tablePanel;
           decimals=0,
           unit='bytes',
         )
-        .addTarget(prometheus.target('sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'))
+        .addTarget(prometheus.target('sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'))
         .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local cpuUtilPanel =
@@ -76,7 +76,7 @@ local table = grafana.tablePanel;
           title='CPU Utilization',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'))
+        .addTarget(prometheus.target('round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m]) * on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))))) * 100)'))
         .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local memUtilPanel =
@@ -87,7 +87,7 @@ local table = grafana.tablePanel;
           min=0,
           max=100,
         )
-        .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) )) * 100)'))
+        .addTarget(prometheus.target('round((1 - (sum(node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) / sum(node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) )) * 100)'))
         .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local mostUtilDiskPanel =
@@ -98,7 +98,7 @@ local table = grafana.tablePanel;
           min=0,
           max=100,
         )
-        .addTarget(prometheus.target('round(\nmax(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device))\n * 100 \n * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}\n)\n)'))
+        .addTarget(prometheus.target('round(\nmax(\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device)) /\n(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device) +\nsum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (instance, device))\n * 100 \n * on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))\n)\n)'))
         .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local networkErrPanel =
@@ -109,7 +109,7 @@ local table = grafana.tablePanel;
           min=0,
           max=100,
         )
-        .addTarget(prometheus.target('sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'))
+        .addTarget(prometheus.target('sum(rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) + \nsum(rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'))
         .addThreshold({ color: $._config.grafanaDashboards.color.blue, value: null });
 
       local cpuUtilGraphPanel =
@@ -120,7 +120,7 @@ local table = grafana.tablePanel;
           min=0,
           max=100,
         )
-        .addTarget(prometheus.target(legendFormat='cpu  - {{nodename}}', expr='round((1 - (avg by (nodename) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'));
+        .addTarget(prometheus.target(legendFormat='cpu  - {{nodename}}', expr='round((1 - (avg by (nodename) (irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))))) * 100)'));
 
       local loadAverageGraphPanel =
         graphPanel.new(
@@ -132,10 +132,10 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/logical cores/', color: '#C4162A', linewidth: 2 })
         .addTargets(
           [
-            prometheus.target(legendFormat='1m load average {{nodename}}', expr='sum by (nodename) (node_load1{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='5m load average {{nodename}}', expr='sum by (nodename) (node_load5{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='15m load average {{nodename}}', expr='sum by (nodename) (node_load15{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='logical cores {{nodename}}', expr='count by (nodename) (node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+            prometheus.target(legendFormat='1m load average {{nodename}}', expr='sum by (nodename) (node_load1{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
+            prometheus.target(legendFormat='5m load average {{nodename}}', expr='sum by (nodename) (node_load5{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
+            prometheus.target(legendFormat='15m load average {{nodename}}', expr='sum by (nodename) (node_load15{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
+            prometheus.target(legendFormat='logical cores {{nodename}}', expr='count by (nodename) (node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
           ]
         );
 
@@ -154,12 +154,12 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/free/', hiddenSeries: true })
         .addTargets(
           [
-            prometheus.target(legendFormat='memory used - {{nodename}}', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) - sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory available - {{nodename}}', expr='sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory buffers - {{nodename}}', expr='sum by (nodename) (node_memory_Buffers_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory cached - {{nodename}}', expr='sum by (nodename) (node_memory_Cached_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory free - {{nodename}}', expr='sum by (nodename) (node_memory_MemFree_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-            prometheus.target(legendFormat='memory total - {{nodename}}', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+            prometheus.target(legendFormat='memory used - {{nodename}}', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) - sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
+            prometheus.target(legendFormat='memory available - {{nodename}}', expr='sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
+            prometheus.target(legendFormat='memory buffers - {{nodename}}', expr='sum by (nodename) (node_memory_Buffers_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
+            prometheus.target(legendFormat='memory cached - {{nodename}}', expr='sum by (nodename) (node_memory_Cached_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
+            prometheus.target(legendFormat='memory free - {{nodename}}', expr='sum by (nodename) (node_memory_MemFree_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
+            prometheus.target(legendFormat='memory total - {{nodename}}', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
           ]
         );
 
@@ -177,10 +177,10 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/utilization/', yaxis: 2, lines: false, legend: false, pointradius: 0 })
         .addTargets(
           [
-            prometheus.target(legendFormat='disk used {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename, mountpoint)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename, mountpoint)'),
-            prometheus.target(legendFormat='disk size {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename, mountpoint)'),
-            prometheus.target(legendFormat='disk available {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename, mountpoint)'),
-            prometheus.target(legendFormat='disk utilization {{device}} {{nodename}} {{mountpoint}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename, mountpoint)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+            prometheus.target(legendFormat='disk used {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"} * on(instance) group_left(nodename) (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) by (device, instance, nodename, mountpoint)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"} * on(instance) group_left(nodename) (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) by (device, instance, nodename, mountpoint)'),
+            prometheus.target(legendFormat='disk size {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) by (device, instance, nodename, mountpoint)'),
+            prometheus.target(legendFormat='disk available {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) by (device, instance, nodename, mountpoint)'),
+            prometheus.target(legendFormat='disk utilization {{device}} {{nodename}} {{mountpoint}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype=~"$diskfs"}) by (device, instance, nodename, mountpoint) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename, mountpoint)) * 100 * on(instance) group_left(nodename) (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
           ]
         ) { yaxes: std.mapWithIndex(function(i, item) if (i == 1) then item { show: false } else item, super.yaxes) };  // Hide second Y axis
 
@@ -198,10 +198,10 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/utilization/', yaxis: 2, lines: false, legend: false, pointradius: 0 })
         .addTargets(
           [
-            prometheus.target(legendFormat='disk used {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"} * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
-            prometheus.target(legendFormat='disk size {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
-            prometheus.target(legendFormat='disk available {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (device, instance, nodename)'),
-            prometheus.target(legendFormat='disk utilization {{device}} {{nodename}} {{mountpoint}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+            prometheus.target(legendFormat='disk used {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"} * on(instance) group_left(nodename) (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) by (device, instance, nodename)  - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"} * on(instance) group_left(nodename) (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk size {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk available {{device}} {{nodename}} {{mountpoint}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))) by (device, instance, nodename)'),
+            prometheus.target(legendFormat='disk utilization {{device}} {{nodename}} {{mountpoint}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job", fstype!~"$diskfs"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename)))'),
           ]
         ) { yaxes: std.mapWithIndex(function(i, item) if (i == 1) then item { show: false } else item, super.yaxes) };  // Hide second Y axis
 
@@ -217,9 +217,9 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/io time*/', yaxis: 2 })
         .addTargets(
           [
-            prometheus.target(legendFormat='read {{device}} {{nodename}}', expr='sum(rate(node_disk_read_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-            prometheus.target(legendFormat='written {{device}} {{nodename}}', expr='sum(rate(node_disk_written_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-            prometheus.target(legendFormat='io time {{device}} {{nodename}}', expr='sum(rate(node_disk_io_time_seconds_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='read {{device}} {{nodename}}', expr='sum(rate(node_disk_read_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))'),
+            prometheus.target(legendFormat='written {{device}} {{nodename}}', expr='sum(rate(node_disk_written_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))'),
+            prometheus.target(legendFormat='io time {{device}} {{nodename}}', expr='sum(rate(node_disk_io_time_seconds_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))'),
           ]
         );
 
@@ -234,8 +234,8 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target(legendFormat='Tx_{{device}} {{nodename}}', expr='rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-            prometheus.target(legendFormat='Rx_{{device}} {{nodename}}', expr='rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+            prometheus.target(legendFormat='Tx_{{device}} {{nodename}}', expr='rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))'),
+            prometheus.target(legendFormat='Rx_{{device}} {{nodename}}', expr='rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))'),
           ]
         );
 
@@ -247,7 +247,7 @@ local table = grafana.tablePanel;
           fill=0,
           min=0,
         )
-        .addTarget(prometheus.target(legendFormat='{{device}} {{nodename}}', expr='rate(node_network_receive_bytes_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
+        .addTarget(prometheus.target(legendFormat='{{device}} {{nodename}}', expr='rate(node_network_receive_bytes_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))'));
 
       local netTransGraphPanel =
         graphPanel.new(
@@ -257,7 +257,7 @@ local table = grafana.tablePanel;
           fill=0,
           min=0,
         )
-        .addTarget(prometheus.target(legendFormat='{{device}} {{nodename}}', expr='rate(node_network_transmit_bytes_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'));
+        .addTarget(prometheus.target(legendFormat='{{device}} {{nodename}}', expr='rate(node_network_transmit_bytes_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   (avg(node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) by (instance,nodename))'));
 
       dashboard.new(
         'Node Exporter',

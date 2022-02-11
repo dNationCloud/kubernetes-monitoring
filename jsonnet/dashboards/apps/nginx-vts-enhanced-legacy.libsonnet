@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-/* K8s nginx vts enhanced dashboard */
+/* K8s nginx vts enhanced legacy dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
 local template = grafana.template;
@@ -25,13 +25,13 @@ local row = grafana.row;
 
 {
   grafanaDashboards+:: {
-    'nginx-vts-enhanced':
+    'nginx-vts-enhanced-legacy':
       local hostTemplate =
         template.new(
           name='host',
           label='Host',
           datasource='$datasource',
-          query='label_values(nginx_vts_server_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, host)',
+          query='label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, host)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -43,7 +43,7 @@ local row = grafana.row;
           name='upstream',
           label='Upstream',
           datasource='$datasource',
-          query='label_values(nginx_vts_upstream_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, upstream)',
+          query='label_values(nginx_upstream_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, upstream)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -161,7 +161,7 @@ local row = grafana.row;
           title='Server Connections',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('sum(nginx_vts_main_connections{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"active|writing|reading|waiting"}) by (status)', legendFormat='{{status}}'));
+        .addTarget(prometheus.target('sum(nginx_server_connections{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"active|writing|reading|waiting"}) by (status)', legendFormat='{{status}}'));
 
       local serverCache =
         graphPanel.new(
@@ -169,14 +169,14 @@ local row = grafana.row;
           datasource='$datasource',
           min=0,
         )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_server_cache_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (status)', legendFormat='{{status}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_server_cache{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (status)', legendFormat='{{status}}'));
 
       local serverRequests =
         graphPanel.new(
           title='Server Requests',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_server_requests_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_server_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
 
       local serverBytes =
         graphPanel.new(
@@ -185,7 +185,7 @@ local row = grafana.row;
           format='bytes',
           min=0,
         )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_server_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (direction)', legendFormat='{{direction}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (direction)', legendFormat='{{direction}}'));
 
       local upstreamRequests =
         graphPanel.new(
@@ -193,7 +193,7 @@ local row = grafana.row;
           datasource='$datasource',
           description="This one is providing aggregated error codes, but it's still possible to graph these per upstream.",
         )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_upstream_requests_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_upstream_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
 
       local upstreamBytes =
         graphPanel.new(
@@ -202,14 +202,14 @@ local row = grafana.row;
           format='bytes',
           min=0,
         )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_upstream_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}[5m])) by (direction)', legendFormat='{{direction}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_upstream_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}[5m])) by (direction)', legendFormat='{{direction}}'));
 
       local upstreamBackendResponse =
         graphPanel.new(
           title='Upstream Backend Response',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('sum(nginx_vts_upstream_response_seconds{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}) by (backend)', legendFormat='{{backend}}'));
+        .addTarget(prometheus.target('sum(nginx_upstream_responseMsec{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", upstream=~"^$upstream$"}) by (backend)', legendFormat='{{backend}}'));
 
       local templates =
         [
@@ -218,9 +218,9 @@ local row = grafana.row;
         + (if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [])
         + [
           $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-          $.grafanaTemplates.jobTemplate('label_values(nginx_vts_server_bytes_total{cluster=~"$cluster"}, job)'),
-          $.grafanaTemplates.namespaceTemplate('label_values(nginx_vts_server_bytes_total{cluster=~"$cluster", job=~"$job"}, namespace)'),
-          $.grafanaTemplates.podTemplate('label_values(nginx_vts_server_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
+          $.grafanaTemplates.jobTemplate('label_values(nginx_server_bytes{cluster=~"$cluster"}, job)'),
+          $.grafanaTemplates.namespaceTemplate('label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job"}, namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(nginx_server_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
           hostTemplate,
           upstreamTemplate,
         ]
@@ -253,13 +253,13 @@ local row = grafana.row;
       ] + if $._config.grafanaDashboards.isLoki then logsPanels else [];
 
       dashboard.new(
-        'Nginx VTS Enhanced',
+        'Nginx VTS Enhanced Legacy',
         editable=$._config.grafanaDashboards.editable,
         graphTooltip=$._config.grafanaDashboards.tooltip,
         refresh=$._config.grafanaDashboards.refresh,
         time_from=$._config.grafanaDashboards.time_from,
         tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.nginxVtsEnhanced,
+        uid=$._config.grafanaDashboards.ids.nginxVtsEnhancedLegacy,
       )
       .addTemplates(templates)
       .addPanels(panels),

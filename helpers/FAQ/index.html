@@ -1214,7 +1214,7 @@ sudo vim kube-scheduler.yaml
 <span class="c1"># Edit bind-address and port command options</span>
 ...
 - --bind-address<span class="o">=</span><span class="m">0</span>.0.0.0
-- --port<span class="o">=</span><span class="m">10251</span>
+- --secure-port<span class="o">=</span><span class="m">10259</span>
 ...
 </code></pre></div></p>
 </li>
@@ -1226,10 +1226,18 @@ sudo vim kube-controller-manager.yaml
 <span class="c1"># Edit bind-address and port command options</span>
 ...
 - --bind-address<span class="o">=</span><span class="m">0</span>.0.0.0
-- --port<span class="o">=</span><span class="m">10252</span>
+- --secure-port<span class="o">=</span><span class="m">10257</span>
 ...
 </code></pre></div></p>
 </li>
+</ul>
+<p>You should also check:
+* TLS configuration of prometheus components responsible for scraping <code>controller-manager</code> and <code>scheduler</code>.
+If you don't want to set up TLS, you can skip validation as shown <a href="https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/helpers/values-kind.yaml">here</a>.</p>
+<ul>
+<li>Authorization to access <code>controller-manager</code> and <code>scheduler</code>. You can skip authorization for some endpoints 
+  by setting <code>--authorization-always-allow-paths: "/healthz,/readyz,/livez,/metrics"</code> in <code>kubeadm_init.yaml</code> (<a href="https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/helpers/kind_cluster_config.yaml">see example for kind cluster</a>) or 
+  manually in already running K8s deployment by following same steps as above when setting metrics bind address.</li>
 </ul>
                 
               
