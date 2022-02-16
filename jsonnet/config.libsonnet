@@ -49,7 +49,7 @@
         yellow: '#fade2a',  // yellow
         blue: '#5794f2',  // blue
         lightblue: '#8ab8ff',  // light-blue
-        gray: '#858187', //gray
+        gray: '#858187',  //gray
       },
       severityColors: {
         default: 'green',
@@ -113,6 +113,7 @@
         autoscaler: 'autoscaler',
         apache: 'apache',
         mysqlExporter: 'mysqlexporter',
+        websocket: 'websocket',
         //Monitoring dashboard
         monitoring: 'monitoring',
       },
