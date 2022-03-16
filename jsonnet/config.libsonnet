@@ -14,7 +14,7 @@
 */
 
 /* Default configuration file */
-(import 'templates.libsonnet') +
+//(import 'templates.libsonnet') +
 
 {
   mergeConfig(defaultCfg, customCfg)::
@@ -153,14 +153,39 @@
       alertGroupHost: 'Host',
       alertGroupHostApp: 'HostApp',
     },
-    //multiple cluster monitoring isn't supported yet
+
     clusterMonitoring: {
       enabled: true,
-      clusters: [],
+      //clusters: [],
+      clusters: [
+        {name: "Workload cluster", label: "workload-cluster-label", description: "", apps:[]},
+        {name: "Observer cluster", label: "observer-cluster-label", description: "", apps:[]},
+      ],
     },
     hostMonitoring: {
-      enabled: false,
-      hosts: [],
+      enabled: true,
+      hosts: [
+
+        {
+    "name": "host-01",
+    "description": "Host 01 Node Exporter",
+    "jobName": "host-01",
+    "host": {
+      "address": "95.217.178.89"
+    },
+    "serviceMonitor": {
+      "endpoints": [
+        {
+          "port": "9100",
+          "interval": "30s",
+          "path": "/metrics"
+        }
+      ]
+    }
+  }
+
+      ],
     },
   },
-}
+} +
+(import 'templates.libsonnet')

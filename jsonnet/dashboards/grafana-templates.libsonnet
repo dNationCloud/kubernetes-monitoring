@@ -54,7 +54,8 @@ local template = grafana.template;
         name='datasource',
         label='Datasource',
         query='prometheus',
-        current=null,
+        #TODO change current based on thano/no-thanos ?
+        current='thanos',
       ),
 
     alertManagerTemplate()::
@@ -89,14 +90,14 @@ local template = grafana.template;
         label='Severity',
       ),
 
-    clusterTemplate(query)::
+    clusterTemplate(query, hide='')::
       baseTemplate(
         name='cluster',
         label='Cluster',
         query=query,
-        hide='variable',
         includeAll=false,
         multi=false,
+        hide=hide,
       ),
 
     instanceTemplate(query, label='Instance')::

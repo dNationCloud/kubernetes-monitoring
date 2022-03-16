@@ -47,7 +47,7 @@ local text = grafana.text;
       local alertPanel(title, expr) =
         statPanel.new(
           title=title,
-          datasource='$alertmanager',
+          datasource='$datasource',
           graphMode='none',
           colorMode='background',
         )
@@ -56,7 +56,7 @@ local text = grafana.text;
       local criticalPanel =
         alertPanel(
           title='Critical',
-          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"}' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
+          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
@@ -64,7 +64,7 @@ local text = grafana.text;
       local warningPanel =
         alertPanel(
           title='Warning',
-          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"}' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
+          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
@@ -175,7 +175,6 @@ local text = grafana.text;
         .addTemplates([
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
-          $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
           $.grafanaTemplates.jobTemplate('label_values(node_uname_info{cluster=~"$cluster", pod=~"virt-launcher.*"}, job)', hide='variable'),
         ])
         .addPanels(

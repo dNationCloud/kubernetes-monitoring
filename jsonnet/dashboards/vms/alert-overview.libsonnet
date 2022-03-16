@@ -23,30 +23,48 @@ local table = grafana.tablePanel;
 {
   grafanaDashboards+:: {
     'alert-vm-overview':
+
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
-      local valueMaps =
-        [
-          { text: 'Critical', value: 4 },
-          { text: 'Warning', value: 2 },
-          { text: 'Info', value: 1 },
-        ];
-      local thresholds = [2, 4];
+      local warning_thresholds = [2, 3];
+      local critical_thresholds = [3, 3];
 
       local alertsInfoTable =
         table.new(
           title='Alerts Info',
-          datasource='$alertmanager',
+          datasource='$datasource',
           styles=[
             { alias: 'Starts At', pattern: 'Time', type: 'date' },
-            { alias: 'Severity', pattern: 'severity', colors: colors, colorMode: 'row', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
             { alias: 'Alertname', pattern: 'alertname', type: 'string' },
             { alias: 'Job', pattern: 'job', type: 'string' },
             { alias: 'Node', pattern: 'nodename', type: 'string' },
-            { pattern: 'prometheus', type: 'hidden' },
-            { alias: 'Message', pattern: 'message', type: 'string' },
+            { alias: 'warningCode', pattern: 'Value #A', type: 'number', thresholds: warning_thresholds, colors: colors, colorMode: 'row'},
+            { alias: 'criticalCode  ', pattern: 'Value #B', type: 'number', thresholds: critical_thresholds, colors: colors, colorMode: 'row'},
           ]
         )
-        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup", job=~"$job"}' });
+        .addTargets([
+          prometheus.target('ALERTS{job=~"$job", alertname!="Watchdog", alertstate=~"firing|pending", severity="warning", severity=~"$severity", alertgroup=~"$alertgroup"} * 2', format='table', instant=true),
+          prometheus.target('ALERTS{job=~"$job", alertname!="Watchdog", alertstate=~"firing|pending", severity="critical", severity=~"$severity", alertgroup=~"$alertgroup"} * 3', format='table', instant=true),
+        ])
+        .addTransformations([
+          {
+            id: 'organize',
+            options: {
+              excludeByName: {
+                __name__: true,
+                prometheus: true,
+              },
+              indexByName: {
+                Time: 0,
+                severity: 1,
+                nodename: 2,
+                alertname: 3,
+                job: 4,
+                alertstate: 4,
+                alertgroup: 5,
+              },
+            },
+          },
+        ]);
 
       dashboard.new(
         'AlertVM',

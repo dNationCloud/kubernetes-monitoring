@@ -16,6 +16,7 @@
 /* K8s alert overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
+local prometheus = grafana.prometheus;
 local dashboard = grafana.dashboard;
 local row = grafana.row;
 local table = grafana.tablePanel;
@@ -23,46 +24,44 @@ local table = grafana.tablePanel;
 {
   grafanaDashboards+:: {
     'alert-cluster-overview':
+
+      local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
+      local warning_thresholds = [2, 3];
+      local critical_thresholds = [3, 3];
+
       local alertsInfoTable =
         table.new(
           title='Alerts Info',
-          datasource='$alertmanager',
+          datasource='$datasource',
           styles=[
-            { alias: 'Detailed link', pattern: 'link', type: 'string', link: true, linkUrl: '/d/${__cell:raw}&from=${__cell_0:raw}&to=now' },
-            { alias: 'Runbook url', pattern: 'runbook_url', type: 'string', link: true, linkUrl: '${__cell:raw}' },
+            { alias: 'Starts At', pattern: 'Time', type: 'date'},
+            { alias: 'warningCode', pattern: 'Value #A', type: 'number', thresholds: warning_thresholds, colors: colors, colorMode: 'row'},
+            { alias: 'criticalCode  ', pattern: 'Value #B', type: 'number', thresholds: critical_thresholds, colors: colors, colorMode: 'row'},
           ]
         )
+        .addTargets([
+          prometheus.target('ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing|pending", severity="warning", severity=~"$severity", alertgroup=~"$alertgroup"} * 2', format='table', instant=true),
+          prometheus.target('ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing|pending", severity="critical", severity=~"$severity", alertgroup=~"$alertgroup"} * 3', format='table', instant=true),
+        ])
         .addTransformations([
           {
             id: 'organize',
             options: {
               excludeByName: {
-                alertstatus_code: true,
+                __name__: true,
                 prometheus: true,
               },
               indexByName: {
                 Time: 0,
                 severity: 1,
-                alertname: 2,
-                message: 3,
-                link: 4,
-                alertstatus: 5,
-                job: 6,
-              },
-              renameByName: {
-                Time: 'Starts At',
-                nodename: 'node',
+                cluster: 2,
+                alertname: 3,
+                alertstate: 4,
+                alertgroup: 5,
               },
             },
           },
-        ])
-        {
-          targets: [{
-            active: true,
-            inhibited: true,
-            filters: 'severity=~"$severity", alertgroup=~"$alertgroup"',
-          }],
-        };
+        ]);
 
       dashboard.new(
         'AlertCluster',
@@ -75,6 +74,7 @@ local table = grafana.tablePanel;
       )
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
         $.grafanaTemplates.alertManagerTemplate(),
         $.grafanaTemplates.alertGroupTemplate('label_values(ALERTS, alertgroup)'),
         $.grafanaTemplates.severityTemplate('label_values(ALERTS, severity)'),
