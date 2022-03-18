@@ -100,6 +100,7 @@
         pythonFlask: 'pythonflask',
         javaActuator: 'javaactuator',
         cAdvisor: 'cadvisor',
+        lokiDistributed: 'loki-distributed',
         phpFpm: 'phpfpm',
         nginxVts: 'nginxvts',
         nginxVtsEnhanced: 'nginxvtsenhanced',
