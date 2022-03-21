@@ -136,11 +136,11 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             local panelHeight = tpl.panel.gridPos.h;
             local panelWidth = tpl.panel.gridPos.w;
 
-            local clusterLabel = if std.objectHas(cluster, 'label') then cluster.label else '';
+            local clusterLabel = if std.objectHas(cluster, 'label') then cluster.label else '.*';
 
             // multiple cluster monitoring isn't supported yet, replace lines when adding support for multiple clusters
             //local dataLinkCommonArgs = $._config.grafanaDashboards.dataLinkCommonArgs;
-            local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster|', clusterLabel);
+            //local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster|', clusterLabel);
 
             // when multiple cluster will be supported, cluster variable will in expr will be cluster name
             //local localCluster = { name: '' };
@@ -189,7 +189,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 if std.length(tpl.panel.dataLinks) > 0 then
                   tpl.panel.dataLinks
                 else
-                  [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
+                  [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), $._config.grafanaDashboards.dataLinkCommonArgs] }]
                )
             )
             {

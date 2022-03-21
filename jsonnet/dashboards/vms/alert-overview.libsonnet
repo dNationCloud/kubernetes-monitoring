@@ -16,6 +16,7 @@
 /* VM alert overview dashboard */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
+local prometheus = grafana.prometheus;
 local dashboard = grafana.dashboard;
 local row = grafana.row;
 local table = grafana.tablePanel;

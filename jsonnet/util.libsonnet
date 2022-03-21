@@ -435,7 +435,7 @@
      * @param array Datalinks for panel.
      * @return array Datalinks for panel.
      */
-    local clusterLabel = if utils.isMultiClusterMonitoring() then '$cluster' else '|';
+    local clusterLabel = if utils.isMultiClusterMonitoring() then '$cluster' else '.*';
     [
       datalink { url: std.strReplace(datalink.url, '$cluster|', clusterLabel) }
       for datalink in datalinks

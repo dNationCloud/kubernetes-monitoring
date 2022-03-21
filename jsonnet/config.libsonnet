@@ -14,7 +14,7 @@
 */
 
 /* Default configuration file */
-//(import 'templates.libsonnet') +
+(import 'templates.libsonnet') +
 
 {
   mergeConfig(defaultCfg, customCfg)::
@@ -156,7 +156,7 @@
 
     clusterMonitoring: {
       enabled: true,
-      //clusters: [],
+//      clusters: [],
       clusters: [
         {name: "Workload cluster", label: "workload-cluster-label", description: "", apps:[]},
         {name: "Observer cluster", label: "observer-cluster-label", description: "", apps:[]},
@@ -187,5 +187,4 @@
       ],
     },
   },
-} +
-(import 'templates.libsonnet')
+}
