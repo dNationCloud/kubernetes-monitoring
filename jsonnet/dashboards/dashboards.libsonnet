@@ -62,6 +62,7 @@
 (import 'apps/apache.libsonnet') +
 (import 'apps/mysql-exporter.libsonnet') +
 (import 'apps/websocket.libsonnet') +
+(import 'apps/jvm.libsonnet') +
 
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +
