@@ -129,12 +129,14 @@ local template = grafana.template;
         multi=multi,
       ),
 
-    podTemplate(query, hide='')::
+    podTemplate(query, hide='', includeAll=true, multi=true)::
       baseTemplate(
         name='pod',
         label='Pod',
         query=query,
         hide=hide,
+        includeAll=includeAll,
+        multi=multi,
       ),
 
     containerTemplate(query)::
@@ -158,11 +160,13 @@ local template = grafana.template;
         query=query,
       ),
 
-    jobNameTemplate(query)::
+    jobNameTemplate(query, includeAll=true, multi=true)::
       baseTemplate(
         name='job_name',
         label='Job name',
         query=query,
+        includeAll=includeAll,
+        multi=multi,
       ),
 
     jobTemplate(query, hide='', current=null)::
