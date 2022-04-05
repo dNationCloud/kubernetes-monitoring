@@ -1631,7 +1631,7 @@
         apache: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1642,7 +1642,18 @@
         cAdvisor: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
+            mappings: [{ text: '-', type: 1, value: -1 }],
+            gridPos: {
+              w: 4,
+            },
+          },
+        },
+        lokiDistributed: {
+          default: false,
+          panel: {
+            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1653,7 +1664,7 @@
         websocket: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1675,7 +1686,7 @@
         phpFpm: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1686,7 +1697,7 @@
         rabbitmq: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1697,7 +1708,7 @@
         nginxNrpe: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1719,7 +1730,7 @@
         mysqlExporter: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
