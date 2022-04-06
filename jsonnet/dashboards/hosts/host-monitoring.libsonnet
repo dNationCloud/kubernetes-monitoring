@@ -50,13 +50,14 @@ local text = grafana.text;
           datasource='$datasource',
           graphMode='none',
           colorMode='background',
+          reducerFunction='last',
         )
         .addTarget({ type: 'single', expr: expr }),
 
       local criticalPanel =
         alertPanel(
           title='Critical',
-          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
+          expr='sum(ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"}) OR on() vector(0)' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
@@ -64,7 +65,7 @@ local text = grafana.text;
       local warningPanel =
         alertPanel(
           title='Warning',
-          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
+          expr='sum(ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"}) OR on() vector(0)' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
         )
         .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
@@ -81,7 +82,7 @@ local text = grafana.text;
         )
         .addTarget(prometheus.target(tpl.panel.expr))
         .addMappings(tpl.panel.mappings)
-        .addDataLinks(tpl.panel.dataLinks)
+        .addDataLinks($.updateDataLinksCommonArgs(tpl.panel.dataLinks))
         .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
         {
           gridPos: {
@@ -98,16 +99,32 @@ local text = grafana.text;
       local hostAppStatsPanels(index, app) = [
         local tpl = template.item;
         local tplIndex = template.index;
+
         local appGridX =
           if std.type(tpl.panel.gridPos.x) == 'number' then
             tpl.panel.gridPos.x
           else
             (index + tplIndex) * tpl.panel.gridPos.w;
+
         local appGridY =
           if std.type(tpl.panel.gridPos.y) == 'number' then
             tpl.panel.gridPos.y
           else
             12;  // `12` -> init Y position in application row;
+
+        local datalinks =
+          if std.length(tpl.panel.dataLinks) > 0 then
+            [
+              dataLink {
+                url: dataLink.url % { job: app.jobName },
+              }
+              for dataLink in tpl.panel.dataLinks
+            ]
+          else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
+            [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
+          else
+            [];
+
         statPanel.new(
           title='%s %s' % [tpl.templateName, app.name],
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
@@ -119,19 +136,7 @@ local text = grafana.text;
         )
         .addTarget(prometheus.target(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName }))
         .addMappings(tpl.panel.mappings)
-        .addDataLinks(
-          if std.length(tpl.panel.dataLinks) > 0 then
-            [
-              dataLink {
-                url: dataLink.url % { job: app.jobName },
-              }
-              for dataLink in tpl.panel.dataLinks
-            ]
-          else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
-            [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
-          else
-            []
-        )
+        .addDataLinks($.updateDataLinksCommonArgs(datalinks))
         .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
         {
           gridPos: {
@@ -176,6 +181,7 @@ local text = grafana.text;
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
           $.grafanaTemplates.jobTemplate('label_values(node_uname_info{pod=~""}, job)', hide='variable', current=jobName),
+          $.grafanaTemplates.clusterTemplate('label_values(node_uname_info{job=~"$job"}, cluster)'),
         ])
         .addPanels(
           [

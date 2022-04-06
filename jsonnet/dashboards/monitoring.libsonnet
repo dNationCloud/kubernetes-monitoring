@@ -116,7 +116,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 if std.length(tpl.panel.dataLinks) > 0 then
                   tpl.panel.dataLinks % { job: host.jobName }
                 else
-                  [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host, $._config.templates.L1.host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] }]
+                  [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host, $._config.templates.L1.host), $._config.grafanaDashboards.dataLinkCommonArgsNoCluster, host.jobName] }]
               )
             )
             {

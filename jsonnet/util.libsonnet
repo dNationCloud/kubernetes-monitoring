@@ -427,17 +427,23 @@
     else
       defaultDashboardId,
 
-  updateDataLinksCommonArgs(datalinks)::
+  updateDataLinksCommonArgs(datalinks, tableLink=false)::
     /**
      * If monitoring is in multi-cluster setup, we want to pass variable $cluster between dashboards.
-     * If monitoring is in single-cluster setup, only '|' is passed which match everything.
+     * If monitoring is in single-cluster setup, only '$cluster|' is passed which match everything.
      *
      * @param array Datalinks for panel.
+     * @param boolean tableLink if processed datalinks are from table or panels.
      * @return array Datalinks for panel.
      */
-    local clusterLabel = if utils.isMultiClusterMonitoring() then '$cluster' else '.*';
+    local clusterLabel = if utils.isMultiClusterMonitoring() then '$cluster' else '$cluster|';
+    local urlField = if tableLink then 'linkUrl' else 'url';
     [
-      datalink { url: std.strReplace(datalink.url, '$cluster|', clusterLabel) }
+      local urlFieldValue = if tableLink then datalink.linkUrl else datalink.url;
+      if std.objectHas(datalink, urlField) then
+        datalink { [urlField]: std.strReplace(urlFieldValue, '$cluster|', clusterLabel) }
+      else
+        datalink
       for datalink in datalinks
     ],
 

@@ -58,6 +58,7 @@
         invalid: 'black',  // invalid range is always from minus infinity to 'lowest' thredhold if it is defined
       },
       dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to' % [self.refresh],
+      dataLinkCommonArgsNoCluster: 'refresh=%s&var-datasource=$datasource&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
       templateSort: 5,  // case insensitive ascent sort
       ids: {
@@ -156,34 +157,108 @@
 
     clusterMonitoring: {
       enabled: true,
-//      clusters: [],
+ //     clusters: [{name: "Workload cluster", description: ""}],
       clusters: [
-        {name: "Workload cluster", label: "workload-cluster-label", description: "", apps:[]},
+        {name: "Workload cluster", label: "workload-cluster-label", description: ""},
         {name: "Observer cluster", label: "observer-cluster-label", description: "", apps:[]},
       ],
     },
     hostMonitoring: {
       enabled: true,
+//      hosts: [
+//
+//        {
+//    "name": "host-01",
+//    "description": "Host 01 Node Exporter",
+//    "jobName": "host-01",
+//    "host": {
+//      "address": "95.217.178.89"
+//    },
+//    "serviceMonitor": {
+//      "endpoints": [
+//        {
+//          "port": "9100",
+//          "interval": "30s",
+//          "path": "/metrics"
+//        }
+//      ]
+//    }
+//  }
+//
+//      ],
       hosts: [
-
         {
-    "name": "host-01",
-    "description": "Host 01 Node Exporter",
-    "jobName": "host-01",
+    "apps": [
+      {
+        "description": "MySQL on qa-sql-h-1",
+        "jobName": "qa-sql-h-1-mysql-exporter",
+        "name": "Qa-SQL-h-1",
+        "serviceMonitor": {
+          "endpoints": [
+            {
+              "interval": "30s",
+              "path": "/metrics",
+              "port": "9104",
+              "relabelings": [
+                {
+                  "action": "replace",
+                  "regex": "(.*)",
+                  "replacement": "qa-sql-h-1.maxiticket.sk:9104",
+                  "sourceLabels": [
+                    "__address__"
+                  ],
+                  "targetLabel": "__address__"
+                }
+              ]
+            }
+          ],
+          "jobLabel": "app",
+          "selector": {
+            "matchLabels": {
+              "app": "qa-sql-h-1-mysql-exporter"
+            }
+          }
+        },
+        "templates": {
+          "mysqlExporter": {
+            "enabled": true
+          },
+          "mysqlGalera": {
+            "enabled": true
+          }
+        }
+      }
+    ],
+    "description": "qa-sql-h-1",
     "host": {
-      "address": "95.217.178.89"
+      "address": "162.55.215.98"
     },
+    "jobName": "qa-sql-h-1",
+    "name": "qa-sql-h-1",
     "serviceMonitor": {
       "endpoints": [
         {
-          "port": "9100",
           "interval": "30s",
-          "path": "/metrics"
+          "path": "/metrics",
+          "port": "9100"
         }
       ]
+    },
+    "templates": {
+      "overallUtilizationDisk": {
+        "enabled": false
+      },
+      "overallUtilizationDiskSQL": {
+        "enabled": true
+      },
+      "overallUtilizationRAM": {
+        "enabled": false
+      },
+      "overallUtilizationRAMSQL": {
+        "enabled": true
+      }
     }
   }
-
       ],
     },
   },
