@@ -1,0 +1,44 @@
+name: Generate changelog
+on:
+  push:
+    branches:
+      - v2.0.x
+
+jobs:
+  build:
+    name: "Generate CHANGELOG"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check-out"
+        uses: actions/checkout@v3
+      - name: "Update CHANGELOG"
+        id: update-release-changelog
+        uses: heinrichreimer/github-changelog-generator-action@v2.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          onlyLastTag: false
+          stripHeaders: false
+          base: "CHANGELOG.md"
+          headerLabel: "# Changelog"
+          breakingLabel: '### Breaking'
+          enhancementLabel: '### Enhancements'
+          stripGeneratorNotice: true
+          bugsLabel: '### Fixes'
+          issues: true
+          issuesWoLabels: true
+          pullRequests: true
+          prWoLabels: true
+          author: false
+          verbose: true
+      - name: Commit CHANGELOG
+        run: |
+          git add .
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git commit -m "Update CHANGELOG"
+      - name: Push CHANGELOG changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+          force: true
