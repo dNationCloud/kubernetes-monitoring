@@ -28,6 +28,7 @@ local template = grafana.template;
       refresh=$._config.grafanaDashboards.templateRefresh,
       sort=$._config.grafanaDashboards.templateSort,
       hide='',
+      regex='',
       includeAll=true,
       multi=true,
       allValues=null,
@@ -41,6 +42,7 @@ local template = grafana.template;
         refresh=refresh,
         sort=sort,
         hide=hide,
+        regex=regex,
         includeAll=includeAll,
         multi=multi,
         allValues=allValues,
@@ -75,6 +77,14 @@ local template = grafana.template;
         hide=hide,
       ),
 
+    intervalTemplate(query)::
+      template.interval(
+        name='interval',
+        label='Interval',
+        query=query,
+        current='All',
+      ),
+
     alertGroupTemplate(query)::
       baseTemplate(
         query=query,
@@ -99,11 +109,12 @@ local template = grafana.template;
         multi=false,
       ),
 
-    instanceTemplate(query, label='Instance')::
+    instanceTemplate(query, label='Instance', regex='')::
       baseTemplate(
         name='instance',
         label=label,
         query=query,
+        regex=regex,
       ),
 
     nodeTemplate(query)::
@@ -162,13 +173,14 @@ local template = grafana.template;
         multi=multi,
       ),
 
-    jobTemplate(query, hide='', current=null)::
+    jobTemplate(query, hide='', current=null, regex='')::
       baseTemplate(
         name='job',
         label='Job',
         query=query,
         hide=hide,
         current=current,
+        regex=regex,
       ),
 
     pvcTemplate(query)::
@@ -205,6 +217,19 @@ local template = grafana.template;
         name='search',
         label='Logs Search',
       ),
+
+    retentionTemplate()::
+      template.text(
+        name='retention',
+        label='Retention',
+      ) {
+        current: {
+          selected: false,
+          text: '300',
+          value: '300',
+        },
+      },
+
 
     viewByTemplate(query)::
       template.custom(

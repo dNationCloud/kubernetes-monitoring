@@ -64,6 +64,7 @@
 (import 'apps/websocket.libsonnet') +
 (import 'apps/loki-distributed.libsonnet') +
 (import 'apps/jvm.libsonnet') +
+(import 'apps/prometheus.libsonnet') +
 
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +
