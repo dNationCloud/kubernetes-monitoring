@@ -2,7 +2,7 @@ name: Generate changelog
 on:
   push:
     branches:
-      - v2.0.x
+      - dsuba-changelog
 
 jobs:
   build:
