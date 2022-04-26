@@ -116,6 +116,7 @@
         mysqlExporter: 'mysqlexporter',
         websocket: 'websocket',
         jvm: 'jvm',
+        prometheus: 'prometheus',
         //Monitoring dashboard
         monitoring: 'monitoring',
       },
