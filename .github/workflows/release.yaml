@@ -69,3 +69,49 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
         CUSTOM_TAG: 'v${{ steps.version.outputs.chart }}'
         RELEASE_BRANCHES: main
+
+  generate-changelog:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: dNationCloud/kubernetes-monitoring
+          ref: main
+          token: ${{ secrets.BOT_GITHUB_PAT }}
+
+      - name: "Update CHANGELOG"
+        id: update-release-changelog
+        uses: heinrichreimer/github-changelog-generator-action@v2.3
+        with:
+          token: ${{ secrets.BOT_GITHUB_PAT }}
+          onlyLastTag: false
+          stripHeaders: false
+          base: "CHANGELOG.md"
+          headerLabel: "# Changelog"
+          breakingLabel: '### Breaking'
+          enhancementLabel: '### Enhancements'
+          stripGeneratorNotice: true
+          bugsLabel: '### Fixes'
+          issues: true
+          issuesWoLabels: true
+          pullRequests: true
+          prWoLabels: true
+          author: false
+          verbose: true
+          unreleased: false
+
+      - name: Commit CHANGELOG
+        run: |
+          git config --global user.name "${{ secrets.BOT_GITHUB_NAME }}"
+          git config --global user.email "${{ secrets.BOT_GITHUB_EMAIL }}"
+          git config --global user.password "${{ secrets.BOT_GITHUB_PAT }}"
+          git add CHANGELOG.md
+          git commit -m "Update CHANGELOG.md"
+
+      - name: Push CHANGELOG changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: "${{ secrets.BOT_GITHUB_PAT }}"
+          branch: main
