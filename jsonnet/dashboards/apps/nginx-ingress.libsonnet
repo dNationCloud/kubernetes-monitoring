@@ -264,7 +264,7 @@ local table = grafana.tablePanel;
           styles=[
             { pattern: 'Time', type: 'hidden' },
             { alias: 'Host', pattern: 'host', type: 'string' },
-            { alias: 'TTL', pattern: 'Value #A', type: 'number', colors: colors, colorMode: 'cell', thresholds: [0, 8 * 24 * 60 * 60], unit: 's', decimals: 0 },
+            { alias: 'TTL', pattern: 'Value', type: 'number', colors: colors, colorMode: 'cell', thresholds: [0, 8 * 24 * 60 * 60], unit: 's', decimals: 0 },
           ]
         )
         .addTarget(prometheus.target(format='table', instant=true, expr='avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster", job=~"$job", pod=~"$pod", namespace=~"$namespace", container=~"$container"}) by (host) - time()'));
