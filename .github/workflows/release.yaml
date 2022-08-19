@@ -64,7 +64,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
 
     - name: Tag branch
-      uses: anothrNick/github-tag-action@1.26.0
+      uses: anothrNick/github-tag-action@1.39.0
       env:
         GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
         CUSTOM_TAG: 'v${{ steps.version.outputs.chart }}'
