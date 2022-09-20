@@ -336,9 +336,10 @@ Example:
 Currently only first layer is customizable, which caused this unexpected behaviour.
 Templating of other layers is under development and is planned in [v1.1.x release](https://github.com/issues?q=is%3Aopen+is%3Aissue+author%3Amatofeder+archived%3Afalse+label%3Av1.1.x).
 
-## Kubernetes Monitoring shows `DOWN` state for some control plane components. Are control plane components working correctly?
+## Kubernetes Monitoring shows ` - ` OR ` 0% ` state for some control plane components. Are control plane components working correctly?
 
-Control plane components work probably well, but their metrics server might be disabled or misconfigured.
+Control plane components work probably well, but their metrics server might be disabled, misconfigured
+or may not be present at all. For example, if is used OVNKubernetes CNI `kube-proxy` doesn't exist here.
 You should want  to check address bindings of control plane components' metrics as follows:
 
 The metrics of `etcd` and `kube-proxy` control plane components are by default
