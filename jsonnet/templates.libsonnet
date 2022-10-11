@@ -140,6 +140,7 @@
         operator: '<',
         warning: 99,
         critical: 95,
+        lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
       },
       node: {
         operator: '>=',
@@ -394,8 +395,9 @@
           panel: {
             title: 'API Server',
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
-            expr: expr,
+            expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
+            mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 0,
               y: 5,
@@ -417,8 +419,9 @@
           panel: {
             title: 'Controller Manager',
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
-            expr: expr,
+            expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
+            mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 4,
               y: 5,
@@ -440,8 +443,9 @@
           panel: {
             title: 'Etcd',
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
-            expr: expr,
+            expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
+            mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 8,
               y: 5,
@@ -463,8 +467,9 @@
           panel: {
             title: 'Kubelet',
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
-            expr: expr,
+            expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
+            mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 12,
               y: 5,
@@ -486,8 +491,9 @@
           panel: {
             title: 'Proxy',
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
-            expr: expr,
+            expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
+            mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 16,
               y: 5,
@@ -509,8 +515,9 @@
           panel: {
             title: 'Scheduler',
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
-            expr: expr,
+            expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
+            mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
               x: 20,
               y: 5,

@@ -519,8 +519,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kubernetes-monitoring-shows-down-state-for-some-control-plane-components-are-control-plane-components-working-correctly" class="md-nav__link">
-    Kubernetes Monitoring shows DOWN state for some control plane components. Are control plane components working correctly?
+  <a href="#kubernetes-monitoring-shows-or-0-state-for-some-control-plane-components-are-control-plane-components-working-correctly" class="md-nav__link">
+    Kubernetes Monitoring shows - OR 0% state for some control plane components. Are control plane components working correctly?
   </a>
   
 </li>
@@ -821,8 +821,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kubernetes-monitoring-shows-down-state-for-some-control-plane-components-are-control-plane-components-working-correctly" class="md-nav__link">
-    Kubernetes Monitoring shows DOWN state for some control plane components. Are control plane components working correctly?
+  <a href="#kubernetes-monitoring-shows-or-0-state-for-some-control-plane-components-are-control-plane-components-working-correctly" class="md-nav__link">
+    Kubernetes Monitoring shows - OR 0% state for some control plane components. Are control plane components working correctly?
   </a>
   
 </li>
@@ -1161,8 +1161,9 @@ table items on L2 layer dashboard may have different background color as corresp
 <img alt="l2_k8s_elk_pvc.png" src="../../docs/images/l2_k8s_elk_pvc.png" /></p>
 <p>Currently only first layer is customizable, which caused this unexpected behaviour.
 Templating of other layers is under development and is planned in <a href="https://github.com/issues?q=is%3Aopen+is%3Aissue+author%3Amatofeder+archived%3Afalse+label%3Av1.1.x">v1.1.x release</a>.</p>
-<h2 id="kubernetes-monitoring-shows-down-state-for-some-control-plane-components-are-control-plane-components-working-correctly">Kubernetes Monitoring shows <code>DOWN</code> state for some control plane components. Are control plane components working correctly?</h2>
-<p>Control plane components work probably well, but their metrics server might be disabled or misconfigured.
+<h2 id="kubernetes-monitoring-shows-or-0-state-for-some-control-plane-components-are-control-plane-components-working-correctly">Kubernetes Monitoring shows <code>-</code> OR <code>0%</code> state for some control plane components. Are control plane components working correctly?</h2>
+<p>Control plane components work probably well, but their metrics server might be disabled, misconfigured
+or may not be present at all. For example, if is used OVNKubernetes CNI <code>kube-proxy</code> doesn't exist here.
 You should want  to check address bindings of control plane components' metrics as follows:</p>
 <p>The metrics of <code>etcd</code> and <code>kube-proxy</code> control plane components are by default
 bound to the localhost that prometheus instances <strong>cannot</strong> access.

@@ -2625,6 +2625,7 @@ message: Cluster Api Server Health Low {{ $value }}%
 name: ClusterApiServerHealthLow
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 </code></div>
@@ -2636,13 +2637,18 @@ thresholds:
 - title: K8s Overview
   url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: (sum(up{cluster=~"$cluster|", job="apiserver"}) / count(up{cluster=~"$cluster|",
-  job="apiserver"})) * 100
+  job="apiserver"})) * 100 OR on() vector(-1)
 gridPos:
   w: 4
   x: 0
   y: 5
+mappings:
+- text: '-'
+  type: 1
+  value: -1
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 title: API Server
@@ -2660,6 +2666,7 @@ message: Cluster Controller Manager Health Low {{ $value }}%
 name: ClusterControllerManagerHealthLow
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 </code></div>
@@ -2671,13 +2678,18 @@ thresholds:
 - title: K8s Overview
   url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: (sum(up{cluster=~"$cluster|", job="kube-controller-manager"}) / count(up{cluster=~"$cluster|",
-  job="kube-controller-manager"})) * 100
+  job="kube-controller-manager"})) * 100 OR on() vector(-1)
 gridPos:
   w: 4
   x: 4
   y: 5
+mappings:
+- text: '-'
+  type: 1
+  value: -1
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 title: Controller Manager
@@ -2769,6 +2781,7 @@ message: Cluster Etcd Health Low {{ $value }}%
 name: ClusterEtcdHealthLow
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 </code></div>
@@ -2780,13 +2793,18 @@ thresholds:
 - title: K8s Overview
   url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: (sum(up{cluster=~"$cluster|", job="kube-etcd"}) / count(up{cluster=~"$cluster|",
-  job="kube-etcd"})) * 100
+  job="kube-etcd"})) * 100 OR on() vector(-1)
 gridPos:
   w: 4
   x: 8
   y: 5
+mappings:
+- text: '-'
+  type: 1
+  value: -1
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 title: Etcd
@@ -2804,6 +2822,7 @@ message: Cluster Kubelet Health Low {{ $value }}%
 name: ClusterKubeletHealthLow
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 </code></div>
@@ -2815,13 +2834,18 @@ thresholds:
 - title: K8s Overview
   url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: (sum(up{cluster=~"$cluster|", job="kubelet", metrics_path="/metrics"}) / count(up{cluster=~"$cluster|",
-  job="kubelet", metrics_path="/metrics"})) * 100
+  job="kubelet", metrics_path="/metrics"})) * 100 OR on() vector(-1)
 gridPos:
   w: 4
   x: 12
   y: 5
+mappings:
+- text: '-'
+  type: 1
+  value: -1
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 title: Kubelet
@@ -3678,6 +3702,7 @@ message: Cluster Proxy Health Low {{ $value }}%
 name: ClusterProxyHealthLow
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 </code></div>
@@ -3689,13 +3714,18 @@ thresholds:
 - title: K8s Overview
   url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: (sum(up{cluster=~"$cluster|", job="kube-proxy"}) / count(up{cluster=~"$cluster|",
-  job="kube-proxy"})) * 100
+  job="kube-proxy"})) * 100 OR on() vector(-1)
 gridPos:
   w: 4
   x: 16
   y: 5
+mappings:
+- text: '-'
+  type: 1
+  value: -1
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 title: Proxy
@@ -3870,6 +3900,7 @@ message: Cluster Scheduler Health Low {{ $value }}%
 name: ClusterSchedulerHealthLow
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 </code></div>
@@ -3881,13 +3912,18 @@ thresholds:
 - title: K8s Overview
   url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: (sum(up{cluster=~"$cluster|", job="kube-scheduler"}) / count(up{cluster=~"$cluster|",
-  job="kube-scheduler"})) * 100
+  job="kube-scheduler"})) * 100 OR on() vector(-1)
 gridPos:
   w: 4
   x: 20
   y: 5
+mappings:
+- text: '-'
+  type: 1
+  value: -1
 thresholds:
   critical: 95
+  lowest: 0
   operator: <
   warning: 99
 title: Scheduler
@@ -6975,6 +7011,8 @@ unit: bytes
 <p><br></p>
 <h4 id="controlplane"><a name='controlPlane_175'>controlPlane</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
+</td></tr>
+<tr><td>lowest</td><td><div class='my-pre'><code>0</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code>"<"</code></div>
 </td></tr>
