@@ -12,8 +12,10 @@ When some threshold is crossed and this state  persists for **5** minutes (defau
 The orange state panel  with `Warning` label is displayed in case of warning alert. Red state panel with  `Critical` label is displayed in case of critical alert.
 We have implemented intuitive green, orange and red color indicators that are signalizing if your action is needed or if everything is OK.
 If you want to see more information about your k8s cluster, just drill down by left-clicking on
-the relevant state panel. As of now, only single cluster monitoring is supported. Multi cluster monitoring support is under development.
+the relevant state panel. As of now, multi-cluster monitoring support is avaible.
+
 - If you are interested in the k8s cluster monitoring see [How to set up k8s cluster monitoring?](#how-to-set-up-k8s-cluster-monitoring) section.
+- If you are interested in the k8s multi-cluster monitoring see [How to set up k8s multi-cluster monitoring?](#how-to-set-up-k8s-multi-cluster-monitoring) section.
 
 #### Host monitoring
 Host monitoring integration allows you to monitor your hosts infrastructure within our kubernetes based, 
@@ -96,7 +98,7 @@ panels are separated into several sections:
 
 When a failed condition of monitored host element occurs the state panel shows lowered percentage value on health indicator. If the state of health is too
 low and the percentage value reached warning or even critical threshold, corresponding state panel changes its color.
-Intuitive green, orange and red color principle is used. When failed state lasts longer than **5** minutes (default) then 
+Intuitive green, orange and red color principle is used. When failed state lasts longer than **5** minutes (default) then
 the relevant alert is triggered and highlighted in alert panel. Also the panel representing the overall health of the host in the monitoring layer 0 changes accordingly.
 The first layer is the source of all aggregated hosts alerts triggered by dNation monitoring.
 
@@ -423,3 +425,25 @@ If you don't want to set up TLS, you can skip validation as shown [here](https:/
   by setting `--authorization-always-allow-paths: "/healthz,/readyz,/livez,/metrics"` in `kubeadm_init.yaml` ([see example for kind cluster](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/helpers/kind_cluster_config.yaml)) or 
   manually in already running K8s deployment by following same steps as above when setting metrics bind address.
   
+
+## How to set up k8s multi-cluster monitoring?
+### Prerequisites
+Install dNation k8s monitoring on k8s cluster. See installation steps [here](https://github.com/dNationCloud/kubernetes-monitoring#full-installation).
+
+### Set up
+Multi-cluster monitoring is supported by default. All you need to do is just to install dNation Kubernetes Monitoring with custom values as shown in example [here](https://github.com/dNationCloud/kubernetes-monitoring/blob/main/helpers/README.md#L57).
+```yaml
+clusterMonitoring:
+  enabled: true
+  clusters:
+  - name: Observer
+    label: observer-cluster
+    description: 'Kubernetes cluster with application monitoring'
+    apps: []
+  - name: Workload
+    label: workload-cluster
+    description: 'Kubernetes cluster with application monitoring'
+    apps: []
+```
+
+Do not forget to set the correct labels for your clusters!

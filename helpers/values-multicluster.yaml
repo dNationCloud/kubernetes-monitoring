@@ -26,29 +26,15 @@ containerLabel: &containerLabel
   replacement: $1
   action: replace
 
-hostMonitoring:
-  enabled: true
-  hosts:
-  - name: host-01
-    description: Host 01 Node Exporter
-    jobName: host-01
-    host:
-      address: 95.217.178.89
-    serviceMonitor:
-      endpoints:
-      - port: "9100"  # Node exporter port
-        interval: 30s
-        path: /metrics
-
 clusterMonitoring:
   enabled: true
   clusters:
-#  - name: Observer
-#    label: observer-cluster-label
-#    description: 'Kubernetes cluster with application monitoring'
-#    apps: []
+  - name: Observer
+    label: observer-cluster
+    description: 'Kubernetes cluster with application monitoring'
+    apps: []
   - name: Workload
-#    label: workload-cluster-label
+    label: workload-cluster
     description: 'Kubernetes cluster with application monitoring'
     apps:
     # Application Monitoring using the service monitor CRD.
@@ -97,12 +83,6 @@ clusterMonitoring:
 
 templates:
   L1:
-    host:
-      overallUtilizationDisk:
-        alert:
-          thresholds:
-            warning: 50
-
     k8s:
       # Override title for etcd health panel
       etcdHealth:

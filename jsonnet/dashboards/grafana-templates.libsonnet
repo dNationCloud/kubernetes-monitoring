@@ -54,7 +54,6 @@ local template = grafana.template;
         name='datasource',
         label='Datasource',
         query='prometheus',
-        #TODO change current based on thano/no-thanos ?
         current='thanos',
       ),
 

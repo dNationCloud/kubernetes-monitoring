@@ -46,7 +46,6 @@ local table = grafana.tablePanel;
           prometheus.target('ALERTS{job=~"$job", alertname!="Watchdog", alertstate=~"firing|pending", severity="warning", severity=~"$severity", alertgroup=~"$alertgroup"} * 2', format='table', instant=true),
           prometheus.target('ALERTS{job=~"$job", alertname!="Watchdog", alertstate=~"firing|pending", severity="critical", severity=~"$severity", alertgroup=~"$alertgroup"} * 3', format='table', instant=true),
         ])
-//        .addTarget({ type: 'table', expr: 'ALERTS{alertname!="Watchdog", severity=~"$severity", alertgroup=~"$alertgroup", job=~"$job"}' })
         .addTransformations([
           {
             id: 'organize',

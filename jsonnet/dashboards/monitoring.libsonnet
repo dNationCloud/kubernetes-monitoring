@@ -138,12 +138,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
 
             local clusterLabel = if std.objectHas(cluster, 'label') then cluster.label else '.*';
 
-            // multiple cluster monitoring isn't supported yet, replace lines when adding support for multiple clusters
-            //local dataLinkCommonArgs = $._config.grafanaDashboards.dataLinkCommonArgs;
             local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster|', clusterLabel);
-
-            // when multiple cluster will be supported, cluster variable will in expr will be cluster name
-            //local localCluster = { name: '' };
 
             local gridX =
               if std.type(tpl.panel.gridPos.x) == 'number' then
@@ -185,7 +180,6 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
             .addMappings(tpl.panel.mappings)
             .addDataLinks(
-              #TODO  updateDataLinksCommonArgs probably doesnt have to be here
               $.updateDataLinksCommonArgs(
                 if std.length(tpl.panel.dataLinks) > 0 then
                   tpl.panel.dataLinks
@@ -212,7 +206,6 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             ]);
 
           local clusterPanels =
-            // multiple cluster monitoring isn't supported yet, always take only first cluster
             std.flattenArrays([
               clusterPanel(cluster.index, cluster.item)
               for cluster in $.zipWithIndex($._config.clusterMonitoring.clusters)

@@ -81,7 +81,6 @@ grafanaDashboards:
 clusterMonitoring:
   enabled: true
   clusters:
-  # Cluster Monitoring, multiple cluster monitoring isn't supported yet.
   - name: K8sCluster
     description: 'Kubernetes cluster monitoring'
     apps: []

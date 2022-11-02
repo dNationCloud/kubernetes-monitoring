@@ -9,7 +9,7 @@
 See status of your Kubernetes infrastructure and applications at a glance using semaphore (green/orange/red) principle:
 [![Watch the video](https://cdn.ifne.eu/public/icons/dnation_k8sm8g_screenshot.png)](https://www.youtube.com/watch?v=Kf_GBb6XRqU)
 
-It is a set of Grafana dashboards and Prometheus alerts written in [Jsonnet](https://jsonnet.org/). This Monitoring following 3 basic design principles:
+It is a set of Grafana dashboards and Prometheus alerts written in [Jsonnet](https://jsonnet.org/). This Monitoring also supports multi-cluster monitoring by `Thanos` and following 3 basic design principles:
 
 1. `Intuitive` - Green, orange and red colors signaling whether or not your action is needed
 1. `Drill-down` - if you want details why something is green, orange or red, just click it
