@@ -92,6 +92,9 @@
   isHostMonitoring()::
     $._config.hostMonitoring.enabled && std.length($._config.hostMonitoring.hosts) > 0,
 
+  isMultiClusterMonitoring()::
+    $._config.clusterMonitoring.enabled && std.length($._config.clusterMonitoring.clusters) > 1,
+
   dashboardTemplateMapping():: {
     /**
      * Maps dashboards to their template group. User defined templates from values.yaml are included too.
@@ -281,7 +284,7 @@
   getTemplateAlerts(objTemplates, obj=null):: [
     /**
      * Merge user defined alerts with defaults and cluster-specific alert data.
-     * Compute dashboard ids to links based on parameter linkTo. If target dashboard will be custom.
+     * Compute dashboard ids to links based on parameter linkTo. If target dashboard will be custom
      * alert name is changed too.
      *
      * @param objTemplates Object with templates.
@@ -424,26 +427,49 @@
     else
       defaultDashboardId,
 
+  updateDataLinksCommonArgs(datalinks, tableLink=false)::
+    /**
+     * If monitoring is in multi-cluster setup, we want to pass variable $cluster between dashboards.
+     * If monitoring is in single-cluster setup, only '$cluster|' is passed which match everything.
+     *
+     * @param array Datalinks for panel.
+     * @param boolean tableLink if processed datalinks are from table or panels.
+     * @return array Datalinks for panel.
+     */
+    local clusterLabel = if utils.isMultiClusterMonitoring() then '$cluster' else '$cluster|';
+    local urlField = if tableLink then 'linkUrl' else 'url';
+    [
+      local urlFieldValue = if tableLink then datalink.linkUrl else datalink.url;
+      if std.objectHas(datalink, urlField) then
+        datalink { [urlField]: std.strReplace(urlFieldValue, '$cluster|', clusterLabel) }
+      else
+        datalink
+      for datalink in datalinks
+    ],
+
   finalizeDataLinksUrl(obj, template)::
     /**
-     * Replace placeholder {} in url with dashboard id defined by template field linkTo.
+     * Replace placeholder {} in url with dashboard id defined by template field linkTo
+     * and update dataLinkCommonArgs based on new merged config.
      *
      * @param obj Custer or host.
      * @param template
      * @return datalink object.
      */
     local datalinks = template.panel.dataLinks;
-    [
-      if std.objectHas(template, 'linkTo') && std.length(template.linkTo) > i then
-        local datalink = datalinks[i];
-        local linkTo = template.linkTo[i];
-        local defaultDashboardId = utils.getDashboardIdFromLinkTo(linkTo);
-        local customDashboardId = utils.getCustomLinkDashboardId(obj, defaultDashboardId, linkTo, template.templateName);
-        datalink { url: std.strReplace(datalink.url, '{}', customDashboardId) }
-      else
-        datalinks[i]
-      for i in std.range(0, std.length(datalinks) - 1)
-    ],
+    utils.updateDataLinksCommonArgs(
+      [
+        if std.objectHas(template, 'linkTo') && std.length(template.linkTo) > i then
+          local datalink = datalinks[i];
+          local linkTo = template.linkTo[i];
+          local defaultDashboardId = utils.getDashboardIdFromLinkTo(linkTo);
+          local customDashboardId = utils.getCustomLinkDashboardId(obj, defaultDashboardId, linkTo, template.templateName);
+          datalink { url: std.strReplace(datalink.url, '{}', customDashboardId) }
+        else
+          datalinks[i]
+        for i in std.range(0, std.length(datalinks) - 1)
+      ]
+    ),
 
   createControlPlaneDashboard(jsonName, dashboardFunction, dashboardUid, dashboardName, templateGroup, templateName)::
     /**

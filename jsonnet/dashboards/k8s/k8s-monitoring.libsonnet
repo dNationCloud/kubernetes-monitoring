@@ -55,12 +55,20 @@ local getGridY(offset, index, panelWidth, panelHeight) =
 {
   grafanaDashboards+::
     local clusterDashboard(cluster, dashboardUid, dashboardName, clusterTemplates, clusterApps=[], clusterVMs=[]) = {
+
+      local explorerLinkUrl =
+        if $.isMultiClusterMonitoring() then
+          // there is cluster label in example loki query
+          '/explore?orgId=1&left=%5B%22now-1d%22,%22now%22,%22$datasource_logs%22,%7B%22expr%22:%22%7Bcluster%3D%5C%22$datasource_logs%5C%22,%20namespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D'
+        else
+          '/explore?orgId=1&left=%5B%22now-7d%22,%22now%22,%22$datasource_logs%22,%7B%22expr%22:%22%7Bnamespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
+
       local explorerLink =
         link.dashboards(
           title='Logs',
           tags=[],
           icon='doc',
-          url='/explore?orgId=1&left=%5B%22now-7d%22,%22now%22,%22$datasource_logs%22,%7B%22expr%22:%22%7Bnamespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
+          url=explorerLinkUrl,
           type='link',
         ),
       local dNationLink =
@@ -91,17 +99,25 @@ local getGridY(offset, index, panelWidth, panelHeight) =
       local criticalPanel =
         alertPanel(
           title='Critical',
-          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate="firing", severity="critical", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
+          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing|pending", severity="critical", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
         )
-        .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] })
+        .addDataLinks(
+          $.updateDataLinksCommonArgs(
+            [{ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] }]
+          )
+        )
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
 
       local warningPanel =
         alertPanel(
           title='Warning',
-          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate="firing", severity="warning", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
+          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing|pending", severity="warning", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
         )
-        .addDataLink({ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] })
+        .addDataLinks(
+          $.updateDataLinksCommonArgs(
+            [{ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] }]
+           )
+        )
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
 
       local k8sStatsPanels = [
@@ -141,7 +157,7 @@ local getGridY(offset, index, panelWidth, panelHeight) =
           if std.type(tpl.panel.gridPos.y) == 'number' then
             tpl.panel.gridPos.y
           else
-            29;  // `23` -> init Y position in application row;
+            29;  // `29` -> init Y position in application row;
         statPanel.new(
           title='%s %s' % [tpl.templateName, app.name],
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
@@ -154,17 +170,19 @@ local getGridY(offset, index, panelWidth, panelHeight) =
         .addTarget(prometheus.target(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName }))
         .addMappings(tpl.panel.mappings)
         .addDataLinks(
-          if std.length(tpl.panel.dataLinks) > 0 then
-            [
-              dataLink {
-                url: dataLink.url % { job: app.jobName },
-              }
-              for dataLink in tpl.panel.dataLinks
-            ]
-          else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
-            [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
-          else
-            []
+          $.updateDataLinksCommonArgs(
+            if std.length(tpl.panel.dataLinks) > 0 then
+              [
+                dataLink {
+                  url: dataLink.url % { job: app.jobName },
+                }
+                for dataLink in tpl.panel.dataLinks
+              ]
+            else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
+              [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
+            else
+              []
+          )
         )
         .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
         {
@@ -221,12 +239,14 @@ local getGridY(offset, index, panelWidth, panelHeight) =
         .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
         .addMappings(tpl.panel.mappings)
         .addDataLinks(
-          if std.length(tpl.panel.dataLinks) > 0 then
-            tpl.panel.dataLinks % { job: vm.jobName }
-          else
-            local id = $._config.grafanaDashboards.ids.vmMonitoring;
-            local vmUid = if isMulti then $.getCustomUid([cluster.name, id, vm.name]) else $.getCustomUid([id, vm.name]);
-            [{ title: 'VM Monitoring', url: '/d/%s?%s&var-job=%s' % [vmUid, $._config.grafanaDashboards.dataLinkCommonArgs, vm.jobName] }]
+          $.updateDataLinksCommonArgs(
+            if std.length(tpl.panel.dataLinks) > 0 then
+              tpl.panel.dataLinks % { job: vm.jobName }
+            else
+              local id = $._config.grafanaDashboards.ids.vmMonitoring;
+              local vmUid = if isMulti then $.getCustomUid([cluster.name, id, vm.name]) else $.getCustomUid([id, vm.name]);
+              [{ title: 'VM Monitoring', url: '/d/%s?%s&var-job=%s' % [vmUid, $._config.grafanaDashboards.dataLinkCommonArgs, vm.jobName] }]
+          )
         )
         {
           gridPos: {

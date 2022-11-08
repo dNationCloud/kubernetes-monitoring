@@ -54,7 +54,7 @@ local template = grafana.template;
         name='datasource',
         label='Datasource',
         query='prometheus',
-        current=null,
+        current='thanos',
       ),
 
     alertManagerTemplate()::
@@ -89,14 +89,21 @@ local template = grafana.template;
         label='Severity',
       ),
 
-    clusterTemplate(query)::
+    clusterTemplate(query, hide='')::
+
+      // cluster variable will be hide if there is only 1 cluster and hide parameter is not set
+      local hideVariable =
+        if hide == '' then
+          if $.isMultiClusterMonitoring() then '' else 'variable'
+        else hide;
+
       baseTemplate(
         name='cluster',
         label='Cluster',
         query=query,
-        hide='variable',
         includeAll=false,
         multi=false,
+        hide=hideVariable,
       ),
 
     instanceTemplate(query, label='Instance')::

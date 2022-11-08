@@ -31,7 +31,7 @@ local table = grafana.tablePanel;
           datasource=templatePanel.datasource,
           sort=templatePanel.sort,
           description=templatePanel.description,
-          styles=templatePanel.styles,
+          styles=$.updateDataLinksCommonArgs(templatePanel.styles, tableLink=true),
         )
         .addTransformations(templatePanel.transformations)
         .addTargets(

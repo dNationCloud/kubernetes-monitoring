@@ -50,12 +50,12 @@ make jsonnet-package
 helm dependency update chart
 # K8s monitoring only (default)
 helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack
-# Cluster monitoring example
-helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack -f helpers/values-cluster.yaml
 # Cluster monitoring example with custom dashboard templates
 helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack -f helpers/values-cluster-elk.yaml
 # Host monitoring example
 helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack -f helpers/values-host.yaml
+# Multi-cluster monitoring example
+helm install dnation-kubernetes-monitoring chart --set releaseOverride=dnation-kubernetes-monitoring-stack -f helpers/values-multicluster.yaml
 ```
 
 If you want to run jsonnet formatter or linter use following:

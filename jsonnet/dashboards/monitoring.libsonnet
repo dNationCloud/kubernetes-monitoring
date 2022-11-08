@@ -112,10 +112,12 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
             .addMappings(tpl.panel.mappings)
             .addDataLinks(
-              if std.length(tpl.panel.dataLinks) > 0 then
-                tpl.panel.dataLinks % { job: host.jobName }
-              else
-                [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host, $._config.templates.L1.host), $._config.grafanaDashboards.dataLinkCommonArgs, host.jobName] }]
+              $.updateDataLinksCommonArgs(
+                if std.length(tpl.panel.dataLinks) > 0 then
+                  tpl.panel.dataLinks % { job: host.jobName }
+                else
+                  [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host, $._config.templates.L1.host), $._config.grafanaDashboards.dataLinkCommonArgsNoCluster, host.jobName] }]
+              )
             )
             {
               gridPos: {
@@ -134,12 +136,9 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             local panelHeight = tpl.panel.gridPos.h;
             local panelWidth = tpl.panel.gridPos.w;
 
-            // multiple cluster monitoring isn't supported yet, replace lines when adding support for multiple clusters
-            local dataLinkCommonArgs = $._config.grafanaDashboards.dataLinkCommonArgs;
-            //local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster|', cluster.name);
+            local clusterLabel = if std.objectHas(cluster, 'label') then cluster.label else '.*';
 
-            // when multiple cluster will be supported, cluster variable will in expr will be cluster name
-            local localCluster = { name: '' };
+            local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster|', clusterLabel);
 
             local gridX =
               if std.type(tpl.panel.gridPos.x) == 'number' then
@@ -169,7 +168,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 instant: true,
                 expr: tpl.panel.expr %
                       {
-                        cluster: localCluster.name,
+                        cluster: clusterLabel,
                         groupCluster: $._config.prometheusRules.alertGroupCluster +
                                       (if isVM then '|' + $._config.prometheusRules.alertGroupClusterVM else ''),
                         groupApp: $._config.prometheusRules.alertGroupClusterApp +
@@ -181,10 +180,12 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
             .addMappings(tpl.panel.mappings)
             .addDataLinks(
-              if std.length(tpl.panel.dataLinks) > 0 then
-                tpl.panel.dataLinks
-              else
-                [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
+              $.updateDataLinksCommonArgs(
+                if std.length(tpl.panel.dataLinks) > 0 then
+                  tpl.panel.dataLinks
+                else
+                  [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
+               )
             )
             {
               gridPos: {
@@ -205,7 +206,6 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             ]);
 
           local clusterPanels =
-            // multiple cluster monitoring isn't supported yet, always take only first cluster
             std.flattenArrays([
               clusterPanel(cluster.index, cluster.item)
               for cluster in $.zipWithIndex($._config.clusterMonitoring.clusters)
