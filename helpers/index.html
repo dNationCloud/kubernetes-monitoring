@@ -318,12 +318,12 @@ kubectl --namespace default port-forward <span class="nv">$POD_NAME</span> <span
 helm dependency update chart
 <span class="c1"># K8s monitoring only (default)</span>
 helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack
-<span class="c1"># Cluster monitoring example</span>
-helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack -f helpers/values-cluster.yaml
 <span class="c1"># Cluster monitoring example with custom dashboard templates</span>
 helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack -f helpers/values-cluster-elk.yaml
 <span class="c1"># Host monitoring example</span>
 helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack -f helpers/values-host.yaml
+<span class="c1"># Multi-cluster monitoring example</span>
+helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack -f helpers/values-multicluster.yaml
 </code></pre></div></li>
 </ol>
 <p>If you want to run jsonnet formatter or linter use following:

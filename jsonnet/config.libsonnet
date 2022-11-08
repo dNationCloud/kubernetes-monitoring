@@ -58,6 +58,7 @@
         invalid: 'black',  // invalid range is always from minus infinity to 'lowest' thredhold if it is defined
       },
       dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to' % [self.refresh],
+      dataLinkCommonArgsNoCluster: 'refresh=%s&var-datasource=$datasource&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
       templateSort: 5,  // case insensitive ascent sort
       ids: {
@@ -153,7 +154,7 @@
       alertGroupHost: 'Host',
       alertGroupHostApp: 'HostApp',
     },
-    //multiple cluster monitoring isn't supported yet
+
     clusterMonitoring: {
       enabled: true,
       clusters: [],
