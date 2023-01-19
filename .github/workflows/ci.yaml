@@ -24,7 +24,7 @@ on:
 
 jobs:
   lint-chart:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -42,7 +42,7 @@ jobs:
         config: .github/ct.yaml
 
   lint-appVersion:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -81,7 +81,7 @@ jobs:
         comparison: notEqual
 
   lint-jsonnet:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs:
     - lint-chart
     - lint-appVersion
@@ -102,7 +102,7 @@ jobs:
       run: make json-rules
 
   install-chart:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs:
     - lint-chart
     - lint-appVersion
