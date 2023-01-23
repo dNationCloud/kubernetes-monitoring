@@ -49,7 +49,7 @@
         yellow: '#fade2a',  // yellow
         blue: '#5794f2',  // blue
         lightblue: '#8ab8ff',  // light-blue
-        gray: '#858187', //gray
+        gray: '#858187',  //gray
       },
       severityColors: {
         default: 'green',
@@ -101,6 +101,7 @@
         pythonFlask: 'pythonflask',
         javaActuator: 'javaactuator',
         cAdvisor: 'cadvisor',
+        lokiDistributed: 'loki-distributed',
         phpFpm: 'phpfpm',
         nginxVts: 'nginxvts',
         nginxVtsEnhanced: 'nginxvtsenhanced',
@@ -113,6 +114,9 @@
         autoscaler: 'autoscaler',
         apache: 'apache',
         mysqlExporter: 'mysqlexporter',
+        websocket: 'websocket',
+        jvm: 'jvm',
+        prometheus: 'prometheus',
         //Monitoring dashboard
         monitoring: 'monitoring',
       },
@@ -139,7 +143,7 @@
         k8sMonitoringMain: ['k8s', 'cluster', 'host', 'L0'],
       },
       constants: {
-        infinity: 999999999,
+        infinity: 99999999999999999999999999999999,
         maxWarnings: 10000,
       },
     },
