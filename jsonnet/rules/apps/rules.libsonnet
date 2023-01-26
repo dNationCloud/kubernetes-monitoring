@@ -55,6 +55,9 @@
     if std.length(k8sAppAlerts) > 0 || std.length(hostAppAlerts) > 0 || std.length(vmAppAlerts) > 0 then
       {
         'apps.rules': {
+          local alertGroupK8sApps = { alertgroup : $._config.prometheusRules.alertGroupClusterApp },
+          local alertGroupHostApps = { alertgroup : $._config.prometheusRules.alertGroupHostApp },
+          local alertGroupVmApps  = { alertgroup : $._config.prometheusRules.alertGroupClusterVMApp },
           groups: [
             $.newRuleGroup('k8sApps.rules')
             .addRules(
@@ -67,7 +70,7 @@
                     expr=alert.expr,
                     thresholds=alert.thresholds,
                     link=alert.link,
-                    customLables=alert.customLables,
+                    customLables=alertGroupK8sApps + alert.customLables,
                   )
                   for alert in k8sAppAlerts
                 ]
@@ -84,7 +87,7 @@
                     expr=alert.expr,
                     thresholds=alert.thresholds,
                     link=alert.link,
-                    customLables=alert.customLables,
+                    customLables=alertGroupHostApps + alert.customLables,
                   )
                   for alert in hostAppAlerts
                 ]
@@ -101,7 +104,7 @@
                     expr=alert.expr,
                     thresholds=alert.thresholds,
                     link=alert.link,
-                    customLables=alert.customLables,
+                    customLables=alertGroupVmApps + alert.customLables,
                   )
                   for alert in vmAppAlerts
                 ]

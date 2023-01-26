@@ -1,0 +1,922 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.7">
+    
+    
+      
+        <title>Changelog - dNation Kubernetes Monitoring</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.19753c6b.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.196e0c26.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../docs/docs.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="dNation Kubernetes Monitoring" class="md-header-nav__button md-logo" aria-label="dNation Kubernetes Monitoring">
+      
+  <img src="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png" alt="logo">
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            dNation Kubernetes Monitoring
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/dNationCloud/kubernetes-monitoring" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dNationCloud/kubernetes-monitoring
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="dNation Kubernetes Monitoring" class="md-nav__button md-logo" aria-label="dNation Kubernetes Monitoring">
+      
+  <img src="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png" alt="logo">
+
+    </a>
+    dNation Kubernetes Monitoring
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/dNationCloud/kubernetes-monitoring" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dNationCloud/kubernetes-monitoring
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../docs/documentation/" class="md-nav__link">
+      Docs
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../docs/AWS_doc/" class="md-nav__link">
+      AWS
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../helpers/FAQ/" class="md-nav__link">
+      FAQ
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#v211-2023-01-26" class="md-nav__link">
+    v2.1.1 (2023-01-26)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v210-2023-01-23" class="md-nav__link">
+    v2.1.0 (2023-01-23)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v202-2023-01-19" class="md-nav__link">
+    v2.0.2 (2023-01-19)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v200-2022-11-08" class="md-nav__link">
+    v2.0.0 (2022-11-08)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v142-2022-10-11" class="md-nav__link">
+    v1.4.2 (2022-10-11)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v141-2022-08-15" class="md-nav__link">
+    v1.4.1 (2022-08-15)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.4.1 (2022-08-15)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes" class="md-nav__link">
+    Fixes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v140-2022-02-11" class="md-nav__link">
+    v1.4.0 (2022-02-11)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.4.0 (2022-02-11)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes_1" class="md-nav__link">
+    Fixes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v134-2022-01-11" class="md-nav__link">
+    v1.3.4 (2022-01-11)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v133-2021-06-22" class="md-nav__link">
+    v1.3.3 (2021-06-22)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v132-2021-06-21" class="md-nav__link">
+    v1.3.2 (2021-06-21)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.3.2 (2021-06-21)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes_2" class="md-nav__link">
+    Fixes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v131-2021-06-17" class="md-nav__link">
+    v1.3.1 (2021-06-17)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.3.1 (2021-06-17)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes_3" class="md-nav__link">
+    Fixes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v130-2021-06-07" class="md-nav__link">
+    v1.3.0 (2021-06-07)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v121-2021-05-13" class="md-nav__link">
+    v1.2.1 (2021-05-13)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-jsonnet-v103-2021-05-04" class="md-nav__link">
+    cicd-jsonnet-v1.0.3 (2021-05-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v120-2021-05-04" class="md-nav__link">
+    v1.2.0 (2021-05-04)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v112-2021-04-21" class="md-nav__link">
+    v1.1.2 (2021-04-21)
+  </a>
+  
+    <nav class="md-nav" aria-label="v1.1.2 (2021-04-21)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes_4" class="md-nav__link">
+    Fixes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v111-2021-02-25" class="md-nav__link">
+    v1.1.1 (2021-02-25)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v110-2021-02-23" class="md-nav__link">
+    v1.1.0 (2021-02-23)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1025-2021-02-05" class="md-nav__link">
+    v1.0.25 (2021-02-05)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1024-2021-02-03" class="md-nav__link">
+    v1.0.24 (2021-02-03)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1023-2021-02-03" class="md-nav__link">
+    v1.0.23 (2021-02-03)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1022-2021-01-25" class="md-nav__link">
+    v1.0.22 (2021-01-25)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1021-2021-01-25" class="md-nav__link">
+    v1.0.21 (2021-01-25)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1020-2021-01-14" class="md-nav__link">
+    v1.0.20 (2021-01-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-jsonnet-v102-2021-01-14" class="md-nav__link">
+    cicd-jsonnet-v1.0.2 (2021-01-14)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1019-2020-11-13" class="md-nav__link">
+    v1.0.19 (2020-11-13)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-jsonnet-v101-2020-11-11" class="md-nav__link">
+    cicd-jsonnet-v1.0.1 (2020-11-11)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cicd-jsonnet-v100-2020-11-10" class="md-nav__link">
+    cicd-jsonnet-v1.0.0 (2020-11-10)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1018-2020-10-28" class="md-nav__link">
+    v1.0.18 (2020-10-28)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1017-2020-10-27" class="md-nav__link">
+    v1.0.17 (2020-10-27)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1016-2020-10-26" class="md-nav__link">
+    v1.0.16 (2020-10-26)
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="changelog">Changelog</h1>
+<h2 id="v211-2023-01-26"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.1.1">v2.1.1</a> (2023-01-26)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.1.0...v2.1.1">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Fix generation of docs and pages <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/157">#157</a></li>
+</ul>
+<h2 id="v210-2023-01-23"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.1.0">v2.1.0</a> (2023-01-23)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.0.2...v2.1.0">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>V2.1.x <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/156">#156</a></li>
+</ul>
+<h2 id="v202-2023-01-19"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.0.2">v2.0.2</a> (2023-01-19)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.0.0...v2.0.2">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Mysql exporter alerts missing job label <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/148">#148</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Added alertgroup label for apps.rules <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/154">#154</a></li>
+</ul>
+<h2 id="v200-2022-11-08"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.0.0">v2.0.0</a> (2022-11-08)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.4.2...v2.0.0">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Update dashboards for multi-cluster monitoring <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/153">#153</a></li>
+</ul>
+<h2 id="v142-2022-10-11"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.4.2">v1.4.2</a> (2022-10-11)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.4.1...v1.4.2">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Fix <code>Tag branch</code> github action <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/150">#150</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Change ControlPlane template <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/152">#152</a></li>
+<li>Update github-tag-action to 1.39.0 <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/151">#151</a></li>
+</ul>
+<h2 id="v141-2022-08-15"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.4.1">v1.4.1</a> (2022-08-15)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.4.0...v1.4.1">Full Changelog</a></p>
+<h3 id="fixes">Fixes</h3>
+<ul>
+<li>Wrong job variable for host monitoring when going directly to dashboard <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/133">#133</a></li>
+</ul>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Add dashboard for websocket server <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/97">#97</a></li>
+<li>Add dashboard for JVM exporter <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/96">#96</a></li>
+<li>Add Loki dashboard <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/34">#34</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Update template values to work with grafana 9 <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/149">#149</a></li>
+<li>Fixed config for kind <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/142">#142</a></li>
+</ul>
+<h2 id="v140-2022-02-11"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.4.0">v1.4.0</a> (2022-02-11)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.3.4...v1.4.0">Full Changelog</a></p>
+<h3 id="fixes_1">Fixes</h3>
+<ul>
+<li>Color problem: white value on white background <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/129">#129</a></li>
+<li>Duplicate series error after alertGroup label deletition <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/117">#117</a></li>
+<li>Improve PromQL expressions to resist the label change <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/115">#115</a></li>
+</ul>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Add ci actions to test monitoring installation in latest k8s [releases](https://kubernetes.io/releases/) <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/130">#130</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>V1.4.x <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/139">#139</a></li>
+</ul>
+<h2 id="v134-2022-01-11"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.3.4">v1.3.4</a> (2022-01-11)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.3.3...v1.3.4">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Update docs - define minimal cpu/mem requirements  needed for successful installation  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/131">#131</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Fix color problem on Light theme for Used/Total Cores/Ram/Disk <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/132">#132</a></li>
+</ul>
+<h2 id="v133-2021-06-22"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.3.3">v1.3.3</a> (2021-06-22)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.3.2...v1.3.3">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Use 'Last (not null)' reducer function in L3 pvc gauge panels <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/126">#126</a></li>
+</ul>
+<h2 id="v132-2021-06-21"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.3.2">v1.3.2</a> (2021-06-21)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.3.1...v1.3.2">Full Changelog</a></p>
+<h3 id="fixes_2">Fixes</h3>
+<ul>
+<li>Column sorting in L2 tables doesn't work <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/123">#123</a></li>
+<li>Links in L2 tables have bad variable mapping <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/121">#121</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>L2fixes <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/124">#124</a></li>
+</ul>
+<h2 id="v131-2021-06-17"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.3.1">v1.3.1</a> (2021-06-17)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.3.0...v1.3.1">Full Changelog</a></p>
+<h3 id="fixes_3">Fixes</h3>
+<ul>
+<li>Missing  hyperlink in MySQL Application Graph - Host Monitoring <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/120">#120</a></li>
+<li>Fix legend in Request duration 99th quantile graph - Api server dashboard <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/119">#119</a></li>
+<li>Fix Job graph expression <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/116">#116</a></li>
+</ul>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>MySQL dashboard should have hostname <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/118">#118</a></li>
+<li>L0 expression - If host/cluster is DOWN L0 state panel still shows OK state <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/112">#112</a></li>
+<li>Replace legacy nginx vts metrics <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/110">#110</a></li>
+<li>Split Node Metrics to Master/Nodes <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/107">#107</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Minor graph fixies <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/122">#122</a></li>
+</ul>
+<h2 id="v130-2021-06-07"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.3.0">v1.3.0</a> (2021-06-07)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.2.1...v1.3.0">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Investigate and, if necessary, change usedDisk expression <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/105">#105</a></li>
+<li>Host monitoring - improve host monitoring expressions to be resistant in case of IP address miss configuration  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/100">#100</a></li>
+<li>Improve Nginx VTS dashboard <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/95">#95</a></li>
+<li>Hard coded label alertGroup "Host" in PromQL expression <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/88">#88</a></li>
+<li>Add support for KubeVirt VMs <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/79">#79</a></li>
+<li>Visualize Virtual Filesystems Utilization in separate graph <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/76">#76</a></li>
+<li>Re-organize cluster main dashboard  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/75">#75</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>V1.3.x <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/114">#114</a></li>
+<li>Update AWS_doc.md <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/106">#106</a></li>
+<li>Update aws_doc.md <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/102">#102</a></li>
+<li>Rename namespace in AWS-doc.md <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/101">#101</a></li>
+<li>Aws doc <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/92">#92</a></li>
+</ul>
+<h2 id="v121-2021-05-13"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.2.1">v1.2.1</a> (2021-05-13)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/cicd-jsonnet-v1.0.3...v1.2.1">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>2x increase in CPU usage after redeployment of monitoring <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/90">#90</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Consider null values in stacked graphs as zero <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/91">#91</a></li>
+</ul>
+<h2 id="cicd-jsonnet-v103-2021-05-04"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/cicd-jsonnet-v1.0.3">cicd-jsonnet-v1.0.3</a> (2021-05-04)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.2.0...cicd-jsonnet-v1.0.3">Full Changelog</a></p>
+<h2 id="v120-2021-05-04"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.2.0">v1.2.0</a> (2021-05-04)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.1.2...v1.2.0">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>In the nginx ingress alert Detailed link is 'var-job=' empty <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/80">#80</a></li>
+<li>Make copyright headers consistent across <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/71">#71</a></li>
+<li>Add dashboards for MySQL/MariaDB <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/70">#70</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>V1.2.x <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/89">#89</a></li>
+</ul>
+<h2 id="v112-2021-04-21"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.1.2">v1.1.2</a> (2021-04-21)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.1.1...v1.1.2">Full Changelog</a></p>
+<h3 id="fixes_4">Fixes</h3>
+<ul>
+<li>L0 Warning state panel with red color backgroud  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/66">#66</a></li>
+</ul>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Add template logic to the L3 layers <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/65">#65</a></li>
+<li>Re-Order Columns in L2 dashboards <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/63">#63</a></li>
+<li>Add template logic to the L2 layers <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/17">#17</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Change nginxIngressCertificateExpiry expr to preserve labels <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/81">#81</a></li>
+</ul>
+<h2 id="v111-2021-02-25"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.1.1">v1.1.1</a> (2021-02-25)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.1.0...v1.1.1">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Fix Job select in Job Overview L2 dashboard <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/62">#62</a></li>
+<li>Release v1.1.x <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/57">#57</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Fix Job select in Job Overview <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/64">#64</a></li>
+</ul>
+<h2 id="v110-2021-02-23"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.1.0">v1.1.0</a> (2021-02-23)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.25...v1.1.0">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Dependencies update -  dnation jsonnet translator version <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/56">#56</a></li>
+<li>Update CONTRIBUTING.md file according to the latest versioning rules  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/50">#50</a></li>
+<li>Annoying <code>Do you want to save your changes?</code> alert even when dashboard has not been changed   <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/47">#47</a></li>
+<li>CI pipeline improvement - follow up issue  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/46">#46</a></li>
+<li>Update FAQ - Why L2 table item has different background color as corresponding L1 stat panel?  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/45">#45</a></li>
+<li>Add basic drop-down menu on k8s L2 dashboards <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/43">#43</a></li>
+<li>Add release version badge to the README  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/41">#41</a></li>
+<li>Update L1 dashboards - rename RPC to GRPC <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/39">#39</a></li>
+<li>Update L1 links in k8s monitoring dashboard <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/37">#37</a></li>
+<li>[Docs] Escape double quotes in expressions <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/36">#36</a></li>
+<li>Add possibility to exclude dashboard from <code>helm upgrade</code> process <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/33">#33</a></li>
+<li>Add template logic to the L0 layer <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/25">#25</a></li>
+<li>Ingress controller dashboard L1 - improve expression <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/19">#19</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>V1.1.x <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/61">#61</a></li>
+<li>Escape quotes in docs <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/53">#53</a></li>
+<li>Update contributing <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/52">#52</a></li>
+<li>Lint appVersion always with main branch <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/49">#49</a></li>
+</ul>
+<h2 id="v1025-2021-02-05"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.25">v1.0.25</a> (2021-02-05)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.24...v1.0.25">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Create CI/CD job to check version of monitoring application <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/30">#30</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Fix linting appVersion in ci <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/44">#44</a></li>
+<li>Fix missing escape of '%' in jsonnet <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/42">#42</a></li>
+<li>Add ci check of appVersion <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/38">#38</a></li>
+</ul>
+<h2 id="v1024-2021-02-03"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.24">v1.0.24</a> (2021-02-03)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.23...v1.0.24">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Add hyperlinks to the Alerts table panel and/or messages  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/21">#21</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Round value of NginxIngressSuccessRateLow alert <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/40">#40</a></li>
+</ul>
+<h2 id="v1023-2021-02-03"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.23">v1.0.23</a> (2021-02-03)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.22...v1.0.23">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Add FAQ - How to interpret displayed monitoring values across layers?  <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/22">#22</a></li>
+<li>Add HOST IP address info to the L3 layer of monitoring <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/20">#20</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Add grafana dashboard link to alerts <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/32">#32</a></li>
+<li>Simplify local development <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/31">#31</a></li>
+</ul>
+<h2 id="v1022-2021-01-25"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.22">v1.0.22</a> (2021-01-25)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.21...v1.0.22">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Add possibility to adjust the monitoring dashboards default directory <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/18">#18</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Add HOST IP address info table to the NodeExporter <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/29">#29</a></li>
+</ul>
+<h2 id="v1021-2021-01-25"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.21">v1.0.21</a> (2021-01-25)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.20...v1.0.21">Full Changelog</a></p>
+<p><strong>Closed issues:</strong></p>
+<ul>
+<li>Docs json-&gt;yaml <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/24">#24</a></li>
+<li>Record short video to show the latest monitoring state.   <a href="https://github.com/dNationCloud/kubernetes-monitoring/issues/16">#16</a></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Add option to change grafana directory <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/28">#28</a></li>
+<li>Change docs from json to yaml <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/26">#26</a></li>
+<li>Update README.md <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/23">#23</a></li>
+</ul>
+<h2 id="v1020-2021-01-14"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.20">v1.0.20</a> (2021-01-14)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/cicd-jsonnet-v1.0.2...v1.0.20">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Docs <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/15">#15</a></li>
+</ul>
+<h2 id="cicd-jsonnet-v102-2021-01-14"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/cicd-jsonnet-v1.0.2">cicd-jsonnet-v1.0.2</a> (2021-01-14)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.19...cicd-jsonnet-v1.0.2">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Update ci/cd image version to 1.0.2 <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/14">#14</a></li>
+<li>Sync gitlab main <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/13">#13</a></li>
+<li>Fix release.yaml bug <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/12">#12</a></li>
+<li>Update CODE_OF_CONDUCT.md <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/11">#11</a></li>
+<li>Update CODE_OF_CONDUCT.md <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/10">#10</a></li>
+</ul>
+<h2 id="v1019-2020-11-13"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.19">v1.0.19</a> (2020-11-13)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/cicd-jsonnet-v1.0.1...v1.0.19">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Update README.md <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/9">#9</a></li>
+<li>Node filter <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/8">#8</a></li>
+</ul>
+<h2 id="cicd-jsonnet-v101-2020-11-11"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/cicd-jsonnet-v1.0.1">cicd-jsonnet-v1.0.1</a> (2020-11-11)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/cicd-jsonnet-v1.0.0...cicd-jsonnet-v1.0.1">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Increase version of packages in docker image <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/7">#7</a></li>
+</ul>
+<h2 id="cicd-jsonnet-v100-2020-11-10"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/cicd-jsonnet-v1.0.0">cicd-jsonnet-v1.0.0</a> (2020-11-10)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.18...cicd-jsonnet-v1.0.0">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Create tag when CI/CD jsonnet docker code changes <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/6">#6</a></li>
+</ul>
+<h2 id="v1018-2020-10-28"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.18">v1.0.18</a> (2020-10-28)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.17...v1.0.18">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Notes <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/4">#4</a></li>
+</ul>
+<h2 id="v1017-2020-10-27"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.17">v1.0.17</a> (2020-10-27)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/v1.0.16...v1.0.17">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Update CDN image urls <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/3">#3</a></li>
+</ul>
+<h2 id="v1016-2020-10-26"><a href="https://github.com/dNationCloud/kubernetes-monitoring/tree/v1.0.16">v1.0.16</a> (2020-10-26)</h2>
+<p><a href="https://github.com/dNationCloud/kubernetes-monitoring/compare/7e099fb8c61f24de235b5442d1ee4416c31e3ebe...v1.0.16">Full Changelog</a></p>
+<p><strong>Merged pull requests:</strong></p>
+<ul>
+<li>Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/2">#2</a></li>
+<li>Add GitHub CI/CD <a href="https://github.com/dNationCloud/kubernetes-monitoring/pull/1">#1</a></li>
+</ul>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.0ac82a11.min.js"></script>
+      <script src="../assets/javascripts/bundle.f81dfb4d.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.4ac00218.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

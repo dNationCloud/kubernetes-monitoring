@@ -473,38 +473,38 @@
 <li>
 <p>Add dNation helm repository and update it.
   <div class="highlight"><pre><span></span><code><span class="c1"># Add dNation helm repository</span>
-helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
-helm repo update
+helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>dnationcloud<span class="w"> </span>https://dnationcloud.github.io/helm-hub/
+helm<span class="w"> </span>repo<span class="w"> </span>update
 </code></pre></div></p>
 </li>
 <li>
 <p>It is a good practice to install new packages in a separate namespace, as it is easier to manage it this way. Create a new namespace, for example call it "monitoring"
-  <div class="highlight"><pre><span></span><code>kubectl create namespace monitoring
+  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>monitoring
 </code></pre></div></p>
 </li>
 <li>
 <p>In case your current Kubernetes installation doesn't contain Prometheus Operator, Grafana or Loki, please install dNation Kubernetes Monitoring Stack helm chart (recommended) with dNation Kubernetes Monitoring Chart
   <div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart</span>
-helm upgrade --install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span>&lt;image-tag&gt; --version<span class="o">=</span>&lt;helm-chart-version&gt;
+helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>dnation-kubernetes-monitoring-stack<span class="w"> </span>dnationcloud/dnation-kubernetes-monitoring-stack<span class="w"> </span>--namespace<span class="w"> </span>monitoring<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span>&lt;image-tag&gt;<span class="w"> </span>--version<span class="o">=</span>&lt;helm-chart-version&gt;
 </code></pre></div>
   Example of installation for helm chart version <code>1.1.2</code>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring Stack with dNation Kubernetes Monitoring chart</span>
-helm upgrade --install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack --namespace monitoring --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span><span class="m">0</span>.2.0 --version<span class="o">=</span><span class="m">1</span>.1.2
+helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>dnation-kubernetes-monitoring-stack<span class="w"> </span>dnationcloud/dnation-kubernetes-monitoring-stack<span class="w"> </span>--namespace<span class="w"> </span>monitoring<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span><span class="m">0</span>.2.0<span class="w"> </span>--version<span class="o">=</span><span class="m">1</span>.1.2
 </code></pre></div></p>
 </li>
 <li>
 <p>If your current Kubernetes installation already contains Prometheus Operator, Grafana and Loki, please follow this
   <div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring</span>
-helm upgrade --install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring --set dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span>&lt;image-tag&gt; --version<span class="o">=</span>&lt;helm-chart-version&gt;
+helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>dnation-kubernetes-monitoring<span class="w"> </span>dnationcloud/dnation-kubernetes-monitoring<span class="w"> </span>--namespace<span class="w"> </span>monitoring<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span>&lt;image-tag&gt;<span class="w"> </span>--version<span class="o">=</span>&lt;helm-chart-version&gt;
 </code></pre></div>
   Example of installation for helm chart version <code>1.1.2</code>:
   <div class="highlight"><pre><span></span><code><span class="c1"># Install dNation Kubernetes Monitoring</span>
-helm upgrade --install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring --namespace monitoring --set dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator --set dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span><span class="m">0</span>.2.0 --version<span class="o">=</span><span class="m">1</span>.1.2
+helm<span class="w"> </span>upgrade<span class="w"> </span>--install<span class="w"> </span>dnation-kubernetes-monitoring<span class="w"> </span>dnationcloud/dnation-kubernetes-monitoring<span class="w"> </span>--namespace<span class="w"> </span>monitoring<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-jsonnet-translator.image.repository<span class="o">=</span><span class="m">709825985650</span>.dkr.ecr.us-east-1.amazonaws.com/dnation/kubernetes-jsonnet-translator<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-monitoring.dnation-kubernetes-jsonnet-translator.image.tag<span class="o">=</span><span class="m">0</span>.2.0<span class="w"> </span>--version<span class="o">=</span><span class="m">1</span>.1.2
 </code></pre></div></p>
 </li>
 <li>
 <p>Check its status by running
-  <div class="highlight"><pre><span></span><code>kubectl get pods --namespace monitoring 
+  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--namespace<span class="w"> </span>monitoring<span class="w"> </span>
 </code></pre></div></p>
 </li>
 </ul>
@@ -514,13 +514,13 @@ helm upgrade --install dnation-kubernetes-monitoring dnationcloud/dnation-kubern
 <ul>
 <li>
 <p>Get your 'admin' user password by running
-  <div class="highlight"><pre><span></span><code>kubectl --namespace monitoring get secret dnation-kubernetes-monitoring-stack-grafana -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.admin-password}&quot;</span> <span class="p">|</span> base64 --decode <span class="p">;</span> <span class="nb">echo</span>
+  <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>--namespace<span class="w"> </span>monitoring<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>dnation-kubernetes-monitoring-stack-grafana<span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.data.admin-password}&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>--decode<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="nb">echo</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>Use Port Forwarding if you want to access the Grafana server from outside your cluster
-  <div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace monitoring -l <span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
-kubectl --namespace monitoring port-forward <span class="nv">$POD_NAME</span> <span class="m">3000</span>
+  <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--namespace<span class="w"> </span>monitoring<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span><span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
+kubectl<span class="w"> </span>--namespace<span class="w"> </span>monitoring<span class="w"> </span>port-forward<span class="w"> </span><span class="nv">$POD_NAME</span><span class="w"> </span><span class="m">3000</span>
 </code></pre></div></p>
 </li>
 <li>

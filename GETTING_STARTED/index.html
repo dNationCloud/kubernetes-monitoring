@@ -286,11 +286,11 @@
 * <a href="https://helm.sh/">Helm3</a></p>
 <p>dNation Kubernetes Monitoring helm chart is hosted in the <a href="https://artifacthub.io/packages/search?repo=dnationcloud">dNation helm repository</a>.
 <div class="highlight"><pre><span></span><code><span class="c1"># Add dNation helm repository</span>
-helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
-helm repo update
+helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>dnationcloud<span class="w"> </span>https://dnationcloud.github.io/helm-hub/
+helm<span class="w"> </span>repo<span class="w"> </span>update
 
 <span class="c1"># Install dNation Kubernetes Monitoring</span>
-helm install dnation-kubernetes-monitoring dnationcloud/dnation-kubernetes-monitoring
+helm<span class="w"> </span>install<span class="w"> </span>dnation-kubernetes-monitoring<span class="w"> </span>dnationcloud/dnation-kubernetes-monitoring
 </code></pre></div></p>
 <p>Search for <code>Monitoring</code> dashboard. The fun starts here :).
 If you want to set the <code>Monitoring</code> dashboard as a home dashboard follow <a href="https://grafana.com/docs/grafana/latest/administration/change-home-dashboard/#set-the-default-dashboard-through-preferences">here</a>.

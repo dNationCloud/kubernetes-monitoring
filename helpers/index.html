@@ -289,58 +289,58 @@ Then the k8s configmap with compressed jsonnet is consumed by <a href="https://g
 <p>If you want to test your local changes in local KinD k8s cluster use following steps:</p>
 <ol>
 <li>Create KinD cluster
-<div class="highlight"><pre><span></span><code>kind create cluster --config helpers/kind_cluster_config.yaml --image kindest/node:v1.22.1
+<div class="highlight"><pre><span></span><code>kind<span class="w"> </span>create<span class="w"> </span>cluster<span class="w"> </span>--config<span class="w"> </span>helpers/kind_cluster_config.yaml<span class="w"> </span>--image<span class="w"> </span>kindest/node:v1.22.1
 </code></pre></div></li>
 <li>
 <p>Install kubernetes-monitoring-stack (without dNation Kubernetes Monitoring dependency)
 K8s-m8g-stack is an umbrella helm chart which deploys Grafana, Loki and Prometheus Operator projects.
 <div class="highlight"><pre><span></span><code><span class="c1"># Add dNation helm repository</span>
-helm repo add dnationcloud https://dnationcloud.github.io/helm-hub/
-helm repo update
+helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>dnationcloud<span class="w"> </span>https://dnationcloud.github.io/helm-hub/
+helm<span class="w"> </span>repo<span class="w"> </span>update
 
 <span class="c1"># Install dNation Kubernetes Monitoring Stack without dNation Kubernetes Monitoring chart</span>
-helm install dnation-kubernetes-monitoring-stack dnationcloud/dnation-kubernetes-monitoring-stack -f https://raw.githubusercontent.com/dNationCloud/kubernetes-monitoring-stack/main/helpers/values-kind.yaml --set dnation-kubernetes-monitoring.enabled<span class="o">=</span><span class="nb">false</span>
+helm<span class="w"> </span>install<span class="w"> </span>dnation-kubernetes-monitoring-stack<span class="w"> </span>dnationcloud/dnation-kubernetes-monitoring-stack<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/dNationCloud/kubernetes-monitoring-stack/main/helpers/values-kind.yaml<span class="w"> </span>--set<span class="w"> </span>dnation-kubernetes-monitoring.enabled<span class="o">=</span><span class="nb">false</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>Follow installation notes and use Port Forwarding if you want to access the Grafana server from outside your KinD cluster
-<div class="highlight"><pre><span></span><code> <span class="nb">export</span> <span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl get pods --namespace default -l <span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span> -o <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
-kubectl --namespace default port-forward <span class="nv">$POD_NAME</span> <span class="m">3000</span>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">POD_NAME</span><span class="o">=</span><span class="k">$(</span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--namespace<span class="w"> </span>default<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;app.kubernetes.io/name=grafana,app.kubernetes.io/instance=dnation-kubernetes-monitoring-stack&quot;</span><span class="w"> </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s2">&quot;{.items[0].metadata.name}&quot;</span><span class="k">)</span>
+kubectl<span class="w"> </span>--namespace<span class="w"> </span>default<span class="w"> </span>port-forward<span class="w"> </span><span class="nv">$POD_NAME</span><span class="w"> </span><span class="m">3000</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>Package jsonnet templates
-<div class="highlight"><pre><span></span><code>make jsonnet-package
+<div class="highlight"><pre><span></span><code>make<span class="w"> </span>jsonnet-package
 </code></pre></div></p>
 </li>
 <li>Deploy dNation Kubernetes Monitoring with your changes
 <div class="highlight"><pre><span></span><code><span class="c1"># Update K8s monitoring chart dependencies</span>
-helm dependency update chart
+helm<span class="w"> </span>dependency<span class="w"> </span>update<span class="w"> </span>chart
 <span class="c1"># K8s monitoring only (default)</span>
-helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack
+helm<span class="w"> </span>install<span class="w"> </span>dnation-kubernetes-monitoring<span class="w"> </span>chart<span class="w"> </span>--set<span class="w"> </span><span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack
 <span class="c1"># Cluster monitoring example with custom dashboard templates</span>
-helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack -f helpers/values-cluster-elk.yaml
+helm<span class="w"> </span>install<span class="w"> </span>dnation-kubernetes-monitoring<span class="w"> </span>chart<span class="w"> </span>--set<span class="w"> </span><span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack<span class="w"> </span>-f<span class="w"> </span>helpers/values-cluster-elk.yaml
 <span class="c1"># Host monitoring example</span>
-helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack -f helpers/values-host.yaml
+helm<span class="w"> </span>install<span class="w"> </span>dnation-kubernetes-monitoring<span class="w"> </span>chart<span class="w"> </span>--set<span class="w"> </span><span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack<span class="w"> </span>-f<span class="w"> </span>helpers/values-host.yaml
 <span class="c1"># Multi-cluster monitoring example</span>
-helm install dnation-kubernetes-monitoring chart --set <span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack -f helpers/values-multicluster.yaml
+helm<span class="w"> </span>install<span class="w"> </span>dnation-kubernetes-monitoring<span class="w"> </span>chart<span class="w"> </span>--set<span class="w"> </span><span class="nv">releaseOverride</span><span class="o">=</span>dnation-kubernetes-monitoring-stack<span class="w"> </span>-f<span class="w"> </span>helpers/values-multicluster.yaml
 </code></pre></div></li>
 </ol>
 <p>If you want to run jsonnet formatter or linter use following:
 <div class="highlight"><pre><span></span><code><span class="c1"># Format jsonnet files</span>
-make jsonnet-fmt
+make<span class="w"> </span>jsonnet-fmt
 <span class="c1"># Lint jsonnet files</span>
-make jsonnet-lint
+make<span class="w"> </span>jsonnet-lint
 </code></pre></div>
 If you want to generate plain json grafana dashboards or prometheus rules use following:
 <div class="highlight"><pre><span></span><code><span class="c1"># Build json grafana dashboards</span>
-make json-dashboards
+make<span class="w"> </span>json-dashboards
 <span class="c1"># Build json prometheus rules</span>
-make json-rules
+make<span class="w"> </span>json-rules
 </code></pre></div>
 If you want to run helm linter use following:
 <div class="highlight"><pre><span></span><code><span class="c1"># Lint helm chart</span>
-make helm-lint
+make<span class="w"> </span>helm-lint
 </code></pre></div></p>
                 
               
