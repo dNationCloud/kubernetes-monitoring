@@ -39,7 +39,6 @@ jobs:
 
     - name: Install Python dependencies
       run: |
-        pip3 install -U pip setuptools
         pip3 install -r "docs/requirements.txt"
 
     - name: Generate docs
