@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/dnationcloud)](https://artifacthub.io/packages/search?repo=dnationcloud)
 [![version](https://img.shields.io/badge/dynamic/yaml?color=blue&label=Version&prefix=v&query=%24.appVersion&url=https%3A%2F%2Fraw.githubusercontent.com%2FdNationCloud%2Fkubernetes-monitoring%2Fmain%2Fchart%2FChart.yaml)](https://artifacthub.io/packages/search?repo=dnationcloud)
-[![docs](https://img.shields.io/github/workflow/status/dNationCloud/kubernetes-monitoring/Generate%20documentation%20and%20upload%20to%20Github%20Page?label=Docs)](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/)
+[![docs](https://img.shields.io/github/actions/workflow/status/dNationCloud/kubernetes-monitoring/generate-docs.yaml?branch=main&label=Docs)](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation/)
 
 See status of your Kubernetes infrastructure and applications at a glance using semaphore (green/orange/red) principle:
 [![Watch the video](https://cdn.ifne.eu/public/icons/dnation_k8sm8g_screenshot.png)](https://www.youtube.com/watch?v=Kf_GBb6XRqU)
