@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.2.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.2.1) (2023-04-12)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.2.0...v2.2.1)
+
+**Merged pull requests:**
+
+- Bump up monitoring version [\#160](https://github.com/dNationCloud/kubernetes-monitoring/pull/160)
+- Fix Docs badge [\#159](https://github.com/dNationCloud/kubernetes-monitoring/pull/159)
+
 ## [v2.2.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.2.0) (2023-03-24)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.1.1...v2.2.0)
@@ -399,6 +408,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
