@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.2.2](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.2.2) (2023-04-18)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.2.1...v2.2.2)
+
+**Merged pull requests:**
+
+- Fix duplicate series for host monitoring in multicluster setup [\#161](https://github.com/dNationCloud/kubernetes-monitoring/pull/161)
+
 ## [v2.2.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.2.1) (2023-04-12)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.2.0...v2.2.1)
@@ -408,6 +416,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
