@@ -1603,9 +1603,9 @@ unit: none
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
 expr: sum(rate(node_network_transmit_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
-  [5m]) * on(instance, job) group_left(nodename) (node_uname_info) ) by (job, nodename)
-  + sum(rate(node_network_receive_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
-  * on(instance, job) group_left(nodename) (node_uname_info) ) by (job, nodename)
+  [5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job,
+  nodename) + sum(rate(node_network_receive_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename)
 linkGetParams: var-instance={{ $labels.nodename }}
 message: 'Host {{ $labels.nodename }}: High Overall Network Errors Count {{ $value
   }}%'
@@ -1623,9 +1623,9 @@ thresholds:
 - title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: sum(rate(node_network_transmit_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
-  [5m]) * on(instance, job) group_left(nodename) (node_uname_info) ) by (job, nodename)
-  + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
-  * on(instance, job) group_left(nodename) (node_uname_info) ) by (job, nodename)
+  [5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job,
+  nodename) + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename)
 gridPos:
   x: 18
   y: 6
@@ -1644,8 +1644,8 @@ unit: pps
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
 expr: round((1 - (avg(irate(node_cpu_seconds_total{job=~"%s", mode="idle"}[5m]) *
-  on(instance, job) group_left(nodename) (node_uname_info)) by (job, nodename) ))
-  * 100)
+  on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename)
+  )) * 100)
 linkGetParams: var-instance={{ $labels.nodename }}
 message: 'Host {{ $labels.nodename }}: High CPU Overall Utilization {{ $value }}%'
 name: HostCPUOverallHigh
@@ -1662,8 +1662,8 @@ thresholds:
 - title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"$job", mode="idle"}[5m])
-  * on(instance, job) group_left(nodename) (node_uname_info)) by (job, nodename) ))
-  * 100))
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename)
+  )) * 100))
 gridPos:
   x: 0
   y: 6
@@ -1680,14 +1680,14 @@ title: Overall Utilization
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
-expr: round((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance, job) group_left(nodename)
-  (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
-  * on(instance, job) group_left(nodename) (node_uname_info)) by (job, nodename, device))
-  / ((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance, job) group_left(nodename)
-  (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
-  * on(instance, job) group_left(nodename) (node_uname_info)) by (job, nodename, device))
-  + sum(node_filesystem_avail_bytes{job=~"%s"} * on(instance, job) group_left(nodename)
-  (node_uname_info)) by (job, nodename, device)) * 100 > 0)
+expr: round((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance, job, cluster)
+  group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename,
+  device)) / ((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance, job, cluster)
+  group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename,
+  device)) + sum(node_filesystem_avail_bytes{job=~"%s"} * on(instance, job, cluster)
+  group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)
 linkGetParams: var-instance={{ $labels.nodename }}
 message: 'Host {{ $labels.nodename }}: High Disk Overall Utilization {{ $value }}%'
 name: HostDiskOverallHigh
@@ -1710,14 +1710,14 @@ description: "The percentage of the disk utilization is calculated using the fra
   \ using the remaining reserved space requires root privileges.\nAny non-privileged\
   \ users and processes are unable to write new data to the partition. See the list\
   \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
-expr: max(round((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance, job) group_left(nodename)
-  (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
-  * on(instance, job) group_left(nodename) (node_uname_info)) by (job, nodename, device))
-  / ((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance, job) group_left(nodename)
-  (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
-  * on(instance, job) group_left(nodename) (node_uname_info)) by (job, nodename, device))
-  + sum(node_filesystem_avail_bytes{job=~"$job"} * on(instance, job) group_left(nodename)
-  (node_uname_info)) by (job, nodename, device)) * 100 > 0))
+expr: max(round((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance, job, cluster)
+  group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename,
+  device)) / ((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance, job, cluster)
+  group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename,
+  device)) + sum(node_filesystem_avail_bytes{job=~"$job"} * on(instance, job, cluster)
+  group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))
 gridPos:
   x: 12
   y: 6
@@ -1734,10 +1734,10 @@ title: Overall Utilization
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
-expr: round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{job=~"%s"}
-  * on(instance, job) group_left(nodename) (node_uname_info)) / sum by (job, nodename)
-  (node_memory_MemTotal_bytes{job=~"%s"} * on(instance, job) group_left(nodename)
-  (node_uname_info))) * 100)
+expr: round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"%s"}
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) / sum by (job,
+  nodename, cluster) (node_memory_MemTotal_bytes{job=~"%s"} * on(instance, job, cluster)
+  group_left(nodename) (node_uname_info))) * 100)
 linkGetParams: var-instance={{ $labels.nodename }}
 message: 'Host {{ $labels.nodename }}: High RAM Overall Utilization {{ $value }}%'
 name: HostRAMOverallHigh
@@ -1755,10 +1755,10 @@ thresholds:
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
   \ (<memory available>/<memory total>)\n```"
-expr: avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{job=~"$job"}
-  * on(instance, job) group_left(nodename) (node_uname_info)) / sum by (job, nodename)
-  (node_memory_MemTotal_bytes{job=~"$job"} * on(instance, job) group_left(nodename)
-  (node_uname_info))) * 100))
+expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"$job"}
+  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) / sum by (job,
+  nodename, cluster) (node_memory_MemTotal_bytes{job=~"$job"} * on(instance, job,
+  cluster) group_left(nodename) (node_uname_info))) * 100))
 gridPos:
   x: 6
   y: 6
@@ -7013,9 +7013,9 @@ title: Most Utilized VM
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
 expr: sum(sum(rate(node_network_transmit_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
-  [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)
-  + sum(rate(node_network_receive_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
-  * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))
+  [5m]) * on(instance, cluster) group_left(nodename) (node_uname_info) ) by (job,
+  nodename) + sum(rate(node_network_receive_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+  * on(instance, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename))
 message: VM High Overall Network Errors Count {{ $value }}%
 name: VMNetworkOverallErrorsHigh
 thresholds:
@@ -7031,9 +7031,9 @@ thresholds:
 - title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: sum(sum(rate(node_network_transmit_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
-  [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)
-  + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
-  * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename))
+  [5m]) * on(instance, cluster) group_left(nodename) (node_uname_info) ) by (job,
+  nodename) + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+  * on(instance, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename))
 gridPos:
   w: 3
   x: 18
@@ -7053,7 +7053,8 @@ unit: pps
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"%s", mode="idle"}[5m])
-  * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))
+  * on(instance, cluster) group_left(nodename) (node_uname_info)) by (job, nodename)
+  )) * 100))
 message: VM High CPU Overall Utilization {{ $value }}%
 name: VMCPUOverallHigh
 thresholds:
@@ -7069,7 +7070,8 @@ thresholds:
 - title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"$job", mode="idle"}[5m])
-  * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))
+  * on(instance, cluster) group_left(nodename) (node_uname_info)) by (job, nodename)
+  )) * 100))
 gridPos:
   w: 3
   x: 0
@@ -7131,10 +7133,10 @@ title: Overall Utilization
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
-expr: avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{job=~"%s"}
-  * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename)
-  (node_memory_MemTotal_bytes{job=~"%s"} * on(instance) group_left(nodename) (node_uname_info)))
-  * 100))
+expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"%s"}
+  * on(instance, cluster) group_left(nodename) (node_uname_info)) / sum by (job, nodename,
+  cluster) (node_memory_MemTotal_bytes{job=~"%s"} * on(instance, cluster) group_left(nodename)
+  (node_uname_info))) * 100))
 message: VM High RAM Overall Utilization {{ $value }}%
 name: VMRAMOverallHigh
 thresholds:
@@ -7151,10 +7153,10 @@ thresholds:
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to
 description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
   \ (<memory available>/<memory total>)\n```"
-expr: avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{job=~"$job"}
-  * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename)
-  (node_memory_MemTotal_bytes{job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)))
-  * 100))
+expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"$job"}
+  * on(instance, cluster) group_left(nodename) (node_uname_info)) / sum by (job, nodename,
+  cluster) (node_memory_MemTotal_bytes{job=~"$job"} * on(instance, cluster) group_left(nodename)
+  (node_uname_info))) * 100))
 gridPos:
   w: 3
   x: 6
