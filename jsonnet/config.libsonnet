@@ -117,6 +117,7 @@
         websocket: 'websocket',
         jvm: 'jvm',
         prometheus: 'prometheus',
+        sslExporter: 'ssl-exporter',
         //Monitoring dashboard
         monitoring: 'monitoring',
       },
