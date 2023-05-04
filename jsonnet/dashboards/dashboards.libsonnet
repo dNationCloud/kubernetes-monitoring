@@ -65,7 +65,7 @@
 (import 'apps/loki-distributed.libsonnet') +
 (import 'apps/jvm.libsonnet') +
 (import 'apps/prometheus.libsonnet') +
-
+(import 'apps/ssl-exporter.libsonnet')+
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +
 (import 'vms/alert-overview.libsonnet') +
