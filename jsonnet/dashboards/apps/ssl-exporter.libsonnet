@@ -248,9 +248,9 @@ local statPanel = grafana.statPanel;
       )
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
-        $.grafanaTemplates.clusterTemplate('label_values( node_uname_info, cluster )'),
-        $.grafanaTemplates.jobTemplate('label_values( ssl_probe_success{ cluster=~"$cluster" }, job )'),
-        $.grafanaTemplates.instanceTemplate('label_values( { job=~"$job" }, instance )')
+        $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+        $.grafanaTemplates.jobTemplate('label_values(ssl_probe_success{cluster=~"$cluster"}, job)'),
+        $.grafanaTemplates.instanceTemplate('label_values({job=~"$job"}, instance)')
       ])
       .addPanels(panels),
   },
