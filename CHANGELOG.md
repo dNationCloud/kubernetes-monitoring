@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.3.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.3.1) (2023-05-09)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.3.0...v2.3.1)
+
+**Merged pull requests:**
+
+- Fix, ssl exporter dashboard [\#163](https://github.com/dNationCloud/kubernetes-monitoring/pull/163)
+
 ## [v2.3.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.3.0) (2023-05-04)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.2.2...v2.3.0)
@@ -424,6 +432,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
