@@ -150,11 +150,11 @@
     },
     RecordRules: [
       {
-        expr: 'node_uname_info{job=~"node-exporter"} and on(nodename) label_replace(kube_node_role{role=~"master"}, "nodename", "$1", "node", "(.+)")',
+        expr: 'node_uname_info{job=~"node-exporter"} and on(nodename) label_replace(kube_node_role{role=~"control-plane"}, "nodename", "$1", "node", "(.+)")',
         record: 'master_uname_info',
       },
       {
-        expr: 'node_uname_info{job=~"node-exporter"} unless on(nodename) label_replace(kube_node_role{role=~"master"}, "nodename", "$1", "node", "(.+)")',
+        expr: 'node_uname_info{job=~"node-exporter"} unless on(nodename) label_replace(kube_node_role{role=~"control-plane"}, "nodename", "$1", "node", "(.+)")',
         record: 'worker_uname_info',
       },
     ],
