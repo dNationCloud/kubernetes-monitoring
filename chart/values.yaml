@@ -98,7 +98,7 @@ clusterMonitoring:
     #      nginxIngress:  # Application Exporter template
     #        enabled: true
     #    serviceMonitor:
-    #      jobLabel: app # The label to use to retrieve the job name from.
+    #      jobLabel: app  # The label to use to retrieve the job name from
     #      namespaceSelector:  # Namespaces to transfer from the kubernetes service to the target
     #        ## Match any namespace
     #        # any: true
@@ -124,7 +124,7 @@ clusterMonitoring:
     #        interval: 30s  # Interval at which metrics should be scraped
     #        path: /metrics  # HTTP path to scrape for metrics
     #        relabelings:
-    #        - *containerLabel
+    #        - *containerLabel  # See helpers/values-multicluster.yaml
     #
     # Application Monitoring using the PodMonitor CRD.
     #
@@ -135,7 +135,7 @@ clusterMonitoring:
     #      nginxIngress:  # Application Exporter template
     #        enabled: true
     #    podMonitor:
-    #      jobLabel: app # The label to use to retrieve the job name from.
+    #      jobLabel: app  # The label to use to retrieve the job name from
     #      namespaceSelector:  # Namespaces to transfer from the kubernetes service to the target
     #        ## Match any namespace
     #        # any: true
