@@ -1444,10 +1444,10 @@ during helm installation.</p>
 </td></tr>
 <tr><td>L2</td><td><a href='#L2_144'>L2</a>
 </td></tr>
-<tr><td>RecordRules</td><td><div class='my-pre'><code>- expr: node_uname_info{job=~"node-exporter"} and on(nodename) label_replace(kube_node_role{role=~"master"},
+<tr><td>RecordRules</td><td><div class='my-pre'><code>- expr: node_uname_info{job=~"node-exporter"} and on(nodename) label_replace(kube_node_role{role=~"control-plane"},
     "nodename", "$1", "node", "(.+)")
   record: master_uname_info
-- expr: node_uname_info{job=~"node-exporter"} unless on(nodename) label_replace(kube_node_role{role=~"master"},
+- expr: node_uname_info{job=~"node-exporter"} unless on(nodename) label_replace(kube_node_role{role=~"control-plane"},
     "nodename", "$1", "node", "(.+)")
   record: worker_uname_info
 </code></div>
