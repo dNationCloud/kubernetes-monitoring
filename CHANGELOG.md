@@ -1,5 +1,14 @@
 # Changelog
 
+## [v2.4.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.4.0) (2023-05-24)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.3.1...v2.4.0)
+
+**Merged pull requests:**
+
+- Small comment in values.yaml [\#166](https://github.com/dNationCloud/kubernetes-monitoring/pull/166)
+- Add support for k8s version 1.24+ [\#165](https://github.com/dNationCloud/kubernetes-monitoring/pull/165)
+
 ## [v2.3.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.3.1) (2023-05-09)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.3.0...v2.3.1)
@@ -432,6 +441,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
