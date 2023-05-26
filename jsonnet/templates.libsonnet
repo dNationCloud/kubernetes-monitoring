@@ -1749,6 +1749,29 @@
             },
           },
         },
+        harbor: {
+          default: false,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.harbor],
+          panel: {
+            expr: '(sum(harbor_up{cluster=~"$cluster|", %(job)s}) / count(harbor_up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
+            mappings: [{ text: '-', type: 1, value: -1 }],
+            gridPos: {
+              w: 4,
+            },
+          },
+          alert: {
+            name: '%(prefix)sHarborComponentDown',
+            message: '%(prefix)s {{ $labels.job }}: Harbor component "{{ $labels.component }}" is down',
+            expr: 'harbor_up{cluster=~"$cluster|", %(job)s}' % { job: 'job=~".+"' },
+            linkGetParams: 'var-job={{ $labels.job }}',
+            thresholds: {
+              operator: '==',
+              critical: 0,
+              warning: 0,
+            },
+          },
+        },
       },
       k8sApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
       hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
