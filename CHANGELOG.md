@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.5.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.5.0) (2023-05-26)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.4.0...v2.5.0)
+
+**Merged pull requests:**
+
+- Add Harbor dashboard [\#167](https://github.com/dNationCloud/kubernetes-monitoring/pull/167)
+
 ## [v2.4.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.4.0) (2023-05-24)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.3.1...v2.4.0)
@@ -441,6 +449,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
