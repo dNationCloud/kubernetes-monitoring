@@ -118,6 +118,7 @@
         jvm: 'jvm',
         prometheus: 'prometheus',
         sslExporter: 'ssl-exporter',
+        harbor: 'harbor',
         //Monitoring dashboard
         monitoring: 'monitoring',
       },
