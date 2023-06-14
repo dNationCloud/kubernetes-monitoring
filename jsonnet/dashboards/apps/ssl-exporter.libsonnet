@@ -18,7 +18,7 @@ local prometheus = grafana.prometheus;
 local row = grafana.row;
 local table = grafana.tablePanel;
 local statPanel = grafana.statPanel;
-
+// local kubeconfigMasterFilter = '(ssl_probe_success{job="ssl-kubernetes-kubeconfig"}* on(pod) group_left(node) kube_pod_info) and on(node)(label_replace(master_uname_info,"node","$1","nodename", "(.+)"))';
 {
   grafanaDashboards+:: {
 
@@ -32,7 +32,7 @@ local statPanel = grafana.statPanel;
         .addTarget(
           prometheus.target(
             format='table',
-            expr='count(max(ssl_cert_not_after{instance=~"$instance", job=~"$job"}) by (issuer_cn, serial_no))',
+            expr='count(max(ssl_cert_not_after{job=~"$job"}) by (issuer_cn, serial_no))',
             instant=true,
           )
         );
@@ -60,11 +60,12 @@ local statPanel = grafana.statPanel;
         .addTarget(
           prometheus.target(
             expr='
-            (count(up{job=~"$job"}==0) OR on() vector(0))+(count(ssl_probe_success{job!~"ssl-kubernetes-secrets"}==0) OR on() vector(0))+
-            (count((ssl_cert_not_after-time())<0) OR on() vector(0))+
-            (count((ssl_file_not_after-time())<0) OR on() vector(0))+
-            (count((ssl_kubeconfig_cert_not_after-time())<0) OR on()vector(0))+
-            (count((ssl_kubernetes_cert_not_after-time())<0) OR on()vector(0))
+            (count(up{job=~"$job", cluster=~"$cluster"}==0) OR on() vector(0))+
+            (count(ssl_probe_success{cluster=~"$cluster"}==0) OR on() vector(0))+
+            (count((ssl_cert_not_after{cluster=~"$cluster"}-time())<0) OR on() vector(0))+
+            (count((ssl_file_not_after{cluster=~"$cluster"}-time())<0) OR on() vector(0))+
+            (count((ssl_kubeconfig_cert_not_after{cluster=~"$cluster"}-time())<0) OR on()vector(0))+
+            (count((ssl_kubernetes_cert_not_after{cluster=~"$cluster"}-time())<0) OR on()vector(0))
             ',
             format='table',
             instant=true,
@@ -80,12 +81,12 @@ local statPanel = grafana.statPanel;
           graphMode='none',
         ).addTarget(
           prometheus.target(
-            expr="
-            (count(0<(ssl_cert_not_after-time())<8*24*60*60) OR on() vector(0))+
-            (count(0<(ssl_file_not_after-time())<8*24*60*60) OR on() vector(0))+
-            (count(0<(ssl_kubeconfig_cert_not_after-time())<8*24*60*60) OR on() vector(0)) +
-            (count(0<(ssl_kubernetes_cert_not_after-time())<8*24*60*60) OR on() vector(0))
-            ",
+            expr='
+            (count(0<(ssl_cert_not_after{cluster=~"$cluster"}-time())<8*24*60*60) OR on() vector(0))+
+            (count(0<(ssl_file_not_after{cluster=~"$cluster"}-time())<8*24*60*60) OR on() vector(0))+
+            (count(0<(ssl_kubeconfig_cert_not_after{cluster=~"$cluster"}-time())<8*24*60*60) OR on() vector(0)) +
+            (count(0<(ssl_kubernetes_cert_not_after{cluster=~"$cluster"}-time())<8*24*60*60) OR on() vector(0))
+            ',
             format=table,
             instant=true,
           )
@@ -120,7 +121,7 @@ local statPanel = grafana.statPanel;
           ]
         ).addTarget(
           prometheus.target(
-            expr='ssl_probe_success{instance=~"$instance", job!~"ssl-kubernetes-secrets"}==0',
+            expr='ssl_probe_success{cluster=~"$cluster"}==0',
             format="table",
             intervalFactor=1,
             instant=true,
@@ -160,13 +161,13 @@ local statPanel = grafana.statPanel;
           prometheus.target(
             format='table',
             instant=true,
-            expr=ssl_metric+'{ instance=~"$instance", job=~"$job" } - time()'
+            expr=ssl_metric
             )
         );
 
       local externalCerts = ssl_exporter_table(
           title=sslExternalDesc,
-          ssl_metric='ssl_cert_not_after',
+          ssl_metric='ssl_cert_not_after{ job=~"$job", cluster=~"$cluster" } - time()',
           columns=
           [
             { alias: 'Instance', pattern: 'instance', type: 'string' },
@@ -178,7 +179,7 @@ local statPanel = grafana.statPanel;
 
       local k8sKubeconfig = ssl_exporter_table(
           title=sslKubeconfigDesc,
-          ssl_metric='ssl_kubeconfig_cert_not_after',
+          ssl_metric='ssl_kubeconfig_cert_not_after{ job=~"$job", cluster=~"$cluster" } - time()',
           columns=
           [
             { pattern: 'dnsnames', type: 'hidden' },
@@ -192,12 +193,13 @@ local statPanel = grafana.statPanel;
 
       local k8sFiles = ssl_exporter_table(
         title=sslK8sFileDesc,
-        ssl_metric='ssl_file_cert_not_after',
+        ssl_metric='ssl_file_cert_not_after{ job=~"$job", cluster=~"$cluster" }* on(pod) group_left(node) kube_pod_info - time()',
         columns=
         [
           { pattern: 'dnsnames', type: 'hidden' },
           { pattern: 'instance', type: 'hidden' },
           { alias: 'CN', pattern: 'cn', type: 'string' },
+          { alias: 'Node', pattern: 'node', type: 'string' },
           { alias: 'Issuer CN', pattern: 'issuer_cn', type: 'string' },
           { alias: 'Kubeconfig', pattern: 'kubeconfig', type: 'string' },
         ]
@@ -205,7 +207,7 @@ local statPanel = grafana.statPanel;
 
       local k8sSecrets = ssl_exporter_table(
         title=sslK8sSecretDesc,
-        ssl_metric='ssl_kubernetes_cert_not_after',
+        ssl_metric='ssl_kubernetes_cert_not_after{ job=~"$job", cluster=~"$cluster" } - time()',
         columns=
         [
           { alias: 'CN', pattern: 'cn', type: 'string' },
