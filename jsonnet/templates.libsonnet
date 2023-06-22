@@ -1772,6 +1772,28 @@
             },
           },
         },
+       sslExporter: {
+          local minusInfinity = -$.defaultConfig.grafanaDashboards.constants.infinity,
+          local invalid = minusInfinity - 1,
+          local thresholds = {
+            operator: '<',
+            warning: 8 * 24 * 60 * 60,
+            critical: 0,
+            lowest: minusInfinity,  // invalid range is always from minus infinity to 'lowest' thredhold
+          },
+          default: false,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.sslExporter],
+          panel: {
+            expr: 'bottomk(1,ssl_cert_not_after{cluster="$cluster"}-time() OR ssl_file_cert_not_after{cluster="$cluster"}-time() OR ssl_kubeconfig_cert_not_after{cluster="$cluster"}-time() OR ssl_kubernetes_cert_not_after{cluster="$cluster"}-time())',
+            thresholds: thresholds,  // invalid range is always from minus infinity to 'lowest' thredhold,
+            mappings: [{ text: '-', type: 1, value: invalid }],
+            unit: 's',
+            decimals: 0,
+            gridPos: {
+              w: 4,
+            },
+          },
+        },
       },
       k8sApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
       hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
