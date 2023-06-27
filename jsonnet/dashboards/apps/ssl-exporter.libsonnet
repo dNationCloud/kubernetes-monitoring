@@ -193,7 +193,7 @@ local statPanel = grafana.statPanel;
 
       local k8sFiles = ssl_exporter_table(
         title=sslK8sFileDesc,
-        ssl_metric='ssl_file_cert_not_after{ job=~"$job", cluster=~"$cluster" }* on(pod) group_left(node) kube_pod_info - time()',
+        ssl_metric='ssl_file_cert_not_after{ job=~"$job", cluster=~"$cluster" }* on(pod) group_left(node) kube_pod_info{ cluster=~"$cluster"} - time()',
         columns=
         [
           { pattern: 'dnsnames', type: 'hidden' },
