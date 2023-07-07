@@ -52,6 +52,32 @@ local getGridY(offset, index, panelWidth, panelHeight) =
   local rowIndex = std.floor(index / panelsInRow);
   (rowIndex * panelHeight) + offset;
 
+local sumAppWidth(apps) =
+  /**
+   * Summation of widths of the individual applications
+   *
+   * @param apps Array of applications you want to add.
+   * @return the sum of individual applications.
+  */
+  std.foldl(
+    function(x, y)
+    (
+    if (x + y) > std.floor((x + y)/rowWidth)*rowWidth && x < std.floor((x + y)/rowWidth)*rowWidth then
+      (x + y + (x + y - std.floor((x + y)/rowWidth)*rowWidth))
+    else
+      (x + y)
+    ),
+  [
+    temp.panel.gridPos.w
+    for app in apps
+    for temp in app.templates
+  ], 0);
+
+local sumTempWidth(templates) = 
+  std.foldl(function(x, y) (x + y), [
+    temp.panel.gridPos.w
+    for temp in templates
+  ], 0);  
 {
   grafanaDashboards+::
     local clusterDashboard(cluster, dashboardUid, dashboardName, clusterTemplates, clusterApps=[], clusterVMs=[]) = {
@@ -145,19 +171,32 @@ local getGridY(offset, index, panelWidth, panelHeight) =
         for tpl in clusterTemplates
         if (std.objectHas(tpl, 'panel') && tpl.panel != {})
       ],
-      local k8sAppStatsPanels(index, app) = [
+      local k8sAppStatsPanels(app, prevAppLenght) = [
         local tpl = template.item;
         local tplIndex = template.index;
+        local prevTempWidth =
+          if tplIndex > 0 then
+            sumTempWidth(std.slice(app.templates,0,tplIndex,1))
+          else
+            0;
+        local widthRowLeft = 
+          // in jsonnet when dividend or divisor is negative then it returns negative reminder
+          if (prevTempWidth + prevAppLenght) > 24 then
+            ((rowWidth - (prevTempWidth + prevAppLenght)) % rowWidth) + rowWidth
+          else
+            (rowWidth - (prevTempWidth + prevAppLenght)) % rowWidth;
         local appGridX =
           if std.type(tpl.panel.gridPos.x) == 'number' then
             tpl.panel.gridPos.x
+          else if widthRowLeft >= tpl.panel.gridPos.w || widthRowLeft == 0 then
+            (prevTempWidth + prevAppLenght) % rowWidth
           else
-            (index + tplIndex) * tpl.panel.gridPos.w;
+            (prevTempWidth + prevAppLenght) % widthRowLeft;
         local appGridY =
           if std.type(tpl.panel.gridPos.y) == 'number' then
             tpl.panel.gridPos.y
           else
-            29;  // `29` -> init Y position in application row;
+            29 + tpl.panel.gridPos.h * std.floor(prevAppLenght/rowWidth);  // `29` -> init Y position in application row;
         statPanel.new(
           title='%s %s' % [tpl.templateName, app.name],
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
@@ -201,7 +240,10 @@ local getGridY(offset, index, panelWidth, panelHeight) =
             row.new('Applications') { gridPos: { x: 0, y: 28, w: 24, h: 1 } },
           ] +
           std.flattenArrays([
-            k8sAppStatsPanels(app.index, app.item)
+            if app.index > 0 then
+              k8sAppStatsPanels(app.item, sumAppWidth(std.slice(apps,0,app.index,1)))
+            else
+              k8sAppStatsPanels(app.item, 0)
             for app in $.zipWithIndex(apps)
           ])
         else
