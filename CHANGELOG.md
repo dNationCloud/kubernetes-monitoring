@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.5.3](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.5.3) (2023-07-18)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.5.2...v2.5.3)
+
+**Merged pull requests:**
+
+- Fix x and y coordinates of app box overview [\#170](https://github.com/dNationCloud/kubernetes-monitoring/pull/170)
+
 ## [v2.5.2](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.5.2) (2023-06-27)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.5.1...v2.5.2)
@@ -469,6 +477,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
