@@ -99,21 +99,22 @@ local template = grafana.template;
         label='Severity',
       ),
 
-    clusterTemplate(query, hide='')::
+    clusterTemplate(query, hide='', multi=false, includeAll=false, current=null)::
 
       // cluster variable will be hide if there is only 1 cluster and hide parameter is not set
-      local hideVariable =
-        if hide == '' then
-          if $.isMultiClusterMonitoring() then '' else 'variable'
-        else hide;
+      // local hideVariable =
+      //   if hide == '' then
+      //     if $.isMultiClusterMonitoring() then '' else 'variable'
+      //   else hide;
 
       baseTemplate(
         name='cluster',
         label='Cluster',
         query=query,
-        includeAll=false,
-        multi=false,
-        hide=hideVariable,
+        includeAll=includeAll,
+        multi=multi,
+        hide=hide,
+        current=current,
       ),
 
     instanceTemplate(query, label='Instance', regex='')::
