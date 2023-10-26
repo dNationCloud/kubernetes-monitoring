@@ -155,11 +155,12 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             local isVM = (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0);
 
             statPanel.new(
-              title='Cluster %s' % cluster.name,
+              title='Cluster %s' % "$cluster",
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
               unit=tpl.panel.unit,
+              repeat='cluster',
               decimals=tpl.panel.decimals,
             )
             .addTarget(
@@ -168,7 +169,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 instant: true,
                 expr: tpl.panel.expr %
                       {
-                        cluster: clusterLabel,
+                        cluster: '$cluster',
                         groupCluster: $._config.prometheusRules.alertGroupCluster +
                                       (if isVM then '|' + $._config.prometheusRules.alertGroupClusterVM else ''),
                         groupApp: $._config.prometheusRules.alertGroupClusterApp +
@@ -224,6 +225,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
           .addTemplates([
             $.grafanaTemplates.datasourceTemplate(),
             $.grafanaTemplates.alertManagerTemplate(),
+            $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)', multi=true, includeAll=true, current='All'),
           ])
           .addPanels(
             (
