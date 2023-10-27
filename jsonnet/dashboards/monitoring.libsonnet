@@ -150,7 +150,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if std.type(tpl.panel.gridPos.y) == 'number' then
                 tpl.panel.gridPos.y
               else
-                getGridY(1, index, panelWidth, panelHeight);
+                getGridY(4, index, panelWidth, panelHeight);
 
             local isVM = (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0);
 
@@ -200,6 +200,48 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             if (std.objectHas(tpl, 'panel') && tpl.panel != {})
           ];
 
+          local statusPanels(title, expr) =
+            statPanel.new(
+              title=title,
+              datasource='$datasource',
+              graphMode='none',
+              colorMode='background',
+            )
+          .addTarget({ type: 'single', expr: expr });
+
+          local statusNormalPanel =
+            statusPanels(
+              title='Number of k8s clusters in normal state',
+              expr='count(count by (cluster)(ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate!="firing", severity="warning", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)'
+            )
+            .addThresholds(
+              [
+                { color: $._config.grafanaDashboards.color.green, value: null },
+              ]
+            );            
+
+          local statusWarningPanel =
+            statusPanels(
+              title='Number of k8s clusters in warning state',
+              expr='count(count by (cluster)(ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity="warning", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)'
+            )
+            .addThresholds(
+              [
+                { color: $._config.grafanaDashboards.color.orange, value: null },
+              ]
+            );
+
+          local statusCriticalPanel =
+            statusPanels(
+              title='Number of k8s clusters in critical state',
+              expr='count(count by (cluster) (ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing", severity="critical", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)'
+            )
+          .addThresholds(
+            [
+              { color: $._config.grafanaDashboards.color.red, value: null },
+            ]
+          );
+
           local hostPanels =
             std.flattenArrays([
               hostPanel(host.index, host.item)
@@ -230,7 +272,13 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
           .addPanels(
             (
               if $.isClusterMonitoring() then
-                [row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
+                [
+                  row.new('Status of k8s clusters') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+                  statusNormalPanel { gridPos: { x: 0, y: 1, w: 8, h: 3 } },
+                  statusWarningPanel { gridPos: { x: 8, y: 1, w: 8, h: 3 } },
+                  statusCriticalPanel { gridPos: { x: 16, y: 1, w: 8, h: 3 } },
+                  row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+                ] + clusterPanels
               else []
             ) +
             (
