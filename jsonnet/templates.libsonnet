@@ -176,7 +176,7 @@
           },
         },
         nodeHealth: {
-          local expr = 'round(sum(kube_node_info{cluster=~"$cluster|"}) / (sum(kube_node_info{cluster=~"$cluster|"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster|"}) + sum(kube_node_status_condition{cluster=~"$cluster|", condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  + sum(kube_node_status_condition{cluster=~"$cluster|", condition="Ready", status=~"false|unknown"}) ) * 100)',
+          local expr = 'round(sum(kube_node_info{cluster=~"$cluster|.*"}) / (sum(kube_node_info{cluster=~"$cluster|.*"}) + sum(kube_node_spec_unschedulable{cluster=~"$cluster|.*"}) + sum(kube_node_status_condition{cluster=~"$cluster|.*", condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  + sum(kube_node_status_condition{cluster=~"$cluster|.*", condition="Ready", status=~"false|unknown"}) ) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s,
           linkTo: ['nodeOverviewTable'],
           panel: {
@@ -198,7 +198,7 @@
           },
         },
         runningPods: {
-          local expr = 'round(sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster|", phase="Unknown"})) * 100)',
+          local expr = 'round(sum(kube_pod_status_phase{cluster=~"$cluster|.*", phase="Running"}) / (sum(kube_pod_status_phase{cluster=~"$cluster|.*", phase="Running"}) + sum(kube_pod_status_phase{cluster=~"$cluster|.*", phase="Pending"}) + sum(kube_pod_status_phase{cluster=~"$cluster|.*", phase="Failed"}) + sum(kube_pod_status_phase{cluster=~"$cluster|.*", phase="Unknown"})) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s,
           linkTo: ['podOverviewTable'],
           panel: {
@@ -220,7 +220,7 @@
           },
         },
         runningStatefulSets: {
-          local expr = 'round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster|"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster|"}) * 100)',
+          local expr = 'round(sum(kube_statefulset_status_replicas_ready{cluster=~"$cluster|.*"}) / sum(kube_statefulset_status_replicas{cluster=~"$cluster|.*"}) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s,
           linkTo: ['statefulSetOverviewTable'],
           panel: {
@@ -242,7 +242,7 @@
           },
         },
         daemonSetsHealth: {
-          local expr = 'round((sum(kube_daemonset_status_updated_number_scheduled{cluster=~"$cluster|"} OR kube_daemonset_updated_number_scheduled{cluster=~"$cluster|"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster|"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|"})) * 100)',
+          local expr = 'round((sum(kube_daemonset_status_updated_number_scheduled{cluster=~"$cluster|.*"} OR kube_daemonset_updated_number_scheduled{cluster=~"$cluster|.*"}) + sum(kube_daemonset_status_number_available{cluster=~"$cluster|.*"})) / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster|.*"})) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s,
           linkTo: ['daemonSetOverviewTable'],
           panel: {
@@ -264,7 +264,7 @@
           },
         },
         pvcBound: {
-          local expr = 'round(sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Pending"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|", phase="Lost"})\n) * 100)',
+          local expr = 'round(sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|.*", phase="Bound"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|.*", phase="Bound"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|.*", phase="Pending"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=~"$cluster|.*", phase="Lost"})\n) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s {
             lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
           },
@@ -290,7 +290,7 @@
           },
         },
         deploymentsHealth: {
-          local expr = 'round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster|"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster|"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster|"})) * 100)',
+          local expr = 'round((sum(kube_deployment_status_replicas_updated{cluster=~"$cluster|.*"}) + sum(kube_deployment_status_replicas_available{cluster=~"$cluster|.*"})) / (2 * sum(kube_deployment_status_replicas{cluster=~"$cluster|.*"})) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s,
           linkTo: ['deploymentOverviewTable'],
           panel: {
@@ -312,7 +312,7 @@
           },
         },
         runningContainers: {
-          local expr = 'round(sum(kube_pod_container_status_running{cluster=~"$cluster|"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|"}) + (sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|", reason!="Completed"}) OR vector(0)) + sum(kube_pod_container_status_waiting{cluster=~"$cluster|"})) * 100)',
+          local expr = 'round(sum(kube_pod_container_status_running{cluster=~"$cluster|.*"}) / (sum(kube_pod_container_status_running{cluster=~"$cluster|.*"}) + (sum(kube_pod_container_status_terminated_reason{cluster=~"$cluster|.*", reason!="Completed"}) OR vector(0)) + sum(kube_pod_container_status_waiting{cluster=~"$cluster|.*"})) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s,
           linkTo: ['containerOverviewTable'],
           panel: {
@@ -334,7 +334,7 @@
           },
         },
         succeededJobs: {
-          local expr = 'round(sum(kube_job_status_succeeded{cluster=~"$cluster|"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster|"}) + sum(kube_job_status_failed{cluster=~"$cluster|"})) * 100)',
+          local expr = 'round(sum(kube_job_status_succeeded{cluster=~"$cluster|.*"}) / (sum(kube_job_status_succeeded{cluster=~"$cluster|.*"}) + sum(kube_job_status_failed{cluster=~"$cluster|.*"})) * 100)',
           local thresholds = defaultTemplate.commonThresholds.k8s {
             lowest: 0,  // invalid range is always from minus infinity to 'lowest' thredhold
           },
@@ -359,7 +359,7 @@
           },
         },
         mostUtilizedPVC: {
-          local expr = 'sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|"}) * 100) by (persistentvolumeclaim)',
+          local expr = 'sum(((kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|.*"} - kubelet_volume_stats_available_bytes{cluster=~"$cluster|.*"}) / kubelet_volume_stats_capacity_bytes{cluster=~"$cluster|.*"}) * 100) by (persistentvolumeclaim)',
           local thresholds = {
             operator: '>=',
             warning: 85,
@@ -389,7 +389,7 @@
           },
         },
         apiServerHealth: {
-          local expr = '(sum(up{cluster=~"$cluster|", %(apiServer)s}) / count(up{cluster=~"$cluster|", %(apiServer)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
+          local expr = '(sum(up{cluster=~"$cluster|.*", %(apiServer)s}) / count(up{cluster=~"$cluster|.*", %(apiServer)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
           local thresholds = defaultTemplate.commonThresholds.controlPlane,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.apiServer],
           panel: {
@@ -413,7 +413,7 @@
           },
         },
         controllerManagerHealth: {
-          local expr = '(sum(up{cluster=~"$cluster|", %(controllerManager)s}) / count(up{cluster=~"$cluster|", %(controllerManager)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
+          local expr = '(sum(up{cluster=~"$cluster|.*", %(controllerManager)s}) / count(up{cluster=~"$cluster|.*", %(controllerManager)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
           local thresholds = defaultTemplate.commonThresholds.controlPlane,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.controllerManager],
           panel: {
@@ -437,7 +437,7 @@
           },
         },
         etcdHealth: {
-          local expr = '(sum(up{cluster=~"$cluster|", %(etcd)s}) / count(up{cluster=~"$cluster|", %(etcd)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
+          local expr = '(sum(up{cluster=~"$cluster|.*", %(etcd)s}) / count(up{cluster=~"$cluster|.*", %(etcd)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
           local thresholds = defaultTemplate.commonThresholds.controlPlane,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.etcd],
           panel: {
@@ -461,7 +461,7 @@
           },
         },
         kubeletHealth: {
-          local expr = '(sum(up{cluster=~"$cluster|", %(kubelet)s, metrics_path="/metrics"}) / count(up{cluster=~"$cluster|", %(kubelet)s, metrics_path="/metrics"})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
+          local expr = '(sum(up{cluster=~"$cluster|.*", %(kubelet)s, metrics_path="/metrics"}) / count(up{cluster=~"$cluster|.*", %(kubelet)s, metrics_path="/metrics"})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
           local thresholds = defaultTemplate.commonThresholds.controlPlane,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.kubelet],
           panel: {
@@ -485,7 +485,7 @@
           },
         },
         proxyHealth: {
-          local expr = '(sum(up{cluster=~"$cluster|", %(proxy)s}) / count(up{cluster=~"$cluster|", %(proxy)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
+          local expr = '(sum(up{cluster=~"$cluster|.*", %(proxy)s}) / count(up{cluster=~"$cluster|.*", %(proxy)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
           local thresholds = defaultTemplate.commonThresholds.controlPlane,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.proxy],
           panel: {
@@ -509,7 +509,7 @@
           },
         },
         schedulerHealth: {
-          local expr = '(sum(up{cluster=~"$cluster|", %(scheduler)s}) / count(up{cluster=~"$cluster|", %(scheduler)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
+          local expr = '(sum(up{cluster=~"$cluster|.*", %(scheduler)s}) / count(up{cluster=~"$cluster|.*", %(scheduler)s})) * 100' % $.defaultConfig.grafanaDashboards.selectors,
           local thresholds = defaultTemplate.commonThresholds.controlPlane,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.scheduler],
           panel: {
@@ -534,7 +534,7 @@
         },
         /* Master Nodes Metrics */
         mostUtilizedMasterNodeCPU: {
-          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename) )) * 100)',
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|.*", %(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -561,7 +561,7 @@
           },
         },
         mostUtilizedMasterNodeRAM: {
-          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info))) * 100)',
+          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -589,7 +589,7 @@
           },
         },
         mostUtilizedMasterNodeDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) * 100)',
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -614,7 +614,7 @@
           },
         },
         mostUtilizedMasterNodeNetworkErrors: {
-          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename)',
+          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|.*", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|.*", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename)',
           local thresholds = {
             operator: '>=',
             warning: 10,
@@ -646,7 +646,7 @@
           },
         },
         overallUtilizationMasterNodesCPU: {
-          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename) )) * 100)',
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|.*", %(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['cpuPerNodePolystat'],
           panel: {
@@ -672,7 +672,7 @@
           },
         },
         overallUtilizationMasterNodesRAM: {
-          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info))) * 100)',
+          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['memoryPerNodePolystat'],
           panel: {
@@ -699,7 +699,7 @@
           },
         },
         overallUtilizationMasterNodesDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) * 100 > 0)',
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)) * 100 > 0)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['diskPerNodePolystat'],
           panel: {
@@ -723,7 +723,7 @@
           },
         },
         overallMasterNodesNetworkErrors: {
-          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename)',
+          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|.*", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|.*", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename)',
           local thresholds = {
             operator: '>=',
             warning: 10,
@@ -851,7 +851,7 @@
         },
         /* Worker Nodes Metrics */
         mostUtilizedWorkerNodeCPU: {
-          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename) )) * 100)',
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|.*", %(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -878,7 +878,7 @@
           },
         },
         mostUtilizedWorkerNodeRAM: {
-          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info))) * 100)',
+          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -906,7 +906,7 @@
           },
         },
         mostUtilizedWorkerNodeDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) * 100)',
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -931,7 +931,7 @@
           },
         },
         mostUtilizedWorkerNodeNetworkErrors: {
-          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename)',
+          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|.*", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|.*", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename)',
           local thresholds = {
             operator: '>=',
             warning: 10,
@@ -963,7 +963,7 @@
           },
         },
         overallUtilizationWorkerNodesCPU: {
-          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|", %(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename) )) * 100)',
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster|.*", %(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['cpuPerNodePolystat'],
           panel: {
@@ -989,7 +989,7 @@
           },
         },
         overallUtilizationWorkerNodesRAM: {
-          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info))) * 100)',
+          local expr = 'round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['memoryPerNodePolystat'],
           panel: {
@@ -1016,7 +1016,7 @@
           },
         },
         overallUtilizationWorkerNodesDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) * 100 > 0)',
+          local expr = 'round((sum(node_filesystem_size_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{cluster=~"$cluster|.*", %(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)) * 100 > 0)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: ['diskPerNodePolystat'],
           panel: {
@@ -1040,7 +1040,7 @@
           },
         },
         overallWorkerNodesNetworkErrors: {
-          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename)',
+          local expr = 'sum(rate(node_network_transmit_errs_total{cluster=~"$cluster|.*", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster=~"$cluster|.*", %(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename)',
           local thresholds = {
             operator: '>=',
             warning: 10,
@@ -1409,7 +1409,7 @@
       },
       appTemplates:: {
         pythonFlask: {
-          local expr = '(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s,status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
+          local expr = '(sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|.*", %(job)s,status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|.*", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster=~"$cluster|.*", %(job)s}[5m])) + 100)',
           local thresholds = {
             operator: '<',
             critical: 85,
@@ -1435,7 +1435,7 @@
           },
         },
         javaActuator: {
-          local expr = '(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|", %(job)s, area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|", %(job)s, area="heap"}))',
+          local expr = '(sum by (job) (jvm_memory_used_bytes{cluster=~"$cluster|.*", %(job)s, area="heap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|.*", %(job)s, area="nonheap"}) > sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|.*", %(job)s, area="nonheap"})*100/sum  by (job) (jvm_memory_max_bytes{cluster=~"$cluster|.*", %(job)s, area="heap"}) or (sum  by (job) (jvm_memory_used_bytes{cluster=~"$cluster|.*", %(job)s, area="nonheap"})*100)/sum by (job) (jvm_memory_max_bytes{cluster=~"$cluster|.*", %(job)s, area="heap"}))',
           local thresholds = {
             operator: '>=',
             critical: 90,
@@ -1461,7 +1461,7 @@
           },
         },
         nginxIngress: {
-          local expr = '((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s, status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100))',
+          local expr = '((sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|.*", %(job)s, status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|.*", %(job)s}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster=~"$cluster|.*", %(job)s}[5m])) + 100))',
           local thresholds = {
             operator: '<',
             critical: 85,
@@ -1487,7 +1487,7 @@
           },
         },
         nginxIngressCertificateExpiry: {
-          local expr = 'bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster|", %(job)s} - time())',
+          local expr = 'bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster|.*", %(job)s} - time())',
           local minusInfinity = -$.defaultConfig.grafanaDashboards.constants.infinity,
           local invalid = minusInfinity - 1,
           local thresholds = {
@@ -1521,7 +1521,7 @@
           },
         },
         nginxVts: {
-          local expr = '(sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
+          local expr = '(sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|.*", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|.*", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster=~"$cluster|.*", %(job)s}[5m])) + 100)',
           local thresholds = {
             operator: '<',
             critical: 85,
@@ -1548,7 +1548,7 @@
         },
         nginxVtsEnhanced: self.nginxVts { linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxVtsEnhanced] },
         nginxVtsLegacy: {
-          local expr = '(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|", %(job)s}[5m])) + 100)',
+          local expr = '(sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|.*", %(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|.*", %(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster=~"$cluster|.*", %(job)s}[5m])) + 100)',
           local thresholds = {
             operator: '<',
             critical: 85,
@@ -1575,7 +1575,7 @@
         },
         nginxVtsEnhancedLegacy: self.nginxVtsLegacy { linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxVtsEnhancedLegacy] },
         autoscaler: {
-          local expr = '(sum by (job) (autoscaler_healthy{cluster=~"$cluster|", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|", %(job)s}) * 100)',
+          local expr = '(sum by (job) (autoscaler_healthy{cluster=~"$cluster|.*", %(job)s}) / sum by (job) (autoscaler_instances{cluster=~"$cluster|.*", %(job)s}) * 100)',
           local thresholds = {
             operator: '<',
             critical: 85,
@@ -1601,7 +1601,7 @@
           },
         },
         postfix: {
-          local expr = '(sum by (job) (postfix_size{cluster=~"$cluster|", %(job)s}))',
+          local expr = '(sum by (job) (postfix_size{cluster=~"$cluster|.*", %(job)s}))',
           local thresholds = {
             operator: '>=',
             warning: 5,
@@ -1631,7 +1631,7 @@
         apache: {
           default: false,
           panel: {
-            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|.*", %(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1642,7 +1642,7 @@
         cAdvisor: {
           default: false,
           panel: {
-            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|.*", %(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1653,7 +1653,7 @@
         lokiDistributed: {
           default: false,
           panel: {
-            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|.*", %(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1664,7 +1664,7 @@
         websocket: {
           default: false,
           panel: {
-            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|.*", %(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1675,7 +1675,7 @@
         jvm: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1686,7 +1686,7 @@
         prometheus: {
           default: false,
           panel: {
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1697,7 +1697,7 @@
         phpFpm: {
           default: false,
           panel: {
-            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|.*", %(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1708,7 +1708,7 @@
         rabbitmq: {
           default: false,
           panel: {
-            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|.*", %(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1719,7 +1719,7 @@
         nginxNrpe: {
           default: false,
           panel: {
-            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|.*", %(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1731,7 +1731,7 @@
           default: false,
           panel: {
             description: 'GenericApp template. Used when application monitoring is requested but appropriate template was not found.',
-            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100',
+            expr: '(sum(up{%(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100',
             thresholds: defaultTemplate.commonThresholds.app,
             gridPos: {
               w: 4,
@@ -1741,7 +1741,7 @@
         mysqlExporter: {
           default: false,
           panel: {
-            expr: '(sum(up{cluster=~"$cluster|", %(job)s}) / count(up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(up{cluster=~"$cluster|.*", %(job)s}) / count(up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1753,7 +1753,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.harbor],
           panel: {
-            expr: '(sum(harbor_up{cluster=~"$cluster|", %(job)s}) / count(harbor_up{cluster=~"$cluster|", %(job)s}))*100 OR on() vector(-1)',
+            expr: '(sum(harbor_up{cluster=~"$cluster|.*", %(job)s}) / count(harbor_up{cluster=~"$cluster|.*", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ text: '-', type: 1, value: -1 }],
             gridPos: {
@@ -1763,7 +1763,7 @@
           alert: {
             name: '%(prefix)sHarborComponentDown',
             message: '%(prefix)s {{ $labels.job }}: Harbor component "{{ $labels.component }}" is down',
-            expr: 'harbor_up{cluster=~"$cluster|", %(job)s}' % { job: 'job=~".+"' },
+            expr: 'harbor_up{cluster=~"$cluster|.*", %(job)s}' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: {
               operator: '==',
