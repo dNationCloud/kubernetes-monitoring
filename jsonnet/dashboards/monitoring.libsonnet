@@ -204,13 +204,14 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               datasource='$datasource',
               graphMode='none',
               colorMode='background',
+              reducerFunction='last',
             )
           .addTarget({ type: 'single', expr: expr });
 
           local statusNormalPanel =
             statusPanels(
               title='Number of k8s clusters in normal state',
-              expr='count(count by (cluster)(ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate!="firing", severity="warning", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)'
+              expr='count(count by (cluster) (up{job=~"node-exporter", cluster=~"$cluster"})) - (count(count by (cluster)(ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity=~"warning|critical", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0))'
             )
             .addThresholds(
               [
