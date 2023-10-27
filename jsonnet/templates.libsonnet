@@ -167,7 +167,7 @@
             name: 'ClusterTargetDown',
             message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
             customLables: k8sCustomLables,
-            expr: '100 * (count by(job, namespace, service) (up{pod!~"virt-launcher.*|"} == 0) / count by(job, namespace, service) (up{pod!~"virt-launcher.*|"}))',
+            expr: '100 * (count by(job, namespace, service, cluster) (up{pod!~"virt-launcher.*|"} == 0) / count by(job, namespace, service, cluster) (up{pod!~"virt-launcher.*|"}))',
             thresholds: {
               operator: '>=',
               warning: 10,
