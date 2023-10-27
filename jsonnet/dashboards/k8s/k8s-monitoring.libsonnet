@@ -125,7 +125,7 @@ local sumTempWidth(templates) =
       local criticalPanel =
         alertPanel(
           title='Critical',
-          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing|pending", severity="critical", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
+          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing", severity="critical", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
         )
         .addDataLinks(
           $.updateDataLinksCommonArgs(
@@ -137,7 +137,7 @@ local sumTempWidth(templates) =
       local warningPanel =
         alertPanel(
           title='Warning',
-          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing|pending", severity="warning", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
+          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing", severity="warning", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
         )
         .addDataLinks(
           $.updateDataLinksCommonArgs(
