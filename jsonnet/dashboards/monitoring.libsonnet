@@ -266,7 +266,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
           .addTemplates([
             $.grafanaTemplates.datasourceTemplate(),
             $.grafanaTemplates.alertManagerTemplate(),
-            $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)', multi=true, includeAll=true, current='All'),
+            $.grafanaTemplates.clusterTemplate('label_values(kaas, cluster)', multi=true, includeAll=true, current='All'),
           ])
           .addPanels(
             (
