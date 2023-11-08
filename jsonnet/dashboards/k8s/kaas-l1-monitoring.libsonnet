@@ -61,34 +61,36 @@ local sumAppWidth(apps) =
   */
   std.foldl(
     function(x, y)
-      (
-        if (x + y) > std.floor((x + y) / rowWidth) * rowWidth && x < std.floor((x + y) / rowWidth) * rowWidth then
-          (x + y + (x + y - std.floor((x + y) / rowWidth) * rowWidth))
-        else
-          (x + y)
-      ),
-    [
-      temp.panel.gridPos.w
-      for app in apps
-      for temp in app.templates
-    ],
-    0
-  );
+    (
+    if (x + y) > std.floor((x + y)/rowWidth)*rowWidth && x < std.floor((x + y)/rowWidth)*rowWidth then
+      (x + y + (x + y - std.floor((x + y)/rowWidth)*rowWidth))
+    else
+      (x + y)
+    ),
+  [
+    temp.panel.gridPos.w
+    for app in apps
+    for temp in app.templates
+  ], 0);
 
-local sumTempWidth(templates) =
+local sumTempWidth(templates) = 
   std.foldl(function(x, y) (x + y), [
     temp.panel.gridPos.w
     for temp in templates
-  ], 0);
+  ], 0);  
 {
   grafanaDashboards+::
     local clusterDashboard(cluster, dashboardUid, dashboardName, clusterTemplates, clusterApps=[], clusterVMs=[]) = {
+
+      local explorerLinkUrl =
+          '/explore?orgId=1&left=%5B%22now-7d%22,%22now%22,%22$datasource_logs%22,%7B%22expr%22:%22%7Bnamespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
+
       local explorerLink =
         link.dashboards(
           title='Logs',
           tags=[],
           icon='doc',
-          url='/explore?orgId=1&left=%5B%22now-1d%22,%22now%22,%22$datasource_logs%22,%7B%22expr%22:%22%7Bcluster%3D%5C%22$cluster%5C%22,%20namespace%3D%5C%22kube-system%5C%22,%20stream%3D%5C%22stderr%5C%22%7D%20%7C~%20%5C%22(%3Fi)error%5C%22%20!~%20%5C%22Final%20error%20received,%20removing%20PVC%20.%2B%20from%20claims%20in%20progress%5C%22%22%7D,%7B%22mode%22:%22Logs%22%7D,%7B%22ui%22:%5Btrue,true,true,%22numbers%22%5D%7D%5D',
+          url=explorerLinkUrl,
           type='link',
         ),
       local dNationLink =
@@ -119,7 +121,7 @@ local sumTempWidth(templates) =
       local criticalPanel =
         alertPanel(
           title='Critical',
-          expr='sum(ALERTS{cluster="$cluster", alertname!="Watchdog", alertstate=~"firing|pending", severity="critical", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
+          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing", severity="critical", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
         )
         .addDataLinks(
           $.updateDataLinksCommonArgs(
@@ -131,19 +133,19 @@ local sumTempWidth(templates) =
       local warningPanel =
         alertPanel(
           title='Warning',
-          expr='sum(ALERTS{cluster="$cluster", alertname!="Watchdog", alertstate=~"firing|pending", severity="warning", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
+          expr='sum(ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing", severity="warning", alertgroup=~"%s"}) OR on() vector(0)' % std.join('|', alertGroups + alertVMGroups)
         )
         .addDataLinks(
           $.updateDataLinksCommonArgs(
             [{ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] }]
-          )
+           )
         )
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
 
       local k8sStatsPanels = [
         statPanel.new(
           title=tpl.panel.title,
-          description='%s\n\nK8s monitoring template: _%s_' % [tpl.panel.description, tpl.templateName],
+          description='%s\n\nKaaS monitoring template: _%s_' % [tpl.panel.description, tpl.templateName],
           datasource=tpl.panel.datasource,
           colorMode=tpl.panel.colorMode,
           graphMode=tpl.panel.graphMode,
@@ -170,10 +172,10 @@ local sumTempWidth(templates) =
         local tplIndex = template.index;
         local prevTempWidth =
           if tplIndex > 0 then
-            sumTempWidth(std.slice(app.templates, 0, tplIndex, 1))
+            sumTempWidth(std.slice(app.templates,0,tplIndex,1))
           else
             0;
-        local widthRowLeft =
+        local widthRowLeft = 
           // in jsonnet when dividend or divisor is negative then it returns negative reminder
           if (prevTempWidth + prevAppLenght) > 24 then
             ((rowWidth - (prevTempWidth + prevAppLenght)) % rowWidth) + rowWidth
@@ -190,7 +192,7 @@ local sumTempWidth(templates) =
           if std.type(tpl.panel.gridPos.y) == 'number' then
             tpl.panel.gridPos.y
           else
-            29 + tpl.panel.gridPos.h * std.floor(prevAppLenght / rowWidth);  // `29` -> init Y position in application row;
+            29 + tpl.panel.gridPos.h * std.floor(prevAppLenght/rowWidth);  // `29` -> init Y position in application row;
         statPanel.new(
           title='%s %s' % [tpl.templateName, app.name],
           description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
@@ -235,7 +237,7 @@ local sumTempWidth(templates) =
           ] +
           std.flattenArrays([
             if app.index > 0 then
-              k8sAppStatsPanels(app.item, sumAppWidth(std.slice(apps, 0, app.index, 1)))
+              k8sAppStatsPanels(app.item, sumAppWidth(std.slice(apps,0,app.index,1)))
             else
               k8sAppStatsPanels(app.item, 0)
             for app in $.zipWithIndex(apps)
@@ -244,8 +246,6 @@ local sumTempWidth(templates) =
           [],
 
       local appPanels = applicationPanels(clusterApps),
-
-      local isMulti = std.length($._config.clusterMonitoring.clusters) > 1,
 
       local vmPanel(index, vm, offset) = [
         local panelHeight = tpl.panel.gridPos.h;
@@ -280,7 +280,7 @@ local sumTempWidth(templates) =
               tpl.panel.dataLinks % { job: vm.jobName }
             else
               local id = $._config.grafanaDashboards.ids.vmMonitoring;
-              local vmUid = if isMulti then $.getCustomUid([cluster.name, id, vm.name]) else $.getCustomUid([id, vm.name]);
+              local vmUid = $.getCustomUid([id, vm.name]);
               [{ title: 'VM Monitoring', url: '/d/%s?%s&var-job=%s' % [vmUid, $._config.grafanaDashboards.dataLinkCommonArgs, vm.jobName] }]
           )
         )
@@ -322,7 +322,7 @@ local sumTempWidth(templates) =
         [
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
-          $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)', hide='variable'),
+          $.grafanaTemplates.clusterTemplate('label_values(kaas, cluster)'),
           $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
           $.grafanaTemplates.masterInstanceTemplate(),
           $.grafanaTemplates.workerInstanceTemplate(),
@@ -336,7 +336,7 @@ local sumTempWidth(templates) =
           graphTooltip=$._config.grafanaDashboards.tooltip,
           refresh=$._config.grafanaDashboards.refresh,
           time_from=$._config.grafanaDashboards.time_from,
-          tags=$._config.grafanaDashboards.tags.k8sMonitoring,
+          tags=$._config.grafanaDashboards.tags.kaasMonitoring,
           uid=dashboardUid,
         )
         .addLinks(links)
@@ -361,23 +361,23 @@ local sumTempWidth(templates) =
           ] + k8sStatsPanels + appPanels + vmPanels(clusterVMs)
         ),
     };
-    if $.isClusterMonitoring() then
+    if $.isKaasMonitoring() then
       {
-        ['k8s-monitoring-%s' % cluster.name]:
+        ['kaas-monitoring-%s' % cluster.name]:
           clusterDashboard(
             cluster,
-            $.getCustomUid([$._config.grafanaDashboards.ids.k8sMonitoring, cluster.name]),
-            $.getCustomName(['Kubernetes Monitoring', cluster.name]),
+            $.getCustomUid([$._config.grafanaDashboards.ids.kaasL1Monitoring, cluster.name]),
+            $.getCustomName(['KaaS Monitoring', cluster.name]),
             $.getTemplates($._config.templates.L1.k8s, cluster),
             $.getApps($._config.templates.L1.k8sApps, cluster),
             if std.objectHas(cluster, 'vms') then cluster.vms else [],
           ).dashboard
-        for cluster in $._config.clusterMonitoring.clusters
+        for cluster in $._config.kaasMonitoring.clusters
         if (std.objectHas(cluster, 'apps') || !$.hasDefaultTemplates(cluster, $._config.templates.L1.k8s) || std.objectHas(cluster, 'vms'))
       } +
-      if $.isAnyDefault($._config.clusterMonitoring.clusters, $._config.templates.L1.k8s) then
+      if $.isAnyDefault($._config.kaasMonitoring.clusters, $._config.templates.L1.k8s) then
         {
-          'k8s-monitoring': clusterDashboard({}, $._config.grafanaDashboards.ids.k8sMonitoring, 'Kubernetes Monitoring', $.getTemplates($._config.templates.L1.k8s)).dashboard,
+          'kaas-l1-monitoring': clusterDashboard({}, $._config.grafanaDashboards.ids.kaasL1Monitoring, 'KaaS Monitoring', $.getTemplates($._config.templates.L1.k8s)).dashboard,
         }
       else
         {}

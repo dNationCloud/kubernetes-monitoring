@@ -106,7 +106,7 @@ local template = grafana.template;
         query=query,
         includeAll=includeAll,
         multi=multi,
-        hide=hide,
+        hide=hideVariable,
         current=current,
       ),
 

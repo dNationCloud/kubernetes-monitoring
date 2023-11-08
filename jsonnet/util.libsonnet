@@ -89,6 +89,9 @@
   isClusterMonitoring()::
     $._config.clusterMonitoring.enabled && std.length($._config.clusterMonitoring.clusters) > 0,
 
+  isKaasMonitoring()::
+    $._config.kaasMonitoring.enabled && std.length($._config.clusterMonitoring.clusters) > 0,
+
   isHostMonitoring()::
     $._config.hostMonitoring.enabled && std.length($._config.hostMonitoring.hosts) > 0,
 
@@ -96,6 +99,7 @@
     /**
      * Maps dashboards to their template group. User defined templates from values.yaml are included too.
      */
+    [$._config.grafanaDashboards.ids.kaasMonitoring]: $._config.templates.L0Kaas.k8s + $._config.templates.L0.host,
     [$._config.grafanaDashboards.ids.monitoring]: $._config.templates.L0.k8s + $._config.templates.L0.host,
     [$._config.grafanaDashboards.ids.k8sMonitoring]: $._config.templates.L1.k8s,
     [$._config.grafanaDashboards.ids.containerOverview]: $._config.templates.L2.containerOverview,
@@ -503,6 +507,33 @@
       else
         {}
     else
+      {} +
+
+    if utils.isKaasMonitoring() then
+      {
+        [std.join('-', [jsonName, cluster.name, tpl.templateName])]:
+          dashboardFunction(
+            utils.getCustomUid([dashboardUid, cluster.name, tpl.templateName]),
+            utils.getCustomName([dashboardName, cluster.name]),
+            tpl
+          ).dashboard
+        for cluster in $._config.kaasMonitoring.clusters
+        //tpl is placed inside array and used in for loop only so we can use it in the field name (std.join(...,tpl.templateName))
+        for tpl in [utils.getSpecificTemplate(utils.getTemplates(templateGroup, cluster), templateName)]
+        if utils.isCustomDashboard(cluster, dashboardUid)
+      } +
+      if utils.isAnyDefaultTemplate($._config.kaasMonitoring.clusters, templateName) then
+        {
+          [jsonName]:
+            dashboardFunction(
+              dashboardUid,
+              dashboardName,
+              utils.getSpecificTemplate(utils.getTemplates(templateGroup), templateName)
+            ).dashboard,
+        }
+      else
+        {}
+    else
       {},
 
   createOverviewDashboards(jsonName, dashboardFunction, dashboardUid, dashboardName, templateName, rowName=null, customizableGrafanaTemplateFunction=null, grafanaTemplates=[], instancePanels=[])::
@@ -545,6 +576,37 @@
         if utils.isCustomTemplate(cluster, tpl.templateName)
       } +
       if utils.isAnyDefaultTemplate($._config.clusterMonitoring.clusters, templateName) then
+        {
+          [jsonName]:
+            local tpl = utils.getSpecificTemplate(utils.getTemplates(templateGroup), templateName);
+            dashboardFunction(
+              dashboardUid=dashboardUid,
+              dashboardName=dashboardName,
+              mainTemplate=tpl,
+              grafanaTemplates=grafanaTemplates + getCustomizableGrafanaTemplate(tpl, customizableGrafanaTemplateFunction),
+              customParams={ rowName: rowName, instancePanels: instancePanels }
+            ).dashboard,
+        }
+      else
+        {}
+    else
+      {} +
+
+    if utils.isKaasMonitoring() then
+      {
+        [std.join('-', [jsonName, cluster.name, tpl.templateName])]:
+          dashboardFunction(
+            dashboardUid=utils.getCustomUid([dashboardUid, cluster.name, tpl.templateName]),
+            dashboardName=utils.getCustomName([dashboardName, cluster.name, tpl.templateName]),
+            mainTemplate=tpl,
+            grafanaTemplates=grafanaTemplates + getCustomizableGrafanaTemplate(tpl, customizableGrafanaTemplateFunction),
+            customParams={ rowName: rowName, instancePanels: instancePanels }  //params that are different for tableOverview and polystatOverview
+          ).dashboard
+        for cluster in $._config.kaasMonitoring.clusters
+        for tpl in utils.getSpecificTemplates(utils.getTemplates(templateGroup, cluster), templateName)
+        if utils.isCustomTemplate(cluster, tpl.templateName)
+      } +
+      if utils.isAnyDefaultTemplate($._config.kaasMonitoring.clusters, templateName) then
         {
           [jsonName]:
             local tpl = utils.getSpecificTemplate(utils.getTemplates(templateGroup), templateName);

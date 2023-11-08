@@ -57,7 +57,7 @@
         critical: 'red',
         invalid: 'black',  // invalid range is always from minus infinity to 'lowest' thredhold if it is defined
       },
-      dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
+      dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to' % [self.refresh],
       dataLinkCommonArgsNoCluster: 'refresh=%s&var-datasource=$datasource&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
       templateSort: 5,  // case insensitive ascent sort
@@ -84,6 +84,7 @@
         networkNamespaceOverview: 'networknamespaceoverview',
         cpuOverview: 'cpuoverview',
         cpuNamespaceOverview: 'cpunamespaceoverview',
+        kaasL1Monitoring: 'kaasl1monitoring',
         // Kube system dashboards
         controllerManager: 'controllermanager',
         scheduler: 'scheduler',
@@ -121,6 +122,7 @@
         harbor: 'harbor',
         //Monitoring dashboard
         monitoring: 'monitoring',
+        kaasMonitoring: 'kaas-monitoring',
       },
       selectors: {
         apiServer: 'job="apiserver"',
@@ -131,6 +133,7 @@
         proxy: 'job="kube-proxy"',
       },
       tags: {
+        kaasMonitoring: ['kaas', 'monitoring', 'L1'],
         k8sMonitoring: ['k8s', 'monitoring', 'L1'],
         k8sOverview: ['k8s', 'overview', 'L2'],
         k8sSystem: ['k8s', 'system', 'L2'],
@@ -143,6 +146,7 @@
         k8sVMs: ['k8s', 'vm', 'L2'],
         k8sHostsMain: ['k8s', 'host', 'L1'],
         k8sMonitoringMain: ['k8s', 'cluster', 'host', 'L0'],
+        kaasMonitoringMain: ['kaas', 'cluster', 'host', 'L0'],
       },
       constants: {
         infinity: 99999999999999999999999999999999,
@@ -161,6 +165,10 @@
       alertGroupHostApp: 'HostApp',
     },
 
+    kaasMonitoring: {
+      enabled: false,
+      clusters: [],
+    },
     clusterMonitoring: {
       enabled: true,
       clusters: [],

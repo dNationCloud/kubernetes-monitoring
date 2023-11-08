@@ -26,6 +26,7 @@
 (import 'k8s/cpu-namespace-overview.libsonnet') +
 (import 'k8s/k8s-overview-dashboards.libsonnet') +
 (import 'k8s/node-overview-dashboards.libsonnet') +
+(import 'k8s/kaas-l1-monitoring.libsonnet') +
 
 // Kube system dashboards
 (import 'k8s/controller-manager.libsonnet') +
@@ -73,4 +74,5 @@
 (import 'vms/alert-overview.libsonnet') +
 
 // Monitoring dashboards
+(import 'kaas-monitoring.libsonnet') +
 (import 'monitoring.libsonnet')

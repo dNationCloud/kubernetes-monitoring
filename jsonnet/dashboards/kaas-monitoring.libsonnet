@@ -65,14 +65,14 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
     local maxWarnings = $._config.grafanaDashboards.constants.maxWarnings;
 
     local numOfClusters =
-      if $.isClusterMonitoring() then std.length($._config.clusterMonitoring.clusters) else 0;
+      if $.isKaasMonitoring() then std.length($._config.kaasMonitoring.clusters) else 0;
 
     local getUid(defaultUid, obj, templateGroup) =
       if $.isAnyDefault([obj], templateGroup) then defaultUid else $.getCustomUid([defaultUid, obj.name]);
 
-    if $.isHostMonitoring() || $.isClusterMonitoring() then
+    if $.isHostMonitoring() || $.isKaasMonitoring() then
       {
-        monitoring:
+        kaasMonitoring:
           local dNationLink =
             link.dashboards(
               title='dNation - Making Cloud Easy',
@@ -98,7 +98,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if std.type(tpl.panel.gridPos.y) == 'number' then
                 tpl.panel.gridPos.y
               else
-                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h), index, panelWidth, panelHeight);
+                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.L0Kaas.k8s.main.panel.gridPos.w, $._config.templates.L0Kaas.k8s.main.panel.gridPos.h), index, panelWidth, panelHeight);
 
             statPanel.new(
               title='Host %s' % host.name,
@@ -136,9 +136,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             local panelHeight = tpl.panel.gridPos.h;
             local panelWidth = tpl.panel.gridPos.w;
 
-            local clusterLabel = cluster.label;
-
-            local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster', clusterLabel);
+            local dataLinkCommonArgs = $._config.grafanaDashboards.dataLinkCommonArgs;
 
             local gridX =
               if std.type(tpl.panel.gridPos.x) == 'number' then
@@ -150,16 +148,17 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if std.type(tpl.panel.gridPos.y) == 'number' then
                 tpl.panel.gridPos.y
               else
-                getGridY(1, index, panelWidth, panelHeight);
+                getGridY(4, index, panelWidth, panelHeight);
 
             local isVM = (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0);
 
             statPanel.new(
-              title='Cluster %s' % cluster.name,
+              title='Cluster %s' % "$cluster",
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
               unit=tpl.panel.unit,
+              repeat='cluster',
               decimals=tpl.panel.decimals,
             )
             .addTarget(
@@ -168,7 +167,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 instant: true,
                 expr: tpl.panel.expr %
                       {
-                        cluster: clusterLabel,
+                        cluster: '$cluster',
                         groupCluster: $._config.prometheusRules.alertGroupCluster +
                                       (if isVM then '|' + $._config.prometheusRules.alertGroupClusterVM else ''),
                         groupApp: $._config.prometheusRules.alertGroupClusterApp +
@@ -184,8 +183,8 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 if std.length(tpl.panel.dataLinks) > 0 then
                   tpl.panel.dataLinks
                 else
-                  [{ title: 'Observer Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
-               )
+                  [{ title: 'KaaS Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.kaasL1Monitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
+                )
             )
             {
               gridPos: {
@@ -195,9 +194,52 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 h: panelHeight,
               },
             }
-            for tpl in $.getTemplates($._config.templates.L0.k8s, cluster)
+            for tpl in $.getTemplates($._config.templates.L0Kaas.k8s, cluster)
             if (std.objectHas(tpl, 'panel') && tpl.panel != {})
           ];
+
+          local statusPanels(title, expr) =
+            statPanel.new(
+              title=title,
+              datasource='$datasource',
+              graphMode='none',
+              colorMode='background',
+              reducerFunction='last',
+            )
+          .addTarget({ type: 'single', expr: expr });
+
+          local statusNormalPanel =
+            statusPanels(
+              title='Number of k8s clusters in normal state',
+              expr='count(count by (cluster) (kaas{cluster=~"$cluster"})) - (count(count by (cluster)(ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity=~"warning|critical", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)) OR on() vector(0)'
+            )
+            .addThresholds(
+              [
+                { color: $._config.grafanaDashboards.color.green, value: null },
+              ]
+            );            
+
+          local statusWarningPanel =
+            statusPanels(
+              title='Number of k8s clusters in warning state',
+              expr='sum(group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~".*", alertstate="firing", severity="warning", alertgroup=~"Cluster|ClusterApp"}) - group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~".*", alertstate="firing", severity="critical", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)'
+            )
+            .addThresholds(
+              [
+                { color: $._config.grafanaDashboards.color.orange, value: null },
+              ]
+            );
+
+          local statusCriticalPanel =
+            statusPanels(
+              title='Number of k8s clusters in critical state',
+              expr='count(count by (cluster) (ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing", severity="critical", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)'
+            )
+          .addThresholds(
+            [
+              { color: $._config.grafanaDashboards.color.red, value: null },
+            ]
+          );
 
           local hostPanels =
             std.flattenArrays([
@@ -208,34 +250,41 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
           local clusterPanels =
             std.flattenArrays([
               clusterPanel(cluster.index, cluster.item)
-              for cluster in $.zipWithIndex($._config.clusterMonitoring.clusters)
+              for cluster in $.zipWithIndex($._config.kaasMonitoring.clusters)
             ]);
 
           dashboard.new(
-            'Observer monitoring',
+            'KaaS Monitoring',
             editable=$._config.grafanaDashboards.editable,
             graphTooltip=$._config.grafanaDashboards.tooltip,
             refresh=$._config.grafanaDashboards.refresh,
             time_from=$._config.grafanaDashboards.time_from,
-            tags=$._config.grafanaDashboards.tags.k8sMonitoringMain,
-            uid=$._config.grafanaDashboards.ids.monitoring,
+            tags=$._config.grafanaDashboards.tags.kaasMonitoringMain,
+            uid=$._config.grafanaDashboards.ids.kaasMonitoring,
           )
           .addLink(dNationLink)
           .addTemplates([
             $.grafanaTemplates.datasourceTemplate(),
             $.grafanaTemplates.alertManagerTemplate(),
+            $.grafanaTemplates.clusterTemplate('label_values(kaas, cluster)', multi=true, includeAll=true, current='All'),
           ])
           .addPanels(
             (
-              if $.isClusterMonitoring() then
-                [row.new('Observer Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
+              if $.isKaasMonitoring() then
+                [
+                  row.new('KaaS Status') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+                  statusNormalPanel { gridPos: { x: 0, y: 1, w: 8, h: 3 } },
+                  statusWarningPanel { gridPos: { x: 8, y: 1, w: 8, h: 3 } },
+                  statusCriticalPanel { gridPos: { x: 16, y: 1, w: 8, h: 3 } },
+                  row.new('KaaS Monitoring') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+                ] + clusterPanels
               else []
             ) +
             (
               if $.isHostMonitoring() then
                 [
                   row.new('Host Monitoring') {
-                    local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
+                    local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0Kaas.k8s.main.panel.gridPos.w, $._config.templates.L0Kaas.k8s.main.panel.gridPos.h) - 1,
                     gridPos: { x: 0, y: rowY, w: 24, h: 1 },
                   },
                 ] + hostPanels
