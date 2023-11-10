@@ -1764,8 +1764,10 @@
             name: '%(prefix)sHarborComponentDown',
             message: '%(prefix)s {{ $labels.job }}: Harbor component "{{ $labels.component }}" is down',
             expr: 'harbor_up{%(job)s}' % { job: 'job=~".+"' },
-            expr: 'harbor_up{cluster=~"$cluster|.*", %(job)s}' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
+            thresholds: {
+              operator: '==',
+              critical: 0,
               warning: 0,
             },
           },
