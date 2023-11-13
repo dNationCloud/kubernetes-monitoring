@@ -222,7 +222,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
           local statusWarningPanel =
             statusPanels(
               title='Number of k8s clusters in warning state',
-              expr='sum(group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~".*", alertstate="firing", severity="warning", alertgroup=~"Cluster|ClusterApp"}) - group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~".*", alertstate="firing", severity="critical", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)'
+              expr='group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity="warning", alertgroup=~"Cluster|ClusterApp"}) or on() vector(0) unless group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity="critical", alertgroup=~"Cluster|ClusterApp"}) or on() vector(0)'
             )
             .addThresholds(
               [
