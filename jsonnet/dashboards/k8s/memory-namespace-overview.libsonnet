@@ -81,7 +81,7 @@ local graphPanel = grafana.graphPanel;
         $.grafanaTemplates.instanceTemplate('label_values(kube_pod_info{cluster=~"$cluster"}, node)', label='Node'),
         $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance"}, namespace)'),
         $.grafanaTemplates.podTemplate('label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)', hide='variable'),
-        $.grafanaTemplates.workloadTypeTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)'),
+        $.grafanaTemplates.workloadTypeTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, workload_type)'),
         $.grafanaTemplates.workloadTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)'),
       ])
       .addPanels(
