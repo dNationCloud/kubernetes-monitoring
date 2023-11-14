@@ -159,6 +159,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               colorMode=tpl.panel.colorMode,
               unit=tpl.panel.unit,
               repeat='cluster',
+              maxPerRow=4,
               decimals=tpl.panel.decimals,
             )
             .addTarget(

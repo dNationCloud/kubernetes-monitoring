@@ -165,6 +165,10 @@
       alertGroupHostApp: 'HostApp',
     },
 
+    blackboxMonitoring: {
+      enabled: false,
+    },
+
     kaasMonitoring: {
       enabled: false,
       clusters: [],

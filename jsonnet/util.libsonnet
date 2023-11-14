@@ -86,6 +86,9 @@
   getCustomName(nameStrings)::
     std.join(' ', nameStrings),
 
+  isBlackBoxMonitoring()::
+    $._config.blackboxMonitoring.enabled,
+
   isClusterMonitoring()::
     $._config.clusterMonitoring.enabled && std.length($._config.clusterMonitoring.clusters) > 0,
 

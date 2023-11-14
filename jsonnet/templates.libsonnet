@@ -1799,6 +1799,33 @@
       hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
       vmApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterVMApp, self.appTemplates),
     },
+    blackbox: {
+      k8s: {
+        main: {
+          local expr = 'group by (instance) (probe_success{instance=~"%(http_endpoint)s", endpoint="http"})',
+          local thresholds = {
+            operator: '<',
+            lowest: 0,
+            critical: 1,
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+              { from: -1, text: '-', to: -1, type: 2, value: '' },
+              { from: 0, text: 'Critical', to: 0, type: 2, value: '' },
+              { from: 1, text: 'OK', to: 1, type: 2, value: '' },
+            ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          },
+        },
+      },
+    },
     L0Kaas: {
       local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
       k8s: {

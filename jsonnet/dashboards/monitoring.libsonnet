@@ -83,62 +83,62 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               targetBlank=true,
             );
 
-          local hostPanel(index, host) = [
+          // local hostPanel(index, host) = [
 
-            local panelHeight = tpl.panel.gridPos.h;
-            local panelWidth = tpl.panel.gridPos.w;
+          //   local panelHeight = tpl.panel.gridPos.h;
+          //   local panelWidth = tpl.panel.gridPos.w;
 
-            local gridX =
-              if std.type(tpl.panel.gridPos.x) == 'number' then
-                tpl.panel.gridPos.x
-              else
-                getGridX(index, panelWidth);
+          //   local gridX =
+          //     if std.type(tpl.panel.gridPos.x) == 'number' then
+          //       tpl.panel.gridPos.x
+          //     else
+          //       getGridX(index, panelWidth);
 
-            local gridY =
-              if std.type(tpl.panel.gridPos.y) == 'number' then
-                tpl.panel.gridPos.y
-              else
-                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h), index, panelWidth, panelHeight);
+          //   local gridY =
+          //     if std.type(tpl.panel.gridPos.y) == 'number' then
+          //       tpl.panel.gridPos.y
+          //     else
+          //       getGridY(getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h), index, panelWidth, panelHeight);
 
-            statPanel.new(
-              title='Host %s' % host.name,
-              datasource=tpl.panel.datasource,
-              graphMode=tpl.panel.graphMode,
-              colorMode=tpl.panel.colorMode,
-              unit=tpl.panel.unit,
-              decimals=tpl.panel.decimals,
-            )
-            .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { job: std.join('|', $.getAlertJobs(host)), groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings } })
-            .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
-            .addMappings(tpl.panel.mappings)
-            .addDataLinks(
-              $.updateDataLinksCommonArgs(
-                if std.length(tpl.panel.dataLinks) > 0 then
-                  tpl.panel.dataLinks % { job: host.jobName }
-                else
-                  [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host, $._config.templates.L1.host), $._config.grafanaDashboards.dataLinkCommonArgsNoCluster, host.jobName] }]
-              )
-            )
-            {
-              gridPos: {
-                x: gridX,
-                y: gridY,
-                w: panelWidth,
-                h: panelHeight,
-              },
-            }
-            for tpl in $.getTemplates($._config.templates.L0.host, host)
-            if (std.objectHas(tpl, 'panel') && tpl.panel != {})
-          ];
+          //   statPanel.new(
+          //     title='Host %s' % host.name,
+          //     datasource=tpl.panel.datasource,
+          //     graphMode=tpl.panel.graphMode,
+          //     colorMode=tpl.panel.colorMode,
+          //     unit=tpl.panel.unit,
+          //     decimals=tpl.panel.decimals,
+          //   )
+          //   .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { job: std.join('|', $.getAlertJobs(host)), groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings } })
+          //   .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
+          //   .addMappings(tpl.panel.mappings)
+          //   .addDataLinks(
+          //     $.updateDataLinksCommonArgs(
+          //       if std.length(tpl.panel.dataLinks) > 0 then
+          //         tpl.panel.dataLinks % { job: host.jobName }
+          //       else
+          //         [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host, $._config.templates.L1.host), $._config.grafanaDashboards.dataLinkCommonArgsNoCluster, host.jobName] }]
+          //     )
+          //   )
+          //   {
+          //     gridPos: {
+          //       x: gridX,
+          //       y: gridY,
+          //       w: panelWidth,
+          //       h: panelHeight,
+          //     },
+          //   }
+          //   for tpl in $.getTemplates($._config.templates.L0.host, host)
+          //   if (std.objectHas(tpl, 'panel') && tpl.panel != {})
+          // ];
 
           local clusterPanel(index, cluster) = [
 
             local panelHeight = tpl.panel.gridPos.h;
             local panelWidth = tpl.panel.gridPos.w;
 
-            local clusterLabel = cluster.label;
+            local clusterLabel = if std.objectHas(cluster, 'label') then cluster.label else '.*';
 
-            local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster', clusterLabel);
+            local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster|', clusterLabel);
 
             local gridX =
               if std.type(tpl.panel.gridPos.x) == 'number' then
@@ -199,11 +199,73 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             if (std.objectHas(tpl, 'panel') && tpl.panel != {})
           ];
 
-          local hostPanels =
-            std.flattenArrays([
-              hostPanel(host.index, host.item)
-              for host in $.zipWithIndex($._config.hostMonitoring.hosts)
-            ]);
+          local blackBoxPanels = [
+
+            local panelHeight = tpl.panel.gridPos.h;
+            local panelWidth = tpl.panel.gridPos.w;
+
+            local clusterLabel = cluster.label;
+
+            local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster', clusterLabel);
+
+            local gridX =
+              if std.type(tpl.panel.gridPos.x) == 'number' then
+                tpl.panel.gridPos.x
+              else
+                0;
+
+            local gridY =
+              if std.type(tpl.panel.gridPos.y) == 'number' then
+                tpl.panel.gridPos.y
+              else
+                getClusterRowGridY(
+                  numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h
+                );
+
+            statPanel.new(
+              title="$http_endpoint",
+              datasource=tpl.panel.datasource,
+              graphMode=tpl.panel.graphMode,
+              colorMode=tpl.panel.colorMode,
+              unit=tpl.panel.unit,
+              repeat='http_endpoint',
+              decimals=tpl.panel.decimals,
+              maxPerRow=4,
+            )
+            .addTarget(
+              {
+                type: 'single',
+                instant: true,
+                expr: tpl.panel.expr %{http_endpoint: '$http_endpoint'},
+              }
+            )
+            .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
+            .addMappings(tpl.panel.mappings)
+            .addDataLinks(
+              $.updateDataLinksCommonArgs(
+                if std.length(tpl.panel.dataLinks) > 0 then
+                  tpl.panel.dataLinks
+                else
+                  [{ title: 'Blackbox Exporter (HTTP prober)', url: '/d/%s?%s' % ['blackbox', dataLinkCommonArgs] }]
+                )
+            )
+            {
+              gridPos: {
+                x: gridX,
+                y: gridY,
+                w: panelWidth,
+                h: panelHeight,
+              },
+            }
+            for tpl in $.getTemplates($._config.templates.blackbox.k8s)
+            if (std.objectHas(tpl, 'panel') && tpl.panel != {})
+          ];
+
+          // local hostPanels =
+          //   std.flattenArrays([
+          //     hostPanel(host.index, host.item)
+          //     for host in $.zipWithIndex($._config.hostMonitoring.hosts)
+          //   ]);
 
           local clusterPanels =
             std.flattenArrays([
@@ -212,7 +274,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             ]);
 
           dashboard.new(
-            'Observer monitoring',
+            'IaaS monitoring',
             editable=$._config.grafanaDashboards.editable,
             graphTooltip=$._config.grafanaDashboards.tooltip,
             refresh=$._config.grafanaDashboards.refresh,
@@ -224,6 +286,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
           .addTemplates([
             $.grafanaTemplates.datasourceTemplate(),
             $.grafanaTemplates.alertManagerTemplate(),
+            $.grafanaTemplates.httpTemplate('label_values(probe_http_version{endpoint="http"},instance)', multi=true, includeAll=true, current='All'),
           ])
           .addPanels(
             (
@@ -232,15 +295,22 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               else []
             ) +
             (
-              if $.isHostMonitoring() then
-                [
-                  row.new('Host Monitoring') {
-                    local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
-                    gridPos: { x: 0, y: rowY, w: 24, h: 1 },
-                  },
-                ] + hostPanels
+              if $.isBlackBoxMonitoring() then
+                [row.new('HTTP/s Endpoints') {
+                  local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
+                  gridPos: { x: 0, y: rowY, w: 24, h: 1 } }] + blackBoxPanels
               else []
             )
+            // (
+            //   if $.isHostMonitoring() then
+            //     [
+            //       row.new('Host Monitoring') {
+            //         local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
+            //         gridPos: { x: 0, y: rowY, w: 24, h: 1 },
+            //       },
+            //     ] + hostPanels
+            //   else []
+            // )
           ),
       } else {},
 }
