@@ -134,7 +134,7 @@ local statPanel = grafana.statPanel;
           legend_hideEmpty=true,
           legend_hideZero=true,
         )
-        .addTarget(prometheus.target('sum(rate(storage_operation_errors_total{cluster=~"$cluster", %(kubelet)s, instance=~"$instance"}[5m])) by (instance, operation_name, volume_plugin)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_name}} {{volume_plugin}}')),
+        .addTarget(prometheus.target('sum(rate(storage_operation_duration_seconds_count{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", status="fail-unknown"}[5m])) by (instance, operation_name, volume_plugin)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_name}} {{volume_plugin}}')),
 
       local storageOperationLatency =
         graphPanel.new(
