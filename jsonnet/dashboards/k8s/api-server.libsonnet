@@ -79,7 +79,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="read"}', legendFormat='{{resource}}')),
+        .addTarget(prometheus.target('cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="read"}', legendFormat='{{resource}}')),
 
       local writeAvailability =
         statPanel.new(
@@ -118,7 +118,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="write"}', legendFormat='{{resource}}')),
+        .addTarget(prometheus.target('cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="write"}', legendFormat='{{resource}}')),
 
       local health =
         statPanel.new(
