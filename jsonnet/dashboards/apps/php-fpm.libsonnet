@@ -30,7 +30,7 @@ local row = grafana.row;
           stack=true,
           nullPointMode='null as zero',
         )
-        .addTarget(prometheus.target('rate(fpm_accepted_conn_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='connections'));
+        .addTarget(prometheus.target('rate(fpm_accepted_conn_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='connections'));
 
       local slowRequests =
         graphPanel.new(
@@ -39,7 +39,7 @@ local row = grafana.row;
           stack=true,
           nullPointMode='null as zero',
         )
-        .addTarget(prometheus.target('rate(fpm_slow_requests_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='requests'));
+        .addTarget(prometheus.target('rate(fpm_slow_requests_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='requests'));
 
       local processes =
         graphPanel.new(
@@ -48,10 +48,10 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(fpm_max_active_processes{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='max active processes'),
-            prometheus.target('rate(fpm_active_processes{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='active processes'),
-            prometheus.target('rate(fpm_total_processes{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='total processes'),
-            prometheus.target('rate(fpm_idle_processes{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='idle processes'),
+            prometheus.target('rate(fpm_max_active_processes{cluster="$cluster", job=~"$job"}[5m])', legendFormat='max active processes'),
+            prometheus.target('rate(fpm_active_processes{cluster="$cluster", job=~"$job"}[5m])', legendFormat='active processes'),
+            prometheus.target('rate(fpm_total_processes{cluster="$cluster", job=~"$job"}[5m])', legendFormat='total processes'),
+            prometheus.target('rate(fpm_idle_processes{cluster="$cluster", job=~"$job"}[5m])', legendFormat='idle processes'),
           ],
         );
 
@@ -60,7 +60,7 @@ local row = grafana.row;
           title='PHP FPM max children processes reached',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('rate(fpm_max_children_reached{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='children processes'));
+        .addTarget(prometheus.target('rate(fpm_max_children_reached{cluster="$cluster", job=~"$job"}[5m])', legendFormat='children processes'));
 
       local listenQueue =
         graphPanel.new(
@@ -69,9 +69,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(fpm_max_listen_queue{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='max listen queue'),
-            prometheus.target('rate(fpm_listen_queue{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='listen queue'),
-            prometheus.target('rate(fpm_listen_queue_len{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='listen queue len'),
+            prometheus.target('rate(fpm_max_listen_queue{cluster="$cluster", job=~"$job"}[5m])', legendFormat='max listen queue'),
+            prometheus.target('rate(fpm_listen_queue{cluster="$cluster", job=~"$job"}[5m])', legendFormat='listen queue'),
+            prometheus.target('rate(fpm_listen_queue_len{cluster="$cluster", job=~"$job"}[5m])', legendFormat='listen queue len'),
           ],
         );
 
@@ -99,7 +99,7 @@ local row = grafana.row;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(fpm_accepted_conn_total{cluster=~"$cluster"}, job)'),
+        $.grafanaTemplates.jobTemplate('label_values(fpm_accepted_conn_total{cluster="$cluster"}, job)'),
       ])
       .addPanels(panels),
   },

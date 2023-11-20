@@ -43,7 +43,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('sum(rate(kubelet_runtime_operations_total{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (operation_type, instance)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_type}}')),
+        .addTarget(prometheus.target('sum(rate(kubelet_runtime_operations_total{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (operation_type, instance)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_type}}')),
 
       local operationErrorRate =
         graphPanel.new(
@@ -56,7 +56,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('sum(rate(kubelet_runtime_operations_errors_total{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_type)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_type}}')),
+        .addTarget(prometheus.target('sum(rate(kubelet_runtime_operations_errors_total{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_type)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_type}}')),
 
       local operationLatency =
         graphPanel.new(
@@ -68,7 +68,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_runtime_operations_duration_seconds_bucket{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_type, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_type}}')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_runtime_operations_duration_seconds_bucket{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_type, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_type}}')),
 
       local podStartRate =
         graphPanel.new(
@@ -83,8 +83,8 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(kubelet_pod_start_duration_seconds_count{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} pod'),
-            prometheus.target('sum(rate(kubelet_pod_worker_duration_seconds_count{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} worker'),
+            prometheus.target('sum(rate(kubelet_pod_start_duration_seconds_count{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} pod'),
+            prometheus.target('sum(rate(kubelet_pod_worker_duration_seconds_count{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} worker'),
           ]
         ),
 
@@ -101,8 +101,8 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pod_start_duration_seconds_count{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} pod'),
-            prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pod_worker_duration_seconds_bucket{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} worker'),
+            prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pod_start_duration_seconds_count{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} pod'),
+            prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pod_worker_duration_seconds_bucket{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} worker'),
           ]
         ),
 
@@ -119,7 +119,7 @@ local statPanel = grafana.statPanel;
           legend_hideEmpty=true,
           legend_hideZero=true,
         )
-        .addTarget(prometheus.target('sum(rate(storage_operation_duration_seconds_count{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_name, volume_plugin)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_name}} {{volume_plugin}}')),
+        .addTarget(prometheus.target('sum(rate(storage_operation_duration_seconds_count{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_name, volume_plugin)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_name}} {{volume_plugin}}')),
 
       local storageOperationErrorRate =
         graphPanel.new(
@@ -134,7 +134,7 @@ local statPanel = grafana.statPanel;
           legend_hideEmpty=true,
           legend_hideZero=true,
         )
-        .addTarget(prometheus.target('sum(rate(storage_operation_duration_seconds_count{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", status="fail-unknown"}[5m])) by (instance, operation_name, volume_plugin)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_name}} {{volume_plugin}}')),
+        .addTarget(prometheus.target('sum(rate(storage_operation_duration_seconds_count{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", status="fail-unknown"}[5m])) by (instance, operation_name, volume_plugin)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_name}} {{volume_plugin}}')),
 
       local storageOperationLatency =
         graphPanel.new(
@@ -149,7 +149,7 @@ local statPanel = grafana.statPanel;
           legend_hideEmpty=true,
           legend_hideZero=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(storage_operation_duration_seconds_bucket{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_name, volume_plugin, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_name}} {{volume_plugin}}')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(storage_operation_duration_seconds_bucket{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_name, volume_plugin, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_name}} {{volume_plugin}}')),
 
       local cgroupManagerRate =
         graphPanel.new(
@@ -162,7 +162,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('sum(rate(kubelet_cgroup_manager_duration_seconds_count{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_type)' % $._config.grafanaDashboards.selectors, legendFormat='{{operation_type}}')),
+        .addTarget(prometheus.target('sum(rate(kubelet_cgroup_manager_duration_seconds_count{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_type)' % $._config.grafanaDashboards.selectors, legendFormat='{{operation_type}}')),
 
       local cgroupManagerDuration =
         graphPanel.new(
@@ -175,7 +175,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_cgroup_manager_duration_seconds_bucket{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_type, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_type}}')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_cgroup_manager_duration_seconds_bucket{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, operation_type, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{operation_type}}')),
 
       local plegRelistRate =
         graphPanel.new(
@@ -189,7 +189,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('sum(rate(kubelet_pleg_relist_duration_seconds_count{cluster=~"$cluster", %(kubelet)s, instance=~"$instance"}[5m])) by (instance)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('sum(rate(kubelet_pleg_relist_duration_seconds_count{cluster="$cluster", %(kubelet)s, instance=~"$instance"}[5m])) by (instance)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       local plegRelistDuration =
         graphPanel.new(
@@ -202,7 +202,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_duration_seconds_bucket{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_duration_seconds_bucket{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       local plegRelistInterval =
         graphPanel.new(
@@ -215,7 +215,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_interval_seconds_bucket{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(kubelet_pleg_relist_interval_seconds_bucket{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       local grpcRate =
         graphPanel.new(
@@ -226,10 +226,10 @@ local statPanel = grafana.statPanel;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", code=~"2.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='2xx'),
-            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", code=~"3.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='3xx'),
-            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", code=~"4.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='4xx'),
-            prometheus.target('sum(rate(rest_client_requests_total{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", code=~"5.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='5xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", code=~"2.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='2xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", code=~"3.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='3xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", code=~"4.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='4xx'),
+            prometheus.target('sum(rate(rest_client_requests_total{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance", code=~"5.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='5xx'),
           ]
         ),
 
@@ -244,7 +244,7 @@ local statPanel = grafana.statPanel;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, verb, url, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{verb}} {{url}}')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(rest_client_request_duration_seconds_bucket{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])) by (instance, verb, url, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{verb}} {{url}}')),
 
       local memory =
         graphPanel.new(
@@ -252,7 +252,7 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('process_resident_memory_bytes{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('process_resident_memory_bytes{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       local cpu =
         graphPanel.new(
@@ -260,14 +260,14 @@ local statPanel = grafana.statPanel;
           datasource='$datasource',
           min=0,
         )
-        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}[5m])' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       local goroutines =
         graphPanel.new(
           title='Goroutines',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('go_goroutines{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('go_goroutines{cluster="$cluster", %(kubelet)s, metrics_path="/metrics", instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       dashboard:
         dashboard.new(
@@ -282,7 +282,7 @@ local statPanel = grafana.statPanel;
         .addTemplates([
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.clusterTemplate('label_values(kube_pod_info, cluster)'),
-          $.grafanaTemplates.instanceTemplate('label_values(kubelet_runtime_operations_total{cluster=~"$cluster", %(kubelet)s, metrics_path="/metrics"}, instance)' % $._config.grafanaDashboards.selectors),
+          $.grafanaTemplates.instanceTemplate('label_values(kubelet_runtime_operations_total{cluster="$cluster", %(kubelet)s, metrics_path="/metrics"}, instance)' % $._config.grafanaDashboards.selectors),
         ])
         .addPanels(
           [

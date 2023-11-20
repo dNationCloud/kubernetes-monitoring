@@ -82,6 +82,7 @@ clusterMonitoring:
   enabled: true
   clusters:
   - name: K8sCluster
+    label: observer-cluster  # The label should be the same as the external_label `cluster` from prometheus
     description: 'Kubernetes cluster monitoring'
     apps: []
     # Kubernetes Application Monitoring could be defined by ServiceMonitor or PodMonitor CRDs. See following links and examples:

@@ -36,46 +36,46 @@ local graphPanel = grafana.graphPanel;
       local cpuPanel =
         panel(
           title='CPU',
-          expr='sum(rate(container_cpu_usage_seconds_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.grafanaDashboards.selectors,
+          expr='sum(rate(container_cpu_usage_seconds_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster="$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.grafanaDashboards.selectors,
           unit='cores',
         );
 
       local memoryPanel =
         panel(
           title='Memory',
-          expr='sum(container_memory_working_set_bytes{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*", container!~"POD|", id!=""})' % $._config.grafanaDashboards.selectors,
+          expr='sum(container_memory_working_set_bytes{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster="$cluster", namespace=~"$namespace", pod=~"$statefulset.*", container!~"POD|", id!=""})' % $._config.grafanaDashboards.selectors,
           unit='bytes',
         );
 
       local networkPanel =
         panel(
           title='Network',
-          expr='sum(rate(container_network_transmit_bytes_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m])) + sum(rate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.grafanaDashboards.selectors,
+          expr='sum(rate(container_network_transmit_bytes_total{%(kubelet)s, metrics_path="/metrics/cadvisor", cluster="$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m])) + sum(rate(container_network_receive_bytes_total{cluster="$cluster", namespace=~"$namespace", pod=~"$statefulset.*"}[5m]))' % $._config.grafanaDashboards.selectors,
           unit='Bps',
         );
 
       local desiredReplicasPanel =
         panel(
           title='Desired Replicas',
-          expr='sum(kube_statefulset_status_replicas{cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
+          expr='sum(kube_statefulset_status_replicas{cluster="$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
         );
 
       local currentReplicasPanel =
         panel(
           title='Replicas of current version',
-          expr='sum(kube_statefulset_status_replicas_current{cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
+          expr='sum(kube_statefulset_status_replicas_current{cluster="$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
         );
 
       local observedGenerationPanel =
         panel(
           title='Observed Generation',
-          expr='sum(kube_statefulset_status_observed_generation{cluster=~"$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
+          expr='sum(kube_statefulset_status_observed_generation{cluster="$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',
         );
 
       local metadataGenerationPanel =
         panel(
           title='Metadata Generation',
-          expr='sum(kube_statefulset_metadata_generation{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"})',
+          expr='sum(kube_statefulset_metadata_generation{statefulset=~"$statefulset", cluster="$cluster", namespace=~"$namespace"})',
         );
 
       local replicasGraphPanel =
@@ -85,11 +85,11 @@ local graphPanel = grafana.graphPanel;
         )
         .addTargets(
           [
-            prometheus.target(legendFormat='replicas specified {{statefulset}}', expr='sum(kube_statefulset_replicas{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
-            prometheus.target(legendFormat='replicas created {{statefulset}}', expr='sum(kube_statefulset_status_replicas{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
-            prometheus.target(legendFormat='ready {{statefulset}}', expr='sum(kube_statefulset_status_replicas_ready{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
-            prometheus.target(legendFormat='replicas of current version {{statefulset}}', expr='sum(kube_statefulset_status_replicas_current{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
-            prometheus.target(legendFormat='updated {{statefulset}}', expr='sum(kube_statefulset_status_replicas_updated{statefulset=~"$statefulset", cluster=~"$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='replicas specified {{statefulset}}', expr='sum(kube_statefulset_replicas{statefulset=~"$statefulset", cluster="$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='replicas created {{statefulset}}', expr='sum(kube_statefulset_status_replicas{statefulset=~"$statefulset", cluster="$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='ready {{statefulset}}', expr='sum(kube_statefulset_status_replicas_ready{statefulset=~"$statefulset", cluster="$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='replicas of current version {{statefulset}}', expr='sum(kube_statefulset_status_replicas_current{statefulset=~"$statefulset", cluster="$cluster", namespace=~"$namespace"}) by (statefulset)'),
+            prometheus.target(legendFormat='updated {{statefulset}}', expr='sum(kube_statefulset_status_replicas_updated{statefulset=~"$statefulset", cluster="$cluster", namespace=~"$namespace"}) by (statefulset)'),
           ]
         );
 
@@ -105,8 +105,8 @@ local graphPanel = grafana.graphPanel;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(kube_statefulset_metadata_generation, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_statefulset_metadata_generation{cluster=~"$cluster"}, namespace)'),
-        $.grafanaTemplates.statefulsetTemplate('label_values(kube_statefulset_metadata_generation{cluster=~"$cluster", namespace=~"$namespace"}, statefulset)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_statefulset_metadata_generation{cluster="$cluster"}, namespace)'),
+        $.grafanaTemplates.statefulsetTemplate('label_values(kube_statefulset_metadata_generation{cluster="$cluster", namespace=~"$namespace"}, statefulset)'),
       ])
       .addPanels(
         [

@@ -32,7 +32,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           unit='percentunit',
         )
-        .addTarget(prometheus.target('apiserver_request:availability%dd{cluster=~"$cluster", verb="all"}' % availabilityDays)),
+        .addTarget(prometheus.target('apiserver_request:availability%dd{cluster="$cluster", verb="all"}' % availabilityDays)),
 
       local errorBudget =
         graphPanel.new(
@@ -40,7 +40,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='percentunit',
         )
-        .addTarget(prometheus.target('100 * (apiserver_request:availability%dd{cluster=~"$cluster", verb="all"} - %f)' % [availabilityDays, errorBudgetTarget], legendFormat='errorbudget')),
+        .addTarget(prometheus.target('100 * (apiserver_request:availability%dd{cluster="$cluster", verb="all"} - %f)' % [availabilityDays, errorBudgetTarget], legendFormat='errorbudget')),
 
       local readAvailability =
         statPanel.new(
@@ -48,7 +48,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           unit='percentunit',
         )
-        .addTarget(prometheus.target('apiserver_request:availability%dd{cluster=~"$cluster", verb="read"}' % availabilityDays)),
+        .addTarget(prometheus.target('apiserver_request:availability%dd{cluster="$cluster", verb="read"}' % availabilityDays)),
 
       local readRequests =
         graphPanel.new(
@@ -62,7 +62,7 @@ local errorBudgetTarget = 0.99;
         .addSeriesOverride({ alias: '/3../i', color: '#F2CC0C' })
         .addSeriesOverride({ alias: '/4../i', color: '#3274D9' })
         .addSeriesOverride({ alias: '/5../i', color: '#E02F44' })
-        .addTarget(prometheus.target('sum(code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read"})', legendFormat='{{code}}')),
+        .addTarget(prometheus.target('sum(code_resource:apiserver_request_total:rate5m{cluster="$cluster", verb="read"})', legendFormat='{{code}}')),
 
       local readErrors =
         graphPanel.new(
@@ -71,7 +71,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           format='percentunit',
         )
-        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read", code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="read"})', legendFormat='{{resource}}')),
+        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster="$cluster", verb="read", code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster="$cluster", verb="read"})', legendFormat='{{resource}}')),
 
       local readDuration =
         graphPanel.new(
@@ -79,7 +79,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="read"}', legendFormat='{{resource}}')),
+        .addTarget(prometheus.target('cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster="$cluster", verb="read"}', legendFormat='{{resource}}')),
 
       local writeAvailability =
         statPanel.new(
@@ -87,7 +87,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           unit='percentunit',
         )
-        .addTarget(prometheus.target('apiserver_request:availability%dd{cluster=~"$cluster", verb="write"}' % availabilityDays)),
+        .addTarget(prometheus.target('apiserver_request:availability%dd{cluster="$cluster", verb="write"}' % availabilityDays)),
 
       local writeRequests =
         graphPanel.new(
@@ -101,7 +101,7 @@ local errorBudgetTarget = 0.99;
         .addSeriesOverride({ alias: '/3../i', color: '#F2CC0C' })
         .addSeriesOverride({ alias: '/4../i', color: '#3274D9' })
         .addSeriesOverride({ alias: '/5../i', color: '#E02F44' })
-        .addTarget(prometheus.target('sum(code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write"})', legendFormat='{{code}}')),
+        .addTarget(prometheus.target('sum(code_resource:apiserver_request_total:rate5m{cluster="$cluster", verb="write"})', legendFormat='{{code}}')),
 
       local writeErrors =
         graphPanel.new(
@@ -110,7 +110,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           format='percentunit',
         )
-        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write", code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster=~"$cluster", verb="write"})', legendFormat='{{resource}}')),
+        .addTarget(prometheus.target('sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster="$cluster", verb="write", code=~"5.."}) / sum by (resource) (code_resource:apiserver_request_total:rate5m{cluster="$cluster", verb="write"})', legendFormat='{{resource}}')),
 
       local writeDuration =
         graphPanel.new(
@@ -118,7 +118,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster=~"$cluster", verb="write"}', legendFormat='{{resource}}')),
+        .addTarget(prometheus.target('cluster_quantile:apiserver_request_sli_duration_seconds:histogram_quantile{cluster="$cluster", verb="write"}', legendFormat='{{resource}}')),
 
       local health =
         statPanel.new(
@@ -137,10 +137,10 @@ local errorBudgetTarget = 0.99;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", code=~"2.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='2xx'),
-            prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", code=~"3.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='3xx'),
-            prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", code=~"4.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='4xx'),
-            prometheus.target('sum(rate(apiserver_request_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", code=~"5.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='5xx'),
+            prometheus.target('sum(rate(apiserver_request_total{cluster="$cluster", %(apiServer)s, instance=~"$instance", code=~"2.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='2xx'),
+            prometheus.target('sum(rate(apiserver_request_total{cluster="$cluster", %(apiServer)s, instance=~"$instance", code=~"3.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='3xx'),
+            prometheus.target('sum(rate(apiserver_request_total{cluster="$cluster", %(apiServer)s, instance=~"$instance", code=~"4.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='4xx'),
+            prometheus.target('sum(rate(apiserver_request_total{cluster="$cluster", %(apiServer)s, instance=~"$instance", code=~"5.."}[5m]))' % $._config.grafanaDashboards.selectors, legendFormat='5xx'),
           ]
         ),
       local requestDuration =
@@ -148,7 +148,7 @@ local errorBudgetTarget = 0.99;
           title='Request duration 99th quantile',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{cluster=~"$cluster", %(apiServer)s, instance=~"$instance", verb!="WATCH"}[5m])) by (verb, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{verb}}')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{cluster="$cluster", %(apiServer)s, instance=~"$instance", verb!="WATCH"}[5m])) by (verb, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{verb}}')),
 
       local workQueueAddRate =
         graphPanel.new(
@@ -158,7 +158,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           legend_show=false,
         )
-        .addTarget(prometheus.target('sum(rate(workqueue_adds_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}')),
+        .addTarget(prometheus.target('sum(rate(workqueue_adds_total{cluster="$cluster", %(apiServer)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}')),
 
       local workQueueDepth =
         graphPanel.new(
@@ -167,7 +167,7 @@ local errorBudgetTarget = 0.99;
           min=0,
           legend_show=false,
         )
-        .addTarget(prometheus.target('sum(rate(workqueue_depth{cluster=~"$cluster", %(apiServer)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}')),
+        .addTarget(prometheus.target('sum(rate(workqueue_depth{cluster="$cluster", %(apiServer)s, instance=~"$instance"}[5m])) by (instance, name)' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}')),
 
       local workQueueLatency =
         graphPanel.new(
@@ -179,7 +179,7 @@ local errorBudgetTarget = 0.99;
           legend_alignAsTable=true,
           legend_rightSide=true,
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(workqueue_queue_duration_seconds_bucket{cluster=~"$cluster", %(apiServer)s, instance=~"$instance"}[5m])) by (instance, name, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}')),
+        .addTarget(prometheus.target('histogram_quantile(0.99, sum(rate(workqueue_queue_duration_seconds_bucket{cluster="$cluster", %(apiServer)s, instance=~"$instance"}[5m])) by (instance, name, le))' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}} {{name}}')),
 
       local memory =
         graphPanel.new(
@@ -187,7 +187,7 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('process_resident_memory_bytes{cluster=~"$cluster", %(apiServer)s, instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('process_resident_memory_bytes{cluster="$cluster", %(apiServer)s, instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       local cpu =
         graphPanel.new(
@@ -195,14 +195,14 @@ local errorBudgetTarget = 0.99;
           datasource='$datasource',
           min=0,
         )
-        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster=~"$cluster", %(apiServer)s, instance=~"$instance"}[5m])' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster="$cluster", %(apiServer)s, instance=~"$instance"}[5m])' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       local goroutines =
         graphPanel.new(
           title='Goroutines',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('go_goroutines{cluster=~"$cluster", %(apiServer)s, instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
+        .addTarget(prometheus.target('go_goroutines{cluster="$cluster", %(apiServer)s, instance=~"$instance"}' % $._config.grafanaDashboards.selectors, legendFormat='{{instance}}')),
 
       dashboard:
         dashboard.new(
@@ -217,7 +217,7 @@ local errorBudgetTarget = 0.99;
         .addTemplates([
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.clusterTemplate('label_values(apiserver_request_total, cluster)'),
-          $.grafanaTemplates.instanceTemplate('label_values(apiserver_request_total{cluster=~"$cluster", %(apiServer)s}, instance)' % $._config.grafanaDashboards.selectors),
+          $.grafanaTemplates.instanceTemplate('label_values(apiserver_request_total{cluster="$cluster", %(apiServer)s}, instance)' % $._config.grafanaDashboards.selectors),
         ])
         .addPanels(
           [

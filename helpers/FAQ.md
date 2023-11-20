@@ -12,7 +12,7 @@ When some threshold is crossed and this state  persists for **5** minutes (defau
 The orange state panel  with `Warning` label is displayed in case of warning alert. Red state panel with  `Critical` label is displayed in case of critical alert.
 We have implemented intuitive green, orange and red color indicators that are signalizing if your action is needed or if everything is OK.
 If you want to see more information about your k8s cluster, just drill down by left-clicking on
-the relevant state panel. As of now, multi-cluster monitoring support is avaible.
+the relevant state panel. As of now, multi-cluster monitoring support is available.
 
 - If you are interested in the k8s cluster monitoring see [How to set up k8s cluster monitoring?](#how-to-set-up-k8s-cluster-monitoring) section.
 - If you are interested in the k8s multi-cluster monitoring see [How to set up k8s multi-cluster monitoring?](#how-to-set-up-k8s-multi-cluster-monitoring) section.
@@ -139,6 +139,7 @@ clusterMonitoring:
   enabled: true
   clusters:
   - name: K8sCluster
+    label: observer-cluster  # The label should be the same as the external_label `cluster` from prometheus
     description: 'Kubernetes cluster monitoring'
     apps: []
 ```
@@ -189,6 +190,7 @@ clusterMonitoring:
   enabled: true
   clusters:
   - name: K8sCluster
+    label: observer-cluster  # The label should be the same as the external_label `cluster` from prometheus
     description: 'Kubernetes cluster with application monitoring'
     apps:
     - name: app-example
@@ -198,7 +200,7 @@ clusterMonitoring:
         javaActuator:  # Application Exporter template
           enabled: true
       serviceMonitor:
-        jobLabel: app # The label to use to retrieve the job name from.
+        jobLabel: app  # The label to use to retrieve the job name from.
         namespaceSelector:  # Namespaces to transfer from the kubernetes service to the target
           matchNames:
           - default

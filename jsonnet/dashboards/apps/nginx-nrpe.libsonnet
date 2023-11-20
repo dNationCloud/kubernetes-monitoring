@@ -32,9 +32,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(nginx_accepts_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='accepts'),
-            prometheus.target('rate(nginx_handled_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='handled'),
-            prometheus.target('rate(nginx_active{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='active'),
+            prometheus.target('rate(nginx_accepts_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='accepts'),
+            prometheus.target('rate(nginx_handled_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='handled'),
+            prometheus.target('rate(nginx_active{cluster="$cluster", job=~"$job"}[5m])', legendFormat='active'),
           ],
         );
 
@@ -47,9 +47,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(nginx_reading{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='reading'),
-            prometheus.target('rate(nginx_writing{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='writing'),
-            prometheus.target('rate(nginx_waiting{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='waiting'),
+            prometheus.target('rate(nginx_reading{cluster="$cluster", job=~"$job"}[5m])', legendFormat='reading'),
+            prometheus.target('rate(nginx_writing{cluster="$cluster", job=~"$job"}[5m])', legendFormat='writing'),
+            prometheus.target('rate(nginx_waiting{cluster="$cluster", job=~"$job"}[5m])', legendFormat='waiting'),
           ],
         );
 
@@ -60,7 +60,7 @@ local row = grafana.row;
           stack=true,
           nullPointMode='null as zero',
         )
-        .addTarget(prometheus.target('rate(nginx_requests_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='requests'));
+        .addTarget(prometheus.target('rate(nginx_requests_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='requests'));
 
       local panels = [
         row.new('Connections') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
@@ -82,7 +82,7 @@ local row = grafana.row;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(nginx_accepts_total{cluster=~"$cluster"}, job)'),
+        $.grafanaTemplates.jobTemplate('label_values(nginx_accepts_total{cluster="$cluster"}, job)'),
       ])
       .addPanels(panels),
   },

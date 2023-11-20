@@ -30,8 +30,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(rabbitmq_deliver_total{cluster=~"$cluster", job=~"$job"}[5m]))', legendFormat='deliver'),
-            prometheus.target('sum(rate(rabbitmq_publish_total{cluster=~"$cluster", job=~"$job"}[5m]))', legendFormat='publish'),
+            prometheus.target('sum(rate(rabbitmq_deliver_total{cluster="$cluster", job=~"$job"}[5m]))', legendFormat='deliver'),
+            prometheus.target('sum(rate(rabbitmq_publish_total{cluster="$cluster", job=~"$job"}[5m]))', legendFormat='publish'),
           ],
         );
 
@@ -52,7 +52,7 @@ local row = grafana.row;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(rabbitmq_deliver_total{cluster=~"$cluster"}, job)'),
+        $.grafanaTemplates.jobTemplate('label_values(rabbitmq_deliver_total{cluster="$cluster"}, job)'),
       ])
       .addPanels(panels),
   },
