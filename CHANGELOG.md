@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.6.2](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.6.2) (2023-11-21)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.6.1...v2.6.2)
+
+**Merged pull requests:**
+
+- Preserve cluster label also for apps alerts [\#181](https://github.com/dNationCloud/kubernetes-monitoring/pull/181)
+
 ## [v2.6.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.6.1) (2023-11-21)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.6.0...v2.6.1)
@@ -501,6 +509,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
