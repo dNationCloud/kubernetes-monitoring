@@ -1429,7 +1429,7 @@
           alert: {
             name: '%(prefix)sPythonFlaskSuccessRateLow',
             message: '%(prefix)s {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses) Low {{ $value }}%%',
-            expr: expr % { job: 'job=~".+"' },
+            expr: '(sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{%(job)s,status!~"[4-5].*"}[5m])) / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{%(job)s}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{%(job)s}[5m])) + 100)' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: thresholds,
           },
@@ -1455,7 +1455,7 @@
           alert: {
             name: '%(prefix)sJavaActuatorHeapHigh',
             message: '%(prefix)s {{ $labels.job }}: Java Actuator Heap High {{ $value }}%%',
-            expr: expr % { job: 'job=~".+"' },
+            expr: '(sum by (job, cluster) (jvm_memory_used_bytes{%(job)s, area="heap"})*100/sum  by (job, cluster) (jvm_memory_max_bytes{%(job)s, area="nonheap"}) > sum  by (job, cluster) (jvm_memory_used_bytes{%(job)s, area="nonheap"})*100/sum  by (job, cluster) (jvm_memory_max_bytes{%(job)s, area="heap"}) or (sum  by (job, cluster) (jvm_memory_used_bytes{%(job)s, area="nonheap"})*100)/sum by (job, cluster) (jvm_memory_max_bytes{%(job)s, area="heap"}))' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: thresholds,
           },
@@ -1481,7 +1481,7 @@
           alert: {
             name: '%(prefix)sNginxIngressSuccessRateLow',
             message: '%(prefix)s {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses) Low {{ printf "%%.0f" $value }}%%',
-            expr: expr % { job: 'job=~".+"' },
+            expr: '((sum by (job, cluster) (rate(nginx_ingress_controller_requests{%(job)s, status!~"[4-5].*"}[5m])) / sum by (job, cluster) (rate(nginx_ingress_controller_requests{%(job)s}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_ingress_controller_requests{%(job)s}[5m])) + 100))' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: thresholds,
           },
@@ -1512,7 +1512,7 @@
           alert: {
             name: '%(prefix)sNginxIngressCertificateExpiry',
             message: '%(prefix)s {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf "%%.2f" $value }} days',
-            expr: '%s / 60 / 60 / 24' % (expr % { job: 'job=~".+"' }),
+            expr: '%s / 60 / 60 / 24' % ('bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{%(job)s} - time())' % { job: 'job=~".+"' }),
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: thresholds {
               warning: thresholds.warning / 60 / 60 / 24,
@@ -1541,7 +1541,7 @@
           alert: {
             name: '%(prefix)sNginxVTSSuccessRateLow',
             message: '%(prefix)s {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%%',
-            expr: expr % { job: 'job=~".+"' },
+            expr: '(sum by (job, cluster) (rate(nginx_vts_server_requests_total{%(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{%(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{%(job)s}[5m])) + 100)' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: thresholds,
           },
@@ -1568,7 +1568,7 @@
           alert: {
             name: '%(prefix)sNginxVTSSuccessRateLow',
             message: '%(prefix)s {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses) Low {{ $value }}%%',
-            expr: expr % { job: 'job=~".+"' },
+            expr: '(sum by (job, cluster) (rate(nginx_server_requests{%(job)s, code!~"[4-5].*", code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{%(job)s, code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{%(job)s}[5m])) + 100)' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: thresholds,
           },
@@ -1595,7 +1595,7 @@
           alert: {
             name: '%(prefix)sAutoscalerHealthLow',
             message: '%(prefix)s {{ $labels.job }}: Autoscaler Health Low {{ $value }}%%',
-            expr: expr % { job: 'job=~".+"' },
+            expr: '(sum by (job, cluster) (autoscaler_healthy{%(job)s}) / sum by (job, cluster) (autoscaler_instances{%(job)s}) * 100)' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: thresholds,
           },
@@ -1622,7 +1622,7 @@
           alert: {
             name: '%(prefix)sPostfixQueueSizeHigh',
             message: '%(prefix)s {{ $labels.job }}: Postfix Queue Size High {{ $value }}%%',
-            expr: expr % { job: 'job=~".+"' },
+            expr: '(sum by (job, cluster) (postfix_size{%(job)s}))' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: thresholds,
             mappings: [{ text: '-', type: 1, value: -1 }],
@@ -1763,7 +1763,7 @@
           alert: {
             name: '%(prefix)sHarborComponentDown',
             message: '%(prefix)s {{ $labels.job }}: Harbor component "{{ $labels.component }}" is down',
-            expr: 'harbor_up{cluster="$cluster", %(job)s}' % { job: 'job=~".+"' },
+            expr: 'harbor_up{%(job)s}' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}',
             thresholds: {
               operator: '==',

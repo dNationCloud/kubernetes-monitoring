@@ -1988,8 +1988,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job) (autoscaler_healthy{cluster="$cluster", job=~".+"}) / sum by (job)
-  (autoscaler_instances{cluster="$cluster", job=~".+"}) * 100)
+expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
+  (autoscaler_instances{job=~".+"}) * 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%'
 name: HostAppAutoscalerHealthLow
@@ -2070,7 +2070,7 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: harbor_up{cluster="$cluster", job=~".+"}
+expr: harbor_up{job=~".+"}
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Harbor component "{{ $labels.component }}" is
   down'
@@ -2107,12 +2107,11 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="heap"})*100/sum  by
-  (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="nonheap"}) > sum  by
-  (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="nonheap"})*100/sum  by
-  (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="heap"}) or (sum  by
-  (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="nonheap"})*100)/sum
-  by (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="heap"}))
+expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100/sum  by
+  (job, cluster) (jvm_memory_max_bytes{job=~".+", area="nonheap"}) > sum  by (job,
+  cluster) (jvm_memory_used_bytes{job=~".+", area="nonheap"})*100/sum  by (job, cluster)
+  (jvm_memory_max_bytes{job=~".+", area="heap"}) or (sum  by (job, cluster) (jvm_memory_used_bytes{job=~".+",
+  area="nonheap"})*100)/sum by (job, cluster) (jvm_memory_max_bytes{job=~".+", area="heap"}))
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%'
 name: HostAppJavaActuatorHeapHigh
@@ -2225,10 +2224,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: ((sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster", job=~".+",
-  status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster",
-  job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100))
+expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+", status!~"[4-5].*"}[5m]))
+  / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
+  * 100) > 0 OR (sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
+  + 100))
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses)
   Low {{ printf "%.0f" $value }}%'
@@ -2268,8 +2267,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$cluster",
-  job=~".+"} - time()) / 60 / 60 / 24
+expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
+  / 60 / 60 / 24
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf
   "%.2f" $value }} days'
@@ -2336,10 +2335,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster", job=~".+",
-  code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -2379,10 +2378,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster", job=~".+",
-  code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -2422,10 +2421,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job) (rate(nginx_server_requests{cluster="$cluster", job=~".+", code!~"[4-5].*",
-  code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -2465,10 +2464,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job) (rate(nginx_server_requests{cluster="$cluster", job=~".+", code!~"[4-5].*",
-  code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -2532,7 +2531,7 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job) (postfix_size{cluster="$cluster", job=~".+"}))
+expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}
 mappings:
 - text: '-'
@@ -2596,10 +2595,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+",status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
+  / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
+  * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'HostApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -4479,8 +4478,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job) (autoscaler_healthy{cluster="$cluster", job=~".+"}) / sum by (job)
-  (autoscaler_instances{cluster="$cluster", job=~".+"}) * 100)
+expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
+  (autoscaler_instances{job=~".+"}) * 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%'
 name: ClusterAppAutoscalerHealthLow
@@ -4561,7 +4560,7 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: harbor_up{cluster="$cluster", job=~".+"}
+expr: harbor_up{job=~".+"}
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Harbor component "{{ $labels.component }}"
   is down'
@@ -4598,12 +4597,11 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="heap"})*100/sum  by
-  (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="nonheap"}) > sum  by
-  (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="nonheap"})*100/sum  by
-  (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="heap"}) or (sum  by
-  (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="nonheap"})*100)/sum
-  by (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="heap"}))
+expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100/sum  by
+  (job, cluster) (jvm_memory_max_bytes{job=~".+", area="nonheap"}) > sum  by (job,
+  cluster) (jvm_memory_used_bytes{job=~".+", area="nonheap"})*100/sum  by (job, cluster)
+  (jvm_memory_max_bytes{job=~".+", area="heap"}) or (sum  by (job, cluster) (jvm_memory_used_bytes{job=~".+",
+  area="nonheap"})*100)/sum by (job, cluster) (jvm_memory_max_bytes{job=~".+", area="heap"}))
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%'
 name: ClusterAppJavaActuatorHeapHigh
@@ -4716,10 +4714,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: ((sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster", job=~".+",
-  status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster",
-  job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100))
+expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+", status!~"[4-5].*"}[5m]))
+  / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
+  * 100) > 0 OR (sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
+  + 100))
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses)
   Low {{ printf "%.0f" $value }}%'
@@ -4759,8 +4757,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$cluster",
-  job=~".+"} - time()) / 60 / 60 / 24
+expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
+  / 60 / 60 / 24
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf
   "%.2f" $value }} days'
@@ -4827,10 +4825,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster", job=~".+",
-  code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -4870,10 +4868,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster", job=~".+",
-  code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -4913,10 +4911,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job) (rate(nginx_server_requests{cluster="$cluster", job=~".+", code!~"[4-5].*",
-  code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -4956,10 +4954,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job) (rate(nginx_server_requests{cluster="$cluster", job=~".+", code!~"[4-5].*",
-  code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -5023,7 +5021,7 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job) (postfix_size{cluster="$cluster", job=~".+"}))
+expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}
 mappings:
 - text: '-'
@@ -5087,10 +5085,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+",status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
+  / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
+  * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -5320,8 +5318,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job) (autoscaler_healthy{cluster="$cluster", job=~".+"}) / sum by (job)
-  (autoscaler_instances{cluster="$cluster", job=~".+"}) * 100)
+expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
+  (autoscaler_instances{job=~".+"}) * 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%'
 name: ClusterVMAppAutoscalerHealthLow
@@ -5402,7 +5400,7 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: harbor_up{cluster="$cluster", job=~".+"}
+expr: harbor_up{job=~".+"}
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Harbor component "{{ $labels.component }}"
   is down'
@@ -5439,12 +5437,11 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="heap"})*100/sum  by
-  (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="nonheap"}) > sum  by
-  (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="nonheap"})*100/sum  by
-  (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="heap"}) or (sum  by
-  (job) (jvm_memory_used_bytes{cluster="$cluster", job=~".+", area="nonheap"})*100)/sum
-  by (job) (jvm_memory_max_bytes{cluster="$cluster", job=~".+", area="heap"}))
+expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100/sum  by
+  (job, cluster) (jvm_memory_max_bytes{job=~".+", area="nonheap"}) > sum  by (job,
+  cluster) (jvm_memory_used_bytes{job=~".+", area="nonheap"})*100/sum  by (job, cluster)
+  (jvm_memory_max_bytes{job=~".+", area="heap"}) or (sum  by (job, cluster) (jvm_memory_used_bytes{job=~".+",
+  area="nonheap"})*100)/sum by (job, cluster) (jvm_memory_max_bytes{job=~".+", area="heap"}))
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%'
 name: ClusterVMAppJavaActuatorHeapHigh
@@ -5557,10 +5554,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: ((sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster", job=~".+",
-  status!~"[4-5].*"}[5m])) / sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster",
-  job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_ingress_controller_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100))
+expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+", status!~"[4-5].*"}[5m]))
+  / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
+  * 100) > 0 OR (sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
+  + 100))
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses)
   Low {{ printf "%.0f" $value }}%'
@@ -5600,8 +5597,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$cluster",
-  job=~".+"} - time()) / 60 / 60 / 24
+expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
+  / 60 / 60 / 24
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf
   "%.2f" $value }} days'
@@ -5668,10 +5665,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster", job=~".+",
-  code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -5711,10 +5708,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster", job=~".+",
-  code!~"[4-5].*", code!="total"}[5m])) / sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_vts_server_requests_total{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -5754,10 +5751,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job) (rate(nginx_server_requests{cluster="$cluster", job=~".+", code!~"[4-5].*",
-  code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -5797,10 +5794,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job) (rate(nginx_server_requests{cluster="$cluster", job=~".+", code!~"[4-5].*",
-  code!="total"}[5m])) / sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+", code!="total"}[5m])) * 100) > 0 OR (sum by (job) (rate(nginx_server_requests{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
+  code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
+  code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
@@ -5864,7 +5861,7 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job) (postfix_size{cluster="$cluster", job=~".+"}))
+expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}
 mappings:
 - text: '-'
@@ -5928,10 +5925,10 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+",status!~"[4-5].*"}[5m])) / sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+"}[5m])) * 100) > 0 OR (sum by (job) (rate(flask_http_request_duration_seconds_count{cluster="$cluster",
-  job=~".+"}[5m])) + 100)
+expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
+  / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
+  * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
+  + 100)
 linkGetParams: var-job={{ $labels.job }}
 message: 'ClusterVMApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
