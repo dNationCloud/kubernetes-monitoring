@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.6.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.6.1) (2023-11-21)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.6.0...v2.6.1)
+
+**Merged pull requests:**
+
+- Fix old table panel in alert-overview we are using for Grafana versions 10+ [\#182](https://github.com/dNationCloud/kubernetes-monitoring/pull/182)
+
 ## [v2.6.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.6.0) (2023-11-21)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.5.4...v2.6.0)
@@ -493,6 +501,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
