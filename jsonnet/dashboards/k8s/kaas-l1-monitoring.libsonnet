@@ -125,7 +125,7 @@ local sumTempWidth(templates) =
         )
         .addDataLinks(
           $.updateDataLinksCommonArgs(
-            [{ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] }]
+            [{ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertKaasOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] }]
           )
         )
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
@@ -137,7 +137,7 @@ local sumTempWidth(templates) =
         )
         .addDataLinks(
           $.updateDataLinksCommonArgs(
-            [{ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertClusterOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] }]
+            [{ title: 'K8s Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s&var-alertgroup=%s' % [$._config.grafanaDashboards.ids.alertKaasOverview, $._config.grafanaDashboards.dataLinkCommonArgs, std.join('&var-alertgroup=', alertGroups + alertVMGroups)] }]
            )
         )
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),

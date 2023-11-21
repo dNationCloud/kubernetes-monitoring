@@ -1799,10 +1799,11 @@
       hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
       vmApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterVMApp, self.appTemplates),
     },
-    blackbox: {
-      k8s: {
+    L0: {
+      local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
+      blackbox: {
         main: {
-          local expr = 'group by (instance) (probe_success{instance=~"%(http_endpoint)s", endpoint="http"})',
+          local expr = 'probe_success{instance=~"%(http_endpoint)s", endpoint="http"}',
           local thresholds = {
             operator: '<',
             lowest: 0,
@@ -1825,12 +1826,9 @@
           },
         },
       },
-    },
-    L0Kaas: {
-      local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
-      k8s: {
+      kaas: {
         main: {
-          local expr = '((sum(kaas{cluster=~"%(cluster)s"} unless up{job=~"node-exporter", cluster=~"%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + sum(kaas{cluster=~"%(cluster)s"} or on() vector(0) == bool 0 * (-1)) + sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local expr = '((sum(kaas{cluster=~"%(cluster)s"} unless up{job=~"node-exporter", cluster=~"%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + ((sum(kaas{cluster=~"%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
           local thresholds = {
             operator: '>=',
             lowest: 0,
@@ -1855,13 +1853,37 @@
             },
           },
         },
-      },
-    },
-    L0: {
-      local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
+      },      
       k8s: {
         main: {
           local expr = '((sum(up{job=~"node-exporter", cluster="%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local thresholds = {
+            operator: '>=',
+            lowest: 0,
+            warning: 1,
+            critical: maxWarnings,
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+              { from: -1, text: 'Down', to: -1, type: 2, value: '' },
+              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
+              { from: 1, text: 'Warning', to: maxWarnings - 1, type: 2, value: '' },
+              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+            ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          },
+        },
+      },
+      testbed: {
+        main: {
+          local expr = '((sum(up{infrastructure="testbed"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", infrastructure="testbed", alertstate="firing", severity="warning"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", infrastructure="testbed", alertstate="firing", severity="critical"} OR on() vector(0)) * %(maxWarnings)d',
           local thresholds = {
             operator: '>=',
             lowest: 0,

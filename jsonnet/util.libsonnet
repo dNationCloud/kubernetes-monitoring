@@ -86,6 +86,9 @@
   getCustomName(nameStrings)::
     std.join(' ', nameStrings),
 
+  isTestbedMonitoring()::
+    $._config.testbedMonitoring.enabled,
+
   isBlackBoxMonitoring()::
     $._config.blackboxMonitoring.enabled,
 
@@ -102,7 +105,7 @@
     /**
      * Maps dashboards to their template group. User defined templates from values.yaml are included too.
      */
-    [$._config.grafanaDashboards.ids.kaasMonitoring]: $._config.templates.L0Kaas.k8s + $._config.templates.L0.host,
+    [$._config.grafanaDashboards.ids.kaasMonitoring]: $._config.templates.L0.kaas + $._config.templates.L0.host,
     [$._config.grafanaDashboards.ids.monitoring]: $._config.templates.L0.k8s + $._config.templates.L0.host,
     [$._config.grafanaDashboards.ids.k8sMonitoring]: $._config.templates.L1.k8s,
     [$._config.grafanaDashboards.ids.containerOverview]: $._config.templates.L2.containerOverview,

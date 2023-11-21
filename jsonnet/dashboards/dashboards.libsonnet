@@ -19,6 +19,8 @@
 // dNation dashboards
 (import 'k8s/k8s-monitoring.libsonnet') +
 (import 'k8s/alert-overview.libsonnet') +
+(import 'k8s/alert-overview-kaas.libsonnet') +
+(import 'k8s/alert-overview-testbed.libsonnet') +
 (import 'k8s/node-exporter.libsonnet') +
 (import 'k8s/memory-namespace-overview.libsonnet') +
 (import 'k8s/network-namespace-overview.libsonnet') +
@@ -27,6 +29,7 @@
 (import 'k8s/k8s-overview-dashboards.libsonnet') +
 (import 'k8s/node-overview-dashboards.libsonnet') +
 (import 'k8s/kaas-l1-monitoring.libsonnet') +
+(import 'k8s/testbed-dashlist.libsonnet') +
 
 // Kube system dashboards
 (import 'k8s/controller-manager.libsonnet') +

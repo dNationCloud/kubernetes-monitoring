@@ -98,7 +98,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if std.type(tpl.panel.gridPos.y) == 'number' then
                 tpl.panel.gridPos.y
               else
-                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.L0Kaas.k8s.main.panel.gridPos.w, $._config.templates.L0Kaas.k8s.main.panel.gridPos.h), index, panelWidth, panelHeight);
+                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.L0.kaas.main.panel.gridPos.w, $._config.templates.L0.kaas.main.panel.gridPos.h), index, panelWidth, panelHeight);
 
             statPanel.new(
               title='Host %s' % host.name,
@@ -195,7 +195,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 h: panelHeight,
               },
             }
-            for tpl in $.getTemplates($._config.templates.L0Kaas.k8s, cluster)
+            for tpl in $.getTemplates($._config.templates.L0.kaas, cluster)
             if (std.objectHas(tpl, 'panel') && tpl.panel != {})
           ];
 
@@ -285,7 +285,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               if $.isHostMonitoring() then
                 [
                   row.new('Host Monitoring') {
-                    local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0Kaas.k8s.main.panel.gridPos.w, $._config.templates.L0Kaas.k8s.main.panel.gridPos.h) - 1,
+                    local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.kaas.main.panel.gridPos.w, $._config.templates.L0.kaas.main.panel.gridPos.h) - 1,
                     gridPos: { x: 0, y: rowY, w: 24, h: 1 },
                   },
                 ] + hostPanels

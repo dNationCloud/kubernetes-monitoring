@@ -57,8 +57,9 @@
         critical: 'red',
         invalid: 'black',  // invalid range is always from minus infinity to 'lowest' thredhold if it is defined
       },
-      dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster|&from=$__from&to=$__to' % [self.refresh],
+      dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
       dataLinkCommonArgsNoCluster: 'refresh=%s&var-datasource=$datasource&from=$__from&to=$__to' % [self.refresh],
+      dataLinkCommonArgsBlackbox: 'refresh=%s&var-datasource=$datasource&var-instance=$http_endpoint&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
       templateSort: 5,  // case insensitive ascent sort
       ids: {
@@ -66,6 +67,8 @@
         k8sMonitoring: 'k8smonitoring',
         alertHostOverview: 'alerthostoverview',
         alertClusterOverview: 'alertclusteroverview',
+        alertKaasOverview: 'alertkaasoverview',
+        alertTestbedOverview: 'alerttestbedoverview',
         alertVMOverview: 'alertvmoverview',
         nodeOverview: 'nodeoverview',
         jobOverview: 'joboverview',
@@ -120,6 +123,7 @@
         prometheus: 'prometheus',
         sslExporter: 'ssl-exporter',
         harbor: 'harbor',
+        testbed: 'testbed',
         //Monitoring dashboard
         monitoring: 'monitoring',
         kaasMonitoring: 'kaas-monitoring',
@@ -147,6 +151,7 @@
         k8sHostsMain: ['k8s', 'host', 'L1'],
         k8sMonitoringMain: ['k8s', 'cluster', 'host', 'L0'],
         kaasMonitoringMain: ['kaas', 'cluster', 'host', 'L0'],
+        testbed: ['testbed', 'L1'],
       },
       constants: {
         infinity: 99999999999999999999999999999999,
@@ -168,7 +173,9 @@
     blackboxMonitoring: {
       enabled: false,
     },
-
+    testbedMonitoring: {
+      enabled: false,
+    },
     kaasMonitoring: {
       enabled: false,
       clusters: [],
