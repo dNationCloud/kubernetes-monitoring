@@ -100,20 +100,13 @@ local template = grafana.template;
       ),
 
     clusterTemplate(query, hide='')::
-
-      // cluster variable will be hide if there is only 1 cluster and hide parameter is not set
-      local hideVariable =
-        if hide == '' then
-          if $.isMultiClusterMonitoring() then '' else 'variable'
-        else hide;
-
       baseTemplate(
         name='cluster',
         label='Cluster',
         query=query,
         includeAll=false,
         multi=false,
-        hide=hideVariable,
+        hide=hide,
       ),
 
     instanceTemplate(query, label='Instance', regex='')::
@@ -261,7 +254,7 @@ local template = grafana.template;
       baseTemplate(
         name='masterInstance',
         label='Master Instance',
-        query='label_values(master_uname_info{cluster=~"$cluster"}, instance)',
+        query='label_values(master_uname_info{cluster="$cluster"}, instance)',
         hide='variable',
       ),
 
@@ -269,7 +262,7 @@ local template = grafana.template;
       baseTemplate(
         name='workerInstance',
         label='Worker Instance',
-        query='label_values(worker_uname_info{cluster=~"$cluster"}, instance)',
+        query='label_values(worker_uname_info{cluster="$cluster"}, instance)',
         hide='variable',
       ),
   },

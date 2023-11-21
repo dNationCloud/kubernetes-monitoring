@@ -905,7 +905,7 @@ When some threshold is crossed and this state  persists for <strong>5</strong> m
 The orange state panel  with <code>Warning</code> label is displayed in case of warning alert. Red state panel with  <code>Critical</code> label is displayed in case of critical alert.
 We have implemented intuitive green, orange and red color indicators that are signalizing if your action is needed or if everything is OK.
 If you want to see more information about your k8s cluster, just drill down by left-clicking on
-the relevant state panel. As of now, multi-cluster monitoring support is avaible.</p>
+the relevant state panel. As of now, multi-cluster monitoring support is available.</p>
 <ul>
 <li>If you are interested in the k8s cluster monitoring see <a href="#how-to-set-up-k8s-cluster-monitoring">How to set up k8s cluster monitoring?</a> section.</li>
 <li>If you are interested in the k8s multi-cluster monitoring see <a href="#how-to-set-up-k8s-multi-cluster-monitoring">How to set up k8s multi-cluster monitoring?</a> section.</li>
@@ -1051,6 +1051,7 @@ See some examples from layer 2 of host monitoring:</p>
 <span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">clusters</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K8sCluster</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">observer-cluster</span><span class="w">  </span><span class="c1"># The label should be the same as the external_label `cluster` from prometheus</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
 <span class="w">    </span><span class="nt">apps</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </code></pre></div>
@@ -1092,6 +1093,7 @@ To enable it just create application monitoring definition as follows:
 <span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">clusters</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K8sCluster</span>
+<span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">observer-cluster</span><span class="w">  </span><span class="c1"># The label should be the same as the external_label `cluster` from prometheus</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
 <span class="w">    </span><span class="nt">apps</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-example</span>
@@ -1101,7 +1103,7 @@ To enable it just create application monitoring definition as follows:
 <span class="w">        </span><span class="nt">javaActuator</span><span class="p">:</span><span class="w">  </span><span class="c1"># Application Exporter template</span>
 <span class="w">          </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">serviceMonitor</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span><span class="w"> </span><span class="c1"># The label to use to retrieve the job name from.</span>
+<span class="w">        </span><span class="nt">jobLabel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span><span class="w">  </span><span class="c1"># The label to use to retrieve the job name from.</span>
 <span class="w">        </span><span class="nt">namespaceSelector</span><span class="p">:</span><span class="w">  </span><span class="c1"># Namespaces to transfer from the kubernetes service to the target</span>
 <span class="w">          </span><span class="nt">matchNames</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>

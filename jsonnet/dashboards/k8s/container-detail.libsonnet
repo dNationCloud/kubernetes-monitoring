@@ -39,9 +39,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(kube_pod_container_resource_requests{resource="cpu", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(kube_pod_container_resource_limits{resource="cpu", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(kube_pod_container_resource_requests{resource="cpu", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(kube_pod_container_resource_limits{resource="cpu", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
           ]
         )
         .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
@@ -60,9 +60,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", id!="", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(kube_pod_container_resource_requests{resource="memory", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(kube_pod_container_resource_limits{resource="memory", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(container_memory_working_set_bytes{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", id!="", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(kube_pod_container_resource_requests{resource="memory", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(kube_pod_container_resource_limits{resource="memory", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='PodLimits - {{$view}}'),
           ]
         )
         .addSeriesOverride({ alias: '/PodRequests/', color: $._config.grafanaDashboards.color.red, dashes: true, fill: 0, stack: false, hideTooltip: true })
@@ -80,8 +80,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
           ]
         )
         .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
@@ -99,8 +99,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
           ]
         )
         .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
@@ -122,7 +122,7 @@ local row = grafana.row;
           legend_values=true,
         )
         .addSeriesOverride({ alias: 'Value #A', legend: false, hiddenSeries: true })
-        .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
+        .addTarget(loki.target('sum(count_over_time({cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
 
       local logs =
         logPanel.new(
@@ -130,7 +130,7 @@ local row = grafana.row;
           datasource='$datasource_logs',
           showLabels=true,
         )
-        .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
+        .addTarget(loki.target('{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
 
       local templates =
         [
@@ -140,10 +140,10 @@ local row = grafana.row;
         + [
           $.grafanaTemplates.viewByTemplate('pod,container'),
           $.grafanaTemplates.clusterTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes, cluster)'),
-          $.grafanaTemplates.instanceTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster"}, node)', label='Node'),
-          $.grafanaTemplates.namespaceTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance"}, namespace)'),
-          $.grafanaTemplates.podTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)'),
-          $.grafanaTemplates.containerTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", pod=~"$pod"}, container)'),
+          $.grafanaTemplates.instanceTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster="$cluster"}, node)', label='Node'),
+          $.grafanaTemplates.namespaceTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster="$cluster", node=~"$instance"}, namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster="$cluster", node=~"$instance", namespace=~"$namespace"}, pod)'),
+          $.grafanaTemplates.containerTemplate('label_values(node_namespace_pod_container:container_memory_working_set_bytes{cluster="$cluster", node=~"$instance", namespace=~"$namespace", pod=~"$pod"}, container)'),
         ]
         + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.searchTemplate()] else [];
 

@@ -33,7 +33,7 @@ local table = grafana.tablePanel;
           name='ingress',
           label='Ingress',
           datasource='$datasource',
-          query='label_values(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, ingress)',
+          query='label_values(nginx_ingress_controller_requests{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, ingress)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -55,9 +55,9 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
-            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="cpu", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="cpu", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="cpu", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="cpu", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
           ],
         );
 
@@ -76,9 +76,9 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
-            prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="memory", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="memory", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(container_memory_working_set_bytes{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="memory", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="memory", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
           ],
         );
 
@@ -96,8 +96,8 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
           ],
         );
 
@@ -115,8 +115,8 @@ local table = grafana.tablePanel;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
           ],
         );
 
@@ -136,7 +136,7 @@ local table = grafana.tablePanel;
           legend_values=true,
         )
         .addSeriesOverride({ alias: 'Value #A', legend: false, hiddenSeries: true })
-        .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
+        .addTarget(loki.target('sum(count_over_time({cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
 
       local logs =
         logPanel.new(
@@ -144,7 +144,7 @@ local table = grafana.tablePanel;
           datasource='$datasource_logs',
           showLabels=true,
         )
-        .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
+        .addTarget(loki.target('{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
 
       local controllerRequestVolume =
         statPanel.new(
@@ -152,7 +152,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           unit='reqps',
         )
-        .addTarget(prometheus.target('round(sum(irate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", namespace=~"$namespace", container=~"$container"}[5m])), 0.001)'));
+        .addTarget(prometheus.target('round(sum(irate(nginx_ingress_controller_requests{cluster="$cluster", job=~"$job", controller_pod=~"$pod", namespace=~"$namespace", container=~"$container"}[5m])), 0.001)'));
 
       local configReloads =
         statPanel.new(
@@ -160,7 +160,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           decimals=0,
         )
-        .addTarget(prometheus.target('avg(nginx_ingress_controller_success{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", container=~"$container"})'));
+        .addTarget(prometheus.target('avg(nginx_ingress_controller_success{cluster="$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", container=~"$container"})'));
 
       local ingressRequestVolume =
         graphPanel.new(
@@ -177,14 +177,14 @@ local table = grafana.tablePanel;
           legend_avg=true,
           legend_values=true,
         )
-        .addTarget(prometheus.target('round(sum(irate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", ingress=~"$ingress", container=~"$container"}[5m])) by (ingress), 0.001)', legendFormat='{{ingress}}'));
+        .addTarget(prometheus.target('round(sum(irate(nginx_ingress_controller_requests{cluster="$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", ingress=~"$ingress", container=~"$container"}[5m])) by (ingress), 0.001)', legendFormat='{{ingress}}'));
 
       local controllerConnections =
         statPanel.new(
           title='Controller Connections',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", container=~"$container"}[5m]))'));
+        .addTarget(prometheus.target('sum(avg_over_time(nginx_ingress_controller_nginx_process_connections{cluster="$cluster", job=~"$job", controller_pod=~"$pod", controller_namespace=~"$namespace", container=~"$container"}[5m]))'));
 
       local configFailed =
         statPanel.new(
@@ -192,7 +192,7 @@ local table = grafana.tablePanel;
           datasource='$datasource',
           noValue='0',
         )
-        .addTarget(prometheus.target('count(nginx_ingress_controller_config_last_reload_successful{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",controller_namespace=~"$namespace", container=~"$container"} == 0)'));
+        .addTarget(prometheus.target('count(nginx_ingress_controller_config_last_reload_successful{cluster="$cluster", job=~"$job", controller_pod=~"$pod",controller_namespace=~"$namespace", container=~"$container"} == 0)'));
 
       local controllerSuccessRate =
         statPanel.new(
@@ -208,7 +208,7 @@ local table = grafana.tablePanel;
             { color: $._config.grafanaDashboards.color.green, value: 90 },
           ]
         )
-        .addTarget(prometheus.target('sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",status!~"[4-5].*", container=~"$container"}[5m])) / sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod", namespace=~"$namespace", container=~"$container"}[5m])) * 100'));
+        .addTarget(prometheus.target('sum(rate(nginx_ingress_controller_requests{cluster="$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",status!~"[4-5].*", container=~"$container"}[5m])) / sum(rate(nginx_ingress_controller_requests{cluster="$cluster", job=~"$job", controller_pod=~"$pod", namespace=~"$namespace", container=~"$container"}[5m])) * 100'));
 
       local ingressSuccessRate =
         graphPanel.new(
@@ -227,7 +227,7 @@ local table = grafana.tablePanel;
           legend_min=true,
           legend_values=true,
         )
-        .addTarget(prometheus.target('sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",ingress=~"$ingress",status!~"[4-5].*",  container=~"$container"}[5m])) by (ingress) / sum(rate(nginx_ingress_controller_requests{cluster=~"$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",  container=~"$container", ingress=~"$ingress"}[5m])) by (ingress)', legendFormat='{{ingress}}'));
+        .addTarget(prometheus.target('sum(rate(nginx_ingress_controller_requests{cluster="$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",ingress=~"$ingress",status!~"[4-5].*",  container=~"$container"}[5m])) by (ingress) / sum(rate(nginx_ingress_controller_requests{cluster="$cluster", job=~"$job", controller_pod=~"$pod",namespace=~"$namespace",  container=~"$container", ingress=~"$ingress"}[5m])) by (ingress)', legendFormat='{{ingress}}'));
 
       local percentileTable =
         table.new(
@@ -246,11 +246,11 @@ local table = grafana.tablePanel;
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.50, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
-            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.90, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
-            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.99, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
-            prometheus.target(format='table', instant=true, expr='sum(irate(nginx_ingress_controller_request_size_sum{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (ingress)'),
-            prometheus.target(format='table', instant=true, expr='sum(irate(nginx_ingress_controller_response_size_sum{cluster=~"$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (ingress)'),
+            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.50, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster="$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
+            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.90, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster="$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
+            prometheus.target(format='table', instant=true, expr='histogram_quantile(0.99, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{cluster="$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (le, ingress))'),
+            prometheus.target(format='table', instant=true, expr='sum(irate(nginx_ingress_controller_request_size_sum{cluster="$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (ingress)'),
+            prometheus.target(format='table', instant=true, expr='sum(irate(nginx_ingress_controller_response_size_sum{cluster="$cluster", job=~"$job", ingress!="", controller_pod=~"$pod",  container=~"$container", controller_namespace=~"$namespace", ingress=~"$ingress"}[5m])) by (ingress)'),
           ]
         );
 
@@ -267,7 +267,7 @@ local table = grafana.tablePanel;
             { alias: 'TTL', pattern: 'Value', type: 'number', colors: colors, colorMode: 'cell', thresholds: [0, 8 * 24 * 60 * 60], unit: 's', decimals: 0 },
           ]
         )
-        .addTarget(prometheus.target(format='table', instant=true, expr='avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster=~"$cluster", job=~"$job", pod=~"$pod", namespace=~"$namespace", container=~"$container"}) by (host) - time()'));
+        .addTarget(prometheus.target(format='table', instant=true, expr='avg(nginx_ingress_controller_ssl_expire_time_seconds{cluster="$cluster", job=~"$job", pod=~"$pod", namespace=~"$namespace", container=~"$container"}) by (host) - time()'));
 
       local templates =
         [
@@ -276,11 +276,11 @@ local table = grafana.tablePanel;
         + (if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [])
         + [
           $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-          $.grafanaTemplates.jobTemplate('label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster"}, job)'),
+          $.grafanaTemplates.jobTemplate('label_values(nginx_ingress_controller_config_hash{cluster="$cluster"}, job)'),
           $.grafanaTemplates.viewByTemplate('pod,container'),
-          $.grafanaTemplates.namespaceTemplate('label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job"}, controller_namespace)'),
-          $.grafanaTemplates.podTemplate('label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
-          $.grafanaTemplates.containerTemplate('label_values(nginx_ingress_controller_config_hash{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)'),
+          $.grafanaTemplates.namespaceTemplate('label_values(nginx_ingress_controller_config_hash{cluster="$cluster", job=~"$job"}, controller_namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(nginx_ingress_controller_config_hash{cluster="$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
+          $.grafanaTemplates.containerTemplate('label_values(nginx_ingress_controller_config_hash{cluster="$cluster", job=~"$job", namespace=~"$namespace"}, container)'),
           ingressTemplate,
         ]
         + if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.searchTemplate()] else [];

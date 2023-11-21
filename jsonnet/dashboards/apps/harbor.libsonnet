@@ -34,7 +34,7 @@ local row = grafana.row;
           min=0,
           max=1,
         )
-        .addTarget(prometheus.target('harbor_health{cluster=~"$cluster", job=~"$job"}'))
+        .addTarget(prometheus.target('harbor_health{cluster="$cluster", job=~"$job"}'))
         .addThresholds(
           [
             { color: $._config.grafanaDashboards.color.red, value: null },
@@ -47,35 +47,35 @@ local row = grafana.row;
           title='Component Up Status',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_up{cluster=~"$cluster", job=~"$job"}', legendFormat='{{component}}'));
+        .addTarget(prometheus.target('harbor_up{cluster="$cluster", job=~"$job"}', legendFormat='{{component}}'));
 
       local systemInfo =
         graphPanel.new(
           title='System Info',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_system_info{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('harbor_system_info{cluster="$cluster", job=~"$job"}'));
 
       local artifactPulled =
         graphPanel.new(
           title='Artifact Pulled',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_artifact_pulled{cluster=~"$cluster", job=~"$job"}', legendFormat='{{project_name}}'));
+        .addTarget(prometheus.target('harbor_artifact_pulled{cluster="$cluster", job=~"$job"}', legendFormat='{{project_name}}'));
 
       local projectTotal =
         graphPanel.new(
           title='Project Total',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_project_total{cluster=~"$cluster", job=~"$job"}', legendFormat='public="{{public}}"'));
+        .addTarget(prometheus.target('harbor_project_total{cluster="$cluster", job=~"$job"}', legendFormat='public="{{public}}"'));
 
       local projectMembers =
         graphPanel.new(
           title='Project Members',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_project_member_total{cluster=~"$cluster", job=~"$job"}', legendFormat='{{project_name}}'));
+        .addTarget(prometheus.target('harbor_project_member_total{cluster="$cluster", job=~"$job"}', legendFormat='{{project_name}}'));
 
       local quotaUsage =
         graphPanel.new(
@@ -83,56 +83,56 @@ local row = grafana.row;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('harbor_project_quota_usage_byte{cluster=~"$cluster", job=~"$job"}', legendFormat='{{project_name}}'));
+        .addTarget(prometheus.target('harbor_project_quota_usage_byte{cluster="$cluster", job=~"$job"}', legendFormat='{{project_name}}'));
 
       local projectRepoTotal =
         graphPanel.new(
           title='Project Repo Total',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_project_repo_total{cluster=~"$cluster", job=~"$job"}', legendFormat='{{project_name}}'));
+        .addTarget(prometheus.target('harbor_project_repo_total{cluster="$cluster", job=~"$job"}', legendFormat='{{project_name}}'));
 
       local goInfo =
         graphPanel.new(
           title='Go Info',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('go_info{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_info{cluster="$cluster", job=~"$job"}'));
 
       local processCpuTime =
         graphPanel.new(
           title='Process CPU Time',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster=~"$cluster", job=~"$job"}[5m])'));
+        .addTarget(prometheus.target('rate(process_cpu_seconds_total{cluster="$cluster", job=~"$job"}[5m])'));
 
       local goThreads =
         graphPanel.new(
           title='Go Threads',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('go_threads{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_threads{cluster="$cluster", job=~"$job"}'));
 
       local goroutines =
         graphPanel.new(
           title='Goroutines',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('go_goroutines{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_goroutines{cluster="$cluster", job=~"$job"}'));
 
       local processOpenedFd =
         graphPanel.new(
           title='Process Opened Fd',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('process_open_fds{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('process_open_fds{cluster="$cluster", job=~"$job"}'));
 
       local goHeapObjects =
         graphPanel.new(
           title='Go Heap Objects',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('go_memstats_heap_objects{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_memstats_heap_objects{cluster="$cluster", job=~"$job"}'));
 
       local goAllocatedMemory =
         graphPanel.new(
@@ -140,7 +140,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('go_memstats_alloc_bytes{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_memstats_alloc_bytes{cluster="$cluster", job=~"$job"}'));
 
       local goNextGcBytes =
         graphPanel.new(
@@ -148,7 +148,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('go_memstats_next_gc_bytes{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_memstats_next_gc_bytes{cluster="$cluster", job=~"$job"}'));
 
       local goGcTime_025 =
         graphPanel.new(
@@ -156,7 +156,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('go_gc_duration_seconds{quantile="0.25", cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_gc_duration_seconds{quantile="0.25", cluster="$cluster", job=~"$job"}'));
 
       local goGcTime_050 =
         graphPanel.new(
@@ -164,7 +164,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('go_gc_duration_seconds{quantile="0.5", cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_gc_duration_seconds{quantile="0.5", cluster="$cluster", job=~"$job"}'));
 
       local goGcTime_075 =
         graphPanel.new(
@@ -172,7 +172,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('go_gc_duration_seconds{quantile="0.75", cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('go_gc_duration_seconds{quantile="0.75", cluster="$cluster", job=~"$job"}'));
 
       local apiRequestTime_050 =
         graphPanel.new(
@@ -180,7 +180,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('harbor_core_http_request_duration_seconds{quantile="0.5", cluster=~"$cluster", job=~"$job"}', legendFormat='{{instance}}-{{operation}}'));
+        .addTarget(prometheus.target('harbor_core_http_request_duration_seconds{quantile="0.5", cluster="$cluster", job=~"$job"}', legendFormat='{{instance}}-{{operation}}'));
 
       local apiRequestTime_090 =
         graphPanel.new(
@@ -188,7 +188,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('harbor_core_http_request_duration_seconds{quantile="0.9", cluster=~"$cluster", job=~"$job"}', legendFormat='{{instance}}-{{operation}}'));
+        .addTarget(prometheus.target('harbor_core_http_request_duration_seconds{quantile="0.9", cluster="$cluster", job=~"$job"}', legendFormat='{{instance}}-{{operation}}'));
 
       local apiRequestTime_099 =
         graphPanel.new(
@@ -196,35 +196,35 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('harbor_core_http_request_duration_seconds{quantile="0.99", cluster=~"$cluster", job=~"$job"}', legendFormat='{{instance}}-{{operation}}'));
+        .addTarget(prometheus.target('harbor_core_http_request_duration_seconds{quantile="0.99", cluster="$cluster", job=~"$job"}', legendFormat='{{instance}}-{{operation}}'));
 
       local harborCoreRequestTotal =
         graphPanel.new(
           title='Harbor Core Request Total',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('rate(harbor_core_http_request_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='{{instance}}-{{operation}}'));
+        .addTarget(prometheus.target('rate(harbor_core_http_request_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='{{instance}}-{{operation}}'));
 
       local harborCoreInflightRequest =
         graphPanel.new(
           title='Harbor Core Inflight Request',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_core_http_inflight_requests{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('harbor_core_http_inflight_requests{cluster="$cluster", job=~"$job"}'));
 
       local jobServiceInfo =
         graphPanel.new(
           title='Job Service Info',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_jobservice_info{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('harbor_jobservice_info{cluster="$cluster", job=~"$job"}'));
 
       local taskQueuePendingSize =
         graphPanel.new(
           title='Task Queue Pending Size',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_task_queue_size{cluster=~"$cluster", job=~"$job"}', legendFormat='{{type}}'));
+        .addTarget(prometheus.target('harbor_task_queue_size{cluster="$cluster", job=~"$job"}', legendFormat='{{type}}'));
 
       local taskLatency =
         graphPanel.new(
@@ -233,28 +233,28 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('harbor_task_queue_latency{cluster=~"$cluster", job=~"$job"}', legendFormat='{{type}}'));
+        .addTarget(prometheus.target('harbor_task_queue_latency{cluster="$cluster", job=~"$job"}', legendFormat='{{type}}'));
 
       local taskConcurrency =
         graphPanel.new(
           title='Task Concurrency',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_task_concurrency{cluster=~"$cluster", job=~"$job"}', legendFormat='{{type}}-{{pool}}'));
+        .addTarget(prometheus.target('harbor_task_concurrency{cluster="$cluster", job=~"$job"}', legendFormat='{{type}}-{{pool}}'));
 
       local tasksPerMinute =
         graphPanel.new(
           title='Tasks Per Minute',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('rate(harbor_jobservice_task_total{cluster=~"$cluster", job=~"$job"}[1m])', legendFormat='{{type}} {{status}}'));
+        .addTarget(prometheus.target('rate(harbor_jobservice_task_total{cluster="$cluster", job=~"$job"}[1m])', legendFormat='{{type}} {{status}}'));
 
       local numberRunningScheduledJob =
         graphPanel.new(
           title='Number Of Running Scheduled Job',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('harbor_task_scheduled_total{cluster=~"$cluster", job=~"$job"}'));
+        .addTarget(prometheus.target('harbor_task_scheduled_total{cluster="$cluster", job=~"$job"}'));
 
       local taskProcessTime_050 =
         graphPanel.new(
@@ -262,7 +262,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('harbor_jobservice_task_process_time_seconds{quantile="0.5", cluster=~"$cluster", job=~"$job"}', legendFormat='{{type}} {{status}}'));
+        .addTarget(prometheus.target('harbor_jobservice_task_process_time_seconds{quantile="0.5", cluster="$cluster", job=~"$job"}', legendFormat='{{type}} {{status}}'));
 
       local taskProcessTime_090 =
         graphPanel.new(
@@ -270,7 +270,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('harbor_jobservice_task_process_time_seconds{quantile="0.9", cluster=~"$cluster", job=~"$job"}', legendFormat='{{type}} {{status}}'));
+        .addTarget(prometheus.target('harbor_jobservice_task_process_time_seconds{quantile="0.9", cluster="$cluster", job=~"$job"}', legendFormat='{{type}} {{status}}'));
 
       local taskProcessTime_099 =
         graphPanel.new(
@@ -278,28 +278,28 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('harbor_jobservice_task_process_time_seconds{quantile="0.99", cluster=~"$cluster", job=~"$job"}', legendFormat='{{type}} {{status}}'));
+        .addTarget(prometheus.target('harbor_jobservice_task_process_time_seconds{quantile="0.99", cluster="$cluster", job=~"$job"}', legendFormat='{{type}} {{status}}'));
 
       local registryRequestInflight =
         graphPanel.new(
           title='Registry Request Inflight',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('registry_http_in_flight_requests{cluster=~"$cluster", job=~"$job"}', legendFormat='{{handler}}'));
+        .addTarget(prometheus.target('registry_http_in_flight_requests{cluster="$cluster", job=~"$job"}', legendFormat='{{handler}}'));
 
       local registryRequestRate =
         graphPanel.new(
           title='Registry Request Rate',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('rate(registry_http_requests_total{cluster=~"$cluster", job=~"$job"}[5m])'));
+        .addTarget(prometheus.target('rate(registry_http_requests_total{cluster="$cluster", job=~"$job"}[5m])'));
 
       local registryStorageCache =
         graphPanel.new(
           title='Registry Storage Cache',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('rate(registry_storage_cache_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='{{type}}'));
+        .addTarget(prometheus.target('rate(registry_storage_cache_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='{{type}}'));
 
       local registryRequestTime_050 =
         graphPanel.new(
@@ -307,7 +307,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('histogram_quantile(0.5, rate(registry_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job"}[10m]))'));
+        .addTarget(prometheus.target('histogram_quantile(0.5, rate(registry_http_request_duration_seconds_bucket{cluster="$cluster", job=~"$job"}[10m]))'));
 
       local registryRequestTime_090 =
         graphPanel.new(
@@ -315,7 +315,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('histogram_quantile(0.9, rate(registry_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job"}[10m]))'));
+        .addTarget(prometheus.target('histogram_quantile(0.9, rate(registry_http_request_duration_seconds_bucket{cluster="$cluster", job=~"$job"}[10m]))'));
 
       local registryRequestTime_099 =
         graphPanel.new(
@@ -323,7 +323,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('histogram_quantile(0.99, rate(registry_http_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job"}[10m]))'));
+        .addTarget(prometheus.target('histogram_quantile(0.99, rate(registry_http_request_duration_seconds_bucket{cluster="$cluster", job=~"$job"}[10m]))'));
 
       local registryRequestSize_090 =
         graphPanel.new(
@@ -331,7 +331,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('histogram_quantile(0.9, rate(registry_http_request_size_bytes_bucket{cluster=~"$cluster", job=~"$job"}[10m]))'));
+        .addTarget(prometheus.target('histogram_quantile(0.9, rate(registry_http_request_size_bytes_bucket{cluster="$cluster", job=~"$job"}[10m]))'));
 
       local registryResponseSize_090 =
         graphPanel.new(
@@ -339,7 +339,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='bytes',
         )
-        .addTarget(prometheus.target('histogram_quantile(0.9, rate(registry_http_response_size_bytes_bucket{cluster=~"$cluster", job=~"$job"}[10m]))'));
+        .addTarget(prometheus.target('histogram_quantile(0.9, rate(registry_http_response_size_bytes_bucket{cluster="$cluster", job=~"$job"}[10m]))'));
 
       local registryStorageActionTime_090 =
         graphPanel.new(
@@ -347,7 +347,7 @@ local row = grafana.row;
           datasource='$datasource',
           format='s',
         )
-        .addTarget(prometheus.target('histogram_quantile(0.9, rate(registry_storage_action_seconds_bucket{cluster=~"$cluster", job=~"$job"}[10m]))'));
+        .addTarget(prometheus.target('histogram_quantile(0.9, rate(registry_storage_action_seconds_bucket{cluster="$cluster", job=~"$job"}[10m]))'));
 
       local templates =
         [

@@ -19,6 +19,7 @@ clusterMonitoring:
   enabled: true
   clusters:
   - name: K8sCluster
+    label: observer-cluster
     description: 'Kubernetes cluster monitoring'
     templates:
       mostUtilizedPVCELK:

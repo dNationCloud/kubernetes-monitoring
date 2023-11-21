@@ -28,7 +28,7 @@ local graphPanel = grafana.graphPanel;
           name='host',
           label='Host',
           datasource='$datasource',
-          query='label_values(nginx_vts_server_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, host)',
+          query='label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, host)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -40,14 +40,14 @@ local graphPanel = grafana.graphPanel;
           title='Server Connections',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('sum(nginx_vts_main_connections{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"active|writing|reading|waiting"}) by (status)', legendFormat='{{status}}'));
+        .addTarget(prometheus.target('sum(nginx_vts_main_connections{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"active|writing|reading|waiting"}) by (status)', legendFormat='{{status}}'));
 
       local serverRequests =
         graphPanel.new(
           title='Server Requests',
           datasource='$datasource',
         )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_server_requests_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_vts_server_requests_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
 
       local serverBytes =
         graphPanel.new(
@@ -56,15 +56,15 @@ local graphPanel = grafana.graphPanel;
           format='bytes',
           min=0,
         )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_server_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (direction)', legendFormat='{{direction}}'));
+        .addTarget(prometheus.target('sum(irate(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (direction)', legendFormat='{{direction}}'));
 
       local templates =
         [
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-          $.grafanaTemplates.jobTemplate('label_values(nginx_vts_server_bytes_total{cluster=~"$cluster"}, job)'),
-          $.grafanaTemplates.namespaceTemplate('label_values(nginx_vts_server_bytes_total{cluster=~"$cluster", job=~"$job"}, namespace)'),
-          $.grafanaTemplates.podTemplate('label_values(nginx_vts_server_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
+          $.grafanaTemplates.jobTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster"}, job)'),
+          $.grafanaTemplates.namespaceTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job"}, namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
           hostTemplate,
         ];
 

@@ -30,9 +30,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(autoscaler_instances{cluster=~"$cluster", job=~"$job"})', legendFormat='instances'),
-            prometheus.target('sum(autoscaler_healthy{cluster=~"$cluster", job=~"$job"})', legendFormat='instances healthy'),
-            prometheus.target('sum(autoscaler_groups{cluster=~"$cluster", job=~"$job"})', legendFormat='groups'),
+            prometheus.target('sum(autoscaler_instances{cluster="$cluster", job=~"$job"})', legendFormat='instances'),
+            prometheus.target('sum(autoscaler_healthy{cluster="$cluster", job=~"$job"})', legendFormat='instances healthy'),
+            prometheus.target('sum(autoscaler_groups{cluster="$cluster", job=~"$job"})', legendFormat='groups'),
           ],
         );
 
@@ -53,7 +53,7 @@ local row = grafana.row;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(autoscaler_instances{cluster=~"$cluster"}, job)'),
+        $.grafanaTemplates.jobTemplate('label_values(autoscaler_instances{cluster="$cluster"}, job)'),
       ])
       .addPanels(panels),
   },

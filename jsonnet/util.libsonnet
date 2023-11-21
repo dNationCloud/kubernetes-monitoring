@@ -92,9 +92,6 @@
   isHostMonitoring()::
     $._config.hostMonitoring.enabled && std.length($._config.hostMonitoring.hosts) > 0,
 
-  isMultiClusterMonitoring()::
-    $._config.clusterMonitoring.enabled && std.length($._config.clusterMonitoring.clusters) > 1,
-
   dashboardTemplateMapping():: {
     /**
      * Maps dashboards to their template group. User defined templates from values.yaml are included too.
@@ -429,19 +426,16 @@
 
   updateDataLinksCommonArgs(datalinks, tableLink=false)::
     /**
-     * If monitoring is in multi-cluster setup, we want to pass variable $cluster between dashboards.
-     * If monitoring is in single-cluster setup, only '$cluster|' is passed which match everything.
      *
      * @param array Datalinks for panel.
      * @param boolean tableLink if processed datalinks are from table or panels.
      * @return array Datalinks for panel.
      */
-    local clusterLabel = if utils.isMultiClusterMonitoring() then '$cluster' else '$cluster|';
     local urlField = if tableLink then 'linkUrl' else 'url';
     [
       local urlFieldValue = if tableLink then datalink.linkUrl else datalink.url;
       if std.objectHas(datalink, urlField) then
-        datalink { [urlField]: std.strReplace(urlFieldValue, '$cluster|', clusterLabel) }
+        datalink { [urlField]: urlFieldValue }
       else
         datalink
       for datalink in datalinks

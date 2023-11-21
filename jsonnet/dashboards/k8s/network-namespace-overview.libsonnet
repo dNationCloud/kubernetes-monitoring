@@ -67,51 +67,51 @@ local graphPanel = grafana.graphPanel;
       local recPackErrGraphPanel =
         networkPanel(
           title='Rate of Received Packets Errors',
-          expr='sort_desc(sum(irate(node_network_receive_errs_total{cluster=~"$cluster", namespace=~".+", device!~"lo | veth. | docker.* | flannel.* | cali.* | cbr."}[$interval:$resolution])) by (namespace))',
+          expr='sort_desc(sum(irate(node_network_receive_errs_total{cluster="$cluster", namespace=~".+", device!~"lo | veth. | docker.* | flannel.* | cali.* | cbr."}[$interval:$resolution])) by (namespace))',
         );
 
       local transPackErrGraphPanel =
         networkPanel(
           title='Rate of Transmitted Packets Errors',
-          expr='sort_desc(sum(irate(node_network_transmit_errs_total{cluster=~"$cluster", namespace=~".+", device!~"lo | veth. | docker.* | flannel.* | cali.* | cbr."}[$interval:$resolution])) by (namespace))',
+          expr='sort_desc(sum(irate(node_network_transmit_errs_total{cluster="$cluster", namespace=~".+", device!~"lo | veth. | docker.* | flannel.* | cali.* | cbr."}[$interval:$resolution])) by (namespace))',
         );
 
       local recPackDropGraphPanel =
         networkPanel(
           title='Rate of Received Packets Dropped',
-          expr='sort_desc(sum(irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
+          expr='sort_desc(sum(irate(container_network_receive_packets_dropped_total{cluster="$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
         );
 
       local transPackDropGraphPanel =
         networkPanel(
           title='Rate of Transmitted Packets Dropped',
-          expr='sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
+          expr='sort_desc(sum(irate(container_network_transmit_packets_dropped_total{cluster="$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
         );
 
       local recBandGraphPanel =
         networkPanel(
           title='Receive Bandwidth',
           format='Bps',
-          expr='sort_desc(sum(irate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
+          expr='sort_desc(sum(irate(container_network_receive_bytes_total{cluster="$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
         );
 
       local transBandGraphPanel =
         networkPanel(
           title='Transmit Bandwidth',
           format='Bps',
-          expr='sort_desc(sum(irate(container_network_transmit_bytes_total{cluster=~"$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
+          expr='sort_desc(sum(irate(container_network_transmit_bytes_total{cluster="$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
         );
 
       local recPackGraphPanel =
         networkPanel(
           title='Rate of Received Packets',
-          expr='sort_desc(sum(irate(container_network_receive_packets_total{cluster=~"$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
+          expr='sort_desc(sum(irate(container_network_receive_packets_total{cluster="$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
         );
 
       local transPackGraphPanel =
         networkPanel(
           title='Rate of Transmitted Packets',
-          expr='sort_desc(sum(irate(container_network_transmit_packets_total{cluster=~"$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
+          expr='sort_desc(sum(irate(container_network_transmit_packets_total{cluster="$cluster", namespace=~".+"}[$interval:$resolution])) by (namespace))',
         );
 
       dashboard.new(

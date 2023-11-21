@@ -295,6 +295,15 @@ helm<span class="w"> </span>install<span class="w"> </span>dnation-kubernetes-mo
 <p>Search for <code>Monitoring</code> dashboard. The fun starts here :).
 If you want to set the <code>Monitoring</code> dashboard as a home dashboard follow <a href="https://grafana.com/docs/grafana/latest/administration/change-home-dashboard/#set-the-default-dashboard-through-preferences">here</a>.
 If you're experiencing issues please read the <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation">documentation</a> and <a href="https://dnationcloud.github.io/kubernetes-monitoring/helpers/FAQ/">FAQ</a>.</p>
+<p>You should set the external label <code>cluster</code> for your Prometheus instance and this label should be
+the same, as the one defined in the label field in <a href="../chart/values.yaml">values.yaml</a> for your cluster monitoring.
+E.g., if you installed Prometheus via kube-prometheus-stack helm chart:
+<div class="highlight"><pre><span></span><code><span class="nt">kube-prometheus-stack</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">prometheusSpec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">externalLabels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">cluster</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;observer-cluster&quot;</span>
+</code></pre></div></p>
 <h2 id="configuration">Configuration</h2>
 <p>Default values for dNation Kubernetes Monitoring are defined by merging of jsonnet/config.libsonnet and chart/values.yaml files.
 Full list of possible configuration parameters are listed in the project <a href="https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation">documentation</a>.

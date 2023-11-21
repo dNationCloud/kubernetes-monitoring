@@ -73,8 +73,8 @@ local table = grafana.tablePanel;
       customizableGrafanaTemplateFunction=$.grafanaTemplates.containerTemplate,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_pod_container_info, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_container_info{cluster=~"$cluster"}, namespace)'),
-        $.grafanaTemplates.podTemplate('label_values(kube_pod_container_info{cluster=~"$cluster", namespace=~"$namespace"}, pod)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_container_info{cluster="$cluster"}, namespace)'),
+        $.grafanaTemplates.podTemplate('label_values(kube_pod_container_info{cluster="$cluster", namespace=~"$namespace"}, pod)'),
       ],
     ) +
 
@@ -88,7 +88,7 @@ local table = grafana.tablePanel;
       customizableGrafanaTemplateFunction=$.grafanaTemplates.jobNameTemplate,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_job_info, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_job_info{cluster=~"$cluster"}, namespace)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_job_info{cluster="$cluster"}, namespace)'),
       ],
     ) +
 
@@ -102,7 +102,7 @@ local table = grafana.tablePanel;
       customizableGrafanaTemplateFunction=$.grafanaTemplates.daemonsetTemplate,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_daemonset_status_desired_number_scheduled, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_daemonset_status_desired_number_scheduled{cluster=~"$cluster"}, namespace)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_daemonset_status_desired_number_scheduled{cluster="$cluster"}, namespace)'),
       ],
     ) +
 
@@ -116,7 +116,7 @@ local table = grafana.tablePanel;
       customizableGrafanaTemplateFunction=$.grafanaTemplates.deploymentTemplate,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_deployment_status_replicas, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_deployment_status_replicas{cluster=~"$cluster"}, namespace)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_deployment_status_replicas{cluster="$cluster"}, namespace)'),
       ],
     ) +
 
@@ -130,7 +130,7 @@ local table = grafana.tablePanel;
       customizableGrafanaTemplateFunction=$.grafanaTemplates.podTemplate,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_pod_info, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_info{cluster=~"$cluster"}, namespace)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_info{cluster="$cluster"}, namespace)'),
       ],
     ) +
 
@@ -144,7 +144,7 @@ local table = grafana.tablePanel;
       customizableGrafanaTemplateFunction=$.grafanaTemplates.statefulsetTemplate,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_statefulset_status_replicas, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_statefulset_status_replicas{cluster=~"$cluster"}, namespace)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_statefulset_status_replicas{cluster="$cluster"}, namespace)'),
       ],
     ) +
 
@@ -158,7 +158,7 @@ local table = grafana.tablePanel;
       customizableGrafanaTemplateFunction=$.grafanaTemplates.pvcTemplate,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_persistentvolumeclaim_info, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_persistentvolumeclaim_info{cluster=~"$cluster"}, namespace)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_persistentvolumeclaim_info{cluster="$cluster"}, namespace)'),
       ],
     ) +
 
@@ -172,7 +172,7 @@ local table = grafana.tablePanel;
       customizableGrafanaTemplateFunction=null,
       grafanaTemplates=[
         $.grafanaTemplates.clusterTemplate('label_values(kube_node_status_condition, cluster)'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_persistentvolumeclaim_info{cluster=~"$cluster"}, namespace)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_persistentvolumeclaim_info{cluster="$cluster"}, namespace)'),
       ],
     ),
 

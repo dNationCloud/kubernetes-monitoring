@@ -82,8 +82,8 @@ local polystatPanel = grafana.polystatPanel;
       .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
       .addTargets(
         [
-          prometheus.target(legendFormat='Tx_{{device}}', expr='rate(node_network_transmit_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='Rx_{{device}}', expr='rate(node_network_receive_errs_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='Tx_{{device}}', expr='rate(node_network_transmit_errs_total{cluster="$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='Rx_{{device}}', expr='rate(node_network_receive_errs_total{cluster="$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
         ]
       )
       { tooltip+: { sort: 2 } }
@@ -97,7 +97,7 @@ local polystatPanel = grafana.polystatPanel;
         fill=0,
         min=0,
       )
-      .addTarget(prometheus.target(legendFormat='{{device}}', expr='rate(node_network_receive_bytes_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
+      .addTarget(prometheus.target(legendFormat='{{device}}', expr='rate(node_network_receive_bytes_total{cluster="$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'))
       { tooltip+: { sort: 2 } }
       { gridPos: { x: 0, y: 14, w: 24, h: 7 } };
 
@@ -109,7 +109,7 @@ local polystatPanel = grafana.polystatPanel;
         fill=0,
         min=0,
       )
-      .addTarget(prometheus.target(legendFormat='{{device}}', expr='rate(node_network_transmit_bytes_total{cluster=~"$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'))
+      .addTarget(prometheus.target(legendFormat='{{device}}', expr='rate(node_network_transmit_bytes_total{cluster="$cluster", job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'))
       { tooltip+: { sort: 2 } }
       { gridPos: { x: 0, y: 21, w: 24, h: 7 } };
 
@@ -129,12 +129,12 @@ local polystatPanel = grafana.polystatPanel;
       .addSeriesOverride({ alias: '/free/', hiddenSeries: true })
       .addTargets(
         [
-          prometheus.target(legendFormat='memory used', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}) - sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-          prometheus.target(legendFormat='memory available', expr='sum by (nodename) (node_memory_MemAvailable_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-          prometheus.target(legendFormat='memory buffers', expr='sum by (nodename) (node_memory_Buffers_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-          prometheus.target(legendFormat='memory cached', expr='sum by (nodename) (node_memory_Cached_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-          prometheus.target(legendFormat='memory free', expr='sum by (nodename) (node_memory_MemFree_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
-          prometheus.target(legendFormat='memory total', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+          prometheus.target(legendFormat='memory used', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job"}* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}) - sum by (nodename) (node_memory_MemAvailable_bytes{cluster="$cluster", job=~"$job"} * on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"})'),
+          prometheus.target(legendFormat='memory available', expr='sum by (nodename) (node_memory_MemAvailable_bytes{cluster="$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"})'),
+          prometheus.target(legendFormat='memory buffers', expr='sum by (nodename) (node_memory_Buffers_bytes{cluster="$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"})'),
+          prometheus.target(legendFormat='memory cached', expr='sum by (nodename) (node_memory_Cached_bytes{cluster="$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"})'),
+          prometheus.target(legendFormat='memory free', expr='sum by (nodename) (node_memory_MemFree_bytes{cluster="$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"})'),
+          prometheus.target(legendFormat='memory total', expr='sum by (nodename) (node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"})'),
         ]
       )
       { tooltip+: { sort: 2 } }
@@ -155,10 +155,10 @@ local polystatPanel = grafana.polystatPanel;
       .addSeriesOverride({ alias: '/utilization/', yaxis: 2, lines: false, legend: false, pointradius: 0 })
       .addTargets(
         [
-          prometheus.target(legendFormat='disk used {{device}}', expr='(sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance))\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='disk size {{device}}', expr='sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='disk available {{device}}', expr='sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='disk utilization {{device}}', expr='round((sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster=~"$cluster", job=~"$job"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+          prometheus.target(legendFormat='disk used {{device}}', expr='(sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"}) by (device, instance) - sum(node_filesystem_free_bytes{cluster="$cluster", job=~"$job"}) by (device, instance))\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='disk size {{device}}', expr='sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='disk available {{device}}', expr='sum(node_filesystem_avail_bytes{cluster="$cluster", job=~"$job"}) by (device, instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='disk utilization {{device}}', expr='round((sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster="$cluster", job=~"$job"}) by (device, instance, nodename)) / (sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"}) by (device, instance, nodename) - sum(node_filesystem_free_bytes{cluster="$cluster", job=~"$job"}) by (device, instance, nodename) + sum(node_filesystem_avail_bytes{cluster="$cluster", job=~"$job"}) by (device, instance, nodename)) * 100 * on(instance) group_left(nodename) node_uname_info{cluster="$cluster", nodename=~"$instance"})'),
         ]
       )
       { yaxes: std.mapWithIndex(function(i, item) if (i == 1) then item { show: false } else item, super.yaxes) }  // Hide second Y axis
@@ -177,9 +177,9 @@ local polystatPanel = grafana.polystatPanel;
       .addSeriesOverride({ alias: '/io time*/', yaxis: 2 })
       .addTargets(
         [
-          prometheus.target(legendFormat='read {{device}}', expr='sum(rate(node_disk_read_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='written {{device}}', expr='sum(rate(node_disk_written_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='io time {{device}}', expr='sum(rate(node_disk_io_time_seconds_total{cluster=~"$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='read {{device}}', expr='sum(rate(node_disk_read_bytes_total{cluster="$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='written {{device}}', expr='sum(rate(node_disk_written_bytes_total{cluster="$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='io time {{device}}', expr='sum(rate(node_disk_io_time_seconds_total{cluster="$cluster", job=~"$job"}[5m])) by (instance)\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
         ]
       )
       { tooltip+: { sort: 2 } }
@@ -195,7 +195,7 @@ local polystatPanel = grafana.polystatPanel;
         min=0,
         max=100,
       )
-      .addTarget(prometheus.target(legendFormat='cpu usage', expr='round((1 - (avg(irate(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}))) * 100)'))
+      .addTarget(prometheus.target(legendFormat='cpu usage', expr='round((1 - (avg(irate(node_cpu_seconds_total{cluster="$cluster", job=~"$job", mode="idle"}[5m])\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}))) * 100)'))
       { tooltip+: { sort: 2 } }
       { gridPos: { x: 0, y: 7, w: 24, h: 7 } };
 
@@ -209,10 +209,10 @@ local polystatPanel = grafana.polystatPanel;
       .addSeriesOverride({ alias: 'logical cores', linewidth: 2, color: '#C4162A' })
       .addTargets(
         [
-          prometheus.target(legendFormat='1m load average', expr='node_load1{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='5m load average', expr='node_load5{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='15m load average', expr='node_load15{cluster=~"$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"}'),
-          prometheus.target(legendFormat='logical cores', expr='count(node_cpu_seconds_total{cluster=~"$cluster", job=~"$job", mode="idle"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster=~"$cluster", nodename=~"$instance"})'),
+          prometheus.target(legendFormat='1m load average', expr='node_load1{cluster="$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='5m load average', expr='node_load5{cluster="$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='15m load average', expr='node_load15{cluster="$cluster", job=~"$job"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"}'),
+          prometheus.target(legendFormat='logical cores', expr='count(node_cpu_seconds_total{cluster="$cluster", job=~"$job", mode="idle"}\n* on(instance) group_left(nodename) \n   node_uname_info{cluster="$cluster", nodename=~"$instance"})'),
         ]
       )
       { tooltip+: { sort: 2 } }
@@ -229,7 +229,7 @@ local polystatPanel = grafana.polystatPanel;
       grafanaTemplates=[
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
+        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster="$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
       ]
     ) +
 
@@ -244,7 +244,7 @@ local polystatPanel = grafana.polystatPanel;
       grafanaTemplates=[
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
+        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster="$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
       ]
     ) +
 
@@ -259,7 +259,7 @@ local polystatPanel = grafana.polystatPanel;
       grafanaTemplates=[
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
+        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster="$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
       ]
     ) +
 
@@ -274,7 +274,7 @@ local polystatPanel = grafana.polystatPanel;
       grafanaTemplates=[
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster=~"$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
+        $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster="$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
       ]
     ),
 
