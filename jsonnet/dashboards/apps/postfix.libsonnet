@@ -30,7 +30,7 @@ local row = grafana.row;
           stack=true,
           nullPointMode='null as zero',
         )
-        .addTarget(prometheus.target('sum(postfix_size{cluster=~"$cluster", job=~"$job"})', legendFormat='queue size'));
+        .addTarget(prometheus.target('sum(postfix_size{cluster="$cluster", job=~"$job"})', legendFormat='queue size'));
 
       local panels = [
         row.new('Queue Size') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
@@ -49,7 +49,7 @@ local row = grafana.row;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(postfix_size{cluster=~"$cluster"}, job)'),
+        $.grafanaTemplates.jobTemplate('label_values(postfix_size{cluster="$cluster"}, job)'),
       ])
       .addPanels(panels),
   },

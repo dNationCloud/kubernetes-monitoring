@@ -34,7 +34,7 @@ local graphPanel = grafana.graphPanel;
           format='bytes',
           min=0,
         )
-        .addTarget(prometheus.target(legendFormat='{{pod}}', expr='sum(\ncontainer_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$workload_type"}\n) by (pod) or on() sum(container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}) by (pod)'));
+        .addTarget(prometheus.target(legendFormat='{{pod}}', expr='sum(\ncontainer_memory_working_set_bytes{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$workload_type"}\n) by (pod) or on() sum(container_memory_working_set_bytes{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}) by (pod)'));
 
       local memReqTable =
         table.new(
@@ -56,13 +56,13 @@ local graphPanel = grafana.graphPanel;
         )
         .addTargets(
           [
-            prometheus.target(format='table', instant=true, expr='count(sum(container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}) by (namespace, pod)) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace"} * on(pod, namespace) group_left(node) node_namespace_pod:kube_pod_info:{cluster=~"$cluster", namespace=~"$namespace", node=~"$instance"}) by (workload, namespace)) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_requests{resource="memory", cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace, pod, container) * group(kube_pod_container_resource_requests{resource="memory", cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
-            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_limits{resource="memory", cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
-            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace, pod, container) * group(kube_pod_container_resource_limits{resource="memory", cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
-            prometheus.target(format='table', instant=true, expr='sum(container_memory_working_set_bytes{cluster=~"$cluster", node=~"$instance", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='count(sum(container_memory_working_set_bytes{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}) by (namespace, pod)) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='count(avg(namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace"} * on(pod, namespace) group_left(node) node_namespace_pod:kube_pod_info:{cluster="$cluster", namespace=~"$namespace", node=~"$instance"}) by (workload, namespace)) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_requests{resource="memory", cluster="$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(container_memory_working_set_bytes{cluster="$cluster", node=~"$instance", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace, pod, container) * group(kube_pod_container_resource_requests{resource="memory", cluster="$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
+            prometheus.target(format='table', instant=true, expr='sum(kube_pod_container_resource_limits{resource="memory", cluster="$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace)'),
+            prometheus.target(format='table', instant=true, expr='sum by (namespace) (sum(container_memory_working_set_bytes{cluster="$cluster", node=~"$instance", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace, pod, container) * group(kube_pod_container_resource_limits{resource="memory", cluster="$cluster", node=~"$instance", namespace=~"$namespace"}) by (namespace, pod, container))'),
+            prometheus.target(format='table', instant=true, expr='sum(container_memory_working_set_bytes{cluster="$cluster", node=~"$instance", container!~"POD|", id!="", namespace=~"$namespace"}) by (namespace)'),
           ]
         );
 
@@ -78,11 +78,11 @@ local graphPanel = grafana.graphPanel;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(kube_pod_info, cluster)'),
-        $.grafanaTemplates.instanceTemplate('label_values(kube_pod_info{cluster=~"$cluster"}, node)', label='Node'),
-        $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance"}, namespace)'),
-        $.grafanaTemplates.podTemplate('label_values(kube_pod_info{cluster=~"$cluster", node=~"$instance", namespace=~"$namespace"}, pod)', hide='variable'),
-        $.grafanaTemplates.workloadTypeTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}, workload_type)'),
-        $.grafanaTemplates.workloadTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)'),
+        $.grafanaTemplates.instanceTemplate('label_values(kube_pod_info{cluster="$cluster"}, node)', label='Node'),
+        $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_info{cluster="$cluster", node=~"$instance"}, namespace)'),
+        $.grafanaTemplates.podTemplate('label_values(kube_pod_info{cluster="$cluster", node=~"$instance", namespace=~"$namespace"}, pod)', hide='variable'),
+        $.grafanaTemplates.workloadTypeTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}, workload_type)'),
+        $.grafanaTemplates.workloadTemplate('label_values(namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", workload_type=~"$workload_type"}, workload)'),
       ])
       .addPanels(
         [

@@ -32,7 +32,7 @@ local row = grafana.row;
           name='jvm_memory_pool_heap',
           label='JVM Memory Pools Heap',
           datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", area="heap"},id)',
+          query='label_values(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", area="heap"},id)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -44,7 +44,7 @@ local row = grafana.row;
           name='jvm_memory_pool_nonheap',
           label='JVM Memory Pools Non-Heap',
           datasource='$datasource',
-          query='label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", area="nonheap"},id)',
+          query='label_values(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", area="nonheap"},id)',
           refresh=$._config.grafanaDashboards.templateRefresh,
           sort=$._config.grafanaDashboards.templateSort,
           includeAll=true,
@@ -66,9 +66,9 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
-            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="cpu", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="cpu", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="cpu", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="cpu", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
           ],
         );
 
@@ -87,9 +87,9 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/PodLimits/', color: $._config.grafanaDashboards.color.orange, dashes: true, fill: 0, stack: false, hideTooltip: true })
         .addTargets(
           [
-            prometheus.target('sum(container_memory_working_set_bytes{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="memory", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
-            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="memory", cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
+            prometheus.target('sum(container_memory_working_set_bytes{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", id!="", container!="POD", container=~"$container"}) by ($view)', legendFormat='{{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_requests{resource="memory", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodRequests - {{$view}}'),
+            prometheus.target('sum(\nkube_pod_container_resource_limits{resource="memory", cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)\n', legendFormat='PodLimits - {{$view}}'),
           ],
         );
 
@@ -107,8 +107,8 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_transmit_bytes_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_bytes_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
           ],
         );
 
@@ -126,8 +126,8 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
         .addTargets(
           [
-            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
-            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_transmit_packets_dropped_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Tx_{{pod}}'),
+            prometheus.target('sum(irate(container_network_receive_packets_dropped_total{cluster="$cluster", namespace=~"$namespace", pod=~"$pod"}[5m])) by (pod)', legendFormat='Rx_{{pod}}'),
           ],
         );
 
@@ -147,7 +147,7 @@ local row = grafana.row;
           legend_values=true,
         )
         .addSeriesOverride({ alias: 'Value #A', legend: false, hiddenSeries: true })
-        .addTarget(loki.target('sum(count_over_time({cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
+        .addTarget(loki.target('sum(count_over_time({cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"[10s])) by ($view)', legendFormat='{{$view}}'));
 
       local logs =
         logPanel.new(
@@ -155,7 +155,7 @@ local row = grafana.row;
           datasource='$datasource_logs',
           showLabels=true,
         )
-        .addTarget(loki.target('{cluster=~"$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
+        .addTarget(loki.target('{cluster="$cluster", namespace=~"$namespace", pod=~"$pod", container=~"$container"} |~ "(?i)$search"'));
 
       local rate =
         graphPanel.new(
@@ -168,7 +168,7 @@ local row = grafana.row;
           legend_current=true,
           legend_values=true,
         )
-        .addTarget(prometheus.target('sum(rate(http_server_requests_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}[1m]))', legendFormat='HTTP'));
+        .addTarget(prometheus.target('sum(rate(http_server_requests_seconds_count{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}[1m]))', legendFormat='HTTP'));
 
       local successRate =
         graphPanel.new(
@@ -181,7 +181,7 @@ local row = grafana.row;
           legend_current=true,
           legend_values=true,
         )
-        .addTarget(prometheus.target('sum(rate(http_server_requests_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"[4-5].*"}[1m]))', legendFormat='HTTP - 5xx|4xx'));
+        .addTarget(prometheus.target('sum(rate(http_server_requests_seconds_count{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"[4-5].*"}[1m]))', legendFormat='HTTP - 5xx|4xx'));
 
       local duration =
         graphPanel.new(
@@ -196,8 +196,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(http_server_requests_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status!~"5.."}[1m]))/sum(rate(http_server_requests_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", status!~"5.."}[1m]))', legendFormat='HTTP - AVG'),
-            prometheus.target('max(http_server_requests_seconds_max{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status!~"5.."})', legendFormat='HTTP - MAX'),
+            prometheus.target('sum(rate(http_server_requests_seconds_sum{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status!~"5.."}[1m]))/sum(rate(http_server_requests_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", status!~"5.."}[1m]))', legendFormat='HTTP - AVG'),
+            prometheus.target('max(http_server_requests_seconds_max{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status!~"5.."})', legendFormat='HTTP - MAX'),
           ],
         );
 
@@ -210,7 +210,7 @@ local row = grafana.row;
         )
         .addThresholds($.grafanaThresholds($._config.templates.L1.k8sApps.javaActuator.panel.thresholds))
         .addTarget(
-          prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})'),
+          prometheus.target('sum(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"})'),
         );
 
       local NonHeapUsed =
@@ -222,7 +222,7 @@ local row = grafana.row;
         )
         .addThresholds($.grafanaThresholds($._config.templates.L1.k8sApps.javaActuator.panel.thresholds))
         .addTarget(
-          prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})'),
+          prometheus.target('sum(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})*100/sum(jvm_memory_max_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"})'),
         );
 
       local JvmHeap =
@@ -239,9 +239,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='committed - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='max - {{$view}}'),
+            prometheus.target('sum(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='used - {{$view}}'),
+            prometheus.target('sum(jvm_memory_committed_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='committed - {{$view}}'),
+            prometheus.target('sum(jvm_memory_max_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="heap"}) by ($view)', legendFormat='max - {{$view}}'),
           ],
         );
 
@@ -259,9 +259,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"}) by ($view)', legendFormat='committed - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"}) by ($view)', legendFormat='max - {{$view}}'),
+            prometheus.target('sum(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"}) by ($view)', legendFormat='used - {{$view}}'),
+            prometheus.target('sum(jvm_memory_committed_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"}) by ($view)', legendFormat='committed - {{$view}}'),
+            prometheus.target('sum(jvm_memory_max_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", area="nonheap"}) by ($view)', legendFormat='max - {{$view}}'),
           ],
         );
 
@@ -278,15 +278,15 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='committed - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='max - {{$view}}'),
-            prometheus.target('sum(process_memory_vss_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='vss - {{$view}}'),
-            prometheus.target('sum(process_memory_rss_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='rss - {{$view}}'),
-            prometheus.target('sum(process_memory_pss_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='pss - {{$view}}'),
-            prometheus.target('sum(process_memory_swap_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='swap - {{$view}}'),
-            prometheus.target('sum(process_memory_swappss_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='swappss - {{$view}}'),
-            prometheus.target('sum(process_memory_pss_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) + sum(process_memory_swap_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='phys (pss+swap) - {{$view}}'),
+            prometheus.target('sum(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='used - {{$view}}'),
+            prometheus.target('sum(jvm_memory_committed_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='committed - {{$view}}'),
+            prometheus.target('sum(jvm_memory_max_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='max - {{$view}}'),
+            prometheus.target('sum(process_memory_vss_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='vss - {{$view}}'),
+            prometheus.target('sum(process_memory_rss_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='rss - {{$view}}'),
+            prometheus.target('sum(process_memory_pss_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='pss - {{$view}}'),
+            prometheus.target('sum(process_memory_swap_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='swap - {{$view}}'),
+            prometheus.target('sum(process_memory_swappss_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='swappss - {{$view}}'),
+            prometheus.target('sum(process_memory_pss_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) + sum(process_memory_swap_bytes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='phys (pss+swap) - {{$view}}'),
           ],
         );
 
@@ -303,10 +303,10 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_threads_live{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(jvm_threads_live_threads{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) ', legendFormat='live - {{$view}}'),
-            prometheus.target('sum(jvm_threads_daemon{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by ($view)  or sum(jvm_threads_daemon_threads{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='daemon - {{$view}}'),
-            prometheus.target('sum(jvm_threads_peak{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by ($view)  or sum(jvm_threads_peak_threads{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='peak - {{$view}}'),
-            prometheus.target('sum(process_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by ($view)', legendFormat='process - {{$view}}'),
+            prometheus.target('sum(jvm_threads_live{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(jvm_threads_live_threads{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) ', legendFormat='live - {{$view}}'),
+            prometheus.target('sum(jvm_threads_daemon{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by ($view)  or sum(jvm_threads_daemon_threads{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='daemon - {{$view}}'),
+            prometheus.target('sum(jvm_threads_peak{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by ($view)  or sum(jvm_threads_peak_threads{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='peak - {{$view}}'),
+            prometheus.target('sum(process_threads{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by ($view)', legendFormat='process - {{$view}}'),
           ],
         );
 
@@ -327,7 +327,7 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/terminated/', color: $._config.grafanaDashboards.color.purple })
         .addSeriesOverride({ alias: '/timed-waiting/', color: $._config.grafanaDashboards.color.orange })
         .addTarget(
-          prometheus.target('sum(jvm_threads_states_threads{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}} - {{$view}}'),
+          prometheus.target('sum(jvm_threads_states_threads{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"})  by (state, $view)', legendFormat='{{state}} - {{$view}}'),
         );
 
       local fileDescriptions =
@@ -344,10 +344,10 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(process_open_fds{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='open - {{$view}}'),
-            prometheus.target('sum(process_max_fds{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='max - {{$view}}'),
-            prometheus.target('sum(process_files_open{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(process_files_open_files{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='open - {{$view}}'),
-            prometheus.target('sum(process_files_max{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(process_files_max_files{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='max - {{$view}}'),
+            prometheus.target('sum(process_open_fds{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='open - {{$view}}'),
+            prometheus.target('sum(process_max_fds{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='max - {{$view}}'),
+            prometheus.target('sum(process_files_open{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(process_files_open_files{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='open - {{$view}}'),
+            prometheus.target('sum(process_files_max{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(process_files_max_files{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='max - {{$view}}'),
           ],
         );
 
@@ -368,7 +368,7 @@ local row = grafana.row;
         .addSeriesOverride({ alias: '/info/', color: $._config.grafanaDashboards.color.green })
         .addSeriesOverride({ alias: '/debug/', color: $._config.grafanaDashboards.color.blue })
         .addTarget(
-          prometheus.target('sum(increase(logback_events_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}} - {{$view}}'),
+          prometheus.target('sum(increase(logback_events_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (level, $view)', legendFormat='{{level}} - {{$view}}'),
         );
 
       local jvmMemoryPoolHeap =
@@ -386,9 +386,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="$jvm_memory_pool_heap"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="$jvm_memory_pool_heap"}) by ($view)', legendFormat='commited - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="$jvm_memory_pool_heap"}) by ($view)', legendFormat='max - {{$view}}'),
+            prometheus.target('sum(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="$jvm_memory_pool_heap"}) by ($view)', legendFormat='used - {{$view}}'),
+            prometheus.target('sum(jvm_memory_committed_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="$jvm_memory_pool_heap"}) by ($view)', legendFormat='commited - {{$view}}'),
+            prometheus.target('sum(jvm_memory_max_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="$jvm_memory_pool_heap"}) by ($view)', legendFormat='max - {{$view}}'),
           ],
         );
 
@@ -407,9 +407,9 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_memory_committed_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='commited - {{$view}}'),
-            prometheus.target('sum(jvm_memory_max_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='max - {{$view}}'),
+            prometheus.target('sum(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='used - {{$view}}'),
+            prometheus.target('sum(jvm_memory_committed_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='commited - {{$view}}'),
+            prometheus.target('sum(jvm_memory_max_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="${jvm_memory_pool_nonheap:raw}"}) by ($view)', legendFormat='max - {{$view}}'),
           ],
         );
 
@@ -422,7 +422,7 @@ local row = grafana.row;
           min=0,
           format='ops',
         )
-        .addTarget(prometheus.target('sum(rate(jvm_gc_pause_seconds_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='{{action}} ({{cause}}) - {{$view}}'));
+        .addTarget(prometheus.target('sum(rate(jvm_gc_pause_seconds_count{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='{{action}} ({{cause}}) - {{$view}}'));
 
       local pauseDurations =
         graphPanel.new(
@@ -435,8 +435,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(jvm_gc_pause_seconds_sum{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view) /sum(rate(jvm_gc_pause_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='avg {{action}} ({{cause}}) - {{$view}}'),
-            prometheus.target('sum(jvm_gc_pause_seconds_max{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by (action, cause, $view)', legendFormat='max {{action}} ({{cause}}) - {{$view}}'),
+            prometheus.target('sum(rate(jvm_gc_pause_seconds_sum{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view) /sum(rate(jvm_gc_pause_seconds_count{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by (action, cause, $view)', legendFormat='avg {{action}} ({{cause}}) - {{$view}}'),
+            prometheus.target('sum(jvm_gc_pause_seconds_max{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by (action, cause, $view)', legendFormat='max {{action}} ({{cause}}) - {{$view}}'),
           ],
         );
 
@@ -451,8 +451,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(rate(jvm_gc_memory_allocated_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by ($view)', legendFormat='allocated - {{$view}}'),
-            prometheus.target('sum(rate(jvm_gc_memory_promoted_bytes_total{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by ($view)', legendFormat='promoted - {{$view}}'),
+            prometheus.target('sum(rate(jvm_gc_memory_allocated_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by ($view)', legendFormat='allocated - {{$view}}'),
+            prometheus.target('sum(rate(jvm_gc_memory_promoted_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[1m])) by ($view)', legendFormat='promoted - {{$view}}'),
           ],
         );
 
@@ -464,7 +464,7 @@ local row = grafana.row;
           fill=2,
           min=0,
         )
-        .addTarget(prometheus.target('sum(jvm_classes_loaded{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='loaded - {{$view}}'));
+        .addTarget(prometheus.target('sum(jvm_classes_loaded{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view) or sum(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}) by ($view)', legendFormat='loaded - {{$view}}'));
 
       local classDelta =
         graphPanel.new(
@@ -473,7 +473,7 @@ local row = grafana.row;
           linewidth=2,
           fill=2,
         )
-        .addTarget(prometheus.target('sum(delta(jvm_classes_loaded{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view) or sum(delta(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view)', legendFormat='delta - {{$view}}'));
+        .addTarget(prometheus.target('sum(delta(jvm_classes_loaded{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view) or sum(delta(jvm_classes_loaded_classes{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container"}[5m])) by ($view)', legendFormat='delta - {{$view}}'));
 
       local directBuffersMemoryUsedBytes =
         graphPanel.new(
@@ -486,8 +486,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_buffer_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_buffer_total_capacity_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view)', legendFormat='capacity - {{$view}}'),
+            prometheus.target('sum(jvm_buffer_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view)', legendFormat='used - {{$view}}'),
+            prometheus.target('sum(jvm_buffer_total_capacity_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view)', legendFormat='capacity - {{$view}}'),
           ],
         );
 
@@ -499,7 +499,7 @@ local row = grafana.row;
           fill=2,
           min=0,
         )
-        .addTarget(prometheus.target('sum(jvm_buffer_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view)', legendFormat='count - {{$view}}'));
+        .addTarget(prometheus.target('sum(jvm_buffer_count{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="direct"}) by ($view)', legendFormat='count - {{$view}}'));
 
       local mappedBuffersMemoryUsedBytes =
         graphPanel.new(
@@ -512,8 +512,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('sum(jvm_buffer_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='used - {{$view}}'),
-            prometheus.target('sum(jvm_buffer_total_capacity_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='capacity - {{$view}}'),
+            prometheus.target('sum(jvm_buffer_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='used - {{$view}}'),
+            prometheus.target('sum(jvm_buffer_total_capacity_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='capacity - {{$view}}'),
           ],
         );
 
@@ -525,7 +525,7 @@ local row = grafana.row;
           fill=2,
           min=0,
         )
-        .addTarget(prometheus.target('sum(jvm_buffer_count{cluster=~"$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='count - {{$view}}'));
+        .addTarget(prometheus.target('sum(jvm_buffer_count{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view) or sum(jvm_buffer_count_buffers{job=~"$job", namespace=~"$namespace", pod=~"$pod", container=~"$container", id="mapped"}) by ($view)', legendFormat='count - {{$view}}'));
 
       local templates =
         [
@@ -534,11 +534,11 @@ local row = grafana.row;
         + (if $._config.grafanaDashboards.isLoki then [$.grafanaTemplates.datasourceLogsTemplate()] else [])
         + [
           $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-          $.grafanaTemplates.jobTemplate('label_values(jvm_memory_used_bytes{cluster=~"$cluster"}, job)'),
+          $.grafanaTemplates.jobTemplate('label_values(jvm_memory_used_bytes{cluster="$cluster"}, job)'),
           $.grafanaTemplates.viewByTemplate('pod,container'),
-          $.grafanaTemplates.namespaceTemplate('label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job"}, namespace)'),
-          $.grafanaTemplates.podTemplate('label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
-          $.grafanaTemplates.containerTemplate('label_values(jvm_memory_used_bytes{cluster=~"$cluster", job=~"$job", namespace=~"$namespace"}, container)'),
+          $.grafanaTemplates.namespaceTemplate('label_values(jvm_memory_used_bytes{cluster="$cluster", job=~"$job"}, namespace)'),
+          $.grafanaTemplates.podTemplate('label_values(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
+          $.grafanaTemplates.containerTemplate('label_values(jvm_memory_used_bytes{cluster="$cluster", job=~"$job", namespace=~"$namespace"}, container)'),
           memoryPoolsHeap,
           memoryPoolsNonHeap,
         ]

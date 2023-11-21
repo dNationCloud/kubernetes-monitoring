@@ -36,7 +36,7 @@ local statPanel = grafana.statPanel;
         )
         .addTarget(
           prometheus.target(
-            expr='histogram_quantile(0.95, sum(rate( %s {cluster=~"$cluster", job=~"$job"}[1m])) by (le,route))' % target,
+            expr='histogram_quantile(0.95, sum(rate( %s {cluster="$cluster", job=~"$job"}[1m])) by (le,route))' % target,
             legendFormat='{{route}}'
           )
         );
@@ -55,7 +55,7 @@ local statPanel = grafana.statPanel;
         )
         .addTarget(
           prometheus.target(
-            expr='histogram_quantile(0.95, sum(rate( %s {cluster=~"$cluster", job=~"$job"}[1m])) by (le))' % target,
+            expr='histogram_quantile(0.95, sum(rate( %s {cluster="$cluster", job=~"$job"}[1m])) by (le))' % target,
             legendFormat=legendFormat
           )
         );
@@ -72,7 +72,7 @@ local statPanel = grafana.statPanel;
           linewidth=2,
           legend_sort='current'
         )
-        .addTarget(prometheus.target('%s{cluster=~"$cluster", job=~"$job"}' % target));
+        .addTarget(prometheus.target('%s{cluster="$cluster", job=~"$job"}' % target));
 
       /*Overview*/
       local version =
@@ -87,7 +87,7 @@ local statPanel = grafana.statPanel;
         .addTarget(
           prometheus.target(
             format='table',
-            expr='loki_build_info{cluster=~"$cluster", job=~"$job"}'
+            expr='loki_build_info{cluster="$cluster", job=~"$job"}'
           )
         );
       local msgs =
@@ -99,7 +99,7 @@ local statPanel = grafana.statPanel;
           unit='short',
         )
         .addTarget(
-          prometheus.target('sum(log_messages_total{cluster=~"$cluster", job=~"$job"})')
+          prometheus.target('sum(log_messages_total{cluster="$cluster", job=~"$job"})')
         );
 
       local errors =
@@ -110,7 +110,7 @@ local statPanel = grafana.statPanel;
           reducerFunction='last',
           colorMode='background',
         )
-        .addTarget(prometheus.target('sum(log_messages_total{cluster=~"$cluster", job=~"$job",level="error"})'))
+        .addTarget(prometheus.target('sum(log_messages_total{cluster="$cluster", job=~"$job",level="error"})'))
         .addThreshold({ value: 0, color: 'green' })
         .addThreshold({ value: 1, color: 'orange' });
 
@@ -122,7 +122,7 @@ local statPanel = grafana.statPanel;
           reducerFunction='last',
           colorMode='background',
         )
-        .addTarget(prometheus.target(format='table', instant=false, expr='loki_panic_total{cluster=~"$cluster", job=~"$job"}'))
+        .addTarget(prometheus.target(format='table', instant=false, expr='loki_panic_total{cluster="$cluster", job=~"$job"}'))
         .addThreshold({ value: 0, color: 'green' })
         .addThreshold({ value: 1, color: 'red' });
 
@@ -142,7 +142,7 @@ local statPanel = grafana.statPanel;
         )
         .addTarget(
           prometheus.target(
-            expr='sum(irate(log_messages_total{cluster=~"$cluster", job=~"$job"}[1m])) by (level)',
+            expr='sum(irate(log_messages_total{cluster="$cluster", job=~"$job"}[1m])) by (level)',
             legendFormat='{{operation}}'
           )
         );
@@ -160,7 +160,7 @@ local statPanel = grafana.statPanel;
         )
         .addTarget(
           prometheus.target(
-            expr='histogram_quantile(0.95, sum(rate(loki_request_duration_seconds_bucket{cluster=~"$cluster", job=~"$job"}[5m])) by (le,route))',
+            expr='histogram_quantile(0.95, sum(rate(loki_request_duration_seconds_bucket{cluster="$cluster", job=~"$job"}[5m])) by (le,route))',
             legendFormat='{{route}}'
           )
         );
@@ -236,7 +236,7 @@ local statPanel = grafana.statPanel;
         )
         .addTarget(
           prometheus.target(
-            expr='histogram_quantile(0.95, sum(rate(loki_cache_value_size_bytes_bucket{cluster=~"$cluster", job=~"$job"}[5m])) by (le,name,method))',
+            expr='histogram_quantile(0.95, sum(rate(loki_cache_value_size_bytes_bucket{cluster="$cluster", job=~"$job"}[5m])) by (le,name,method))',
             legendFormat='{{name}} / {{method}}'
           )
         );
@@ -249,7 +249,7 @@ local statPanel = grafana.statPanel;
           fill=1,
           linewidth=1,
         )
-        .addTarget(prometheus.target(expr='loki_cache_fetched_keys{cluster=~"$cluster", job=~"$job"}', legendFormat='{{container}}/{{name}}'));
+        .addTarget(prometheus.target(expr='loki_cache_fetched_keys{cluster="$cluster", job=~"$job"}', legendFormat='{{container}}/{{name}}'));
 
       local cache_hits_keys =
         graphPanel.new(
@@ -259,7 +259,7 @@ local statPanel = grafana.statPanel;
           fill=1,
           linewidth=1,
         )
-        .addTarget(prometheus.target(expr='rate(loki_cache_hits{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='{{container}}/{{name}}'));
+        .addTarget(prometheus.target(expr='rate(loki_cache_hits{cluster="$cluster", job=~"$job"}[5m])', legendFormat='{{container}}/{{name}}'));
 
       /*Querrier*/
       local querier_cache_corruptions =
@@ -352,7 +352,7 @@ local statPanel = grafana.statPanel;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(loki_build_info{cluster=~"$cluster"}, job)'),
+        $.grafanaTemplates.jobTemplate('label_values(loki_build_info{cluster="$cluster"}, job)'),
       ])
       .addPanels(panels),
   },

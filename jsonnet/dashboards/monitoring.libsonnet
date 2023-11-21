@@ -136,9 +136,9 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             local panelHeight = tpl.panel.gridPos.h;
             local panelWidth = tpl.panel.gridPos.w;
 
-            local clusterLabel = if std.objectHas(cluster, 'label') then cluster.label else '.*';
+            local clusterLabel = cluster.label;
 
-            local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster|', clusterLabel);
+            local dataLinkCommonArgs = std.strReplace($._config.grafanaDashboards.dataLinkCommonArgs, '$cluster', clusterLabel);
 
             local gridX =
               if std.type(tpl.panel.gridPos.x) == 'number' then
@@ -185,7 +185,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                   tpl.panel.dataLinks
                 else
                   [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
-               )
+              )
             )
             {
               gridPos: {

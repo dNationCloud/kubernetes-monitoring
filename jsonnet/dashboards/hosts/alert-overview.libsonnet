@@ -38,8 +38,8 @@ local table = grafana.tablePanel;
             { alias: 'Alertname', pattern: 'alertname', type: 'string' },
             { alias: 'Job', pattern: 'job', type: 'string' },
             { alias: 'Node', pattern: 'nodename', type: 'string' },
-            { alias: 'warningCode', pattern: 'Value #A', type: 'number', thresholds: warning_thresholds, colors: colors, colorMode: 'row'},
-            { alias: 'criticalCode  ', pattern: 'Value #B', type: 'number', thresholds: critical_thresholds, colors: colors, colorMode: 'row'},
+            { alias: 'warningCode', pattern: 'Value #A', type: 'number', thresholds: warning_thresholds, colors: colors, colorMode: 'row' },
+            { alias: 'criticalCode  ', pattern: 'Value #B', type: 'number', thresholds: critical_thresholds, colors: colors, colorMode: 'row' },
           ]
         )
         .addTargets([

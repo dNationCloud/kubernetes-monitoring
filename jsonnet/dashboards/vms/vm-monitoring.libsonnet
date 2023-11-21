@@ -175,7 +175,7 @@ local text = grafana.text;
         .addTemplates([
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
-          $.grafanaTemplates.jobTemplate('label_values(node_uname_info{cluster=~"$cluster", pod=~"virt-launcher.*"}, job)', hide='variable'),
+          $.grafanaTemplates.jobTemplate('label_values(node_uname_info{cluster="$cluster", pod=~"virt-launcher.*"}, job)', hide='variable'),
         ])
         .addPanels(
           [

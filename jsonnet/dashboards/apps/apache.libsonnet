@@ -30,7 +30,7 @@ local row = grafana.row;
           stack=true,
           nullPointMode='null as zero',
         )
-        .addTarget(prometheus.target('rate(apache__req_per_sec{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='requests'));
+        .addTarget(prometheus.target('rate(apache__req_per_sec{cluster="$cluster", job=~"$job"}[5m])', legendFormat='requests'));
 
       local cpuLoad =
         graphPanel.new(
@@ -39,7 +39,7 @@ local row = grafana.row;
           stack=true,
           nullPointMode='null as zero',
         )
-        .addTarget(prometheus.target('rate(apache__c_p_u_load{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='load'));
+        .addTarget(prometheus.target('rate(apache__c_p_u_load{cluster="$cluster", job=~"$job"}[5m])', legendFormat='load'));
 
       local memoryUtilization =
         graphPanel.new(
@@ -49,7 +49,7 @@ local row = grafana.row;
           stack=true,
           nullPointMode='null as zero',
         )
-        .addTarget(prometheus.target('rate(apache__total_k_bytes_total{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='total'));
+        .addTarget(prometheus.target('rate(apache__total_k_bytes_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='total'));
 
       local memoryUtilizationPer =
         graphPanel.new(
@@ -61,8 +61,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(apache__bytes_per_sec{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='bytes per sec'),
-            prometheus.target('rate(apache__bytes_per_req{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='bytes per req'),
+            prometheus.target('rate(apache__bytes_per_sec{cluster="$cluster", job=~"$job"}[5m])', legendFormat='bytes per sec'),
+            prometheus.target('rate(apache__bytes_per_req{cluster="$cluster", job=~"$job"}[5m])', legendFormat='bytes per req'),
           ],
         );
 
@@ -73,8 +73,8 @@ local row = grafana.row;
         )
         .addTargets(
           [
-            prometheus.target('rate(apache__idle_workers{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='idle'),
-            prometheus.target('rate(apache__busy_workers{cluster=~"$cluster", job=~"$job"}[5m])', legendFormat='busy'),
+            prometheus.target('rate(apache__idle_workers{cluster="$cluster", job=~"$job"}[5m])', legendFormat='idle'),
+            prometheus.target('rate(apache__busy_workers{cluster="$cluster", job=~"$job"}[5m])', legendFormat='busy'),
           ],
         );
 
@@ -102,7 +102,7 @@ local row = grafana.row;
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.jobTemplate('label_values(apache__c_p_u_load{cluster=~"$cluster"}, job)'),
+        $.grafanaTemplates.jobTemplate('label_values(apache__c_p_u_load{cluster="$cluster"}, job)'),
       ])
       .addPanels(panels),
   },

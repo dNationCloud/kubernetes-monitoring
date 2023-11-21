@@ -21,6 +21,17 @@ Search for `Monitoring` dashboard. The fun starts here :).
 If you want to set the `Monitoring` dashboard as a home dashboard follow [here](https://grafana.com/docs/grafana/latest/administration/change-home-dashboard/#set-the-default-dashboard-through-preferences).
 If you're experiencing issues please read the [documentation](https://dnationcloud.github.io/kubernetes-monitoring/docs/documentation) and [FAQ](https://dnationcloud.github.io/kubernetes-monitoring/helpers/FAQ/).
 
+You should set the external label `cluster` for your Prometheus instance and this label should be
+the same, as the one defined in the label field in [values.yaml](chart/values.yaml) for your cluster monitoring.
+E.g., if you installed Prometheus via kube-prometheus-stack helm chart:
+```yaml
+kube-prometheus-stack:
+  prometheus:
+    prometheusSpec:
+      externalLabels:
+        cluster: "observer-cluster"
+```
+
 ## Configuration
 
 Default values for dNation Kubernetes Monitoring are defined by merging of jsonnet/config.libsonnet and chart/values.yaml files.
