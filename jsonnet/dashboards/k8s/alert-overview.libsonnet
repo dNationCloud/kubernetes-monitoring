@@ -61,6 +61,9 @@ local table = grafana.tablePanel;
               },
             },
           },
+          {
+            id: 'seriesToRows',
+          },
         ]);
 
       dashboard.new(
