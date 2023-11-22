@@ -43,11 +43,12 @@ local row = grafana.row;
           recent=false,
           search=true,
           headings=false,
-        ) + 
-        {options: {
-          #this need to be changed based on folder
-          folderId: 55
-          }
+        ) +
+        {
+          options: {
+            //this need to be changed based on folder
+            folderId: 55,
+          },
         },
 
       local alertPanel(title, expr) =
@@ -80,7 +81,7 @@ local row = grafana.row;
         .addDataLinks(
           $.updateDataLinksCommonArgs(
             [{ title: 'Testbed Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s' % [$._config.grafanaDashboards.ids.alertTestbedOverview, $._config.grafanaDashboards.dataLinkCommonArgsNoCluster] }]
-           )
+          )
         )
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
 
@@ -102,13 +103,14 @@ local row = grafana.row;
           criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
           warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
           row.new('Dashboards') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
-          dashboardList { gridPos: { x: 0, y: 5, w: 24, h: 20 }},])
+          dashboardList { gridPos: { x: 0, y: 5, w: 24, h: 20 } },
+        ]),
     };
     if $.isTestbedMonitoring() then
       {
-        ['testbed-dashboard-list']:
-          testbedDashboard().dashboard
+        'testbed-dashboard-list':
+          testbedDashboard().dashboard,
       }
     else
-      {}
+      {},
 }

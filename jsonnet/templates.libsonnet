@@ -1853,7 +1853,7 @@
             },
           },
         },
-      },      
+      },
       k8s: {
         main: {
           local expr = '((sum(up{job=~"node-exporter", cluster="%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',

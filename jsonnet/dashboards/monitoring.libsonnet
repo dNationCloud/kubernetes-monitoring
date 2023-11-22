@@ -185,7 +185,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                   tpl.panel.dataLinks
                 else
                   [{ title: 'Observer Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
-               )
+              )
             )
             {
               gridPos: {
@@ -221,7 +221,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 );
 
             statPanel.new(
-              title="$http_endpoint",
+              title='$http_endpoint',
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
@@ -234,7 +234,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               {
                 type: 'single',
                 instant: true,
-                expr: tpl.panel.expr %{http_endpoint: '$http_endpoint'},
+                expr: tpl.panel.expr % { http_endpoint: '$http_endpoint' },
               }
             )
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
@@ -245,7 +245,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                   tpl.panel.dataLinks
                 else
                   [{ title: 'Blackbox Exporter (HTTP prober)', url: '/d/%s?%s' % ['blackbox', dataLinkCommonArgsBlackbox] }]
-                )
+              )
             )
             {
               gridPos: {
@@ -284,7 +284,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 else 0;
 
             statPanel.new(
-              title="Testbed",
+              title='Testbed',
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
@@ -309,7 +309,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                   tpl.panel.dataLinks
                 else
                   [{ title: 'Testbed dashboard list', url: '/d/%s?%s' % ['testbed', dataLinkCommonArgsNoCluster] }]
-                )
+              )
             )
             {
               gridPos: {
@@ -358,22 +358,25 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             ) +
             (
               if $.isBlackBoxMonitoring() then
-                [row.new('Services') { 
+                [row.new('Services') {
                   local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
-                  gridPos: { x: 0, y: rowY, w: 24, h: 1 } }] + blackBoxPanels
+                  gridPos: { x: 0, y: rowY, w: 24, h: 1 },
+                }] + blackBoxPanels
               else []
             ) +
             (
               if $.isTestbedMonitoring() then
                 [row.new('Base') {
-                  local rowY = getClusterRowGridY(
-                    numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h
-                  ) - 1 +
-                  if $.isBlackBoxMonitoring() then
-                    $._config.templates.L0.testbed.main.panel.gridPos.h
-                  else
-                    0,
-                  gridPos: { x: 0, y: rowY, w: 24, h: 1 } }] + testbedPanel
+                  local rowY =
+                    getClusterRowGridY(
+                      numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h
+                    ) - 1 +
+                    if $.isBlackBoxMonitoring() then
+                      $._config.templates.L0.testbed.main.panel.gridPos.h
+                    else
+                      0,
+                  gridPos: { x: 0, y: rowY, w: 24, h: 1 },
+                }] + testbedPanel
               else []
             )
             // (

@@ -34,9 +34,9 @@ local table = grafana.tablePanel;
           title='Alerts Info',
           datasource='$datasource',
           styles=[
-            { alias: 'Starts At', pattern: 'Time', type: 'date'},
-            { alias: 'warningCode', pattern: 'Value #A', type: 'number', thresholds: warning_thresholds, colors: colors, colorMode: 'row'},
-            { alias: 'criticalCode  ', pattern: 'Value #B', type: 'number', thresholds: critical_thresholds, colors: colors, colorMode: 'row'},
+            { alias: 'Starts At', pattern: 'Time', type: 'date' },
+            { alias: 'warningCode', pattern: 'Value #A', type: 'number', thresholds: warning_thresholds, colors: colors, colorMode: 'row' },
+            { alias: 'criticalCode  ', pattern: 'Value #B', type: 'number', thresholds: critical_thresholds, colors: colors, colorMode: 'row' },
           ]
         )
         .addTargets([

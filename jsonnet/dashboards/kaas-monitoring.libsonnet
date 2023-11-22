@@ -153,7 +153,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             local isVM = (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0);
 
             statPanel.new(
-              title='Cluster %s' % "$cluster",
+              title='Cluster %s' % '$cluster',
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
@@ -185,7 +185,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                   tpl.panel.dataLinks
                 else
                   [{ title: 'KaaS Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.kaasL1Monitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
-                )
+              )
             )
             {
               gridPos: {
@@ -207,7 +207,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               colorMode='background',
               reducerFunction='last',
             )
-          .addTarget({ type: 'single', expr: expr });
+            .addTarget({ type: 'single', expr: expr });
 
           local statusNormalPanel =
             statusPanels(
@@ -218,7 +218,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               [
                 { color: $._config.grafanaDashboards.color.green, value: null },
               ]
-            );            
+            );
 
           local statusWarningPanel =
             statusPanels(
@@ -236,11 +236,11 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               title='Number of k8s clusters in critical state',
               expr='count(count by (cluster) (ALERTS{cluster=~"$cluster", alertname!="Watchdog", alertstate=~"firing", severity="critical", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)'
             )
-          .addThresholds(
-            [
-              { color: $._config.grafanaDashboards.color.red, value: null },
-            ]
-          );
+            .addThresholds(
+              [
+                { color: $._config.grafanaDashboards.color.red, value: null },
+              ]
+            );
 
           local hostPanels =
             std.flattenArrays([
