@@ -99,6 +99,17 @@ local template = grafana.template;
         label='Severity',
       ),
 
+    httpTemplate(query, hide='', multi=true, includeAll=true, current='All')::
+      baseTemplate(
+        name='http_endpoint',
+        label='HTTP Endpoint',
+        query=query,
+        includeAll=includeAll,
+        multi=multi,
+        hide=hide,
+        current=current,
+      ),
+
     clusterTemplate(query, hide='', multi=false, includeAll=false, current=null)::
       baseTemplate(
         name='cluster',

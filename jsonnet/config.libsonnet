@@ -59,6 +59,7 @@
       },
       dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
       dataLinkCommonArgsNoCluster: 'refresh=%s&var-datasource=$datasource&from=$__from&to=$__to' % [self.refresh],
+      dataLinkCommonArgsBlackbox: 'refresh=%s&var-datasource=$datasource&var-instance=$http_endpoint&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
       templateSort: 5,  // case insensitive ascent sort
       ids: {
@@ -66,6 +67,8 @@
         k8sMonitoring: 'k8smonitoring',
         alertHostOverview: 'alerthostoverview',
         alertClusterOverview: 'alertclusteroverview',
+        alertKaasOverview: 'alertkaasoverview',
+        alertTestbedOverview: 'alerttestbedoverview',
         alertVMOverview: 'alertvmoverview',
         nodeOverview: 'nodeoverview',
         jobOverview: 'joboverview',
@@ -84,6 +87,7 @@
         networkNamespaceOverview: 'networknamespaceoverview',
         cpuOverview: 'cpuoverview',
         cpuNamespaceOverview: 'cpunamespaceoverview',
+        kaasL1Monitoring: 'kaasl1monitoring',
         // Kube system dashboards
         controllerManager: 'controllermanager',
         scheduler: 'scheduler',
@@ -119,8 +123,10 @@
         prometheus: 'prometheus',
         sslExporter: 'ssl-exporter',
         harbor: 'harbor',
+        testbed: 'testbed',
         //Monitoring dashboard
         monitoring: 'monitoring',
+        kaasMonitoring: 'kaas-monitoring',
       },
       selectors: {
         apiServer: 'job="apiserver"',
@@ -131,6 +137,7 @@
         proxy: 'job="kube-proxy"',
       },
       tags: {
+        kaasMonitoring: ['kaas', 'monitoring', 'L1'],
         k8sMonitoring: ['k8s', 'monitoring', 'L1'],
         k8sOverview: ['k8s', 'overview', 'L2'],
         k8sSystem: ['k8s', 'system', 'L2'],
@@ -143,6 +150,8 @@
         k8sVMs: ['k8s', 'vm', 'L2'],
         k8sHostsMain: ['k8s', 'host', 'L1'],
         k8sMonitoringMain: ['k8s', 'cluster', 'host', 'L0'],
+        kaasMonitoringMain: ['kaas', 'cluster', 'L0'],
+        testbed: ['testbed', 'L1'],
       },
       constants: {
         infinity: 99999999999999999999999999999999,
@@ -161,6 +170,16 @@
       alertGroupHostApp: 'HostApp',
     },
 
+    blackboxMonitoring: {
+      enabled: false,
+    },
+    testbedMonitoring: {
+      enabled: false,
+    },
+    kaasMonitoring: {
+      enabled: false,
+      clusters: [],
+    },
     clusterMonitoring: {
       enabled: true,
       clusters: [],

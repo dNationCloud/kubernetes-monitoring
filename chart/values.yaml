@@ -75,6 +75,20 @@ grafanaDashboards:
   # destinationOverride:
   #   k8s-sidecar-target-directory: "/var/lib/grafana/dashboards/dnation/"
 
+## KaaS Monitoring
+kaasMonitoring:
+  enabled: false
+  clusters:
+  - name: KaasCluster
+    description: 'KaaS monitoring'
+
+## Testbed Monitoring
+testbedMonitoring:
+  enabled: false
+
+## Blackbox Monitoring
+blackboxMonitoring:
+  enabled: false
 
 ## Kubernetes Monitoring
 ##
