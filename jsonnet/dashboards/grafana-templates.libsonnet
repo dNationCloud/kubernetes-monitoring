@@ -100,20 +100,13 @@ local template = grafana.template;
       ),
 
     httpTemplate(query, hide='', multi=true, includeAll=true, current='All')::
-
-      // cluster variable will be hide if there is only 1 cluster and hide parameter is not set
-      local hideVariable =
-        if hide == '' then
-          if $.isBlackBoxMonitoring() then '' else 'variable'
-        else hide;
-
       baseTemplate(
         name='http_endpoint',
         label='HTTP Endpoint',
         query=query,
         includeAll=includeAll,
         multi=multi,
-        hide=hideVariable,
+        hide=hide,
         current=current,
       ),
 

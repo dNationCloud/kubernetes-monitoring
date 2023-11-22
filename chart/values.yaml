@@ -81,7 +81,14 @@ kaasMonitoring:
   clusters:
   - name: KaasCluster
     description: 'KaaS monitoring'
-    apps: []
+
+## Testbed Monitoring
+testbedMonitoring:
+  enabled: false
+
+## Blackbox Monitoring
+blackboxMonitoring:
+  enabled: false
 
 ## Kubernetes Monitoring
 ##

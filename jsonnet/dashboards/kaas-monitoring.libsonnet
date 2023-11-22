@@ -50,27 +50,15 @@ local getGridY(offset, index, panelWidth, panelHeight) =
   local rowIndex = std.floor(index / panelsInRow);
   (rowIndex * panelHeight) + offset;
 
-local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
-  /**
-   * Compute grid Y coordinate of host row based on number of clusters.
-   *
-   * @param index The index of host.
-   * @return grid Y coordinate as number.
-  */
-  getGridY(2 + panelHeight, numOfClusters - 1, panelWidth, panelHeight);
-
 {
   grafanaDashboards+::
 
     local maxWarnings = $._config.grafanaDashboards.constants.maxWarnings;
 
-    local numOfClusters =
-      if $.isKaasMonitoring() then std.length($._config.kaasMonitoring.clusters) else 0;
-
     local getUid(defaultUid, obj, templateGroup) =
       if $.isAnyDefault([obj], templateGroup) then defaultUid else $.getCustomUid([defaultUid, obj.name]);
 
-    if $.isHostMonitoring() || $.isKaasMonitoring() then
+    if $.isKaasMonitoring() then
       {
         kaasMonitoring:
           local dNationLink =
@@ -82,54 +70,6 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               type='link',
               targetBlank=true,
             );
-
-          local hostPanel(index, host) = [
-
-            local panelHeight = tpl.panel.gridPos.h;
-            local panelWidth = tpl.panel.gridPos.w;
-
-            local gridX =
-              if std.type(tpl.panel.gridPos.x) == 'number' then
-                tpl.panel.gridPos.x
-              else
-                getGridX(index, panelWidth);
-
-            local gridY =
-              if std.type(tpl.panel.gridPos.y) == 'number' then
-                tpl.panel.gridPos.y
-              else
-                getGridY(getClusterRowGridY(numOfClusters, $._config.templates.L0.kaas.main.panel.gridPos.w, $._config.templates.L0.kaas.main.panel.gridPos.h), index, panelWidth, panelHeight);
-
-            statPanel.new(
-              title='Host %s' % host.name,
-              datasource=tpl.panel.datasource,
-              graphMode=tpl.panel.graphMode,
-              colorMode=tpl.panel.colorMode,
-              unit=tpl.panel.unit,
-              decimals=tpl.panel.decimals,
-            )
-            .addTarget({ type: 'single', instant: true, expr: tpl.panel.expr % { job: std.join('|', $.getAlertJobs(host)), groupHost: $._config.prometheusRules.alertGroupHost, groupHostApp: $._config.prometheusRules.alertGroupHostApp, maxWarnings: maxWarnings } })
-            .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
-            .addMappings(tpl.panel.mappings)
-            .addDataLinks(
-              $.updateDataLinksCommonArgs(
-                if std.length(tpl.panel.dataLinks) > 0 then
-                  tpl.panel.dataLinks % { job: host.jobName }
-                else
-                  [{ title: 'Host Monitoring', url: '/d/%s?%s&var-job=%s' % [getUid($._config.grafanaDashboards.ids.hostMonitoring, host, $._config.templates.L1.host), $._config.grafanaDashboards.dataLinkCommonArgsNoCluster, host.jobName] }]
-              )
-            )
-            {
-              gridPos: {
-                x: gridX,
-                y: gridY,
-                w: panelWidth,
-                h: panelHeight,
-              },
-            }
-            for tpl in $.getTemplates($._config.templates.L0.host, host)
-            if (std.objectHas(tpl, 'panel') && tpl.panel != {})
-          ];
 
           local clusterPanel(index, cluster) = [
 
@@ -150,8 +90,6 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               else
                 getGridY(4, index, panelWidth, panelHeight);
 
-            local isVM = (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0);
-
             statPanel.new(
               title='Cluster %s' % '$cluster',
               datasource=tpl.panel.datasource,
@@ -169,10 +107,8 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 expr: tpl.panel.expr %
                       {
                         cluster: '$cluster',
-                        groupCluster: $._config.prometheusRules.alertGroupCluster +
-                                      (if isVM then '|' + $._config.prometheusRules.alertGroupClusterVM else ''),
-                        groupApp: $._config.prometheusRules.alertGroupClusterApp +
-                                  (if isVM then '|' + $._config.prometheusRules.alertGroupClusterVMApp else ''),
+                        groupCluster: $._config.prometheusRules.alertGroupCluster,
+                        groupApp: $._config.prometheusRules.alertGroupClusterApp,
                         maxWarnings: maxWarnings,
                       },
               }
@@ -242,12 +178,6 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               ]
             );
 
-          local hostPanels =
-            std.flattenArrays([
-              hostPanel(host.index, host.item)
-              for host in $.zipWithIndex($._config.hostMonitoring.hosts)
-            ]);
-
           local clusterPanels =
             std.flattenArrays([
               clusterPanel(cluster.index, cluster.item)
@@ -279,16 +209,6 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                   statusCriticalPanel { gridPos: { x: 16, y: 1, w: 8, h: 3 } },
                   row.new('KaaS Monitoring') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
                 ] + clusterPanels
-              else []
-            ) +
-            (
-              if $.isHostMonitoring() then
-                [
-                  row.new('Host Monitoring') {
-                    local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.kaas.main.panel.gridPos.w, $._config.templates.L0.kaas.main.panel.gridPos.h) - 1,
-                    gridPos: { x: 0, y: rowY, w: 24, h: 1 },
-                  },
-                ] + hostPanels
               else []
             )
           ),

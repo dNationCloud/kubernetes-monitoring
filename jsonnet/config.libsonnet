@@ -150,7 +150,7 @@
         k8sVMs: ['k8s', 'vm', 'L2'],
         k8sHostsMain: ['k8s', 'host', 'L1'],
         k8sMonitoringMain: ['k8s', 'cluster', 'host', 'L0'],
-        kaasMonitoringMain: ['kaas', 'cluster', 'host', 'L0'],
+        kaasMonitoringMain: ['kaas', 'cluster', 'L0'],
         testbed: ['testbed', 'L1'],
       },
       constants: {

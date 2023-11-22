@@ -1828,7 +1828,7 @@
       },
       kaas: {
         main: {
-          local expr = '((sum(kaas{cluster=~"%(cluster)s"} unless up{job=~"node-exporter", cluster=~"%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + ((sum(kaas{cluster=~"%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster=~"%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local expr = '((sum(kaas{cluster="%(cluster)s"} unless up{job=~"node-exporter", cluster="%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + ((sum(kaas{cluster="%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
           local thresholds = {
             operator: '>=',
             lowest: 0,

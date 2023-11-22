@@ -96,7 +96,7 @@
     $._config.clusterMonitoring.enabled && std.length($._config.clusterMonitoring.clusters) > 0,
 
   isKaasMonitoring()::
-    $._config.kaasMonitoring.enabled && std.length($._config.clusterMonitoring.clusters) > 0,
+    $._config.kaasMonitoring.enabled && std.length($._config.kaasMonitoring.clusters) > 0,
 
   isHostMonitoring()::
     $._config.hostMonitoring.enabled && std.length($._config.hostMonitoring.hosts) > 0,
@@ -105,7 +105,7 @@
     /**
      * Maps dashboards to their template group. User defined templates from values.yaml are included too.
      */
-    [$._config.grafanaDashboards.ids.kaasMonitoring]: $._config.templates.L0.kaas + $._config.templates.L0.host,
+    [$._config.grafanaDashboards.ids.kaasMonitoring]: $._config.templates.L0.kaas,
     [$._config.grafanaDashboards.ids.monitoring]: $._config.templates.L0.k8s + $._config.templates.L0.host,
     [$._config.grafanaDashboards.ids.k8sMonitoring]: $._config.templates.L1.k8s,
     [$._config.grafanaDashboards.ids.containerOverview]: $._config.templates.L2.containerOverview,
