@@ -46,7 +46,7 @@ local row = grafana.row;
         ) +
         {
           options: {
-            //this need to be changed based on folder
+            //this need to be changed based on folder, where you imported your dashboards
             folderId: 55,
           },
         },
@@ -88,7 +88,7 @@ local row = grafana.row;
 
       dashboard:
         dashboard.new(
-          title='Testbed dashboard list',
+          title='IaaS monitoring',
           editable=$._config.grafanaDashboards.editable,
           graphTooltip=$._config.grafanaDashboards.tooltip,
           refresh=$._config.grafanaDashboards.refresh,
@@ -108,7 +108,7 @@ local row = grafana.row;
     };
     if $.isTestbedMonitoring() then
       {
-        'testbed-dashboard-list':
+        'iaas-monitoring':
           testbedDashboard().dashboard,
       }
     else
