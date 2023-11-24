@@ -322,7 +322,7 @@ local sumTempWidth(templates) =
         [
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
-          $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)', hide='variable'),
+          $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
           $.grafanaTemplates.jobTemplate('label_values(node_exporter_build_info{cluster="$cluster", pod!~"virt-launcher.*|"}, job)', hide='variable'),
           $.grafanaTemplates.masterInstanceTemplate(),
           $.grafanaTemplates.workerInstanceTemplate(),

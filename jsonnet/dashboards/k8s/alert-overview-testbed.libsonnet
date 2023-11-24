@@ -71,7 +71,7 @@ local table = grafana.tablePanel;
         graphTooltip=$._config.grafanaDashboards.tooltip,
         refresh=$._config.grafanaDashboards.refresh,
         time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sOverview,
+        tags=$._config.grafanaDashboards.tags.testbedAlert,
         uid=$._config.grafanaDashboards.ids.alertTestbedOverview,
       )
       .addTemplates([

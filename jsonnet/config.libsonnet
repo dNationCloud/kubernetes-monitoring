@@ -151,7 +151,8 @@
         k8sHostsMain: ['k8s', 'host', 'L1'],
         k8sMonitoringMain: ['k8s', 'cluster', 'host', 'L0'],
         kaasMonitoringMain: ['kaas', 'cluster', 'L0'],
-        testbed: ['testbed', 'L1'],
+        testbed: ['testbed', 'L0'],
+        testbedAlert: ['testbed', 'L1'],
       },
       constants: {
         infinity: 99999999999999999999999999999999,
