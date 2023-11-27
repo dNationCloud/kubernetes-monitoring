@@ -43,13 +43,10 @@ local row = grafana.row;
           recent=false,
           search=true,
           headings=false,
-        ) +
-        {
-          options: {
-            //this need to be changed based on folder, where you imported your dashboards
-            folderId: 55,
-          },
-        },
+          tags=[
+            'testbed-dashboard',
+          ],
+        ),
 
       local alertPanel(title, expr) =
         statPanel.new(
