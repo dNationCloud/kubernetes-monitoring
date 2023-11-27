@@ -157,7 +157,7 @@ local text = grafana.text;
     };
     if $.isKaasMonitoring() then
       {
-        ['kaas-l1-monitoring']:
+        ['kaas-l1-' + 'monitoring']:
           clusterDashboard(
             cluster,
             $._config.grafanaDashboards.ids.kaasL1Monitoring,
