@@ -148,7 +148,7 @@ local getGridY(offset, index, panelWidth, panelHeight) =
           local statusNormalPanel =
             statusPanels(
               title='Number of k8s clusters in normal state',
-              expr='count(count by (cluster) (up{cluster=~"$cluster"})) - (count(count by (cluster)(ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity=~"warning|critical", alertgroup=~"Cluster|ClusterApp"})) OR on() vector(0)) OR on() vector(0)'
+              expr='sum(group by (cluster) (kaas{cluster=~"$cluster"}) and group by (cluster) (up{cluster=~"$cluster"}) unless group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity=~"warning|critical", alertgroup=~"Cluster|ClusterApp"}) OR on() vector(0)) OR on() vector(0)'
             )
             .addThresholds(
               [
@@ -159,7 +159,7 @@ local getGridY(offset, index, panelWidth, panelHeight) =
           local statusWarningPanel =
             statusPanels(
               title='Number of k8s clusters in warning state',
-              expr='sum(group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity="warning", alertgroup=~"Cluster|ClusterApp"}) or on() vector(0) unless group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity="critical", alertgroup=~"Cluster|ClusterApp"}) or on() vector(0))'
+              expr='sum(group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity="warning", alertgroup=~"Cluster|ClusterApp"}) unless group by (cluster) (ALERTS{alertname!="Watchdog", cluster=~"$cluster", alertstate="firing", severity="critical", alertgroup=~"Cluster|ClusterApp"})) or on() vector(0)'
             )
             .addThresholds(
               [
