@@ -86,8 +86,8 @@
   getCustomName(nameStrings)::
     std.join(' ', nameStrings),
 
-  isTestbedMonitoring()::
-    $._config.testbedMonitoring.enabled,
+  isIaasMonitoring()::
+    $._config.iaasMonitoring.enabled,
 
   isBlackBoxMonitoring()::
     $._config.blackboxMonitoring.enabled,

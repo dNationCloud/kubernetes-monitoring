@@ -82,8 +82,8 @@ kaasMonitoring:
   - name: KaasCluster
     description: 'KaaS monitoring'
 
-## Testbed Monitoring
-testbedMonitoring:
+## IaaS Monitoring
+iaasMonitoring:
   enabled: false
 
 ## Blackbox Monitoring

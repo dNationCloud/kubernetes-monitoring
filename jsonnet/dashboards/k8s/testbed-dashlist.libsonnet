@@ -103,7 +103,7 @@ local row = grafana.row;
           dashboardList { gridPos: { x: 0, y: 5, w: 24, h: 20 } },
         ]),
     };
-    if $.isTestbedMonitoring() then
+    if $.isIaasMonitoring() then
       {
         'iaas-monitoring':
           testbedDashboard().dashboard,

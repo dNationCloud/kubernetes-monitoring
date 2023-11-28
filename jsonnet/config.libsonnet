@@ -174,7 +174,7 @@
     blackboxMonitoring: {
       enabled: false,
     },
-    testbedMonitoring: {
+    iaasMonitoring: {
       enabled: false,
     },
     kaasMonitoring: {
