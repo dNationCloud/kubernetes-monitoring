@@ -59,7 +59,7 @@
       },
       dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
       dataLinkCommonArgsNoCluster: 'refresh=%s&var-datasource=$datasource&from=$__from&to=$__to' % [self.refresh],
-      dataLinkCommonArgsBlackbox: 'refresh=%s&var-datasource=$datasource&var-instance=$http_endpoint&from=$__from&to=$__to' % [self.refresh],
+      dataLinkCommonArgsBlackbox: 'refresh=%s&var-datasource=$datasource&var-target=$target&from=$__from&to=$__to' % [self.refresh],
       templateRefresh: 'time',  // on time range change
       templateSort: 5,  // case insensitive ascent sort
       ids: {

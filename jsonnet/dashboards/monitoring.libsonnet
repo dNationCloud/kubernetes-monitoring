@@ -173,12 +173,12 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 );
 
             statPanel.new(
-              title='$http_endpoint',
+              title='$target',
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
               unit=tpl.panel.unit,
-              repeat='http_endpoint',
+              repeat='target',
               decimals=tpl.panel.decimals,
               maxPerRow=4,
             )
@@ -186,7 +186,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               {
                 type: 'single',
                 instant: true,
-                expr: tpl.panel.expr % { http_endpoint: '$http_endpoint' },
+                expr: tpl.panel.expr % { target: '$target' },
               }
             )
             .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
@@ -230,7 +230,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
           .addTemplates([
             $.grafanaTemplates.datasourceTemplate(),
             $.grafanaTemplates.alertManagerTemplate(),
-            $.grafanaTemplates.httpTemplate('label_values(probe_http_version{endpoint="http"},instance)', multi=true, includeAll=true, current='All'),
+            $.grafanaTemplates.targetTemplate('label_values(probe_success{endpoint="http"},target)', multi=true, includeAll=true, current='All'),
           ])
           .addPanels(
             (
