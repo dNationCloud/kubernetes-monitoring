@@ -99,10 +99,10 @@ local template = grafana.template;
         label='Severity',
       ),
 
-    httpTemplate(query, hide='', multi=true, includeAll=true, current='All')::
+    targetTemplate(query, hide='', multi=true, includeAll=true, current='All')::
       baseTemplate(
-        name='http_endpoint',
-        label='HTTP Endpoint',
+        name='target',
+        label='Service Target',
         query=query,
         includeAll=includeAll,
         multi=multi,

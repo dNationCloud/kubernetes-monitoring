@@ -1803,7 +1803,7 @@
       local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
       blackbox: {
         main: {
-          local expr = 'probe_success{instance=~"%(http_endpoint)s", endpoint="http"}',
+          local expr = 'probe_success{target=~"%(target)s", endpoint="http"}',
           local thresholds = {
             operator: '<',
             lowest: 0,
