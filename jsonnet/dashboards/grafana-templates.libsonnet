@@ -185,7 +185,7 @@ local template = grafana.template;
         multi=multi,
       ),
 
-    jobTemplate(query, hide='', current=null, regex='')::
+    jobTemplate(query, hide='', current=null, regex='', includeAll=true, multi=true)::
       baseTemplate(
         name='job',
         label='Job',
@@ -193,6 +193,8 @@ local template = grafana.template;
         hide=hide,
         current=current,
         regex=regex,
+        includeAll=includeAll,
+        multi=multi,
       ),
 
     pvcTemplate(query)::
