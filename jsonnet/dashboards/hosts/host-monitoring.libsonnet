@@ -180,7 +180,7 @@ local text = grafana.text;
         .addTemplates([
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
-          $.grafanaTemplates.jobTemplate('label_values(node_uname_info{pod=~""}, job)', hide='variable', current=jobName),
+          $.grafanaTemplates.jobTemplate('label_values(node_uname_info{pod=~""}, job)', hide='variable', current=jobName, includeAll=false, multi=false),
           $.grafanaTemplates.clusterTemplate('label_values(node_uname_info{job=~"$job"}, cluster)'),
         ])
         .addPanels(
