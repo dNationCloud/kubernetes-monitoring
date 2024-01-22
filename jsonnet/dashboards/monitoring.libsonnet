@@ -307,7 +307,7 @@ local getHostRowGridY(numOfHosts, panelWidth, panelHeightHosts, panelHeightClust
             (
               if $.isHostMonitoring() then
                 [
-                  row.new('Host Monitoring') {
+                  row.new('Hosts') {
                     local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
                     gridPos: { x: 0, y: rowY, w: 24, h: 1 },
                   },
