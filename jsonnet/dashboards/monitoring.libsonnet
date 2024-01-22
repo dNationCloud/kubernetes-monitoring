@@ -233,7 +233,7 @@ local getHostRowGridY(numOfHosts, panelWidth, panelHeightHosts, panelHeightClust
                 );
 
             statPanel.new(
-              title='$target',
+              title='Service $target',
               datasource=tpl.panel.datasource,
               graphMode=tpl.panel.graphMode,
               colorMode=tpl.panel.colorMode,
