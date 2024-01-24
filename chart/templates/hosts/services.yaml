@@ -25,10 +25,12 @@
     {{- end }}
     {{ if hasKey . "apps" }}
       {{- range .apps }}
-        {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
-        {{ $_ := set .serviceMonitor "address" $address }}
-        {{ $_ := set .serviceMonitor "jobName" .jobName }}
-        {{ $_ := set $host_service_monitors $name .serviceMonitor }}
+        {{ if hasKey . "serviceMonitor" }}
+          {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+          {{ $_ := set .serviceMonitor "address" $address }}
+          {{ $_ := set .serviceMonitor "jobName" .jobName }}
+          {{ $_ := set $host_service_monitors $name .serviceMonitor }}
+        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
