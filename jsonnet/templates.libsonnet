@@ -1186,7 +1186,7 @@
           },
         },
         overallUtilizationCPU: {
-          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{%(job)s, mode="idle"}[5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{%(job)s, mode="idle"}[5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -1209,7 +1209,7 @@
           },
         },
         overallUtilizationRAM: {
-          local expr = 'round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) / sum by (job, nodename, cluster) (node_memory_MemTotal_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info))) * 100)',
+          local expr = 'round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) / sum by (job, nodename, cluster) (node_memory_MemTotal_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -1233,7 +1233,7 @@
           },
         },
         overallUtilizationDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
+          local expr = 'round((sum(node_filesystem_size_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -1257,7 +1257,7 @@
           },
         },
         overallNetworkErrors: {
-          local expr = 'sum(rate(node_network_transmit_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename)',
+          local expr = 'sum(rate(node_network_transmit_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) ) by (job, nodename)',
           local thresholds = {
             operator: '>=',
             warning: 10,
