@@ -1990,7 +1990,7 @@ thresholds:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
   (autoscaler_instances{job=~".+"}) * 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%'
 name: HostAppAutoscalerHealthLow
 thresholds:
@@ -2071,7 +2071,7 @@ thresholds:
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
 expr: harbor_up{job=~".+"}
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Harbor component "{{ $labels.component }}" is
   down'
 name: HostAppHarborComponentDown
@@ -2112,7 +2112,7 @@ expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100
   cluster) (jvm_memory_used_bytes{job=~".+", area="nonheap"})*100/sum  by (job, cluster)
   (jvm_memory_max_bytes{job=~".+", area="heap"}) or (sum  by (job, cluster) (jvm_memory_used_bytes{job=~".+",
   area="nonheap"})*100)/sum by (job, cluster) (jvm_memory_max_bytes{job=~".+", area="heap"}))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%'
 name: HostAppJavaActuatorHeapHigh
 thresholds:
@@ -2228,7 +2228,7 @@ expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+",
   / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
   + 100))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses)
   Low {{ printf "%.0f" $value }}%'
 name: HostAppNginxIngressSuccessRateLow
@@ -2269,7 +2269,7 @@ thresholds:
   alertgroup: HostApp
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
   / 60 / 60 / 24
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf
   "%.2f" $value }} days'
 name: HostAppNginxIngressCertificateExpiry
@@ -2339,7 +2339,7 @@ expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", co
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: HostAppNginxVTSSuccessRateLow
@@ -2382,7 +2382,7 @@ expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", co
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: HostAppNginxVTSSuccessRateLow
@@ -2425,7 +2425,7 @@ expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5]
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: HostAppNginxVTSSuccessRateLow
@@ -2468,7 +2468,7 @@ expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5]
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: HostAppNginxVTSSuccessRateLow
@@ -2532,7 +2532,7 @@ thresholds:
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 mappings:
 - text: '-'
   type: 1
@@ -2599,7 +2599,7 @@ expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job
   / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: HostAppPythonFlaskSuccessRateLow
@@ -2808,6 +2808,7 @@ thresholds:
   alertgroup: Cluster
 expr: (sum(up{job="apiserver"}) by (cluster) / count(up{job="apiserver"}) by (cluster))
   * 100
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Api Server Health Low {{ $value }}%
 name: ClusterApiServerHealthLow
 thresholds:
@@ -2849,6 +2850,7 @@ title: API Server
   alertgroup: Cluster
 expr: (sum(up{job="kube-controller-manager"}) by (cluster) / count(up{job="kube-controller-manager"})
   by (cluster)) * 100
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Controller Manager Health Low {{ $value }}%
 name: ClusterControllerManagerHealthLow
 thresholds:
@@ -2891,6 +2893,7 @@ title: Controller Manager
 expr: round((sum(kube_daemonset_status_updated_number_scheduled OR kube_daemonset_updated_number_scheduled)
   by (cluster) + sum(kube_daemonset_status_number_available) by (cluster)) / (2 *
   sum(kube_daemonset_status_desired_number_scheduled) by (cluster)) * 100)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: DaemonSets Health Low {{ $value }}%
 name: RunningDaemonSetsHealthLow
 thresholds:
@@ -2927,6 +2930,7 @@ title: DaemonSets Health
   alertgroup: Cluster
 expr: round((sum(kube_deployment_status_replicas_updated) by (cluster) + sum(kube_deployment_status_replicas_available)
   by (cluster)) / (2 * sum(kube_deployment_status_replicas) by (cluster)) * 100)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Running Deployments Health Low {{ $value }}%
 name: RunningDeploymentsHealthLow
 thresholds:
@@ -2961,6 +2965,7 @@ title: Deployments Health
   alertgroup: Cluster
 expr: (sum(up{job="kube-etcd"}) by (cluster) / count(up{job="kube-etcd"}) by (cluster))
   * 100
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Etcd Health Low {{ $value }}%
 name: ClusterEtcdHealthLow
 thresholds:
@@ -3002,6 +3007,7 @@ title: Etcd
   alertgroup: Cluster
 expr: (sum(up{job="kubelet", metrics_path="/metrics"}) by (cluster) / count(up{job="kubelet",
   metrics_path="/metrics"}) by (cluster)) * 100
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Kubelet Health Low {{ $value }}%
 name: ClusterKubeletHealthLow
 thresholds:
@@ -3044,7 +3050,8 @@ title: Kubelet
 expr: round((1 - (avg(irate(node_cpu_seconds_total{job=~"node-exporter", mode="idle"}[5m])
   * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename,
   cluster) )) * 100)
-linkGetParams: var-instance={{ $labels.nodename }}
+linkGetParams: var-instance={{ $labels.nodename }}&var-cluster={{ $labels.cluster
+  }}
 message: 'Cluster Master Node {{ $labels.nodename }}: High CPU Utilization {{ $value
   }}%'
 name: ClusterMasterNodeCPUUtilizationHigh
@@ -3091,7 +3098,8 @@ expr: round((sum(node_filesystem_size_bytes{job=~"node-exporter"} * on(instance,
   pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster))
   + sum(node_filesystem_avail_bytes{job=~"node-exporter"} * on(instance, pod) group_left(nodename)
   (master_uname_info)) by (job, nodename, device, cluster)) * 100)
-linkGetParams: var-instance={{ $labels.nodename }}
+linkGetParams: var-instance={{ $labels.nodename }}&var-cluster={{ $labels.cluster
+  }}
 message: 'Cluster Master Node {{ $labels.nodename }}: High Disk Utilization {{ $value
   }}%'
 name: ClusterMasterNodeDiskUtilizationHigh
@@ -3145,7 +3153,8 @@ expr: sum(rate(node_network_transmit_errs_total{job=~"node-exporter", device!~"l
   cluster) + sum(rate(node_network_receive_errs_total{job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
   * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename,
   cluster)
-linkGetParams: var-instance={{ $labels.nodename }}
+linkGetParams: var-instance={{ $labels.nodename }}&var-cluster={{ $labels.cluster
+  }}
 message: 'Cluster Master Node {{ $labels.nodename }}: High Network Errors Count {{
   $value }}%'
 name: ClusterMasterNodeNetworkErrorsHigh
@@ -3190,7 +3199,8 @@ expr: round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes
   * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename,
   cluster) (node_memory_MemTotal_bytes{job=~"node-exporter"} * on(instance, pod) group_left(nodename)
   (master_uname_info))) * 100)
-linkGetParams: var-instance={{ $labels.nodename }}
+linkGetParams: var-instance={{ $labels.nodename }}&var-cluster={{ $labels.cluster
+  }}
 message: 'Cluster Master Node {{ $labels.nodename }}: High RAM Utilization {{ $value
   }}%'
 name: ClusterMasterNodesRAMUtilizationHigh
@@ -3233,7 +3243,8 @@ title: Most Utilized Node
   alertgroup: Cluster
 expr: sum(((kubelet_volume_stats_capacity_bytes - kubelet_volume_stats_available_bytes)
   / kubelet_volume_stats_capacity_bytes) * 100) by (persistentvolumeclaim, cluster)
-linkGetParams: var-pvc={{ $labels.persistentvolumeclaim }}
+linkGetParams: var-pvc={{ $labels.persistentvolumeclaim }}&var-cluster={{ $labels.cluster
+  }}
 message: '"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value }}%'
 name: PVCUtilizationHigh
 thresholds:
@@ -3277,7 +3288,8 @@ title: Most Utilized PVC
 expr: round((1 - (avg(irate(node_cpu_seconds_total{job=~"node-exporter", mode="idle"}[5m])
   * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename,
   cluster) )) * 100)
-linkGetParams: var-instance={{ $labels.nodename }}
+linkGetParams: var-instance={{ $labels.nodename }}&var-cluster={{ $labels.cluster
+  }}
 message: 'Cluster Worker Node {{ $labels.nodename }}: High CPU Utilization {{ $value
   }}%'
 name: ClusterWorkerNodeCPUUtilizationHigh
@@ -3324,7 +3336,8 @@ expr: round((sum(node_filesystem_size_bytes{job=~"node-exporter"} * on(instance,
   pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster))
   + sum(node_filesystem_avail_bytes{job=~"node-exporter"} * on(instance, pod) group_left(nodename)
   (worker_uname_info)) by (job, nodename, device, cluster)) * 100)
-linkGetParams: var-instance={{ $labels.nodename }}
+linkGetParams: var-instance={{ $labels.nodename }}&var-cluster={{ $labels.cluster
+  }}
 message: 'Cluster Worker Node {{ $labels.nodename }}: High Disk Utilization {{ $value
   }}%'
 name: ClusterWorkerNodeDiskUtilizationHigh
@@ -3378,7 +3391,8 @@ expr: sum(rate(node_network_transmit_errs_total{job=~"node-exporter", device!~"l
   cluster) + sum(rate(node_network_receive_errs_total{job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
   * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename,
   cluster)
-linkGetParams: var-instance={{ $labels.nodename }}
+linkGetParams: var-instance={{ $labels.nodename }}&var-cluster={{ $labels.cluster
+  }}
 message: 'Cluster Worker Node {{ $labels.nodename }}: High Network Errors Count {{
   $value }}%'
 name: ClusterWorkerNodeNetworkErrorsHigh
@@ -3423,7 +3437,8 @@ expr: round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes
   * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename,
   cluster) (node_memory_MemTotal_bytes{job=~"node-exporter"} * on(instance, pod) group_left(nodename)
   (worker_uname_info))) * 100)
-linkGetParams: var-instance={{ $labels.nodename }}
+linkGetParams: var-instance={{ $labels.nodename }}&var-cluster={{ $labels.cluster
+  }}
 message: 'Cluster Worker Node {{ $labels.nodename }}: High RAM Utilization {{ $value
   }}%'
 name: ClusterWorkerNodesRAMUtilizationHigh
@@ -3468,6 +3483,7 @@ expr: round(sum(kube_node_info) by (cluster) / (sum(kube_node_info) by (cluster)
   sum(kube_node_spec_unschedulable) by (cluster) + sum(kube_node_status_condition{condition=~"DiskPressure|MemoryPressure|PIDPressure",
   status=~"true|unknown"}) by (cluster) + sum(kube_node_status_condition{condition="Ready",
   status=~"false|unknown"}) by (cluster)) * 100)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Nodes Health Low {{ $value }}%
 name: NodesHealthLow
 thresholds:
@@ -3508,6 +3524,7 @@ expr: sum(sum(rate(node_network_transmit_errs_total{job=~"node-exporter", device
   cluster) + sum(rate(node_network_receive_errs_total{job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
   * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename,
   cluster)) by (cluster)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Master Nodes High Overall Network Errors Count {{ $value }}%
 name: ClusterMasterNodesNetworkOverallErrorsHigh
 thresholds:
@@ -3550,6 +3567,7 @@ unit: pps
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"node-exporter", mode="idle"}[5m])
   * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename,
   cluster) )) * 100)) by (cluster)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Master Nodes High CPU Overall Utilization {{ $value }}%
 name: ClusterMasterNodesCPUOverallHigh
 thresholds:
@@ -3595,6 +3613,7 @@ expr: avg(round((sum(node_filesystem_size_bytes{job=~"node-exporter"} * on(insta
   pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster))
   + sum(node_filesystem_avail_bytes{job=~"node-exporter"} * on(instance, pod) group_left(nodename)
   (master_uname_info)) by (job, nodename, device, cluster)) * 100 > 0)) by (cluster)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Master Nodes High Disk Overall Utilization {{ $value }}%
 name: ClusterMasterNodesDiskOverallHigh
 thresholds:
@@ -3647,6 +3666,7 @@ expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_b
   * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename,
   cluster) (node_memory_MemTotal_bytes{job=~"node-exporter"} * on(instance, pod) group_left(nodename)
   (master_uname_info))) * 100)) by (cluster)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Master Nodes High RAM Overall Utilization {{ $value }}%
 name: ClusterMasterNodesRAMOverallHigh
 thresholds:
@@ -3689,6 +3709,7 @@ title: Overall Utilization
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"node-exporter", mode="idle"}[5m])
   * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename,
   cluster) )) * 100)) by (cluster)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Worker Nodes High CPU Overall Utilization {{ $value }}%
 name: ClusterWorkerNodesCPUOverallHigh
 thresholds:
@@ -3734,6 +3755,7 @@ expr: avg(round((sum(node_filesystem_size_bytes{job=~"node-exporter"} * on(insta
   pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster))
   + sum(node_filesystem_avail_bytes{job=~"node-exporter"} * on(instance, pod) group_left(nodename)
   (worker_uname_info)) by (job, nodename, device, cluster)) * 100 > 0)) by (cluster)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Worker Nodes High Disk Overall Utilization {{ $value }}%
 name: ClusterWorkerNodesDiskOverallHigh
 thresholds:
@@ -3786,6 +3808,7 @@ expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_b
   * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename,
   cluster) (node_memory_MemTotal_bytes{job=~"node-exporter"} * on(instance, pod) group_left(nodename)
   (worker_uname_info))) * 100)) by (cluster)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Worker Nodes High RAM Overall Utilization {{ $value }}%
 name: ClusterWorkerNodesRAMOverallHigh
 thresholds:
@@ -3830,6 +3853,7 @@ expr: sum(sum(rate(node_network_transmit_errs_total{job=~"node-exporter", device
   cluster) + sum(rate(node_network_receive_errs_total{job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
   * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename,
   cluster)) by (cluster)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Worker Nodes High Overall Network Errors Count {{ $value }}%
 name: ClusterWorkerNodesNetworkOverallErrorsHigh
 thresholds:
@@ -3871,6 +3895,7 @@ unit: pps
   alertgroup: Cluster
 expr: (sum(up{job="kube-proxy"}) by (cluster) / count(up{job="kube-proxy"}) by (cluster))
   * 100
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Proxy Health Low {{ $value }}%
 name: ClusterProxyHealthLow
 thresholds:
@@ -3915,6 +3940,7 @@ expr: "round(sum(kube_persistentvolumeclaim_status_phase{phase=\"Bound\"}) by (c
   \ + sum(kube_persistentvolumeclaim_status_phase{phase=\"Pending\"}) by (cluster)\
   \ +\nsum(kube_persistentvolumeclaim_status_phase{phase=\"Lost\"}) by (cluster)\n\
   ) * 100)"
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: PVC Bound Rate Low {{ $value }}%
 name: PVCBoundRateLow
 thresholds:
@@ -3961,6 +3987,7 @@ expr: round(sum(kube_pod_container_status_running) by (cluster) / (sum(kube_pod_
   by (cluster) + (count(kube_pod_container_status_terminated) by (cluster) - count(kube_pod_container_status_terminated
   unless ignoring(reason) kube_pod_container_status_terminated_reason{reason!="Completed"})
   by (cluster)) + sum(kube_pod_container_status_waiting) by (cluster)) * 100)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Running Containers Health Low {{ $value }}%
 name: RunningContainersHealthLow
 thresholds:
@@ -3997,6 +4024,7 @@ title: Running Containers
 expr: round(sum(kube_pod_status_phase{phase="Running"}) by (cluster) / (sum(kube_pod_status_phase{phase="Running"})
   by (cluster) + sum(kube_pod_status_phase{phase="Pending"}) by (cluster) + sum(kube_pod_status_phase{phase="Failed"})
   by (cluster) + sum(kube_pod_status_phase{phase="Unknown"}) by (cluster)) * 100)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Pods Health Low {{ $value }}%
 name: RunningPodsHealthLow
 thresholds:
@@ -4033,6 +4061,7 @@ title: Running Pods
   alertgroup: Cluster
 expr: round(sum(kube_statefulset_status_replicas_ready) by (cluster) / sum(kube_statefulset_status_replicas)
   by (cluster) * 100)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: StatefulSets Health Low {{ $value }}%
 name: RunningStatefulSetsHealthLow
 thresholds:
@@ -4067,6 +4096,7 @@ title: Running StatefulSets
   alertgroup: Cluster
 expr: (sum(up{job="kube-scheduler"}) by (cluster) / count(up{job="kube-scheduler"})
   by (cluster)) * 100
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Cluster Scheduler Health Low {{ $value }}%
 name: ClusterSchedulerHealthLow
 thresholds:
@@ -4108,6 +4138,7 @@ title: Scheduler
   alertgroup: Cluster
 expr: round(sum(kube_job_status_succeeded) by (cluster) / (sum(kube_job_status_succeeded)
   by (cluster) + sum(kube_job_status_failed) by (cluster)) * 100)
+linkGetParams: var-cluster={{ $labels.cluster }}
 message: Succeeded Jobs Rate Low {{ $value }}%
 name: SucceededJobsRateLow
 thresholds:
@@ -4480,7 +4511,7 @@ thresholds:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
   (autoscaler_instances{job=~".+"}) * 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%'
 name: ClusterAppAutoscalerHealthLow
 thresholds:
@@ -4561,7 +4592,7 @@ thresholds:
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
 expr: harbor_up{job=~".+"}
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Harbor component "{{ $labels.component }}"
   is down'
 name: ClusterAppHarborComponentDown
@@ -4602,7 +4633,7 @@ expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100
   cluster) (jvm_memory_used_bytes{job=~".+", area="nonheap"})*100/sum  by (job, cluster)
   (jvm_memory_max_bytes{job=~".+", area="heap"}) or (sum  by (job, cluster) (jvm_memory_used_bytes{job=~".+",
   area="nonheap"})*100)/sum by (job, cluster) (jvm_memory_max_bytes{job=~".+", area="heap"}))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%'
 name: ClusterAppJavaActuatorHeapHigh
 thresholds:
@@ -4718,7 +4749,7 @@ expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+",
   / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
   + 100))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses)
   Low {{ printf "%.0f" $value }}%'
 name: ClusterAppNginxIngressSuccessRateLow
@@ -4759,7 +4790,7 @@ thresholds:
   alertgroup: ClusterApp
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
   / 60 / 60 / 24
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf
   "%.2f" $value }} days'
 name: ClusterAppNginxIngressCertificateExpiry
@@ -4829,7 +4860,7 @@ expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", co
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterAppNginxVTSSuccessRateLow
@@ -4872,7 +4903,7 @@ expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", co
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterAppNginxVTSSuccessRateLow
@@ -4915,7 +4946,7 @@ expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5]
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterAppNginxVTSSuccessRateLow
@@ -4958,7 +4989,7 @@ expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5]
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterAppNginxVTSSuccessRateLow
@@ -5022,7 +5053,7 @@ thresholds:
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 mappings:
 - text: '-'
   type: 1
@@ -5089,7 +5120,7 @@ expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job
   / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterAppPythonFlaskSuccessRateLow
@@ -5320,7 +5351,7 @@ thresholds:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
   (autoscaler_instances{job=~".+"}) * 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Autoscaler Health Low {{ $value }}%'
 name: ClusterVMAppAutoscalerHealthLow
 thresholds:
@@ -5401,7 +5432,7 @@ thresholds:
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
 expr: harbor_up{job=~".+"}
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Harbor component "{{ $labels.component }}"
   is down'
 name: ClusterVMAppHarborComponentDown
@@ -5442,7 +5473,7 @@ expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100
   cluster) (jvm_memory_used_bytes{job=~".+", area="nonheap"})*100/sum  by (job, cluster)
   (jvm_memory_max_bytes{job=~".+", area="heap"}) or (sum  by (job, cluster) (jvm_memory_used_bytes{job=~".+",
   area="nonheap"})*100)/sum by (job, cluster) (jvm_memory_max_bytes{job=~".+", area="heap"}))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Java Actuator Heap High {{ $value }}%'
 name: ClusterVMAppJavaActuatorHeapHigh
 thresholds:
@@ -5558,7 +5589,7 @@ expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+",
   / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
   + 100))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx Ingress Success Rate (non-4|5xx responses)
   Low {{ printf "%.0f" $value }}%'
 name: ClusterVMAppNginxIngressSuccessRateLow
@@ -5599,7 +5630,7 @@ thresholds:
   alertgroup: ClusterVMApp
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
   / 60 / 60 / 24
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx Ingress Certificate Expiry in {{ printf
   "%.2f" $value }} days'
 name: ClusterVMAppNginxIngressCertificateExpiry
@@ -5669,7 +5700,7 @@ expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", co
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterVMAppNginxVTSSuccessRateLow
@@ -5712,7 +5743,7 @@ expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", co
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterVMAppNginxVTSSuccessRateLow
@@ -5755,7 +5786,7 @@ expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5]
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterVMAppNginxVTSSuccessRateLow
@@ -5798,7 +5829,7 @@ expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5]
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
   code!="total"}[5m])) * 100) > 0 OR (sum by (job, cluster) (rate(nginx_server_requests{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Nginx VTS Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterVMAppNginxVTSSuccessRateLow
@@ -5862,7 +5893,7 @@ thresholds:
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 mappings:
 - text: '-'
   type: 1
@@ -5929,7 +5960,7 @@ expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job
   / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   + 100)
-linkGetParams: var-job={{ $labels.job }}
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp {{ $labels.job }}: Python Flask Success Rate (non-4|5xx responses)
   Low {{ $value }}%'
 name: ClusterVMAppPythonFlaskSuccessRateLow
