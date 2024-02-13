@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-{{- if and .Values.hostMonitoring.enabled }}
+{{- if .Values.hostMonitoring.enabled }}
   {{ $host_service_monitors := dict }}
   {{- range .Values.hostMonitoring.hosts }}
     {{ if hasKey . "serviceMonitor" }}
