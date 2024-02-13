@@ -46,7 +46,7 @@ items:
     labels:
 {{ include "k8s-monitoring.labels" $ | indent 6 }}
       app: {{ include "k8s-monitoring.name" $ }}
-      release: {{ $.Release.Name }}
+      release: {{ include "k8s-monitoring.release" $ }}
   subsets:
   - addresses:
     - ip: {{ $serviceMonitor.address }}
