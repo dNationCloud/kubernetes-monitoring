@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.7.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.0) (2024-02-14)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.6.3...v2.7.0)
+
+**Merged pull requests:**
+
+- Port work from scs-kaas-mvp branch to the main branch [\#197](https://github.com/dNationCloud/kubernetes-monitoring/pull/197)
+
 ## [v2.6.3](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.6.3) (2024-01-29)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.6.2...v2.6.3)
@@ -517,6 +525,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
