@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-/* K8s alert overview dashboard */
+/* K8s alert overview dashboard for KaaS */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local prometheus = grafana.prometheus;
@@ -23,7 +23,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'alert-cluster-overview':
+    'alert-kaas-overview':
 
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local warning_thresholds = [2, 3];
@@ -67,17 +67,17 @@ local table = grafana.tablePanel;
         ]);
 
       dashboard.new(
-        'AlertCluster',
+        'AlertKaaS',
         editable=$._config.grafanaDashboards.editable,
         graphTooltip=$._config.grafanaDashboards.tooltip,
         refresh=$._config.grafanaDashboards.refresh,
         time_from=$._config.grafanaDashboards.time_from,
         tags=$._config.grafanaDashboards.tags.k8sOverview,
-        uid=$._config.grafanaDashboards.ids.alertClusterOverview,
+        uid=$._config.grafanaDashboards.ids.alertKaasOverview,
       )
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
-        $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
+        $.grafanaTemplates.clusterTemplate('label_values(kaas, cluster)'),
         $.grafanaTemplates.alertManagerTemplate(),
         $.grafanaTemplates.alertGroupTemplate('label_values(ALERTS, alertgroup)'),
         $.grafanaTemplates.severityTemplate('label_values(ALERTS, severity)'),

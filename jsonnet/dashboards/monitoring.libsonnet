@@ -59,6 +59,15 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
   */
   getGridY(2 + panelHeight, numOfClusters - 1, panelWidth, panelHeight);
 
+local getHostRowGridY(numOfHosts, panelWidth, panelHeightHosts, panelHeightClusters) =
+  /**
+   * Compute grid Y coordinate of services row based on number of hosts.
+   *
+   * @param index The index of host.
+   * @return grid Y coordinate as number.
+  */
+  getGridY(3 + panelHeightHosts + panelHeightClusters, numOfHosts - 1, panelWidth, panelHeightHosts);
+
 {
   grafanaDashboards+::
 
@@ -66,6 +75,9 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
 
     local numOfClusters =
       if $.isClusterMonitoring() then std.length($._config.clusterMonitoring.clusters) else 0;
+
+    local numOfHosts =
+      if $.isHostMonitoring() then std.length($._config.hostMonitoring.hosts) else 0;
 
     local getUid(defaultUid, obj, templateGroup) =
       if $.isAnyDefault([obj], templateGroup) then defaultUid else $.getCustomUid([defaultUid, obj.name]);
@@ -184,7 +196,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
                 if std.length(tpl.panel.dataLinks) > 0 then
                   tpl.panel.dataLinks
                 else
-                  [{ title: 'Kubernetes Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
+                  [{ title: 'Observer Monitoring', url: '/d/%s?%s' % [getUid($._config.grafanaDashboards.ids.k8sMonitoring, cluster, $._config.templates.L1.k8s), dataLinkCommonArgs] }]
               )
             )
             {
@@ -196,6 +208,66 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
               },
             }
             for tpl in $.getTemplates($._config.templates.L0.k8s, cluster)
+            if (std.objectHas(tpl, 'panel') && tpl.panel != {})
+          ];
+
+          local blackBoxPanels = [
+
+            local panelHeight = tpl.panel.gridPos.h;
+            local panelWidth = tpl.panel.gridPos.w;
+
+            local dataLinkCommonArgsBlackbox = $._config.grafanaDashboards.dataLinkCommonArgsBlackbox;
+
+            local gridX =
+              if std.type(tpl.panel.gridPos.x) == 'number' then
+                tpl.panel.gridPos.x
+              else
+                0;
+
+            local gridY =
+              if std.type(tpl.panel.gridPos.y) == 'number' then
+                tpl.panel.gridPos.y
+              else
+                getHostRowGridY(
+                  numOfHosts, $._config.templates.L0.host.main.panel.gridPos.w, $._config.templates.L0.host.main.panel.gridPos.h, $._config.templates.L0.k8s.main.panel.gridPos.h
+                );
+
+            statPanel.new(
+              title='Service $target',
+              datasource=tpl.panel.datasource,
+              graphMode=tpl.panel.graphMode,
+              colorMode=tpl.panel.colorMode,
+              unit=tpl.panel.unit,
+              repeat='target',
+              decimals=tpl.panel.decimals,
+              maxPerRow=4,
+            )
+            .addTarget(
+              {
+                type: 'single',
+                instant: true,
+                expr: tpl.panel.expr % { target: '$target' },
+              }
+            )
+            .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
+            .addMappings(tpl.panel.mappings)
+            .addDataLinks(
+              $.updateDataLinksCommonArgs(
+                if std.length(tpl.panel.dataLinks) > 0 then
+                  tpl.panel.dataLinks
+                else
+                  [{ title: 'Blackbox Exporter (HTTP prober)', url: '/d/%s?%s' % ['blackbox', dataLinkCommonArgsBlackbox] }]
+              )
+            )
+            {
+              gridPos: {
+                x: gridX,
+                y: gridY,
+                w: panelWidth,
+                h: panelHeight,
+              },
+            }
+            for tpl in $.getTemplates($._config.templates.L0.blackbox)
             if (std.objectHas(tpl, 'panel') && tpl.panel != {})
           ];
 
@@ -212,7 +284,7 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
             ]);
 
           dashboard.new(
-            'Monitoring',
+            'Infrastructure services monitoring',
             editable=$._config.grafanaDashboards.editable,
             graphTooltip=$._config.grafanaDashboards.tooltip,
             refresh=$._config.grafanaDashboards.refresh,
@@ -224,21 +296,30 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
           .addTemplates([
             $.grafanaTemplates.datasourceTemplate(),
             $.grafanaTemplates.alertManagerTemplate(),
+            $.grafanaTemplates.targetTemplate('label_values(probe_success{endpoint="http"},target)', multi=true, includeAll=true, current='All'),
           ])
           .addPanels(
             (
               if $.isClusterMonitoring() then
-                [row.new('Kubernetes Monitoring') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
+                [row.new('Clusters') { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels
               else []
             ) +
             (
               if $.isHostMonitoring() then
                 [
-                  row.new('Host Monitoring') {
+                  row.new('Hosts') {
                     local rowY = getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
                     gridPos: { x: 0, y: rowY, w: 24, h: 1 },
                   },
                 ] + hostPanels
+              else []
+            ) +
+            (
+              if $.isBlackBoxMonitoring() then
+                [row.new('Services') {
+                  local rowY = getHostRowGridY(numOfHosts, $._config.templates.L0.host.main.panel.gridPos.w, $._config.templates.L0.host.main.panel.gridPos.h, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1,
+                  gridPos: { x: 0, y: rowY, w: 24, h: 1 },
+                }] + blackBoxPanels
               else []
             )
           ),

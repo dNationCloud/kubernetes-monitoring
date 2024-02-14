@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-{{- if and .Values.hostMonitoring.enabled }}
+{{- if .Values.hostMonitoring.enabled }}
   {{ $host_service_monitors := dict }}
   {{- range .Values.hostMonitoring.hosts }}
     {{ if hasKey . "serviceMonitor" }}
@@ -23,9 +23,11 @@
     {{- end }}
     {{ if hasKey . "apps" }}
       {{- range .apps }}
-        {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
-        {{ $_ := set .serviceMonitor "jobName" .jobName }}
-        {{ $_ := set $host_service_monitors $name .serviceMonitor }}
+        {{ if hasKey . "serviceMonitor" }}
+          {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+          {{ $_ := set .serviceMonitor "jobName" .jobName }}
+          {{ $_ := set $host_service_monitors $name .serviceMonitor }}
+        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}

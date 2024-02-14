@@ -319,6 +319,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kaasmonitoring" class="md-nav__link">
+    kaasMonitoring
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prometheusrules" class="md-nav__link">
     prometheusRules
   </a>
@@ -342,6 +349,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#blackbox" class="md-nav__link">
+    blackbox
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#host" class="md-nav__link">
     host
   </a>
@@ -351,6 +365,20 @@
           <li class="md-nav__item">
   <a href="#k8s" class="md-nav__link">
     k8s
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kaas" class="md-nav__link">
+    kaas
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testbed" class="md-nav__link">
+    testbed
   </a>
   
 </li>
@@ -764,6 +792,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kaasmonitoring" class="md-nav__link">
+    kaasMonitoring
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prometheusrules" class="md-nav__link">
     prometheusRules
   </a>
@@ -787,6 +822,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#blackbox" class="md-nav__link">
+    blackbox
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#host" class="md-nav__link">
     host
   </a>
@@ -796,6 +838,20 @@
           <li class="md-nav__item">
   <a href="#k8s" class="md-nav__link">
     k8s
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kaas" class="md-nav__link">
+    kaas
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testbed" class="md-nav__link">
+    testbed
   </a>
   
 </li>
@@ -1084,7 +1140,10 @@
 <p>Each configuration parameter can be overriden by providing custom <a href="https://github.com/dNationCloud/kubernetes-monitoring/blob/main/chart/values.yaml">values.yaml</a>
 during helm installation.</p>
 <p><br></p>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>clusterMonitoring</td><td><a href='#clusterMonitoring_0'>clusterMonitoring</a>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>blackboxMonitoring</td><td><div class='my-pre'><code>enabled: false
+</code></div>
+</td></tr>
+<tr><td>clusterMonitoring</td><td><a href='#clusterMonitoring_0'>clusterMonitoring</a>
 </td></tr>
 <tr><td>commonLabels</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -1097,13 +1156,18 @@ during helm installation.</p>
 </td></tr>
 <tr><td>hostMonitoring</td><td><a href='#hostMonitoring_10'>hostMonitoring</a>
 </td></tr>
+<tr><td>kaasMonitoring</td><td><a href='#kaasMonitoring_11'>kaasMonitoring</a>
+</td></tr>
 <tr><td>nameOverride</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
 <tr><td>namespaceOverride</td><td><div class='my-pre'><code>""</code></div>
 </td></tr>
-<tr><td>prometheusRules</td><td><a href='#prometheusRules_11'>prometheusRules</a>
+<tr><td>prometheusRules</td><td><a href='#prometheusRules_12'>prometheusRules</a>
 </td></tr>
-<tr><td>templates</td><td><a href='#templates_12'>templates</a>
+<tr><td>templates</td><td><a href='#templates_13'>templates</a>
+</td></tr>
+<tr><td>testbedMonitoring</td><td><div class='my-pre'><code>enabled: false
+</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -1139,6 +1203,8 @@ during helm installation.</p>
 <tr><td>constants</td><td><a href='#constants_5'>constants</a>
 </td></tr>
 <tr><td>dataLinkCommonArgs</td><td><div class='my-pre'><code>"refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to"</code></div>
+</td></tr>
+<tr><td>dataLinkCommonArgsBlackbox</td><td><div class='my-pre'><code>"refresh=10s&var-datasource=$datasource&var-target=$target&from=$__from&to=$__to"</code></div>
 </td></tr>
 <tr><td>dataLinkCommonArgsNoCluster</td><td><div class='my-pre'><code>"refresh=10s&var-datasource=$datasource&from=$__from&to=$__to"</code></div>
 </td></tr>
@@ -1211,6 +1277,10 @@ during helm installation.</p>
 </td></tr>
 <tr><td>alertHostOverview</td><td><div class='my-pre'><code>"alerthostoverview"</code></div>
 </td></tr>
+<tr><td>alertKaasOverview</td><td><div class='my-pre'><code>"alertkaasoverview"</code></div>
+</td></tr>
+<tr><td>alertTestbedOverview</td><td><div class='my-pre'><code>"alerttestbedoverview"</code></div>
+</td></tr>
 <tr><td>alertVMOverview</td><td><div class='my-pre'><code>"alertvmoverview"</code></div>
 </td></tr>
 <tr><td>apache</td><td><div class='my-pre'><code>"apache"</code></div>
@@ -1250,6 +1320,10 @@ during helm installation.</p>
 <tr><td>jvm</td><td><div class='my-pre'><code>"jvm"</code></div>
 </td></tr>
 <tr><td>k8sMonitoring</td><td><div class='my-pre'><code>"k8smonitoring"</code></div>
+</td></tr>
+<tr><td>kaasL1Monitoring</td><td><div class='my-pre'><code>"kaasl1monitoring"</code></div>
+</td></tr>
+<tr><td>kaasMonitoring</td><td><div class='my-pre'><code>"kaas-monitoring"</code></div>
 </td></tr>
 <tr><td>kubelet</td><td><div class='my-pre'><code>"kubelet"</code></div>
 </td></tr>
@@ -1308,6 +1382,8 @@ during helm installation.</p>
 <tr><td>statefulSet</td><td><div class='my-pre'><code>"statefulset"</code></div>
 </td></tr>
 <tr><td>statefulSetOverview</td><td><div class='my-pre'><code>"statefulsetoverview"</code></div>
+</td></tr>
+<tr><td>testbed</td><td><div class='my-pre'><code>"testbed"</code></div>
 </td></tr>
 <tr><td>vmMonitoring</td><td><div class='my-pre'><code>"vmmonitoring"</code></div>
 </td></tr>
@@ -1402,6 +1478,24 @@ during helm installation.</p>
 - vm
 - L2
 </code></div>
+</td></tr>
+<tr><td>kaasMonitoring</td><td><div class='my-pre'><code>- kaas
+- monitoring
+- L1
+</code></div>
+</td></tr>
+<tr><td>kaasMonitoringMain</td><td><div class='my-pre'><code>- kaas
+- cluster
+- L0
+</code></div>
+</td></tr>
+<tr><td>testbed</td><td><div class='my-pre'><code>- testbed
+- L0
+</code></div>
+</td></tr>
+<tr><td>testbedAlert</td><td><div class='my-pre'><code>- testbed
+- L1
+</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -1413,7 +1507,16 @@ during helm installation.</p>
 </td></tr></table>
 
 <p><br></p>
-<h2 id="prometheusrules"><a name='prometheusRules_11'>prometheusRules</a></h2>
+<h2 id="kaasmonitoring"><a name='kaasMonitoring_11'>kaasMonitoring</a></h2>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>clusters</td><td><div class='my-pre'><code>- description: KaaS monitoring
+  name: KaasCluster
+</code></div>
+</td></tr>
+<tr><td>enabled</td><td><div class='my-pre'><code>false</code></div>
+</td></tr></table>
+
+<p><br></p>
+<h2 id="prometheusrules"><a name='prometheusRules_12'>prometheusRules</a></h2>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alertGroupCluster</td><td><div class='my-pre'><code>"Cluster"</code></div>
 </td></tr>
 <tr><td>alertGroupClusterApp</td><td><div class='my-pre'><code>"ClusterApp"</code></div>
@@ -1440,12 +1543,12 @@ during helm installation.</p>
 </td></tr></table>
 
 <p><br></p>
-<h2 id="templates"><a name='templates_12'>templates</a></h2>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>L0</td><td><a href='#L0_13'>L0</a>
+<h2 id="templates"><a name='templates_13'>templates</a></h2>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>L0</td><td><a href='#L0_14'>L0</a>
 </td></tr>
-<tr><td>L1</td><td><a href='#L1_18'>L1</a>
+<tr><td>L1</td><td><a href='#L1_25'>L1</a>
 </td></tr>
-<tr><td>L2</td><td><a href='#L2_150'>L2</a>
+<tr><td>L2</td><td><a href='#L2_157'>L2</a>
 </td></tr>
 <tr><td>RecordRules</td><td><div class='my-pre'><code>- expr: node_uname_info{job=~"node-exporter"} and on(nodename) label_replace(kube_node_role{role=~"control-plane"},
     "nodename", "$1", "node", "(.+)")
@@ -1455,25 +1558,68 @@ during helm installation.</p>
   record: worker_uname_info
 </code></div>
 </td></tr>
-<tr><td>commonThresholds</td><td><a href='#commonThresholds_191'>commonThresholds</a>
+<tr><td>commonThresholds</td><td><a href='#commonThresholds_198'>commonThresholds</a>
 </td></tr>
-<tr><td>templateBases</td><td><a href='#templateBases_198'>templateBases</a>
+<tr><td>templateBases</td><td><a href='#templateBases_205'>templateBases</a>
 </td></tr></table>
 
 <p><br></p>
-<h3 id="l0"><a name='L0_13'>L0</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>host</td><td><a href='#host_14'>host</a>
+<h3 id="l0"><a name='L0_14'>L0</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>blackbox</td><td><a href='#blackbox_15'>blackbox</a>
 </td></tr>
-<tr><td>k8s</td><td><a href='#k8s_16'>k8s</a>
+<tr><td>host</td><td><a href='#host_17'>host</a>
+</td></tr>
+<tr><td>k8s</td><td><a href='#k8s_19'>k8s</a>
+</td></tr>
+<tr><td>kaas</td><td><a href='#kaas_21'>kaas</a>
+</td></tr>
+<tr><td>testbed</td><td><a href='#testbed_23'>testbed</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="host"><a name='host_14'>host</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_15'>main</a>
+<h4 id="blackbox"><a name='blackbox_15'>blackbox</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_16'>main</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='main_15'>main</a> </p>
+<p> <a name='main_16'>main</a> </p>
+
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>expr: probe_success{target=~"%(target)s", endpoint="http"}
+graphMode: none
+gridPos:
+  h: 3
+  w: 4
+mappings:
+- from: -1
+  text: '-'
+  to: -1
+  type: 2
+  value: ''
+- from: 0
+  text: Critical
+  to: 0
+  type: 2
+  value: ''
+- from: 1
+  text: OK
+  to: 1
+  type: 2
+  value: ''
+thresholds:
+  critical: 1
+  lowest: 0
+  operator: <
+unit: none
+</code></div>
+</td></tr></table>
+
+<p><br></p>
+<h4 id="host"><a name='host_17'>host</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_18'>main</a>
+</td></tr></table>
+
+<p><br></p>
+<p> <a name='main_18'>main</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>expr: ((sum(up{job=~"%(job)s"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog",
   alertstate="firing", severity="warning", job=~"%(job)s", alertgroup=~"%(groupHost)s|%(groupHostApp)s"}
@@ -1515,12 +1661,12 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<h4 id="k8s"><a name='k8s_16'>k8s</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_17'>main</a>
+<h4 id="k8s"><a name='k8s_19'>k8s</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_20'>main</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='main_17'>main</a> </p>
+<p> <a name='main_20'>main</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>expr: ((sum(up{job=~"node-exporter", cluster="%(cluster)s"}) or on() vector(0)) ==
   bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing",
@@ -1563,54 +1709,155 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<h3 id="l1"><a name='L1_18'>L1</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>host</td><td><a href='#host_19'>host</a>
-</td></tr>
-<tr><td>hostApps</td><td><a href='#hostApps_31'>hostApps</a>
-</td></tr>
-<tr><td>k8s</td><td><a href='#k8s_55'>k8s</a>
-</td></tr>
-<tr><td>k8sApps</td><td><a href='#k8sApps_100'>k8sApps</a>
-</td></tr>
-<tr><td>vm</td><td><a href='#vm_124'>vm</a>
-</td></tr>
-<tr><td>vmApps</td><td><a href='#vmApps_126'>vmApps</a>
+<h4 id="kaas"><a name='kaas_21'>kaas</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_22'>main</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="host_1"><a name='host_19'>host</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>overallNetworkErrors</td><td><a href='#overallNetworkErrors_20'>overallNetworkErrors</a>
-</td></tr>
-<tr><td>overallUtilizationCPU</td><td><a href='#overallUtilizationCPU_21'>overallUtilizationCPU</a>
-</td></tr>
-<tr><td>overallUtilizationDisk</td><td><a href='#overallUtilizationDisk_22'>overallUtilizationDisk</a>
-</td></tr>
-<tr><td>overallUtilizationRAM</td><td><a href='#overallUtilizationRAM_23'>overallUtilizationRAM</a>
-</td></tr>
-<tr><td>targetDown</td><td><a href='#targetDown_24'>targetDown</a>
-</td></tr>
-<tr><td>totalCores</td><td><a href='#totalCores_25'>totalCores</a>
-</td></tr>
-<tr><td>totalDisk</td><td><a href='#totalDisk_26'>totalDisk</a>
-</td></tr>
-<tr><td>totalRAM</td><td><a href='#totalRAM_27'>totalRAM</a>
-</td></tr>
-<tr><td>usedCores</td><td><a href='#usedCores_28'>usedCores</a>
-</td></tr>
-<tr><td>usedDisk</td><td><a href='#usedDisk_29'>usedDisk</a>
-</td></tr>
-<tr><td>usedRAM</td><td><a href='#usedRAM_30'>usedRAM</a>
+<p> <a name='main_22'>main</a> </p>
+
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>expr: ((sum(kaas{cluster="%(cluster)s"} unless up{job=~"node-exporter", cluster="%(cluster)s"})
+  or on() vector(0)) == bool 0) * (-1) + ((sum(kaas{cluster="%(cluster)s"}) or on()
+  vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s",
+  alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"}
+  OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing",
+  severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0))
+  * %(maxWarnings)d
+graphMode: none
+gridPos:
+  h: 3
+  w: 4
+mappings:
+- from: -2
+  text: '-'
+  to: -2
+  type: 2
+  value: ''
+- from: -1
+  text: Down
+  to: -1
+  type: 2
+  value: ''
+- from: 0
+  text: OK
+  to: 0
+  type: 2
+  value: ''
+- from: 1
+  text: Warning
+  to: 9999
+  type: 2
+  value: ''
+- from: 10000
+  text: Critical
+  to: 100000000000000005366162204393472
+  type: 2
+  value: ''
+thresholds:
+  critical: 10000
+  lowest: 0
+  operator: '>='
+  warning: 1
+unit: none
+</code></div>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallNetworkErrors_20'>overallNetworkErrors</a> </p>
+<h4 id="testbed"><a name='testbed_23'>testbed</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_24'>main</a>
+</td></tr></table>
+
+<p><br></p>
+<p> <a name='main_24'>main</a> </p>
+
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>expr: ((sum(up{infrastructure="testbed"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog",
+  infrastructure="testbed", alertstate="firing", severity="warning"} OR on() vector(0))
+  + sum(ALERTS{alertname!="Watchdog", infrastructure="testbed", alertstate="firing",
+  severity="critical"} OR on() vector(0)) * %(maxWarnings)d
+graphMode: none
+gridPos:
+  h: 3
+  w: 4
+mappings:
+- from: -1
+  text: Down
+  to: -1
+  type: 2
+  value: ''
+- from: 0
+  text: OK
+  to: 0
+  type: 2
+  value: ''
+- from: 1
+  text: Warning
+  to: 9999
+  type: 2
+  value: ''
+- from: 10000
+  text: Critical
+  to: 100000000000000005366162204393472
+  type: 2
+  value: ''
+thresholds:
+  critical: 10000
+  lowest: 0
+  operator: '>='
+  warning: 1
+unit: none
+</code></div>
+</td></tr></table>
+
+<p><br></p>
+<h3 id="l1"><a name='L1_25'>L1</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>host</td><td><a href='#host_26'>host</a>
+</td></tr>
+<tr><td>hostApps</td><td><a href='#hostApps_38'>hostApps</a>
+</td></tr>
+<tr><td>k8s</td><td><a href='#k8s_62'>k8s</a>
+</td></tr>
+<tr><td>k8sApps</td><td><a href='#k8sApps_107'>k8sApps</a>
+</td></tr>
+<tr><td>vm</td><td><a href='#vm_131'>vm</a>
+</td></tr>
+<tr><td>vmApps</td><td><a href='#vmApps_133'>vmApps</a>
+</td></tr></table>
+
+<p><br></p>
+<h4 id="host_1"><a name='host_26'>host</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>overallNetworkErrors</td><td><a href='#overallNetworkErrors_27'>overallNetworkErrors</a>
+</td></tr>
+<tr><td>overallUtilizationCPU</td><td><a href='#overallUtilizationCPU_28'>overallUtilizationCPU</a>
+</td></tr>
+<tr><td>overallUtilizationDisk</td><td><a href='#overallUtilizationDisk_29'>overallUtilizationDisk</a>
+</td></tr>
+<tr><td>overallUtilizationRAM</td><td><a href='#overallUtilizationRAM_30'>overallUtilizationRAM</a>
+</td></tr>
+<tr><td>targetDown</td><td><a href='#targetDown_31'>targetDown</a>
+</td></tr>
+<tr><td>totalCores</td><td><a href='#totalCores_32'>totalCores</a>
+</td></tr>
+<tr><td>totalDisk</td><td><a href='#totalDisk_33'>totalDisk</a>
+</td></tr>
+<tr><td>totalRAM</td><td><a href='#totalRAM_34'>totalRAM</a>
+</td></tr>
+<tr><td>usedCores</td><td><a href='#usedCores_35'>usedCores</a>
+</td></tr>
+<tr><td>usedDisk</td><td><a href='#usedDisk_36'>usedDisk</a>
+</td></tr>
+<tr><td>usedRAM</td><td><a href='#usedRAM_37'>usedRAM</a>
+</td></tr></table>
+
+<p><br></p>
+<p> <a name='overallNetworkErrors_27'>overallNetworkErrors</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
 expr: sum(rate(node_network_transmit_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
-  [5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job,
-  nodename) + sum(rate(node_network_receive_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename)
+  [5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) )
+  by (job, nodename) + sum(rate(node_network_receive_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) ) by (job,
+  nodename)
 linkGetParams: var-instance={{ $labels.nodename }}
 message: 'Host {{ $labels.nodename }}: High Overall Network Errors Count {{ $value
   }}%'
@@ -1628,9 +1875,10 @@ thresholds:
 - title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: sum(rate(node_network_transmit_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
-  [5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job,
-  nodename) + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename)
+  [5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) )
+  by (job, nodename) + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) ) by (job,
+  nodename)
 gridPos:
   x: 18
   y: 6
@@ -1644,13 +1892,13 @@ unit: pps
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationCPU_21'>overallUtilizationCPU</a> </p>
+<p> <a name='overallUtilizationCPU_28'>overallUtilizationCPU</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
 expr: round((1 - (avg(irate(node_cpu_seconds_total{job=~"%s", mode="idle"}[5m]) *
-  on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename)
-  )) * 100)
+  on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
+  nodename) )) * 100)
 linkGetParams: var-instance={{ $labels.nodename }}
 message: 'Host {{ $labels.nodename }}: High CPU Overall Utilization {{ $value }}%'
 name: HostCPUOverallHigh
@@ -1667,8 +1915,8 @@ thresholds:
 - title: System Overview
   url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"$job", mode="idle"}[5m])
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename)
-  )) * 100))
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
+  nodename) )) * 100))
 gridPos:
   x: 0
   y: 6
@@ -1681,18 +1929,19 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationDisk_22'>overallUtilizationDisk</a> </p>
+<p> <a name='overallUtilizationDisk_29'>overallUtilizationDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
-expr: round((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance, job, cluster)
-  group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename,
-  device)) / ((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance, job, cluster)
-  group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename,
-  device)) + sum(node_filesystem_avail_bytes{job=~"%s"} * on(instance, job, cluster)
-  group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)
+expr: round((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance, job, cluster,
+  pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
+  nodename, device)) / ((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance,
+  job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+  - sum(node_filesystem_free_bytes{job=~"%s"} * on(instance, job, cluster, pod) group_left(nodename)
+  (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{job=~"%s"}
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
+  nodename, device)) * 100 > 0)
 linkGetParams: var-instance={{ $labels.nodename }}
 message: 'Host {{ $labels.nodename }}: High Disk Overall Utilization {{ $value }}%'
 name: HostDiskOverallHigh
@@ -1715,14 +1964,15 @@ description: "The percentage of the disk utilization is calculated using the fra
   \ using the remaining reserved space requires root privileges.\nAny non-privileged\
   \ users and processes are unable to write new data to the partition. See the list\
   \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
-expr: max(round((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance, job, cluster)
-  group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename,
-  device)) / ((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance, job, cluster)
-  group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename,
-  device)) + sum(node_filesystem_avail_bytes{job=~"$job"} * on(instance, job, cluster)
-  group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0))
+expr: max(round((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance, job, cluster,
+  pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
+  nodename, device)) / ((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance,
+  job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)
+  - sum(node_filesystem_free_bytes{job=~"$job"} * on(instance, job, cluster, pod)
+  group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{job=~"$job"}
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
+  nodename, device)) * 100 > 0))
 gridPos:
   x: 12
   y: 6
@@ -1735,14 +1985,14 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationRAM_23'>overallUtilizationRAM</a> </p>
+<p> <a name='overallUtilizationRAM_30'>overallUtilizationRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
 expr: round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"%s"}
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) / sum by (job,
-  nodename, cluster) (node_memory_MemTotal_bytes{job=~"%s"} * on(instance, job, cluster)
-  group_left(nodename) (node_uname_info))) * 100)
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) / sum
+  by (job, nodename, cluster) (node_memory_MemTotal_bytes{job=~"%s"} * on(instance,
+  job, cluster, pod) group_left(nodename) (node_uname_info))) * 100)
 linkGetParams: var-instance={{ $labels.nodename }}
 message: 'Host {{ $labels.nodename }}: High RAM Overall Utilization {{ $value }}%'
 name: HostRAMOverallHigh
@@ -1761,9 +2011,9 @@ thresholds:
 description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
   \ (<memory available>/<memory total>)\n```"
 expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"$job"}
-  * on(instance, job, cluster) group_left(nodename) (node_uname_info)) / sum by (job,
-  nodename, cluster) (node_memory_MemTotal_bytes{job=~"$job"} * on(instance, job,
-  cluster) group_left(nodename) (node_uname_info))) * 100))
+  * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) / sum
+  by (job, nodename, cluster) (node_memory_MemTotal_bytes{job=~"$job"} * on(instance,
+  job, cluster, pod) group_left(nodename) (node_uname_info))) * 100))
 gridPos:
   x: 6
   y: 6
@@ -1776,7 +2026,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='targetDown_24'>targetDown</a> </p>
+<p> <a name='targetDown_31'>targetDown</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Host
@@ -1795,7 +2045,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalCores_25'>totalCores</a> </p>
+<p> <a name='totalCores_32'>totalCores</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: count(node_cpu_seconds_total{job=~"$job", mode="system"})
@@ -1814,7 +2064,7 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalDisk_26'>totalDisk</a> </p>
+<p> <a name='totalDisk_33'>totalDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_filesystem_size_bytes{job=~"$job"})
@@ -1833,7 +2083,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalRAM_27'>totalRAM</a> </p>
+<p> <a name='totalRAM_34'>totalRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_memory_MemTotal_bytes{job=~"$job"})
@@ -1852,7 +2102,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedCores_28'>usedCores</a> </p>
+<p> <a name='usedCores_35'>usedCores</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: (1 - (avg(irate(node_cpu_seconds_total{job=~"$job", mode="idle"}[5m])))) * count(node_cpu_seconds_total{job=~"$job",
@@ -1872,7 +2122,7 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedDisk_29'>usedDisk</a> </p>
+<p> <a name='usedDisk_36'>usedDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_filesystem_size_bytes{job=~"$job"}) - sum(node_filesystem_free_bytes{job=~"$job"})
@@ -1891,7 +2141,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedRAM_30'>usedRAM</a> </p>
+<p> <a name='usedRAM_37'>usedRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_memory_MemTotal_bytes{job=~"$job"}) * (((1 - sum(node_memory_MemAvailable_bytes{job=~"$job"})
@@ -1911,56 +2161,56 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="hostapps"><a name='hostApps_31'>hostApps</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_32'>apache</a>
+<h4 id="hostapps"><a name='hostApps_38'>hostApps</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_39'>apache</a>
 </td></tr>
-<tr><td>autoscaler</td><td><a href='#autoscaler_33'>autoscaler</a>
+<tr><td>autoscaler</td><td><a href='#autoscaler_40'>autoscaler</a>
 </td></tr>
-<tr><td>cAdvisor</td><td><a href='#cAdvisor_34'>cAdvisor</a>
+<tr><td>cAdvisor</td><td><a href='#cAdvisor_41'>cAdvisor</a>
 </td></tr>
-<tr><td>genericApp</td><td><a href='#genericApp_35'>genericApp</a>
+<tr><td>genericApp</td><td><a href='#genericApp_42'>genericApp</a>
 </td></tr>
-<tr><td>harbor</td><td><a href='#harbor_36'>harbor</a>
+<tr><td>harbor</td><td><a href='#harbor_43'>harbor</a>
 </td></tr>
-<tr><td>javaActuator</td><td><a href='#javaActuator_37'>javaActuator</a>
+<tr><td>javaActuator</td><td><a href='#javaActuator_44'>javaActuator</a>
 </td></tr>
-<tr><td>jvm</td><td><a href='#jvm_38'>jvm</a>
+<tr><td>jvm</td><td><a href='#jvm_45'>jvm</a>
 </td></tr>
-<tr><td>lokiDistributed</td><td><a href='#lokiDistributed_39'>lokiDistributed</a>
+<tr><td>lokiDistributed</td><td><a href='#lokiDistributed_46'>lokiDistributed</a>
 </td></tr>
-<tr><td>mysqlExporter</td><td><a href='#mysqlExporter_40'>mysqlExporter</a>
+<tr><td>mysqlExporter</td><td><a href='#mysqlExporter_47'>mysqlExporter</a>
 </td></tr>
-<tr><td>nginxIngress</td><td><a href='#nginxIngress_41'>nginxIngress</a>
+<tr><td>nginxIngress</td><td><a href='#nginxIngress_48'>nginxIngress</a>
 </td></tr>
-<tr><td>nginxIngressCertificateExpiry</td><td><a href='#nginxIngressCertificateExpiry_42'>nginxIngressCertificateExpiry</a>
+<tr><td>nginxIngressCertificateExpiry</td><td><a href='#nginxIngressCertificateExpiry_49'>nginxIngressCertificateExpiry</a>
 </td></tr>
-<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_43'>nginxNrpe</a>
+<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_50'>nginxNrpe</a>
 </td></tr>
-<tr><td>nginxVts</td><td><a href='#nginxVts_44'>nginxVts</a>
+<tr><td>nginxVts</td><td><a href='#nginxVts_51'>nginxVts</a>
 </td></tr>
-<tr><td>nginxVtsEnhanced</td><td><a href='#nginxVtsEnhanced_45'>nginxVtsEnhanced</a>
+<tr><td>nginxVtsEnhanced</td><td><a href='#nginxVtsEnhanced_52'>nginxVtsEnhanced</a>
 </td></tr>
-<tr><td>nginxVtsEnhancedLegacy</td><td><a href='#nginxVtsEnhancedLegacy_46'>nginxVtsEnhancedLegacy</a>
+<tr><td>nginxVtsEnhancedLegacy</td><td><a href='#nginxVtsEnhancedLegacy_53'>nginxVtsEnhancedLegacy</a>
 </td></tr>
-<tr><td>nginxVtsLegacy</td><td><a href='#nginxVtsLegacy_47'>nginxVtsLegacy</a>
+<tr><td>nginxVtsLegacy</td><td><a href='#nginxVtsLegacy_54'>nginxVtsLegacy</a>
 </td></tr>
-<tr><td>phpFpm</td><td><a href='#phpFpm_48'>phpFpm</a>
+<tr><td>phpFpm</td><td><a href='#phpFpm_55'>phpFpm</a>
 </td></tr>
-<tr><td>postfix</td><td><a href='#postfix_49'>postfix</a>
+<tr><td>postfix</td><td><a href='#postfix_56'>postfix</a>
 </td></tr>
-<tr><td>prometheus</td><td><a href='#prometheus_50'>prometheus</a>
+<tr><td>prometheus</td><td><a href='#prometheus_57'>prometheus</a>
 </td></tr>
-<tr><td>pythonFlask</td><td><a href='#pythonFlask_51'>pythonFlask</a>
+<tr><td>pythonFlask</td><td><a href='#pythonFlask_58'>pythonFlask</a>
 </td></tr>
-<tr><td>rabbitmq</td><td><a href='#rabbitmq_52'>rabbitmq</a>
+<tr><td>rabbitmq</td><td><a href='#rabbitmq_59'>rabbitmq</a>
 </td></tr>
-<tr><td>sslExporter</td><td><a href='#sslExporter_53'>sslExporter</a>
+<tr><td>sslExporter</td><td><a href='#sslExporter_60'>sslExporter</a>
 </td></tr>
-<tr><td>websocket</td><td><a href='#websocket_54'>websocket</a>
+<tr><td>websocket</td><td><a href='#websocket_61'>websocket</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='apache_32'>apache</a> </p>
+<p> <a name='apache_39'>apache</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -1984,7 +2234,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='autoscaler_33'>autoscaler</a> </p>
+<p> <a name='autoscaler_40'>autoscaler</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2022,7 +2272,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='cAdvisor_34'>cAdvisor</a> </p>
+<p> <a name='cAdvisor_41'>cAdvisor</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2046,7 +2296,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='genericApp_35'>genericApp</a> </p>
+<p> <a name='genericApp_42'>genericApp</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2066,7 +2316,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='harbor_36'>harbor</a> </p>
+<p> <a name='harbor_43'>harbor</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2103,7 +2353,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='javaActuator_37'>javaActuator</a> </p>
+<p> <a name='javaActuator_44'>javaActuator</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2149,7 +2399,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='jvm_38'>jvm</a> </p>
+<p> <a name='jvm_45'>jvm</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2172,7 +2422,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='lokiDistributed_39'>lokiDistributed</a> </p>
+<p> <a name='lokiDistributed_46'>lokiDistributed</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2196,7 +2446,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mysqlExporter_40'>mysqlExporter</a> </p>
+<p> <a name='mysqlExporter_47'>mysqlExporter</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2220,7 +2470,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxIngress_41'>nginxIngress</a> </p>
+<p> <a name='nginxIngress_48'>nginxIngress</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2263,7 +2513,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxIngressCertificateExpiry_42'>nginxIngressCertificateExpiry</a> </p>
+<p> <a name='nginxIngressCertificateExpiry_49'>nginxIngressCertificateExpiry</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2307,7 +2557,7 @@ unit: s
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxNrpe_43'>nginxNrpe</a> </p>
+<p> <a name='nginxNrpe_50'>nginxNrpe</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2331,7 +2581,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVts_44'>nginxVts</a> </p>
+<p> <a name='nginxVts_51'>nginxVts</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2374,7 +2624,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsEnhanced_45'>nginxVtsEnhanced</a> </p>
+<p> <a name='nginxVtsEnhanced_52'>nginxVtsEnhanced</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2417,7 +2667,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsEnhancedLegacy_46'>nginxVtsEnhancedLegacy</a> </p>
+<p> <a name='nginxVtsEnhancedLegacy_53'>nginxVtsEnhancedLegacy</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2460,7 +2710,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsLegacy_47'>nginxVtsLegacy</a> </p>
+<p> <a name='nginxVtsLegacy_54'>nginxVtsLegacy</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2503,7 +2753,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='phpFpm_48'>phpFpm</a> </p>
+<p> <a name='phpFpm_55'>phpFpm</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2527,7 +2777,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='postfix_49'>postfix</a> </p>
+<p> <a name='postfix_56'>postfix</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2568,7 +2818,7 @@ unit: mailq
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='prometheus_50'>prometheus</a> </p>
+<p> <a name='prometheus_57'>prometheus</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2591,7 +2841,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='pythonFlask_51'>pythonFlask</a> </p>
+<p> <a name='pythonFlask_58'>pythonFlask</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
@@ -2634,7 +2884,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='rabbitmq_52'>rabbitmq</a> </p>
+<p> <a name='rabbitmq_59'>rabbitmq</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2658,7 +2908,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='sslExporter_53'>sslExporter</a> </p>
+<p> <a name='sslExporter_60'>sslExporter</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2687,7 +2937,7 @@ unit: s
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='websocket_54'>websocket</a> </p>
+<p> <a name='websocket_61'>websocket</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -2711,98 +2961,98 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="k8s_1"><a name='k8s_55'>k8s</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>apiServerHealth</td><td><a href='#apiServerHealth_56'>apiServerHealth</a>
+<h4 id="k8s_1"><a name='k8s_62'>k8s</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>apiServerHealth</td><td><a href='#apiServerHealth_63'>apiServerHealth</a>
 </td></tr>
-<tr><td>controllerManagerHealth</td><td><a href='#controllerManagerHealth_57'>controllerManagerHealth</a>
+<tr><td>controllerManagerHealth</td><td><a href='#controllerManagerHealth_64'>controllerManagerHealth</a>
 </td></tr>
-<tr><td>daemonSetsHealth</td><td><a href='#daemonSetsHealth_58'>daemonSetsHealth</a>
+<tr><td>daemonSetsHealth</td><td><a href='#daemonSetsHealth_65'>daemonSetsHealth</a>
 </td></tr>
-<tr><td>deploymentsHealth</td><td><a href='#deploymentsHealth_59'>deploymentsHealth</a>
+<tr><td>deploymentsHealth</td><td><a href='#deploymentsHealth_66'>deploymentsHealth</a>
 </td></tr>
-<tr><td>etcdHealth</td><td><a href='#etcdHealth_60'>etcdHealth</a>
+<tr><td>etcdHealth</td><td><a href='#etcdHealth_67'>etcdHealth</a>
 </td></tr>
-<tr><td>kubeletHealth</td><td><a href='#kubeletHealth_61'>kubeletHealth</a>
+<tr><td>kubeletHealth</td><td><a href='#kubeletHealth_68'>kubeletHealth</a>
 </td></tr>
-<tr><td>mostUtilizedMasterNodeCPU</td><td><a href='#mostUtilizedMasterNodeCPU_62'>mostUtilizedMasterNodeCPU</a>
+<tr><td>mostUtilizedMasterNodeCPU</td><td><a href='#mostUtilizedMasterNodeCPU_69'>mostUtilizedMasterNodeCPU</a>
 </td></tr>
-<tr><td>mostUtilizedMasterNodeDisk</td><td><a href='#mostUtilizedMasterNodeDisk_63'>mostUtilizedMasterNodeDisk</a>
+<tr><td>mostUtilizedMasterNodeDisk</td><td><a href='#mostUtilizedMasterNodeDisk_70'>mostUtilizedMasterNodeDisk</a>
 </td></tr>
-<tr><td>mostUtilizedMasterNodeNetworkErrors</td><td><a href='#mostUtilizedMasterNodeNetworkErrors_64'>mostUtilizedMasterNodeNetworkErrors</a>
+<tr><td>mostUtilizedMasterNodeNetworkErrors</td><td><a href='#mostUtilizedMasterNodeNetworkErrors_71'>mostUtilizedMasterNodeNetworkErrors</a>
 </td></tr>
-<tr><td>mostUtilizedMasterNodeRAM</td><td><a href='#mostUtilizedMasterNodeRAM_65'>mostUtilizedMasterNodeRAM</a>
+<tr><td>mostUtilizedMasterNodeRAM</td><td><a href='#mostUtilizedMasterNodeRAM_72'>mostUtilizedMasterNodeRAM</a>
 </td></tr>
-<tr><td>mostUtilizedPVC</td><td><a href='#mostUtilizedPVC_66'>mostUtilizedPVC</a>
+<tr><td>mostUtilizedPVC</td><td><a href='#mostUtilizedPVC_73'>mostUtilizedPVC</a>
 </td></tr>
-<tr><td>mostUtilizedWorkerNodeCPU</td><td><a href='#mostUtilizedWorkerNodeCPU_67'>mostUtilizedWorkerNodeCPU</a>
+<tr><td>mostUtilizedWorkerNodeCPU</td><td><a href='#mostUtilizedWorkerNodeCPU_74'>mostUtilizedWorkerNodeCPU</a>
 </td></tr>
-<tr><td>mostUtilizedWorkerNodeDisk</td><td><a href='#mostUtilizedWorkerNodeDisk_68'>mostUtilizedWorkerNodeDisk</a>
+<tr><td>mostUtilizedWorkerNodeDisk</td><td><a href='#mostUtilizedWorkerNodeDisk_75'>mostUtilizedWorkerNodeDisk</a>
 </td></tr>
-<tr><td>mostUtilizedWorkerNodeNetworkErrors</td><td><a href='#mostUtilizedWorkerNodeNetworkErrors_69'>mostUtilizedWorkerNodeNetworkErrors</a>
+<tr><td>mostUtilizedWorkerNodeNetworkErrors</td><td><a href='#mostUtilizedWorkerNodeNetworkErrors_76'>mostUtilizedWorkerNodeNetworkErrors</a>
 </td></tr>
-<tr><td>mostUtilizedWorkerNodeRAM</td><td><a href='#mostUtilizedWorkerNodeRAM_70'>mostUtilizedWorkerNodeRAM</a>
+<tr><td>mostUtilizedWorkerNodeRAM</td><td><a href='#mostUtilizedWorkerNodeRAM_77'>mostUtilizedWorkerNodeRAM</a>
 </td></tr>
-<tr><td>nodeHealth</td><td><a href='#nodeHealth_71'>nodeHealth</a>
+<tr><td>nodeHealth</td><td><a href='#nodeHealth_78'>nodeHealth</a>
 </td></tr>
-<tr><td>overallMasterNodesNetworkErrors</td><td><a href='#overallMasterNodesNetworkErrors_72'>overallMasterNodesNetworkErrors</a>
+<tr><td>overallMasterNodesNetworkErrors</td><td><a href='#overallMasterNodesNetworkErrors_79'>overallMasterNodesNetworkErrors</a>
 </td></tr>
-<tr><td>overallUtilizationMasterNodesCPU</td><td><a href='#overallUtilizationMasterNodesCPU_73'>overallUtilizationMasterNodesCPU</a>
+<tr><td>overallUtilizationMasterNodesCPU</td><td><a href='#overallUtilizationMasterNodesCPU_80'>overallUtilizationMasterNodesCPU</a>
 </td></tr>
-<tr><td>overallUtilizationMasterNodesDisk</td><td><a href='#overallUtilizationMasterNodesDisk_74'>overallUtilizationMasterNodesDisk</a>
+<tr><td>overallUtilizationMasterNodesDisk</td><td><a href='#overallUtilizationMasterNodesDisk_81'>overallUtilizationMasterNodesDisk</a>
 </td></tr>
-<tr><td>overallUtilizationMasterNodesRAM</td><td><a href='#overallUtilizationMasterNodesRAM_75'>overallUtilizationMasterNodesRAM</a>
+<tr><td>overallUtilizationMasterNodesRAM</td><td><a href='#overallUtilizationMasterNodesRAM_82'>overallUtilizationMasterNodesRAM</a>
 </td></tr>
-<tr><td>overallUtilizationWorkerNodesCPU</td><td><a href='#overallUtilizationWorkerNodesCPU_76'>overallUtilizationWorkerNodesCPU</a>
+<tr><td>overallUtilizationWorkerNodesCPU</td><td><a href='#overallUtilizationWorkerNodesCPU_83'>overallUtilizationWorkerNodesCPU</a>
 </td></tr>
-<tr><td>overallUtilizationWorkerNodesDisk</td><td><a href='#overallUtilizationWorkerNodesDisk_77'>overallUtilizationWorkerNodesDisk</a>
+<tr><td>overallUtilizationWorkerNodesDisk</td><td><a href='#overallUtilizationWorkerNodesDisk_84'>overallUtilizationWorkerNodesDisk</a>
 </td></tr>
-<tr><td>overallUtilizationWorkerNodesRAM</td><td><a href='#overallUtilizationWorkerNodesRAM_78'>overallUtilizationWorkerNodesRAM</a>
+<tr><td>overallUtilizationWorkerNodesRAM</td><td><a href='#overallUtilizationWorkerNodesRAM_85'>overallUtilizationWorkerNodesRAM</a>
 </td></tr>
-<tr><td>overallWorkerNodesNetworkErrors</td><td><a href='#overallWorkerNodesNetworkErrors_79'>overallWorkerNodesNetworkErrors</a>
+<tr><td>overallWorkerNodesNetworkErrors</td><td><a href='#overallWorkerNodesNetworkErrors_86'>overallWorkerNodesNetworkErrors</a>
 </td></tr>
-<tr><td>proxyHealth</td><td><a href='#proxyHealth_80'>proxyHealth</a>
+<tr><td>proxyHealth</td><td><a href='#proxyHealth_87'>proxyHealth</a>
 </td></tr>
-<tr><td>pvcBound</td><td><a href='#pvcBound_81'>pvcBound</a>
+<tr><td>pvcBound</td><td><a href='#pvcBound_88'>pvcBound</a>
 </td></tr>
-<tr><td>runningContainers</td><td><a href='#runningContainers_82'>runningContainers</a>
+<tr><td>runningContainers</td><td><a href='#runningContainers_89'>runningContainers</a>
 </td></tr>
-<tr><td>runningPods</td><td><a href='#runningPods_83'>runningPods</a>
+<tr><td>runningPods</td><td><a href='#runningPods_90'>runningPods</a>
 </td></tr>
-<tr><td>runningStatefulSets</td><td><a href='#runningStatefulSets_84'>runningStatefulSets</a>
+<tr><td>runningStatefulSets</td><td><a href='#runningStatefulSets_91'>runningStatefulSets</a>
 </td></tr>
-<tr><td>schedulerHealth</td><td><a href='#schedulerHealth_85'>schedulerHealth</a>
+<tr><td>schedulerHealth</td><td><a href='#schedulerHealth_92'>schedulerHealth</a>
 </td></tr>
-<tr><td>succeededJobs</td><td><a href='#succeededJobs_86'>succeededJobs</a>
+<tr><td>succeededJobs</td><td><a href='#succeededJobs_93'>succeededJobs</a>
 </td></tr>
-<tr><td>targetDown</td><td><a href='#targetDown_87'>targetDown</a>
+<tr><td>targetDown</td><td><a href='#targetDown_94'>targetDown</a>
 </td></tr>
-<tr><td>totalCoresMasterNodes</td><td><a href='#totalCoresMasterNodes_88'>totalCoresMasterNodes</a>
+<tr><td>totalCoresMasterNodes</td><td><a href='#totalCoresMasterNodes_95'>totalCoresMasterNodes</a>
 </td></tr>
-<tr><td>totalCoresWorkerNodes</td><td><a href='#totalCoresWorkerNodes_89'>totalCoresWorkerNodes</a>
+<tr><td>totalCoresWorkerNodes</td><td><a href='#totalCoresWorkerNodes_96'>totalCoresWorkerNodes</a>
 </td></tr>
-<tr><td>totalDiskMasterNodes</td><td><a href='#totalDiskMasterNodes_90'>totalDiskMasterNodes</a>
+<tr><td>totalDiskMasterNodes</td><td><a href='#totalDiskMasterNodes_97'>totalDiskMasterNodes</a>
 </td></tr>
-<tr><td>totalDiskWorkerNodes</td><td><a href='#totalDiskWorkerNodes_91'>totalDiskWorkerNodes</a>
+<tr><td>totalDiskWorkerNodes</td><td><a href='#totalDiskWorkerNodes_98'>totalDiskWorkerNodes</a>
 </td></tr>
-<tr><td>totalRAMMasterNodes</td><td><a href='#totalRAMMasterNodes_92'>totalRAMMasterNodes</a>
+<tr><td>totalRAMMasterNodes</td><td><a href='#totalRAMMasterNodes_99'>totalRAMMasterNodes</a>
 </td></tr>
-<tr><td>totalRAMWorkerNodes</td><td><a href='#totalRAMWorkerNodes_93'>totalRAMWorkerNodes</a>
+<tr><td>totalRAMWorkerNodes</td><td><a href='#totalRAMWorkerNodes_100'>totalRAMWorkerNodes</a>
 </td></tr>
-<tr><td>usedCoresMasterNodes</td><td><a href='#usedCoresMasterNodes_94'>usedCoresMasterNodes</a>
+<tr><td>usedCoresMasterNodes</td><td><a href='#usedCoresMasterNodes_101'>usedCoresMasterNodes</a>
 </td></tr>
-<tr><td>usedCoresWorkerNodes</td><td><a href='#usedCoresWorkerNodes_95'>usedCoresWorkerNodes</a>
+<tr><td>usedCoresWorkerNodes</td><td><a href='#usedCoresWorkerNodes_102'>usedCoresWorkerNodes</a>
 </td></tr>
-<tr><td>usedDiskMasterNodes</td><td><a href='#usedDiskMasterNodes_96'>usedDiskMasterNodes</a>
+<tr><td>usedDiskMasterNodes</td><td><a href='#usedDiskMasterNodes_103'>usedDiskMasterNodes</a>
 </td></tr>
-<tr><td>usedDiskWorkerNodes</td><td><a href='#usedDiskWorkerNodes_97'>usedDiskWorkerNodes</a>
+<tr><td>usedDiskWorkerNodes</td><td><a href='#usedDiskWorkerNodes_104'>usedDiskWorkerNodes</a>
 </td></tr>
-<tr><td>usedRAMMasterNodes</td><td><a href='#usedRAMMasterNodes_98'>usedRAMMasterNodes</a>
+<tr><td>usedRAMMasterNodes</td><td><a href='#usedRAMMasterNodes_105'>usedRAMMasterNodes</a>
 </td></tr>
-<tr><td>usedRAMWorkerNodes</td><td><a href='#usedRAMWorkerNodes_99'>usedRAMWorkerNodes</a>
+<tr><td>usedRAMWorkerNodes</td><td><a href='#usedRAMWorkerNodes_106'>usedRAMWorkerNodes</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='apiServerHealth_56'>apiServerHealth</a> </p>
+<p> <a name='apiServerHealth_63'>apiServerHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -2844,7 +3094,7 @@ title: API Server
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='controllerManagerHealth_57'>controllerManagerHealth</a> </p>
+<p> <a name='controllerManagerHealth_64'>controllerManagerHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -2886,7 +3136,7 @@ title: Controller Manager
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='daemonSetsHealth_58'>daemonSetsHealth</a> </p>
+<p> <a name='daemonSetsHealth_65'>daemonSetsHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -2924,7 +3174,7 @@ title: DaemonSets Health
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='deploymentsHealth_59'>deploymentsHealth</a> </p>
+<p> <a name='deploymentsHealth_66'>deploymentsHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -2959,7 +3209,7 @@ title: Deployments Health
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='etcdHealth_60'>etcdHealth</a> </p>
+<p> <a name='etcdHealth_67'>etcdHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3001,7 +3251,7 @@ title: Etcd
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='kubeletHealth_61'>kubeletHealth</a> </p>
+<p> <a name='kubeletHealth_68'>kubeletHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3043,7 +3293,7 @@ title: Kubelet
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedMasterNodeCPU_62'>mostUtilizedMasterNodeCPU</a> </p>
+<p> <a name='mostUtilizedMasterNodeCPU_69'>mostUtilizedMasterNodeCPU</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3085,7 +3335,7 @@ title: Most Utilized Node
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedMasterNodeDisk_63'>mostUtilizedMasterNodeDisk</a> </p>
+<p> <a name='mostUtilizedMasterNodeDisk_70'>mostUtilizedMasterNodeDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3144,7 +3394,7 @@ title: Most Utilized Node
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedMasterNodeNetworkErrors_64'>mostUtilizedMasterNodeNetworkErrors</a> </p>
+<p> <a name='mostUtilizedMasterNodeNetworkErrors_71'>mostUtilizedMasterNodeNetworkErrors</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3191,7 +3441,7 @@ unit: pps
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedMasterNodeRAM_65'>mostUtilizedMasterNodeRAM</a> </p>
+<p> <a name='mostUtilizedMasterNodeRAM_72'>mostUtilizedMasterNodeRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3237,7 +3487,7 @@ title: Most Utilized Node
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedPVC_66'>mostUtilizedPVC</a> </p>
+<p> <a name='mostUtilizedPVC_73'>mostUtilizedPVC</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3281,7 +3531,7 @@ title: Most Utilized PVC
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedWorkerNodeCPU_67'>mostUtilizedWorkerNodeCPU</a> </p>
+<p> <a name='mostUtilizedWorkerNodeCPU_74'>mostUtilizedWorkerNodeCPU</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3323,7 +3573,7 @@ title: Most Utilized Node
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedWorkerNodeDisk_68'>mostUtilizedWorkerNodeDisk</a> </p>
+<p> <a name='mostUtilizedWorkerNodeDisk_75'>mostUtilizedWorkerNodeDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3382,7 +3632,7 @@ title: Most Utilized Node
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedWorkerNodeNetworkErrors_69'>mostUtilizedWorkerNodeNetworkErrors</a> </p>
+<p> <a name='mostUtilizedWorkerNodeNetworkErrors_76'>mostUtilizedWorkerNodeNetworkErrors</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3429,7 +3679,7 @@ unit: pps
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedWorkerNodeRAM_70'>mostUtilizedWorkerNodeRAM</a> </p>
+<p> <a name='mostUtilizedWorkerNodeRAM_77'>mostUtilizedWorkerNodeRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3475,7 +3725,7 @@ title: Most Utilized Node
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nodeHealth_71'>nodeHealth</a> </p>
+<p> <a name='nodeHealth_78'>nodeHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3515,7 +3765,7 @@ title: Nodes Health
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallMasterNodesNetworkErrors_72'>overallMasterNodesNetworkErrors</a> </p>
+<p> <a name='overallMasterNodesNetworkErrors_79'>overallMasterNodesNetworkErrors</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3560,7 +3810,7 @@ unit: pps
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationMasterNodesCPU_73'>overallUtilizationMasterNodesCPU</a> </p>
+<p> <a name='overallUtilizationMasterNodesCPU_80'>overallUtilizationMasterNodesCPU</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3600,7 +3850,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationMasterNodesDisk_74'>overallUtilizationMasterNodesDisk</a> </p>
+<p> <a name='overallUtilizationMasterNodesDisk_81'>overallUtilizationMasterNodesDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3658,7 +3908,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationMasterNodesRAM_75'>overallUtilizationMasterNodesRAM</a> </p>
+<p> <a name='overallUtilizationMasterNodesRAM_82'>overallUtilizationMasterNodesRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3702,7 +3952,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationWorkerNodesCPU_76'>overallUtilizationWorkerNodesCPU</a> </p>
+<p> <a name='overallUtilizationWorkerNodesCPU_83'>overallUtilizationWorkerNodesCPU</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3742,7 +3992,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationWorkerNodesDisk_77'>overallUtilizationWorkerNodesDisk</a> </p>
+<p> <a name='overallUtilizationWorkerNodesDisk_84'>overallUtilizationWorkerNodesDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3800,7 +4050,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationWorkerNodesRAM_78'>overallUtilizationWorkerNodesRAM</a> </p>
+<p> <a name='overallUtilizationWorkerNodesRAM_85'>overallUtilizationWorkerNodesRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3844,7 +4094,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallWorkerNodesNetworkErrors_79'>overallWorkerNodesNetworkErrors</a> </p>
+<p> <a name='overallWorkerNodesNetworkErrors_86'>overallWorkerNodesNetworkErrors</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3889,7 +4139,7 @@ unit: pps
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='proxyHealth_80'>proxyHealth</a> </p>
+<p> <a name='proxyHealth_87'>proxyHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3931,7 +4181,7 @@ title: Proxy
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='pvcBound_81'>pvcBound</a> </p>
+<p> <a name='pvcBound_88'>pvcBound</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -3979,7 +4229,7 @@ title: PVC Bound
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='runningContainers_82'>runningContainers</a> </p>
+<p> <a name='runningContainers_89'>runningContainers</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -4017,7 +4267,7 @@ title: Running Containers
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='runningPods_83'>runningPods</a> </p>
+<p> <a name='runningPods_90'>runningPods</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -4055,7 +4305,7 @@ title: Running Pods
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='runningStatefulSets_84'>runningStatefulSets</a> </p>
+<p> <a name='runningStatefulSets_91'>runningStatefulSets</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -4090,7 +4340,7 @@ title: Running StatefulSets
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='schedulerHealth_85'>schedulerHealth</a> </p>
+<p> <a name='schedulerHealth_92'>schedulerHealth</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -4132,7 +4382,7 @@ title: Scheduler
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='succeededJobs_86'>succeededJobs</a> </p>
+<p> <a name='succeededJobs_93'>succeededJobs</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -4173,7 +4423,7 @@ title: Succeeded Jobs
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='targetDown_87'>targetDown</a> </p>
+<p> <a name='targetDown_94'>targetDown</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
@@ -4192,7 +4442,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalCoresMasterNodes_88'>totalCoresMasterNodes</a> </p>
+<p> <a name='totalCoresMasterNodes_95'>totalCoresMasterNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: count(node_cpu_seconds_total{cluster="$cluster", job=~"$job", mode="system",
@@ -4212,7 +4462,7 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalCoresWorkerNodes_89'>totalCoresWorkerNodes</a> </p>
+<p> <a name='totalCoresWorkerNodes_96'>totalCoresWorkerNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: count(node_cpu_seconds_total{cluster="$cluster", job=~"$job", mode="system",
@@ -4232,7 +4482,7 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalDiskMasterNodes_90'>totalDiskMasterNodes</a> </p>
+<p> <a name='totalDiskMasterNodes_97'>totalDiskMasterNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job", instance=~"$masterInstance"})
@@ -4251,7 +4501,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalDiskWorkerNodes_91'>totalDiskWorkerNodes</a> </p>
+<p> <a name='totalDiskWorkerNodes_98'>totalDiskWorkerNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job", instance=~"$workerInstance"})
@@ -4270,7 +4520,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalRAMMasterNodes_92'>totalRAMMasterNodes</a> </p>
+<p> <a name='totalRAMMasterNodes_99'>totalRAMMasterNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job", instance=~"$masterInstance"})
@@ -4289,7 +4539,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalRAMWorkerNodes_93'>totalRAMWorkerNodes</a> </p>
+<p> <a name='totalRAMWorkerNodes_100'>totalRAMWorkerNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job", instance=~"$workerInstance"})
@@ -4308,7 +4558,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedCoresMasterNodes_94'>usedCoresMasterNodes</a> </p>
+<p> <a name='usedCoresMasterNodes_101'>usedCoresMasterNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: (1 - (avg(irate(node_cpu_seconds_total{cluster="$cluster", job=~"$job", mode="idle",
@@ -4329,7 +4579,7 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedCoresWorkerNodes_95'>usedCoresWorkerNodes</a> </p>
+<p> <a name='usedCoresWorkerNodes_102'>usedCoresWorkerNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: (1 - (avg(irate(node_cpu_seconds_total{cluster="$cluster", job=~"$job", mode="idle",
@@ -4350,7 +4600,7 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedDiskMasterNodes_96'>usedDiskMasterNodes</a> </p>
+<p> <a name='usedDiskMasterNodes_103'>usedDiskMasterNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job", instance=~"$masterInstance"})
@@ -4370,7 +4620,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedDiskWorkerNodes_97'>usedDiskWorkerNodes</a> </p>
+<p> <a name='usedDiskWorkerNodes_104'>usedDiskWorkerNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job", instance=~"$workerInstance"})
@@ -4390,7 +4640,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedRAMMasterNodes_98'>usedRAMMasterNodes</a> </p>
+<p> <a name='usedRAMMasterNodes_105'>usedRAMMasterNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job", instance=~"$masterInstance"})
@@ -4411,7 +4661,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedRAMWorkerNodes_99'>usedRAMWorkerNodes</a> </p>
+<p> <a name='usedRAMWorkerNodes_106'>usedRAMWorkerNodes</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job", instance=~"$workerInstance"})
@@ -4432,56 +4682,56 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="k8sapps"><a name='k8sApps_100'>k8sApps</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_101'>apache</a>
+<h4 id="k8sapps"><a name='k8sApps_107'>k8sApps</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_108'>apache</a>
 </td></tr>
-<tr><td>autoscaler</td><td><a href='#autoscaler_102'>autoscaler</a>
+<tr><td>autoscaler</td><td><a href='#autoscaler_109'>autoscaler</a>
 </td></tr>
-<tr><td>cAdvisor</td><td><a href='#cAdvisor_103'>cAdvisor</a>
+<tr><td>cAdvisor</td><td><a href='#cAdvisor_110'>cAdvisor</a>
 </td></tr>
-<tr><td>genericApp</td><td><a href='#genericApp_104'>genericApp</a>
+<tr><td>genericApp</td><td><a href='#genericApp_111'>genericApp</a>
 </td></tr>
-<tr><td>harbor</td><td><a href='#harbor_105'>harbor</a>
+<tr><td>harbor</td><td><a href='#harbor_112'>harbor</a>
 </td></tr>
-<tr><td>javaActuator</td><td><a href='#javaActuator_106'>javaActuator</a>
+<tr><td>javaActuator</td><td><a href='#javaActuator_113'>javaActuator</a>
 </td></tr>
-<tr><td>jvm</td><td><a href='#jvm_107'>jvm</a>
+<tr><td>jvm</td><td><a href='#jvm_114'>jvm</a>
 </td></tr>
-<tr><td>lokiDistributed</td><td><a href='#lokiDistributed_108'>lokiDistributed</a>
+<tr><td>lokiDistributed</td><td><a href='#lokiDistributed_115'>lokiDistributed</a>
 </td></tr>
-<tr><td>mysqlExporter</td><td><a href='#mysqlExporter_109'>mysqlExporter</a>
+<tr><td>mysqlExporter</td><td><a href='#mysqlExporter_116'>mysqlExporter</a>
 </td></tr>
-<tr><td>nginxIngress</td><td><a href='#nginxIngress_110'>nginxIngress</a>
+<tr><td>nginxIngress</td><td><a href='#nginxIngress_117'>nginxIngress</a>
 </td></tr>
-<tr><td>nginxIngressCertificateExpiry</td><td><a href='#nginxIngressCertificateExpiry_111'>nginxIngressCertificateExpiry</a>
+<tr><td>nginxIngressCertificateExpiry</td><td><a href='#nginxIngressCertificateExpiry_118'>nginxIngressCertificateExpiry</a>
 </td></tr>
-<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_112'>nginxNrpe</a>
+<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_119'>nginxNrpe</a>
 </td></tr>
-<tr><td>nginxVts</td><td><a href='#nginxVts_113'>nginxVts</a>
+<tr><td>nginxVts</td><td><a href='#nginxVts_120'>nginxVts</a>
 </td></tr>
-<tr><td>nginxVtsEnhanced</td><td><a href='#nginxVtsEnhanced_114'>nginxVtsEnhanced</a>
+<tr><td>nginxVtsEnhanced</td><td><a href='#nginxVtsEnhanced_121'>nginxVtsEnhanced</a>
 </td></tr>
-<tr><td>nginxVtsEnhancedLegacy</td><td><a href='#nginxVtsEnhancedLegacy_115'>nginxVtsEnhancedLegacy</a>
+<tr><td>nginxVtsEnhancedLegacy</td><td><a href='#nginxVtsEnhancedLegacy_122'>nginxVtsEnhancedLegacy</a>
 </td></tr>
-<tr><td>nginxVtsLegacy</td><td><a href='#nginxVtsLegacy_116'>nginxVtsLegacy</a>
+<tr><td>nginxVtsLegacy</td><td><a href='#nginxVtsLegacy_123'>nginxVtsLegacy</a>
 </td></tr>
-<tr><td>phpFpm</td><td><a href='#phpFpm_117'>phpFpm</a>
+<tr><td>phpFpm</td><td><a href='#phpFpm_124'>phpFpm</a>
 </td></tr>
-<tr><td>postfix</td><td><a href='#postfix_118'>postfix</a>
+<tr><td>postfix</td><td><a href='#postfix_125'>postfix</a>
 </td></tr>
-<tr><td>prometheus</td><td><a href='#prometheus_119'>prometheus</a>
+<tr><td>prometheus</td><td><a href='#prometheus_126'>prometheus</a>
 </td></tr>
-<tr><td>pythonFlask</td><td><a href='#pythonFlask_120'>pythonFlask</a>
+<tr><td>pythonFlask</td><td><a href='#pythonFlask_127'>pythonFlask</a>
 </td></tr>
-<tr><td>rabbitmq</td><td><a href='#rabbitmq_121'>rabbitmq</a>
+<tr><td>rabbitmq</td><td><a href='#rabbitmq_128'>rabbitmq</a>
 </td></tr>
-<tr><td>sslExporter</td><td><a href='#sslExporter_122'>sslExporter</a>
+<tr><td>sslExporter</td><td><a href='#sslExporter_129'>sslExporter</a>
 </td></tr>
-<tr><td>websocket</td><td><a href='#websocket_123'>websocket</a>
+<tr><td>websocket</td><td><a href='#websocket_130'>websocket</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='apache_101'>apache</a> </p>
+<p> <a name='apache_108'>apache</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -4505,7 +4755,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='autoscaler_102'>autoscaler</a> </p>
+<p> <a name='autoscaler_109'>autoscaler</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -4543,7 +4793,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='cAdvisor_103'>cAdvisor</a> </p>
+<p> <a name='cAdvisor_110'>cAdvisor</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -4567,7 +4817,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='genericApp_104'>genericApp</a> </p>
+<p> <a name='genericApp_111'>genericApp</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -4587,7 +4837,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='harbor_105'>harbor</a> </p>
+<p> <a name='harbor_112'>harbor</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -4624,7 +4874,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='javaActuator_106'>javaActuator</a> </p>
+<p> <a name='javaActuator_113'>javaActuator</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -4670,7 +4920,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='jvm_107'>jvm</a> </p>
+<p> <a name='jvm_114'>jvm</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -4693,7 +4943,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='lokiDistributed_108'>lokiDistributed</a> </p>
+<p> <a name='lokiDistributed_115'>lokiDistributed</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -4717,7 +4967,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mysqlExporter_109'>mysqlExporter</a> </p>
+<p> <a name='mysqlExporter_116'>mysqlExporter</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -4741,7 +4991,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxIngress_110'>nginxIngress</a> </p>
+<p> <a name='nginxIngress_117'>nginxIngress</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -4784,7 +5034,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxIngressCertificateExpiry_111'>nginxIngressCertificateExpiry</a> </p>
+<p> <a name='nginxIngressCertificateExpiry_118'>nginxIngressCertificateExpiry</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -4828,7 +5078,7 @@ unit: s
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxNrpe_112'>nginxNrpe</a> </p>
+<p> <a name='nginxNrpe_119'>nginxNrpe</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -4852,7 +5102,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVts_113'>nginxVts</a> </p>
+<p> <a name='nginxVts_120'>nginxVts</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -4895,7 +5145,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsEnhanced_114'>nginxVtsEnhanced</a> </p>
+<p> <a name='nginxVtsEnhanced_121'>nginxVtsEnhanced</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -4938,7 +5188,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsEnhancedLegacy_115'>nginxVtsEnhancedLegacy</a> </p>
+<p> <a name='nginxVtsEnhancedLegacy_122'>nginxVtsEnhancedLegacy</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -4981,7 +5231,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsLegacy_116'>nginxVtsLegacy</a> </p>
+<p> <a name='nginxVtsLegacy_123'>nginxVtsLegacy</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -5024,7 +5274,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='phpFpm_117'>phpFpm</a> </p>
+<p> <a name='phpFpm_124'>phpFpm</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5048,7 +5298,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='postfix_118'>postfix</a> </p>
+<p> <a name='postfix_125'>postfix</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -5089,7 +5339,7 @@ unit: mailq
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='prometheus_119'>prometheus</a> </p>
+<p> <a name='prometheus_126'>prometheus</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5112,7 +5362,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='pythonFlask_120'>pythonFlask</a> </p>
+<p> <a name='pythonFlask_127'>pythonFlask</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
@@ -5155,7 +5405,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='rabbitmq_121'>rabbitmq</a> </p>
+<p> <a name='rabbitmq_128'>rabbitmq</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5179,7 +5429,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='sslExporter_122'>sslExporter</a> </p>
+<p> <a name='sslExporter_129'>sslExporter</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5208,7 +5458,7 @@ unit: s
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='websocket_123'>websocket</a> </p>
+<p> <a name='websocket_130'>websocket</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5232,12 +5482,12 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="vm"><a name='vm_124'>vm</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_125'>main</a>
+<h4 id="vm"><a name='vm_131'>vm</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>main</td><td><a href='#main_132'>main</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='main_125'>main</a> </p>
+<p> <a name='main_132'>main</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>expr: sum(ALERTS{alertname!="Watchdog", alertstate="firing", severity="warning", job=~"%(job)s",
   alertgroup=~"%(groupVM)s|%(groupVMApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog",
@@ -5272,56 +5522,56 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<h4 id="vmapps"><a name='vmApps_126'>vmApps</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_127'>apache</a>
+<h4 id="vmapps"><a name='vmApps_133'>vmApps</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>apache</td><td><a href='#apache_134'>apache</a>
 </td></tr>
-<tr><td>autoscaler</td><td><a href='#autoscaler_128'>autoscaler</a>
+<tr><td>autoscaler</td><td><a href='#autoscaler_135'>autoscaler</a>
 </td></tr>
-<tr><td>cAdvisor</td><td><a href='#cAdvisor_129'>cAdvisor</a>
+<tr><td>cAdvisor</td><td><a href='#cAdvisor_136'>cAdvisor</a>
 </td></tr>
-<tr><td>genericApp</td><td><a href='#genericApp_130'>genericApp</a>
+<tr><td>genericApp</td><td><a href='#genericApp_137'>genericApp</a>
 </td></tr>
-<tr><td>harbor</td><td><a href='#harbor_131'>harbor</a>
+<tr><td>harbor</td><td><a href='#harbor_138'>harbor</a>
 </td></tr>
-<tr><td>javaActuator</td><td><a href='#javaActuator_132'>javaActuator</a>
+<tr><td>javaActuator</td><td><a href='#javaActuator_139'>javaActuator</a>
 </td></tr>
-<tr><td>jvm</td><td><a href='#jvm_133'>jvm</a>
+<tr><td>jvm</td><td><a href='#jvm_140'>jvm</a>
 </td></tr>
-<tr><td>lokiDistributed</td><td><a href='#lokiDistributed_134'>lokiDistributed</a>
+<tr><td>lokiDistributed</td><td><a href='#lokiDistributed_141'>lokiDistributed</a>
 </td></tr>
-<tr><td>mysqlExporter</td><td><a href='#mysqlExporter_135'>mysqlExporter</a>
+<tr><td>mysqlExporter</td><td><a href='#mysqlExporter_142'>mysqlExporter</a>
 </td></tr>
-<tr><td>nginxIngress</td><td><a href='#nginxIngress_136'>nginxIngress</a>
+<tr><td>nginxIngress</td><td><a href='#nginxIngress_143'>nginxIngress</a>
 </td></tr>
-<tr><td>nginxIngressCertificateExpiry</td><td><a href='#nginxIngressCertificateExpiry_137'>nginxIngressCertificateExpiry</a>
+<tr><td>nginxIngressCertificateExpiry</td><td><a href='#nginxIngressCertificateExpiry_144'>nginxIngressCertificateExpiry</a>
 </td></tr>
-<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_138'>nginxNrpe</a>
+<tr><td>nginxNrpe</td><td><a href='#nginxNrpe_145'>nginxNrpe</a>
 </td></tr>
-<tr><td>nginxVts</td><td><a href='#nginxVts_139'>nginxVts</a>
+<tr><td>nginxVts</td><td><a href='#nginxVts_146'>nginxVts</a>
 </td></tr>
-<tr><td>nginxVtsEnhanced</td><td><a href='#nginxVtsEnhanced_140'>nginxVtsEnhanced</a>
+<tr><td>nginxVtsEnhanced</td><td><a href='#nginxVtsEnhanced_147'>nginxVtsEnhanced</a>
 </td></tr>
-<tr><td>nginxVtsEnhancedLegacy</td><td><a href='#nginxVtsEnhancedLegacy_141'>nginxVtsEnhancedLegacy</a>
+<tr><td>nginxVtsEnhancedLegacy</td><td><a href='#nginxVtsEnhancedLegacy_148'>nginxVtsEnhancedLegacy</a>
 </td></tr>
-<tr><td>nginxVtsLegacy</td><td><a href='#nginxVtsLegacy_142'>nginxVtsLegacy</a>
+<tr><td>nginxVtsLegacy</td><td><a href='#nginxVtsLegacy_149'>nginxVtsLegacy</a>
 </td></tr>
-<tr><td>phpFpm</td><td><a href='#phpFpm_143'>phpFpm</a>
+<tr><td>phpFpm</td><td><a href='#phpFpm_150'>phpFpm</a>
 </td></tr>
-<tr><td>postfix</td><td><a href='#postfix_144'>postfix</a>
+<tr><td>postfix</td><td><a href='#postfix_151'>postfix</a>
 </td></tr>
-<tr><td>prometheus</td><td><a href='#prometheus_145'>prometheus</a>
+<tr><td>prometheus</td><td><a href='#prometheus_152'>prometheus</a>
 </td></tr>
-<tr><td>pythonFlask</td><td><a href='#pythonFlask_146'>pythonFlask</a>
+<tr><td>pythonFlask</td><td><a href='#pythonFlask_153'>pythonFlask</a>
 </td></tr>
-<tr><td>rabbitmq</td><td><a href='#rabbitmq_147'>rabbitmq</a>
+<tr><td>rabbitmq</td><td><a href='#rabbitmq_154'>rabbitmq</a>
 </td></tr>
-<tr><td>sslExporter</td><td><a href='#sslExporter_148'>sslExporter</a>
+<tr><td>sslExporter</td><td><a href='#sslExporter_155'>sslExporter</a>
 </td></tr>
-<tr><td>websocket</td><td><a href='#websocket_149'>websocket</a>
+<tr><td>websocket</td><td><a href='#websocket_156'>websocket</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='apache_127'>apache</a> </p>
+<p> <a name='apache_134'>apache</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5345,7 +5595,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='autoscaler_128'>autoscaler</a> </p>
+<p> <a name='autoscaler_135'>autoscaler</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5383,7 +5633,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='cAdvisor_129'>cAdvisor</a> </p>
+<p> <a name='cAdvisor_136'>cAdvisor</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5407,7 +5657,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='genericApp_130'>genericApp</a> </p>
+<p> <a name='genericApp_137'>genericApp</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5427,7 +5677,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='harbor_131'>harbor</a> </p>
+<p> <a name='harbor_138'>harbor</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5464,7 +5714,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='javaActuator_132'>javaActuator</a> </p>
+<p> <a name='javaActuator_139'>javaActuator</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5510,7 +5760,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='jvm_133'>jvm</a> </p>
+<p> <a name='jvm_140'>jvm</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5533,7 +5783,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='lokiDistributed_134'>lokiDistributed</a> </p>
+<p> <a name='lokiDistributed_141'>lokiDistributed</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5557,7 +5807,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mysqlExporter_135'>mysqlExporter</a> </p>
+<p> <a name='mysqlExporter_142'>mysqlExporter</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5581,7 +5831,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxIngress_136'>nginxIngress</a> </p>
+<p> <a name='nginxIngress_143'>nginxIngress</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5624,7 +5874,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxIngressCertificateExpiry_137'>nginxIngressCertificateExpiry</a> </p>
+<p> <a name='nginxIngressCertificateExpiry_144'>nginxIngressCertificateExpiry</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5668,7 +5918,7 @@ unit: s
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxNrpe_138'>nginxNrpe</a> </p>
+<p> <a name='nginxNrpe_145'>nginxNrpe</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5692,7 +5942,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVts_139'>nginxVts</a> </p>
+<p> <a name='nginxVts_146'>nginxVts</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5735,7 +5985,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsEnhanced_140'>nginxVtsEnhanced</a> </p>
+<p> <a name='nginxVtsEnhanced_147'>nginxVtsEnhanced</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5778,7 +6028,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsEnhancedLegacy_141'>nginxVtsEnhancedLegacy</a> </p>
+<p> <a name='nginxVtsEnhancedLegacy_148'>nginxVtsEnhancedLegacy</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5821,7 +6071,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nginxVtsLegacy_142'>nginxVtsLegacy</a> </p>
+<p> <a name='nginxVtsLegacy_149'>nginxVtsLegacy</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5864,7 +6114,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='phpFpm_143'>phpFpm</a> </p>
+<p> <a name='phpFpm_150'>phpFpm</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5888,7 +6138,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='postfix_144'>postfix</a> </p>
+<p> <a name='postfix_151'>postfix</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5929,7 +6179,7 @@ unit: mailq
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='prometheus_145'>prometheus</a> </p>
+<p> <a name='prometheus_152'>prometheus</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -5952,7 +6202,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='pythonFlask_146'>pythonFlask</a> </p>
+<p> <a name='pythonFlask_153'>pythonFlask</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
@@ -5995,7 +6245,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='rabbitmq_147'>rabbitmq</a> </p>
+<p> <a name='rabbitmq_154'>rabbitmq</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -6019,7 +6269,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='sslExporter_148'>sslExporter</a> </p>
+<p> <a name='sslExporter_155'>sslExporter</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -6048,7 +6298,7 @@ unit: s
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='websocket_149'>websocket</a> </p>
+<p> <a name='websocket_156'>websocket</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -6072,41 +6322,41 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<h3 id="l2"><a name='L2_150'>L2</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>containerOverview</td><td><a href='#containerOverview_151'>containerOverview</a>
+<h3 id="l2"><a name='L2_157'>L2</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>containerOverview</td><td><a href='#containerOverview_158'>containerOverview</a>
 </td></tr>
-<tr><td>cpuPerNode</td><td><a href='#cpuPerNode_153'>cpuPerNode</a>
+<tr><td>cpuPerNode</td><td><a href='#cpuPerNode_160'>cpuPerNode</a>
 </td></tr>
-<tr><td>daemonSetOverview</td><td><a href='#daemonSetOverview_155'>daemonSetOverview</a>
+<tr><td>daemonSetOverview</td><td><a href='#daemonSetOverview_162'>daemonSetOverview</a>
 </td></tr>
-<tr><td>deploymentOverview</td><td><a href='#deploymentOverview_157'>deploymentOverview</a>
+<tr><td>deploymentOverview</td><td><a href='#deploymentOverview_164'>deploymentOverview</a>
 </td></tr>
-<tr><td>diskPerNode</td><td><a href='#diskPerNode_159'>diskPerNode</a>
+<tr><td>diskPerNode</td><td><a href='#diskPerNode_166'>diskPerNode</a>
 </td></tr>
-<tr><td>jobOverview</td><td><a href='#jobOverview_161'>jobOverview</a>
+<tr><td>jobOverview</td><td><a href='#jobOverview_168'>jobOverview</a>
 </td></tr>
-<tr><td>memoryPerNode</td><td><a href='#memoryPerNode_163'>memoryPerNode</a>
+<tr><td>memoryPerNode</td><td><a href='#memoryPerNode_170'>memoryPerNode</a>
 </td></tr>
-<tr><td>networkPerNode</td><td><a href='#networkPerNode_165'>networkPerNode</a>
+<tr><td>networkPerNode</td><td><a href='#networkPerNode_172'>networkPerNode</a>
 </td></tr>
-<tr><td>nodeOverview</td><td><a href='#nodeOverview_167'>nodeOverview</a>
+<tr><td>nodeOverview</td><td><a href='#nodeOverview_174'>nodeOverview</a>
 </td></tr>
-<tr><td>podOverview</td><td><a href='#podOverview_169'>podOverview</a>
+<tr><td>podOverview</td><td><a href='#podOverview_176'>podOverview</a>
 </td></tr>
-<tr><td>pvcOverview</td><td><a href='#pvcOverview_171'>pvcOverview</a>
+<tr><td>pvcOverview</td><td><a href='#pvcOverview_178'>pvcOverview</a>
 </td></tr>
-<tr><td>statefulSetOverview</td><td><a href='#statefulSetOverview_173'>statefulSetOverview</a>
+<tr><td>statefulSetOverview</td><td><a href='#statefulSetOverview_180'>statefulSetOverview</a>
 </td></tr>
-<tr><td>vm</td><td><a href='#vm_175'>vm</a>
+<tr><td>vm</td><td><a href='#vm_182'>vm</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="containeroverview"><a name='containerOverview_151'>containerOverview</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>containerOverviewTable</td><td><a href='#containerOverviewTable_152'>containerOverviewTable</a>
+<h4 id="containeroverview"><a name='containerOverview_158'>containerOverview</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>containerOverviewTable</td><td><a href='#containerOverviewTable_159'>containerOverviewTable</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='containerOverviewTable_152'>containerOverviewTable</a> </p>
+<p> <a name='containerOverviewTable_159'>containerOverviewTable</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"baseTableTemplate"</code></div>
 </td></tr>
@@ -6239,12 +6489,12 @@ transformations:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="cpupernode"><a name='cpuPerNode_153'>cpuPerNode</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>cpuPerNodePolystat</td><td><a href='#cpuPerNodePolystat_154'>cpuPerNodePolystat</a>
+<h4 id="cpupernode"><a name='cpuPerNode_160'>cpuPerNode</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>cpuPerNodePolystat</td><td><a href='#cpuPerNodePolystat_161'>cpuPerNodePolystat</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='cpuPerNodePolystat_154'>cpuPerNodePolystat</a> </p>
+<p> <a name='cpuPerNodePolystat_161'>cpuPerNodePolystat</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"basePolystatTemplate"</code></div>
 </td></tr>
@@ -6273,12 +6523,12 @@ title: CPU per Node
 </td></tr></table>
 
 <p><br></p>
-<h4 id="daemonsetoverview"><a name='daemonSetOverview_155'>daemonSetOverview</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>daemonSetOverviewTable</td><td><a href='#daemonSetOverviewTable_156'>daemonSetOverviewTable</a>
+<h4 id="daemonsetoverview"><a name='daemonSetOverview_162'>daemonSetOverview</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>daemonSetOverviewTable</td><td><a href='#daemonSetOverviewTable_163'>daemonSetOverviewTable</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='daemonSetOverviewTable_156'>daemonSetOverviewTable</a> </p>
+<p> <a name='daemonSetOverviewTable_163'>daemonSetOverviewTable</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"baseTableTemplate"</code></div>
 </td></tr>
@@ -6412,12 +6662,12 @@ transformations:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="deploymentoverview"><a name='deploymentOverview_157'>deploymentOverview</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>deploymentOverviewTable</td><td><a href='#deploymentOverviewTable_158'>deploymentOverviewTable</a>
+<h4 id="deploymentoverview"><a name='deploymentOverview_164'>deploymentOverview</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>deploymentOverviewTable</td><td><a href='#deploymentOverviewTable_165'>deploymentOverviewTable</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='deploymentOverviewTable_158'>deploymentOverviewTable</a> </p>
+<p> <a name='deploymentOverviewTable_165'>deploymentOverviewTable</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"baseTableTemplate"</code></div>
 </td></tr>
@@ -6505,12 +6755,12 @@ transformations:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="diskpernode"><a name='diskPerNode_159'>diskPerNode</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>diskPerNodePolystat</td><td><a href='#diskPerNodePolystat_160'>diskPerNodePolystat</a>
+<h4 id="diskpernode"><a name='diskPerNode_166'>diskPerNode</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>diskPerNodePolystat</td><td><a href='#diskPerNodePolystat_167'>diskPerNodePolystat</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='diskPerNodePolystat_160'>diskPerNodePolystat</a> </p>
+<p> <a name='diskPerNodePolystat_167'>diskPerNodePolystat</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"basePolystatTemplate"</code></div>
 </td></tr>
@@ -6551,12 +6801,12 @@ title: Disk per Node
 </td></tr></table>
 
 <p><br></p>
-<h4 id="joboverview"><a name='jobOverview_161'>jobOverview</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>jobOverviewTable</td><td><a href='#jobOverviewTable_162'>jobOverviewTable</a>
+<h4 id="joboverview"><a name='jobOverview_168'>jobOverview</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>jobOverviewTable</td><td><a href='#jobOverviewTable_169'>jobOverviewTable</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='jobOverviewTable_162'>jobOverviewTable</a> </p>
+<p> <a name='jobOverviewTable_169'>jobOverviewTable</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"baseTableTemplate"</code></div>
 </td></tr>
@@ -6628,12 +6878,12 @@ transformations:
 </td></tr></table>
 
 <p><br></p>
-<h4 id="memorypernode"><a name='memoryPerNode_163'>memoryPerNode</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>memoryPerNodePolystat</td><td><a href='#memoryPerNodePolystat_164'>memoryPerNodePolystat</a>
+<h4 id="memorypernode"><a name='memoryPerNode_170'>memoryPerNode</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>memoryPerNodePolystat</td><td><a href='#memoryPerNodePolystat_171'>memoryPerNodePolystat</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='memoryPerNodePolystat_164'>memoryPerNodePolystat</a> </p>
+<p> <a name='memoryPerNodePolystat_171'>memoryPerNodePolystat</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"basePolystatTemplate"</code></div>
 </td></tr>
@@ -6665,12 +6915,12 @@ title: Memory per Node
 </td></tr></table>
 
 <p><br></p>
-<h4 id="networkpernode"><a name='networkPerNode_165'>networkPerNode</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>networkPerNodePolystat</td><td><a href='#networkPerNodePolystat_166'>networkPerNodePolystat</a>
+<h4 id="networkpernode"><a name='networkPerNode_172'>networkPerNode</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>networkPerNodePolystat</td><td><a href='#networkPerNodePolystat_173'>networkPerNodePolystat</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='networkPerNodePolystat_166'>networkPerNodePolystat</a> </p>
+<p> <a name='networkPerNodePolystat_173'>networkPerNodePolystat</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"basePolystatTemplate"</code></div>
 </td></tr>
@@ -6702,12 +6952,12 @@ title: Network Errors per Node
 </td></tr></table>
 
 <p><br></p>
-<h4 id="nodeoverview"><a name='nodeOverview_167'>nodeOverview</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>nodeOverviewTable</td><td><a href='#nodeOverviewTable_168'>nodeOverviewTable</a>
+<h4 id="nodeoverview"><a name='nodeOverview_174'>nodeOverview</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>nodeOverviewTable</td><td><a href='#nodeOverviewTable_175'>nodeOverviewTable</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='nodeOverviewTable_168'>nodeOverviewTable</a> </p>
+<p> <a name='nodeOverviewTable_175'>nodeOverviewTable</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"baseTableTemplate"</code></div>
 </td></tr>
@@ -6825,12 +7075,12 @@ title: Nodes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="podoverview"><a name='podOverview_169'>podOverview</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>podOverviewTable</td><td><a href='#podOverviewTable_170'>podOverviewTable</a>
+<h4 id="podoverview"><a name='podOverview_176'>podOverview</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>podOverviewTable</td><td><a href='#podOverviewTable_177'>podOverviewTable</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='podOverviewTable_170'>podOverviewTable</a> </p>
+<p> <a name='podOverviewTable_177'>podOverviewTable</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"baseTableTemplate"</code></div>
 </td></tr>
@@ -6888,12 +7138,12 @@ title: Pods
 </td></tr></table>
 
 <p><br></p>
-<h4 id="pvcoverview"><a name='pvcOverview_171'>pvcOverview</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>pvcOverviewTable</td><td><a href='#pvcOverviewTable_172'>pvcOverviewTable</a>
+<h4 id="pvcoverview"><a name='pvcOverview_178'>pvcOverview</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>pvcOverviewTable</td><td><a href='#pvcOverviewTable_179'>pvcOverviewTable</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='pvcOverviewTable_172'>pvcOverviewTable</a> </p>
+<p> <a name='pvcOverviewTable_179'>pvcOverviewTable</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"baseTableTemplate"</code></div>
 </td></tr>
@@ -6964,12 +7214,12 @@ title: Persistent Volumes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="statefulsetoverview"><a name='statefulSetOverview_173'>statefulSetOverview</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>statefulSetOverviewTable</td><td><a href='#statefulSetOverviewTable_174'>statefulSetOverviewTable</a>
+<h4 id="statefulsetoverview"><a name='statefulSetOverview_180'>statefulSetOverview</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>statefulSetOverviewTable</td><td><a href='#statefulSetOverviewTable_181'>statefulSetOverviewTable</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='statefulSetOverviewTable_174'>statefulSetOverviewTable</a> </p>
+<p> <a name='statefulSetOverviewTable_181'>statefulSetOverviewTable</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>base</td><td><div class='my-pre'><code>"baseTableTemplate"</code></div>
 </td></tr>
@@ -7027,40 +7277,40 @@ title: StatefulSets
 </td></tr></table>
 
 <p><br></p>
-<h4 id="vm_1"><a name='vm_175'>vm</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>mostUtilizedVMCPU</td><td><a href='#mostUtilizedVMCPU_176'>mostUtilizedVMCPU</a>
+<h4 id="vm_1"><a name='vm_182'>vm</a></h4>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>mostUtilizedVMCPU</td><td><a href='#mostUtilizedVMCPU_183'>mostUtilizedVMCPU</a>
 </td></tr>
-<tr><td>mostUtilizedVMDisk</td><td><a href='#mostUtilizedVMDisk_177'>mostUtilizedVMDisk</a>
+<tr><td>mostUtilizedVMDisk</td><td><a href='#mostUtilizedVMDisk_184'>mostUtilizedVMDisk</a>
 </td></tr>
-<tr><td>mostUtilizedVMNetworkErrors</td><td><a href='#mostUtilizedVMNetworkErrors_178'>mostUtilizedVMNetworkErrors</a>
+<tr><td>mostUtilizedVMNetworkErrors</td><td><a href='#mostUtilizedVMNetworkErrors_185'>mostUtilizedVMNetworkErrors</a>
 </td></tr>
-<tr><td>mostUtilizedVMRAM</td><td><a href='#mostUtilizedVMRAM_179'>mostUtilizedVMRAM</a>
+<tr><td>mostUtilizedVMRAM</td><td><a href='#mostUtilizedVMRAM_186'>mostUtilizedVMRAM</a>
 </td></tr>
-<tr><td>overallNetworkErrors</td><td><a href='#overallNetworkErrors_180'>overallNetworkErrors</a>
+<tr><td>overallNetworkErrors</td><td><a href='#overallNetworkErrors_187'>overallNetworkErrors</a>
 </td></tr>
-<tr><td>overallUtilizationCPU</td><td><a href='#overallUtilizationCPU_181'>overallUtilizationCPU</a>
+<tr><td>overallUtilizationCPU</td><td><a href='#overallUtilizationCPU_188'>overallUtilizationCPU</a>
 </td></tr>
-<tr><td>overallUtilizationDisk</td><td><a href='#overallUtilizationDisk_182'>overallUtilizationDisk</a>
+<tr><td>overallUtilizationDisk</td><td><a href='#overallUtilizationDisk_189'>overallUtilizationDisk</a>
 </td></tr>
-<tr><td>overallUtilizationRAM</td><td><a href='#overallUtilizationRAM_183'>overallUtilizationRAM</a>
+<tr><td>overallUtilizationRAM</td><td><a href='#overallUtilizationRAM_190'>overallUtilizationRAM</a>
 </td></tr>
-<tr><td>targetDown</td><td><a href='#targetDown_184'>targetDown</a>
+<tr><td>targetDown</td><td><a href='#targetDown_191'>targetDown</a>
 </td></tr>
-<tr><td>totalCores</td><td><a href='#totalCores_185'>totalCores</a>
+<tr><td>totalCores</td><td><a href='#totalCores_192'>totalCores</a>
 </td></tr>
-<tr><td>totalDisk</td><td><a href='#totalDisk_186'>totalDisk</a>
+<tr><td>totalDisk</td><td><a href='#totalDisk_193'>totalDisk</a>
 </td></tr>
-<tr><td>totalRAM</td><td><a href='#totalRAM_187'>totalRAM</a>
+<tr><td>totalRAM</td><td><a href='#totalRAM_194'>totalRAM</a>
 </td></tr>
-<tr><td>usedCores</td><td><a href='#usedCores_188'>usedCores</a>
+<tr><td>usedCores</td><td><a href='#usedCores_195'>usedCores</a>
 </td></tr>
-<tr><td>usedDisk</td><td><a href='#usedDisk_189'>usedDisk</a>
+<tr><td>usedDisk</td><td><a href='#usedDisk_196'>usedDisk</a>
 </td></tr>
-<tr><td>usedRAM</td><td><a href='#usedRAM_190'>usedRAM</a>
+<tr><td>usedRAM</td><td><a href='#usedRAM_197'>usedRAM</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedVMCPU_176'>mostUtilizedVMCPU</a> </p>
+<p> <a name='mostUtilizedVMCPU_183'>mostUtilizedVMCPU</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7096,7 +7346,7 @@ title: Most Utilized VM
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedVMDisk_177'>mostUtilizedVMDisk</a> </p>
+<p> <a name='mostUtilizedVMDisk_184'>mostUtilizedVMDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7151,7 +7401,7 @@ title: Most Utilized VM
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedVMNetworkErrors_178'>mostUtilizedVMNetworkErrors</a> </p>
+<p> <a name='mostUtilizedVMNetworkErrors_185'>mostUtilizedVMNetworkErrors</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7192,7 +7442,7 @@ unit: pps
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='mostUtilizedVMRAM_179'>mostUtilizedVMRAM</a> </p>
+<p> <a name='mostUtilizedVMRAM_186'>mostUtilizedVMRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7234,7 +7484,7 @@ title: Most Utilized VM
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallNetworkErrors_180'>overallNetworkErrors</a> </p>
+<p> <a name='overallNetworkErrors_187'>overallNetworkErrors</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7274,7 +7524,7 @@ unit: pps
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationCPU_181'>overallUtilizationCPU</a> </p>
+<p> <a name='overallUtilizationCPU_188'>overallUtilizationCPU</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7311,7 +7561,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationDisk_182'>overallUtilizationDisk</a> </p>
+<p> <a name='overallUtilizationDisk_189'>overallUtilizationDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7355,7 +7605,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='overallUtilizationRAM_183'>overallUtilizationRAM</a> </p>
+<p> <a name='overallUtilizationRAM_190'>overallUtilizationRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7396,7 +7646,7 @@ title: Overall Utilization
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='targetDown_184'>targetDown</a> </p>
+<p> <a name='targetDown_191'>targetDown</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVM
@@ -7415,7 +7665,7 @@ thresholds:
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalCores_185'>totalCores</a> </p>
+<p> <a name='totalCores_192'>totalCores</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: count(node_cpu_seconds_total{cluster="$cluster", job=~"$job", mode="system"})
@@ -7434,7 +7684,7 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalDisk_186'>totalDisk</a> </p>
+<p> <a name='totalDisk_193'>totalDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"})
@@ -7453,7 +7703,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='totalRAM_187'>totalRAM</a> </p>
+<p> <a name='totalRAM_194'>totalRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job"})
@@ -7472,7 +7722,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedCores_188'>usedCores</a> </p>
+<p> <a name='usedCores_195'>usedCores</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: (1 - (avg(irate(node_cpu_seconds_total{cluster="$cluster", job=~"$job", mode="idle"}[5m]))))
@@ -7492,7 +7742,7 @@ unit: none
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedDisk_189'>usedDisk</a> </p>
+<p> <a name='usedDisk_196'>usedDisk</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"}) - sum(node_filesystem_free_bytes{cluster="$cluster",
@@ -7512,7 +7762,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='usedRAM_190'>usedRAM</a> </p>
+<p> <a name='usedRAM_197'>usedRAM</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>panel</td><td><div class='my-pre'><code>colorMode: value
 expr: sum(node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job"}) * (((1 - sum(node_memory_MemAvailable_bytes{cluster="$cluster",
@@ -7532,22 +7782,22 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<h3 id="commonthresholds"><a name='commonThresholds_191'>commonThresholds</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>app</td><td><a href='#app_192'>app</a>
+<h3 id="commonthresholds"><a name='commonThresholds_198'>commonThresholds</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>app</td><td><a href='#app_199'>app</a>
 </td></tr>
-<tr><td>controlPlane</td><td><a href='#controlPlane_193'>controlPlane</a>
+<tr><td>controlPlane</td><td><a href='#controlPlane_200'>controlPlane</a>
 </td></tr>
-<tr><td>criticalPanel</td><td><a href='#criticalPanel_194'>criticalPanel</a>
+<tr><td>criticalPanel</td><td><a href='#criticalPanel_201'>criticalPanel</a>
 </td></tr>
-<tr><td>k8s</td><td><a href='#k8s_195'>k8s</a>
+<tr><td>k8s</td><td><a href='#k8s_202'>k8s</a>
 </td></tr>
-<tr><td>node</td><td><a href='#node_196'>node</a>
+<tr><td>node</td><td><a href='#node_203'>node</a>
 </td></tr>
-<tr><td>warningPanel</td><td><a href='#warningPanel_197'>warningPanel</a>
+<tr><td>warningPanel</td><td><a href='#warningPanel_204'>warningPanel</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="app"><a name='app_192'>app</a></h4>
+<h4 id="app"><a name='app_199'>app</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code>"<"</code></div>
@@ -7556,7 +7806,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="controlplane"><a name='controlPlane_193'>controlPlane</a></h4>
+<h4 id="controlplane"><a name='controlPlane_200'>controlPlane</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
 <tr><td>lowest</td><td><div class='my-pre'><code>0</code></div>
@@ -7567,14 +7817,14 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="criticalpanel"><a name='criticalPanel_194'>criticalPanel</a></h4>
+<h4 id="criticalpanel"><a name='criticalPanel_201'>criticalPanel</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>1</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code>">="</code></div>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="k8s_2"><a name='k8s_195'>k8s</a></h4>
+<h4 id="k8s_2"><a name='k8s_202'>k8s</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>95</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code>"<"</code></div>
@@ -7583,7 +7833,7 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="node"><a name='node_196'>node</a></h4>
+<h4 id="node"><a name='node_203'>node</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>critical</td><td><div class='my-pre'><code>90</code></div>
 </td></tr>
 <tr><td>operator</td><td><div class='my-pre'><code>">="</code></div>
@@ -7592,25 +7842,25 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="warningpanel"><a name='warningPanel_197'>warningPanel</a></h4>
+<h4 id="warningpanel"><a name='warningPanel_204'>warningPanel</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>operator</td><td><div class='my-pre'><code>">="</code></div>
 </td></tr>
 <tr><td>warning</td><td><div class='my-pre'><code>1</code></div>
 </td></tr></table>
 
 <p><br></p>
-<h3 id="templatebases"><a name='templateBases_198'>templateBases</a></h3>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>baseAlert</td><td><a href='#baseAlert_199'>baseAlert</a>
+<h3 id="templatebases"><a name='templateBases_205'>templateBases</a></h3>
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>baseAlert</td><td><a href='#baseAlert_206'>baseAlert</a>
 </td></tr>
-<tr><td>basePolystatTemplate</td><td><a href='#basePolystatTemplate_200'>basePolystatTemplate</a>
+<tr><td>basePolystatTemplate</td><td><a href='#basePolystatTemplate_207'>basePolystatTemplate</a>
 </td></tr>
-<tr><td>baseStatsTemplate</td><td><a href='#baseStatsTemplate_202'>baseStatsTemplate</a>
+<tr><td>baseStatsTemplate</td><td><a href='#baseStatsTemplate_209'>baseStatsTemplate</a>
 </td></tr>
-<tr><td>baseTableTemplate</td><td><a href='#baseTableTemplate_204'>baseTableTemplate</a>
+<tr><td>baseTableTemplate</td><td><a href='#baseTableTemplate_211'>baseTableTemplate</a>
 </td></tr></table>
 
 <p><br></p>
-<h4 id="basealert"><a name='baseAlert_199'>baseAlert</a></h4>
+<h4 id="basealert"><a name='baseAlert_206'>baseAlert</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
@@ -7627,16 +7877,16 @@ unit: bytes
 </td></tr></table>
 
 <p><br></p>
-<h4 id="basepolystattemplate"><a name='basePolystatTemplate_200'>basePolystatTemplate</a></h4>
+<h4 id="basepolystattemplate"><a name='basePolystatTemplate_207'>basePolystatTemplate</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>default</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
 <tr><td>enabled</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_201'>panel</a>
+<tr><td>panel</td><td><a href='#panel_208'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_201'>panel</a> </p>
+<p> <a name='panel_208'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>datasource</td><td><div class='my-pre'><code>"$datasource"</code></div>
 </td></tr>
@@ -7675,7 +7925,7 @@ y: 0
 </td></tr></table>
 
 <p><br></p>
-<h4 id="basestatstemplate"><a name='baseStatsTemplate_202'>baseStatsTemplate</a></h4>
+<h4 id="basestatstemplate"><a name='baseStatsTemplate_209'>baseStatsTemplate</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
@@ -7683,11 +7933,11 @@ y: 0
 </td></tr>
 <tr><td>enabled</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_203'>panel</a>
+<tr><td>panel</td><td><a href='#panel_210'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_203'>panel</a> </p>
+<p> <a name='panel_210'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>colorMode</td><td><div class='my-pre'><code>"background"</code></div>
 </td></tr>
@@ -7722,16 +7972,16 @@ y: error must be overwritten
 </td></tr></table>
 
 <p><br></p>
-<h4 id="basetabletemplate"><a name='baseTableTemplate_204'>baseTableTemplate</a></h4>
+<h4 id="basetabletemplate"><a name='baseTableTemplate_211'>baseTableTemplate</a></h4>
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>default</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
 <tr><td>enabled</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
-<tr><td>panel</td><td><a href='#panel_205'>panel</a>
+<tr><td>panel</td><td><a href='#panel_212'>panel</a>
 </td></tr></table>
 
 <p><br></p>
-<p> <a name='panel_205'>panel</a> </p>
+<p> <a name='panel_212'>panel</a> </p>
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>datasource</td><td><div class='my-pre'><code>"$datasource"</code></div>
 </td></tr>

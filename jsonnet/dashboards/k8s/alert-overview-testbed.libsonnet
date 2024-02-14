@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-/* K8s alert overview dashboard */
+/* K8s alert overview dashboard for Testbed */
 
 local grafana = import 'grafonnet/grafana.libsonnet';
 local prometheus = grafana.prometheus;
@@ -23,7 +23,7 @@ local table = grafana.tablePanel;
 
 {
   grafanaDashboards+:: {
-    'alert-cluster-overview':
+    'alert-testbed-overview':
 
       local colors = [$._config.grafanaDashboards.color.green, $._config.grafanaDashboards.color.orange, $._config.grafanaDashboards.color.red];
       local warning_thresholds = [2, 3];
@@ -40,8 +40,8 @@ local table = grafana.tablePanel;
           ]
         )
         .addTargets([
-          prometheus.target('ALERTS{cluster="$cluster", alertname!="Watchdog", alertstate=~"firing", severity="warning", severity=~"$severity", alertgroup=~"$alertgroup"} * 2', format='table', instant=true),
-          prometheus.target('ALERTS{cluster="$cluster", alertname!="Watchdog", alertstate=~"firing", severity="critical", severity=~"$severity", alertgroup=~"$alertgroup"} * 3', format='table', instant=true),
+          prometheus.target('ALERTS{infrastructure="testbed", alertname!="Watchdog", alertstate=~"firing", severity="warning", severity=~"$severity"} * 2', format='table', instant=true),
+          prometheus.target('ALERTS{infrastructure="testbed", alertname!="Watchdog", alertstate=~"firing", severity="critical", severity=~"$severity"} * 3', format='table', instant=true),
         ])
         .addTransformations([
           {
@@ -54,10 +54,9 @@ local table = grafana.tablePanel;
               indexByName: {
                 Time: 0,
                 severity: 1,
-                cluster: 2,
+                infrastructure: 2,
                 alertname: 3,
                 alertstate: 4,
-                alertgroup: 5,
               },
             },
           },
@@ -67,19 +66,17 @@ local table = grafana.tablePanel;
         ]);
 
       dashboard.new(
-        'AlertCluster',
+        'AlertTestbed',
         editable=$._config.grafanaDashboards.editable,
         graphTooltip=$._config.grafanaDashboards.tooltip,
         refresh=$._config.grafanaDashboards.refresh,
         time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sOverview,
-        uid=$._config.grafanaDashboards.ids.alertClusterOverview,
+        tags=$._config.grafanaDashboards.tags.testbedAlert,
+        uid=$._config.grafanaDashboards.ids.alertTestbedOverview,
       )
       .addTemplates([
         $.grafanaTemplates.datasourceTemplate(),
-        $.grafanaTemplates.clusterTemplate('label_values(kube_node_info, cluster)'),
         $.grafanaTemplates.alertManagerTemplate(),
-        $.grafanaTemplates.alertGroupTemplate('label_values(ALERTS, alertgroup)'),
         $.grafanaTemplates.severityTemplate('label_values(ALERTS, severity)'),
       ])
       .addPanels(

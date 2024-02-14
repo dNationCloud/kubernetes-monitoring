@@ -1208,7 +1208,7 @@
           },
         },
         overallUtilizationCPU: {
-          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{%(job)s, mode="idle"}[5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
+          local expr = 'round((1 - (avg(irate(node_cpu_seconds_total{%(job)s, mode="idle"}[5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -1231,7 +1231,7 @@
           },
         },
         overallUtilizationRAM: {
-          local expr = 'round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) / sum by (job, nodename, cluster) (node_memory_MemTotal_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info))) * 100)',
+          local expr = 'round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) / sum by (job, nodename, cluster) (node_memory_MemTotal_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info))) * 100)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -1255,7 +1255,7 @@
           },
         },
         overallUtilizationDisk: {
-          local expr = 'round((sum(node_filesystem_size_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{%(job)s} * on(instance, job, cluster) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
+          local expr = 'round((sum(node_filesystem_size_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) / ((sum(node_filesystem_size_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) + sum(node_filesystem_avail_bytes{%(job)s} * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job, nodename, device)) * 100 > 0)',
           local thresholds = defaultTemplate.commonThresholds.node,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nodeExporter],
           panel: {
@@ -1279,7 +1279,7 @@
           },
         },
         overallNetworkErrors: {
-          local expr = 'sum(rate(node_network_transmit_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, job, cluster) group_left(nodename) (node_uname_info) ) by (job, nodename)',
+          local expr = 'sum(rate(node_network_transmit_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) ) by (job, nodename)',
           local thresholds = {
             operator: '>=',
             warning: 10,
@@ -1823,9 +1823,89 @@
     },
     L0: {
       local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
+      blackbox: {
+        main: {
+          local expr = 'probe_success{target=~"%(target)s", endpoint="http"}',
+          local thresholds = {
+            operator: '<',
+            lowest: 0,
+            critical: 1,
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+              { from: -1, text: '-', to: -1, type: 2, value: '' },
+              { from: 0, text: 'Critical', to: 0, type: 2, value: '' },
+              { from: 1, text: 'OK', to: 1, type: 2, value: '' },
+            ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          },
+        },
+      },
+      kaas: {
+        main: {
+          local expr = '((sum(kaas{cluster="%(cluster)s"} unless up{job=~"node-exporter", cluster="%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + ((sum(kaas{cluster="%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local thresholds = {
+            operator: '>=',
+            lowest: 0,
+            warning: 1,
+            critical: maxWarnings,
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+              { from: -2, text: '-', to: -2, type: 2, value: '' },
+              { from: -1, text: 'Down', to: -1, type: 2, value: '' },
+              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
+              { from: 1, text: 'Warning', to: maxWarnings - 1, type: 2, value: '' },
+              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+            ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          },
+        },
+      },
       k8s: {
         main: {
           local expr = '((sum(up{job=~"node-exporter", cluster="%(cluster)s"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="warning", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", cluster="%(cluster)s", alertstate="firing", severity="critical", alertgroup=~"%(groupCluster)s|%(groupApp)s"} OR on() vector(0)) * %(maxWarnings)d',
+          local thresholds = {
+            operator: '>=',
+            lowest: 0,
+            warning: 1,
+            critical: maxWarnings,
+          },
+          panel: {
+            expr: expr,
+            thresholds: thresholds,
+            graphMode: 'none',
+            unit: 'none',
+            mappings: [
+              { from: -1, text: 'Down', to: -1, type: 2, value: '' },
+              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
+              { from: 1, text: 'Warning', to: maxWarnings - 1, type: 2, value: '' },
+              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+            ],
+            gridPos: {
+              w: 4,
+              h: 3,
+            },
+          },
+        },
+      },
+      testbed: {
+        main: {
+          local expr = '((sum(up{infrastructure="testbed"}) or on() vector(0)) == bool 0) * (-1) + sum(ALERTS{alertname!="Watchdog", infrastructure="testbed", alertstate="firing", severity="warning"} OR on() vector(0)) + sum(ALERTS{alertname!="Watchdog", infrastructure="testbed", alertstate="firing", severity="critical"} OR on() vector(0)) * %(maxWarnings)d',
           local thresholds = {
             operator: '>=',
             lowest: 0,
