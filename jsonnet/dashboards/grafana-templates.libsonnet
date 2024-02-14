@@ -99,14 +99,26 @@ local template = grafana.template;
         label='Severity',
       ),
 
-    clusterTemplate(query, hide='')::
+    targetTemplate(query, hide='', multi=true, includeAll=true, current='All')::
+      baseTemplate(
+        name='target',
+        label='Service Target',
+        query=query,
+        includeAll=includeAll,
+        multi=multi,
+        hide=hide,
+        current=current,
+      ),
+
+    clusterTemplate(query, hide='', multi=false, includeAll=false, current=null)::
       baseTemplate(
         name='cluster',
         label='Cluster',
         query=query,
-        includeAll=false,
-        multi=false,
+        includeAll=includeAll,
+        multi=multi,
         hide=hide,
+        current=current,
       ),
 
     instanceTemplate(query, label='Instance', regex='')::
@@ -173,7 +185,7 @@ local template = grafana.template;
         multi=multi,
       ),
 
-    jobTemplate(query, hide='', current=null, regex='')::
+    jobTemplate(query, hide='', current=null, regex='', includeAll=true, multi=true)::
       baseTemplate(
         name='job',
         label='Job',
@@ -181,6 +193,8 @@ local template = grafana.template;
         hide=hide,
         current=current,
         regex=regex,
+        includeAll=includeAll,
+        multi=multi,
       ),
 
     pvcTemplate(query)::

@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-{{- if and .Values.hostMonitoring.enabled }}
+{{- if .Values.hostMonitoring.enabled }}
   {{ $host_service_monitors := dict }}
   {{- range .Values.hostMonitoring.hosts }}
     {{ $address := .host.address }}
@@ -24,9 +24,11 @@
     {{- end }}
     {{ if hasKey . "apps" }}
       {{- range .apps }}
-        {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
-        {{ $_ := set .serviceMonitor "address" $address }}
-        {{ $_ := set $host_service_monitors $name .serviceMonitor }}
+        {{ if hasKey . "serviceMonitor" }}
+          {{ $name := (printf "%s-%s-%s" (include "k8s-monitoring.fullname" $) .name .jobName | lower | trunc 63 | trimSuffix "-") }}
+          {{ $_ := set .serviceMonitor "address" $address }}
+          {{ $_ := set $host_service_monitors $name .serviceMonitor }}
+        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -44,7 +46,7 @@ items:
     labels:
 {{ include "k8s-monitoring.labels" $ | indent 6 }}
       app: {{ include "k8s-monitoring.name" $ }}
-      release: {{ $.Release.Name }}
+      release: {{ include "k8s-monitoring.release" $ }}
   subsets:
   - addresses:
     - ip: {{ $serviceMonitor.address }}
