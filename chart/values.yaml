@@ -76,6 +76,8 @@ grafanaDashboards:
   #   k8s-sidecar-target-directory: "/var/lib/grafana/dashboards/dnation/"
 
 ## KaaS Monitoring
+## Experimental tech preview feature developed for SCS k8s observability
+## ref: https://github.com/SovereignCloudStack/k8s-observability
 kaasMonitoring:
   enabled: false
   clusters:
@@ -83,6 +85,8 @@ kaasMonitoring:
     description: 'KaaS monitoring'
 
 ## Testbed Monitoring
+## Experimental tech preview feature developed for SCS k8s observability
+## ref: https://github.com/SovereignCloudStack/k8s-observability
 testbedMonitoring:
   enabled: false
 
