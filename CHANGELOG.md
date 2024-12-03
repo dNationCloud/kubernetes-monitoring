@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.7.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.1) (2024-12-03)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.0...v2.7.1)
+
+**Closed issues:**
+
+- Port work from scs-kaas-mvp branch to the main branch [\#195](https://github.com/dNationCloud/kubernetes-monitoring/issues/195)
+
+**Merged pull requests:**
+
+- Fix issue with host-alert panel for grafana 10 [\#200](https://github.com/dNationCloud/kubernetes-monitoring/pull/200)
+
 ## [v2.7.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.0) (2024-02-14)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.6.3...v2.7.0)
@@ -525,6 +537,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
