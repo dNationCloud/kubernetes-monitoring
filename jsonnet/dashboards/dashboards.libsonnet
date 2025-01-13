@@ -14,6 +14,7 @@
 */
 
 (import '../util.libsonnet') +
+(import '../glib.libsonnet')+
 (import 'grafana-templates.libsonnet') +
 
 // dNation dashboards
@@ -70,6 +71,7 @@
 (import 'apps/jvm.libsonnet') +
 (import 'apps/prometheus.libsonnet') +
 (import 'apps/ssl-exporter.libsonnet') +
+(import 'apps/ssl-exporter-old.libsonnet') +
 (import 'apps/ssl-exporter-new.libsonnet') +
 (import 'apps/harbor.libsonnet') +
 

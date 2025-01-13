@@ -15,7 +15,6 @@
 
 /* Default configuration file */
 (import 'templates.libsonnet') +
-
 {
   mergeConfig(defaultCfg, customCfg)::
     /**

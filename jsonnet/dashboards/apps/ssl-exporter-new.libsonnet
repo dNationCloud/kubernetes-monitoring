@@ -21,69 +21,22 @@ local timeSeries = g.panel.timeSeries;
 local var = g.dashboard.variable;
 local row = g.panel.row;
 {
+    local hr='(Time|container|endpoint|job|namespace|prometheus.*|service|pod)',
 
-    local statPanel(title,query,color="gray", colorMode="fixed") = stat.new (title)
-    + stat.options.withGraphMode('none')
-    + stat.standardOptions.color.withMode(colorMode)
-    + stat.standardOptions.color.withFixedColor('gray')
-    + stat.queryOptions.withTargets([
-        prometheus.new('$datasource',query)
-        + prometheus.withInstant(true),
-    ]),
-    local statPanelThreshold(title,query,steps) = stat.new (title)
-    + stat.options.withGraphMode('none')
-    + stat.standardOptions.thresholds.withSteps(steps)
-    + stat.standardOptions.thresholds.withMode("absolute")
-    + stat.queryOptions.withTargets([
-        prometheus.new('$datasource',query)
-        + prometheus.withInstant(true),
-    ]),
-    local failedSSLConnectTable = table.new('Failed SSL Connect')
-    + table.standardOptions.thresholds.withSteps([
-        table.standardOptions.threshold.step.withValue(null)
-        + table.standardOptions.threshold.step.withColor("red"),
-    ],)
-    + table.fieldConfig.defaults.custom.cellOptions.TableColoredBackgroundCellOptions.withMode("basic")
-    + table.fieldConfig.defaults.custom.cellOptions.TableColoredBackgroundCellOptions.withType()
-    + table.standardOptions.withUnit('short')
-    + table.standardOptions.withOverrides([
-        table.standardOptions.override.byRegexp.new('(Time|__name__)')
-        + table.standardOptions.override.byRegexp.withPropertiesFromOptions(table.fieldConfig.defaults.custom.withHidden()),
-        table.standardOptions.override.byName.new('Value')
-        + table.standardOptions.override.byName.withPropertiesFromOptions(
-            table.standardOptions.withUnit('short')
-            + table.standardOptions.withDecimals(0)
-        ),
-    ])
-    + table.queryOptions.withTargets([
-       prometheus.new('$datasource','ssl_probe_success{cluster="$cluster"}==0' )
-       + prometheus.withInstant(true)
-       + prometheus.withFormat('table'),
-    ]),
-    local sslExporterTable(title,query) = table.new(title)
-    + table.standardOptions.thresholds.withMode("absoute")
-    + table.standardOptions.thresholds.withSteps([
-        table.standardOptions.threshold.step.withValue(null)
-        + table.standardOptions.threshold.step.withColor("transparent"),
-    ],)
-    + table.fieldConfig.defaults.custom.cellOptions.TableColoredBackgroundCellOptions.withMode("basic")
-    + table.fieldConfig.defaults.custom.cellOptions.TableColoredBackgroundCellOptions.withType()
-    + table.gridPos.withW(24)
-    + table.standardOptions.withOverrides([
-        table.standardOptions.override.byName.new('Value')
-        + table.standardOptions.override.byName.withPropertiesFromOptions(
-            table.standardOptions.thresholds.withMode("absolute")
-            + table.standardOptions.withUnit('s')
-            + table.standardOptions.thresholds.withSteps([
-                table.standardOptions.threshold.step.withValue(null) + table.standardOptions.threshold.step.withColor("red"),
-                table.standardOptions.threshold.step.withValue(24*60*60) + table.standardOptions.threshold.step.withColor("orange"),
-                table.standardOptions.threshold.step.withValue(7*24*60*60) + table.standardOptions.threshold.step.withColor("green"),
-            ])
-        ),
-        table.standardOptions.override.byRegexp.new('(Time|container|endpoint|job|namespace|prometheus.*|service|pod)')
-        + table.standardOptions.override.byRegexp.withPropertiesFromOptions(table.fieldConfig.defaults.custom.withHidden())
-     ],
-     )
+    local failedSSLConnectTable = $.gTables.threshold(
+        title="Failed SSL Connects",
+        query='ssl_cert_not_after{ job=~"$job", cluster="$cluster" } - time()',
+        steps= $.gTableSteps.transparent,
+        unit='s',
+        hideRegexp=hr,
+    ),
+    local sslExporterTable(title,query) = $.gTables.valueThreshold(
+        title=title,
+        query=query,
+        steps = $.gTableSteps.standard(null,24*60*60,7*24*60*60),
+        unit='s',
+        hideRegexp=hr,
+    )
      + table.queryOptions.withTransformations([
         table.queryOptions.transformation.withId('organize')
         + table.queryOptions.transformation.withOptions({
@@ -97,36 +50,42 @@ local row = g.panel.row;
         }
         )
      ],)
-     + table.queryOptions.withTargets([
-       prometheus.new('$datasource', query)
-       + prometheus.withInstant(true)
-       + prometheus.withFormat('table'),
-    ])
+     
     ,
-     local sslExternalDesc = 'External SSL Certificates',
-      local sslKubeconfigDesc = 'Kubeconfig Certificates',
-      local sslK8sFileDesc = 'Internal Kubernetes Certificates',
-      local sslK8sSecretDesc = 'Kubernetes Secret Certificates',
+    local sslExternalDesc = 'External SSL Certificates',
+    local sslKubeconfigDesc = 'Kubeconfig Certificates',
+    local sslK8sFileDesc = 'Internal Kubernetes Certificates',
+    local sslK8sSecretDesc = 'Kubernetes Secret Certificates',
     grafanaDashboards+:: {
     'ssl-exporter-new':
     local panels = {
-        totalUniqueCerts: statPanel(
+        totalUniqueCerts: $.gStatPanels.fixed(
             title='Total Unique Certificates',
             query='count(max(ssl_cert_not_after{cluster="$cluster", job=~"$job"}) by (issuer_cn, serial_no))'
             ),
-        totalProbeTargets: statPanel(
+        totalProbeTargets: $.gStatPanels.fixed(
             title='Total Probe Targets',
             query='count(ssl_probe_success{cluster="$cluster"})',
         ),
-        failedSSLCount: statPanelThreshold(
+        failedSSLCount: $.gStatPanels.threshold(
             title='Expired/Failed Certificates',
             query='(count(up{job=~"$job", cluster="$cluster"}==0) OR on() vector(0))+(count(ssl_probe_success{cluster="$cluster"}==0) OR on() vector(0))+(count((ssl_cert_not_after{cluster="$cluster"}-time())<0) OR on() vector(0))+\n            (count((ssl_file_not_after{cluster="$cluster"}-time())<0) OR on() vector(0))+\n            (count((ssl_kubeconfig_cert_not_after{cluster="$cluster"}-time())<0) OR on()vector(0))+(count((ssl_kubernetes_cert_not_after{cluster="$cluster"}-time())<0) OR on()vector(0))',
-            steps=[{index:0, value: 0, color: 'green' },{index:0, value: 1, color: 'red' }],
+            steps=[
+                stat.standardOptions.threshold.step.withValue(0)
+                + stat.standardOptions.threshold.step.withColor('green'),
+                stat.standardOptions.threshold.step.withValue(1)
+                + stat.standardOptions.threshold.step.withColor('red'),
+                ],
         ),
-        nearingExpiryCount : statPanelThreshold(
+        nearingExpiryCount : $.gStatPanels.threshold(
             title='Certificates Nearing Expiration',
             query='(count(0<(ssl_cert_not_after{cluster="$cluster"}-time())<8*24*60*60) OR on() vector(0))+(count(0<(ssl_file_not_after{cluster="$cluster"}-time())<8*24*60*60) OR on() vector(0))+(count(0<(ssl_kubeconfig_cert_not_after{cluster="$cluster"}-time())<8*24*60*60) OR on() vector(0))+(count(0<(ssl_kubernetes_cert_not_after{cluster="$cluster"}-time())<8*24*60*60) OR on() vector(0))',
-            steps=[{index:0, value: 0, color: 'green' },{index:0, value: 1, color: 'orange' }],
+            steps=[
+                stat.standardOptions.threshold.step.withValue(0)
+                + stat.standardOptions.threshold.step.withColor('green'),
+                stat.standardOptions.threshold.step.withValue(1)
+                + stat.standardOptions.threshold.step.withColor('orange'),
+                ],
 
         ),
         failedSSLConnect: failedSSLConnectTable
@@ -183,40 +142,6 @@ local row = g.panel.row;
          + row.withPanels([
             panels.k8sSecrets,
         ])],panelWidth=24, panelHeight=6, startY=7);
-
-    local variables = {
-        datasource:
-            var.datasource.new('datasource', 'prometheus')
-            + var.datasource.generalOptions.showOnDashboard.withLabelAndValue()
-            + var.datasource.generalOptions.withCurrent('thanos')
-            + var.datasource.generalOptions.withLabel('Data source'),
-        cluster:
-            var.query.new('cluster')
-            + var.query.withDatasourceFromVariable(self.datasource)
-            + var.query.queryTypes.withLabelValues('cluster','node_uname_info')
-            + var.query.generalOptions.withLabel('Cluster')
-            + var.query.refresh.onTime()
-            + var.query.withSort(type='alphabetical'),
-        job:
-            var.query.new('job')
-            + var.query.withDatasourceFromVariable(self.datasource)
-            + var.query.generalOptions.withLabel('Job')
-            + var.query.generalOptions.showOnDashboard.withLabelAndValue()
-            + var.query.refresh.onTime()
-            + var.query.selectionOptions.withIncludeAll(true)
-            + var.query.withSort(type='alphabetical')
-            + var.query.queryTypes.withLabelValues('job','ssl_probe_success{cluster="$cluster"}'),
-        instance:
-            var.query.new('instance')
-            + var.query.withDatasourceFromVariable(self.datasource)
-            + var.query.refresh.onTime()
-            + var.query.withSort(type='alphabetical')
-            + var.query.generalOptions.showOnDashboard.withLabelAndValue()
-            + var.query.selectionOptions.withIncludeAll(true)
-            + var.query.queryTypes.withLabelValues('instance','{job=~"$job"}'),
-
-
-    };
     // hack: g.util has a makeGrid function, however it supports only panels of equal width
     local rowfunc(row) = g.util.grid.wrapPanels([row.content],24,1,row.y-1) + g.util.grid.wrapPanels(
         row.content.panels,
@@ -231,7 +156,12 @@ local row = g.panel.row;
     + g.dashboard.withRefresh($._config.grafanaDashboards.refresh)
     + g.dashboard.time.withFrom($._config.grafanaDashboards.time_from)
     + g.dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
-    + g.dashboard.withVariables([variables.datasource, variables.cluster, variables.job, variables.instance])
+    + g.dashboard.withVariables([
+        $.gVariables.datasource(),
+        $.gVariables.cluster('node_uname_info'),
+        $.gVariables.job('ssl_probe_success{cluster="$cluster"}'),
+        $.gVariables.instance('{job=~"$job"}')
+        ])
     + g.dashboard.withPanels(grid)
     },
 
