@@ -434,16 +434,28 @@
     else
       defaultDashboardId,
 
+  addRefreshParam(preprocess_url)::
+    /**
+     *
+     * @param preprocess_url might be with or without refresh parameter.
+     * @return url with added refresh parameter from config if suitable.
+     */
+      local refreh_sep =  if std.length(std.findSubstr('?', preprocess_url)) > 0 then '&' else '?';
+      // remove &refresh= if disabled to be consistent with how "refresh" from a dashboard JSON displays in URL
+      local refresh_param = if std.length(std.findSubstr('refresh=', preprocess_url)) > 0 ||  $._config.grafanaDashboards.refresh == "" then ""
+                            else "%srefresh=%s" % [refreh_sep, $._config.grafanaDashboards.refresh];
+      preprocess_url + refresh_param,
+
   updateDataLinksCommonArgs(datalinks, tableLink=false)::
     /**
      *
      * @param array Datalinks for panel.
      * @param boolean tableLink if processed datalinks are from table or panels.
-     * @return array Datalinks for panel.
+     * @return array Datalinks for panel with refresh parameter.
      */
     local urlField = if tableLink then 'linkUrl' else 'url';
     [
-      local urlFieldValue = if tableLink then datalink.linkUrl else datalink.url;
+      local urlFieldValue = utils.addRefreshParam(if tableLink then datalink.linkUrl else datalink.url);
       if std.objectHas(datalink, urlField) then
         datalink { [urlField]: urlFieldValue }
       else

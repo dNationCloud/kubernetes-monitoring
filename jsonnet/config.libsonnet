@@ -36,6 +36,7 @@
       isLoki: true,
       editable: true,
       tooltip: 'shared_crosshair',
+      // refresh: "" (empty string) to disable refresh
       refresh: '10s',
       time_from: 'now-5m',
       color: {
@@ -57,9 +58,9 @@
         critical: 'red',
         invalid: 'black',  // invalid range is always from minus infinity to 'lowest' thredhold if it is defined
       },
-      dataLinkCommonArgs: 'refresh=%s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to' % [self.refresh],
-      dataLinkCommonArgsNoCluster: 'refresh=%s&var-datasource=$datasource&from=$__from&to=$__to' % [self.refresh],
-      dataLinkCommonArgsBlackbox: 'refresh=%s&var-datasource=$datasource&var-target=$target&from=$__from&to=$__to' % [self.refresh],
+      dataLinkCommonArgs: 'var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to',
+      dataLinkCommonArgsNoCluster: 'var-datasource=$datasource&from=$__from&to=$__to',
+      dataLinkCommonArgsBlackbox: 'var-datasource=$datasource&var-target=$target&from=$__from&to=$__to',
       templateRefresh: 'time',  // on time range change
       templateSort: 5,  // case insensitive ascent sort
       ids: {
