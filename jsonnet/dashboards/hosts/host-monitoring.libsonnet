@@ -59,7 +59,7 @@ local text = grafana.text;
           title='Critical',
           expr='sum(ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"}) OR on() vector(0)' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: $.addRefreshParam('/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s') % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
 
       local warningPanel =
@@ -67,7 +67,7 @@ local text = grafana.text;
           title='Warning',
           expr='sum(ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"}) OR on() vector(0)' % [$._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, std.join('|', alertJobs)],
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: $.addRefreshParam('/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s') % [$._config.grafanaDashboards.ids.alertHostOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupHost, $._config.prometheusRules.alertGroupHostApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
 
       local hostStatsPanels = [

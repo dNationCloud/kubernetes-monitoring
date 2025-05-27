@@ -51,7 +51,7 @@ local graphPanel = grafana.graphPanel;
             { alias: 'Memory Limit', pattern: 'Value #E', type: 'number', unit: 'bytes', decimals: 2 },
             { alias: 'Memory Usage (only defined limit)', pattern: 'Value #F', type: 'number', unit: 'bytes', decimals: 2 },
             { alias: 'Memory Usage (total)', pattern: 'Value #G', type: 'number', unit: 'bytes', decimals: 2 },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s' % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: $.addRefreshParam('/d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s') % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
           ]
         )
         .addTargets(
