@@ -49,9 +49,9 @@ jobs:
         git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.6
+        python-version: 3.10
 
     - name: Install Chartpress
       run: |
@@ -64,7 +64,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
 
     - name: Tag branch
-      uses: anothrNick/github-tag-action@1.39.0
+      uses: anothrNick/github-tag-action@1.67.0
       env:
         GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
         CUSTOM_TAG: 'v${{ steps.version.outputs.chart }}'
