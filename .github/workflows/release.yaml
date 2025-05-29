@@ -26,10 +26,10 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Fetch history
       run: git fetch --prune --unshallow
@@ -72,10 +72,10 @@ jobs:
 
   generate-changelog:
     needs: release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: dNationCloud/kubernetes-monitoring
           ref: main
