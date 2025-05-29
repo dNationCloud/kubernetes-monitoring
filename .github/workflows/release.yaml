@@ -26,10 +26,10 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Fetch history
       run: git fetch --prune --unshallow
@@ -49,9 +49,9 @@ jobs:
         git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.6
+        python-version: '3.10'
 
     - name: Install Chartpress
       run: |
@@ -64,7 +64,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
 
     - name: Tag branch
-      uses: anothrNick/github-tag-action@1.39.0
+      uses: anothrNick/github-tag-action@1.67.0
       env:
         GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
         CUSTOM_TAG: 'v${{ steps.version.outputs.chart }}'
@@ -72,10 +72,10 @@ jobs:
 
   generate-changelog:
     needs: release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: dNationCloud/kubernetes-monitoring
           ref: main

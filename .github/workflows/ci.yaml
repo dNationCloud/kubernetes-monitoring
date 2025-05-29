@@ -24,7 +24,7 @@ on:
 
 jobs:
   lint-chart:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -42,10 +42,10 @@ jobs:
         config: .github/ct.yaml
 
   lint-appVersion:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Check if jsonnet folder changed
       uses: dorny/paths-filter@v2
@@ -62,7 +62,7 @@ jobs:
         echo "::set-output name=app-version::$app"
 
     - name: Checkout main branch
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         ref: main
 
@@ -81,7 +81,7 @@ jobs:
         comparison: notEqual
 
   lint-jsonnet:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs:
     - lint-chart
     - lint-appVersion
@@ -102,7 +102,7 @@ jobs:
       run: make json-rules
 
   install-chart:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs:
     - lint-chart
     - lint-appVersion
