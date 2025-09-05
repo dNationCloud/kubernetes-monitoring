@@ -46,6 +46,8 @@ items:
 {{ include "k8s-monitoring.labels" $ | indent 6 }}
       app: {{ include "k8s-monitoring.name" $ }}
       release: {{ include "k8s-monitoring.release" $ }}
+    annotations:
+{{ include "k8s-monitoring.annotations" $ | indent 6 }}
   spec:
     endpoints:
 {{ toYaml $serviceMonitor.endpoints | indent 4 }}

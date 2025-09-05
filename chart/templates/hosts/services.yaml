@@ -50,6 +50,8 @@ items:
       app: {{ include "k8s-monitoring.name" $ }}
       release: {{ include "k8s-monitoring.release" $ }}
       {{ $serviceMonitor.jobLabel | default "host/app" }}: {{ $serviceMonitor.jobName }}
+    annotations:
+{{ include "k8s-monitoring.annotations" $ | indent 6 }}
   spec:
     type: ExternalName
     externalName: {{ $serviceMonitor.address }}
