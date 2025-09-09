@@ -27,6 +27,7 @@ metadata:
 {{ toYaml .Values.grafanaDashboards.labelJsonnet | indent 4 }}
 {{- end }}
   annotations:
+{{ include "k8s-monitoring.annotations" . | indent 4 }}
     jsonnet_filename: "dashboards.jsonnet"
     tla_codes: |-
       { 'customConfig': '{{ .Values | mustToJson }}' }
