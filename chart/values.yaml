@@ -37,6 +37,11 @@ fullnameOverride: ""
 commonLabels: {}
 # myLabel: myLabelValue
 
+## Annotations to apply to all resources
+##
+commonAnnotations: {}
+# myAnnotation: myAnnotationValue
+
 ## Deploy a dnation-kubernetes-jsonnet-translator
 ## ref: https://github.com/dNationCloud/kubernetes-jsonnet-translator
 ##

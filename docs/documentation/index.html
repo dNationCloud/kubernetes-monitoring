@@ -9,8 +9,14 @@
       
       
       
-      <link rel="shortcut icon" href="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.7">
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../AWS_doc/">
+      
+      
+      <link rel="icon" href="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
     
     
       
@@ -18,41 +24,40 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.19753c6b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.196e0c26.min.css">
         
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
-    
-    
-    
-      
-        
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
-      
-    
     
     
       <link rel="stylesheet" href="../docs.css">
     
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
+
+    
     
     
   </head>
   
   
-    
-    
-    
-    
-    
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
-      
+    <body dir="ltr">
   
+    
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
@@ -68,70 +73,90 @@
       
     </div>
     
+    
       
 
-<header class="md-header" data-md-component="header">
-  <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="../.." title="dNation Kubernetes Monitoring" class="md-header-nav__button md-logo" aria-label="dNation Kubernetes Monitoring">
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="dNation Kubernetes Monitoring" class="md-header__button md-logo" aria-label="dNation Kubernetes Monitoring" data-md-component="logo">
       
   <img src="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png" alt="logo">
 
     </a>
-    <label class="md-header-nav__button md-icon" for="__drawer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
-    </label>
-    <div class="md-header-nav__title" data-md-component="header-title">
+    <label class="md-header__button md-icon" for="__drawer">
       
-        <div class="md-header-nav__ellipsis">
-          <span class="md-header-nav__topic md-ellipsis">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
             dNation Kubernetes Monitoring
           </span>
-          <span class="md-header-nav__topic md-ellipsis">
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
             
               Docs
             
           </span>
         </div>
-      
+      </div>
     </div>
     
-      <label class="md-header-nav__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
-      </label>
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
       
-<div class="md-search" data-md-component="search" role="dialog">
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
-      </button>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
           </div>
-          <ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list" role="presentation"></ol>
         </div>
       </div>
     </div>
   </div>
 </div>
+      
     
     
-      <div class="md-header-nav__source">
-        
-<a href="https://github.com/dNationCloud/kubernetes-monitoring" title="Go to repository" class="md-source">
+      <div class="md-header__source">
+        <a href="https://github.com/dNationCloud/kubernetes-monitoring" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     dNationCloud/kubernetes-monitoring
@@ -140,25 +165,31 @@
       </div>
     
   </nav>
+  
 </header>
     
     <div class="md-container" data-md-component="container">
       
       
         
+          
+        
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
 
+
+
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="dNation Kubernetes Monitoring" class="md-nav__button md-logo" aria-label="dNation Kubernetes Monitoring">
+    <a href="../.." title="dNation Kubernetes Monitoring" class="md-nav__button md-logo" aria-label="dNation Kubernetes Monitoring" data-md-component="logo">
       
   <img src="https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png" alt="logo">
 
@@ -167,11 +198,10 @@
   </label>
   
     <div class="md-nav__source">
-      
-<a href="https://github.com/dNationCloud/kubernetes-monitoring" title="Go to repository" class="md-source">
+      <a href="https://github.com/dNationCloud/kubernetes-monitoring" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     dNationCloud/kubernetes-monitoring
@@ -183,41 +213,71 @@
     
       
       
-      
-
-
-  <li class="md-nav__item">
-    <a href="../.." class="md-nav__link">
-      Home
-    </a>
-  </li>
-
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
     
-      
-      
-      
-
+  </span>
   
 
+      </a>
+    </li>
+  
 
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
       
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Docs
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
-      Docs
-    </a>
-    
       
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Docs
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docs
+    
+  </span>
+  
+
+      </a>
+      
+        
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
   
   
     
@@ -227,18 +287,22 @@
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
   <a href="#clustermonitoring" class="md-nav__link">
-    clusterMonitoring
+    <span class="md-ellipsis">
+      clusterMonitoring
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#dnation-kubernetes-jsonnet-translator" class="md-nav__link">
-    dnation-kubernetes-jsonnet-translator
+    <span class="md-ellipsis">
+      dnation-kubernetes-jsonnet-translator
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="dnation-kubernetes-jsonnet-translator">
@@ -246,7 +310,9 @@
         
           <li class="md-nav__item">
   <a href="#image" class="md-nav__link">
-    image
+    <span class="md-ellipsis">
+      image
+    </span>
   </a>
   
 </li>
@@ -258,7 +324,9 @@
       
         <li class="md-nav__item">
   <a href="#grafanadashboards" class="md-nav__link">
-    grafanaDashboards
+    <span class="md-ellipsis">
+      grafanaDashboards
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="grafanaDashboards">
@@ -266,42 +334,54 @@
         
           <li class="md-nav__item">
   <a href="#color" class="md-nav__link">
-    color
+    <span class="md-ellipsis">
+      color
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#constants" class="md-nav__link">
-    constants
+    <span class="md-ellipsis">
+      constants
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#ids" class="md-nav__link">
-    ids
+    <span class="md-ellipsis">
+      ids
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#selectors" class="md-nav__link">
-    selectors
+    <span class="md-ellipsis">
+      selectors
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#severitycolors" class="md-nav__link">
-    severityColors
+    <span class="md-ellipsis">
+      severityColors
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#tags" class="md-nav__link">
-    tags
+    <span class="md-ellipsis">
+      tags
+    </span>
   </a>
   
 </li>
@@ -313,28 +393,36 @@
       
         <li class="md-nav__item">
   <a href="#hostmonitoring" class="md-nav__link">
-    hostMonitoring
+    <span class="md-ellipsis">
+      hostMonitoring
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#kaasmonitoring" class="md-nav__link">
-    kaasMonitoring
+    <span class="md-ellipsis">
+      kaasMonitoring
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#prometheusrules" class="md-nav__link">
-    prometheusRules
+    <span class="md-ellipsis">
+      prometheusRules
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#templates" class="md-nav__link">
-    templates
+    <span class="md-ellipsis">
+      templates
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="templates">
@@ -342,7 +430,9 @@
         
           <li class="md-nav__item">
   <a href="#l0" class="md-nav__link">
-    L0
+    <span class="md-ellipsis">
+      L0
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="L0">
@@ -350,35 +440,45 @@
         
           <li class="md-nav__item">
   <a href="#blackbox" class="md-nav__link">
-    blackbox
+    <span class="md-ellipsis">
+      blackbox
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#host" class="md-nav__link">
-    host
+    <span class="md-ellipsis">
+      host
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#k8s" class="md-nav__link">
-    k8s
+    <span class="md-ellipsis">
+      k8s
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#kaas" class="md-nav__link">
-    kaas
+    <span class="md-ellipsis">
+      kaas
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#testbed" class="md-nav__link">
-    testbed
+    <span class="md-ellipsis">
+      testbed
+    </span>
   </a>
   
 </li>
@@ -390,7 +490,9 @@
         
           <li class="md-nav__item">
   <a href="#l1" class="md-nav__link">
-    L1
+    <span class="md-ellipsis">
+      L1
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="L1">
@@ -398,42 +500,54 @@
         
           <li class="md-nav__item">
   <a href="#host_1" class="md-nav__link">
-    host
+    <span class="md-ellipsis">
+      host
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#hostapps" class="md-nav__link">
-    hostApps
+    <span class="md-ellipsis">
+      hostApps
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#k8s_1" class="md-nav__link">
-    k8s
+    <span class="md-ellipsis">
+      k8s
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#k8sapps" class="md-nav__link">
-    k8sApps
+    <span class="md-ellipsis">
+      k8sApps
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#vm" class="md-nav__link">
-    vm
+    <span class="md-ellipsis">
+      vm
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#vmapps" class="md-nav__link">
-    vmApps
+    <span class="md-ellipsis">
+      vmApps
+    </span>
   </a>
   
 </li>
@@ -445,7 +559,9 @@
         
           <li class="md-nav__item">
   <a href="#l2" class="md-nav__link">
-    L2
+    <span class="md-ellipsis">
+      L2
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="L2">
@@ -453,91 +569,117 @@
         
           <li class="md-nav__item">
   <a href="#containeroverview" class="md-nav__link">
-    containerOverview
+    <span class="md-ellipsis">
+      containerOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#cpupernode" class="md-nav__link">
-    cpuPerNode
+    <span class="md-ellipsis">
+      cpuPerNode
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#daemonsetoverview" class="md-nav__link">
-    daemonSetOverview
+    <span class="md-ellipsis">
+      daemonSetOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#deploymentoverview" class="md-nav__link">
-    deploymentOverview
+    <span class="md-ellipsis">
+      deploymentOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#diskpernode" class="md-nav__link">
-    diskPerNode
+    <span class="md-ellipsis">
+      diskPerNode
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#joboverview" class="md-nav__link">
-    jobOverview
+    <span class="md-ellipsis">
+      jobOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#memorypernode" class="md-nav__link">
-    memoryPerNode
+    <span class="md-ellipsis">
+      memoryPerNode
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#networkpernode" class="md-nav__link">
-    networkPerNode
+    <span class="md-ellipsis">
+      networkPerNode
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#nodeoverview" class="md-nav__link">
-    nodeOverview
+    <span class="md-ellipsis">
+      nodeOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#podoverview" class="md-nav__link">
-    podOverview
+    <span class="md-ellipsis">
+      podOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#pvcoverview" class="md-nav__link">
-    pvcOverview
+    <span class="md-ellipsis">
+      pvcOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#statefulsetoverview" class="md-nav__link">
-    statefulSetOverview
+    <span class="md-ellipsis">
+      statefulSetOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#vm_1" class="md-nav__link">
-    vm
+    <span class="md-ellipsis">
+      vm
+    </span>
   </a>
   
 </li>
@@ -549,7 +691,9 @@
         
           <li class="md-nav__item">
   <a href="#commonthresholds" class="md-nav__link">
-    commonThresholds
+    <span class="md-ellipsis">
+      commonThresholds
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="commonThresholds">
@@ -557,42 +701,54 @@
         
           <li class="md-nav__item">
   <a href="#app" class="md-nav__link">
-    app
+    <span class="md-ellipsis">
+      app
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#controlplane" class="md-nav__link">
-    controlPlane
+    <span class="md-ellipsis">
+      controlPlane
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#criticalpanel" class="md-nav__link">
-    criticalPanel
+    <span class="md-ellipsis">
+      criticalPanel
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#k8s_2" class="md-nav__link">
-    k8s
+    <span class="md-ellipsis">
+      k8s
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#node" class="md-nav__link">
-    node
+    <span class="md-ellipsis">
+      node
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#warningpanel" class="md-nav__link">
-    warningPanel
+    <span class="md-ellipsis">
+      warningPanel
+    </span>
   </a>
   
 </li>
@@ -604,7 +760,9 @@
         
           <li class="md-nav__item">
   <a href="#templatebases" class="md-nav__link">
-    templateBases
+    <span class="md-ellipsis">
+      templateBases
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="templateBases">
@@ -612,28 +770,36 @@
         
           <li class="md-nav__item">
   <a href="#basealert" class="md-nav__link">
-    baseAlert
+    <span class="md-ellipsis">
+      baseAlert
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#basepolystattemplate" class="md-nav__link">
-    basePolystatTemplate
+    <span class="md-ellipsis">
+      basePolystatTemplate
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#basestatstemplate" class="md-nav__link">
-    baseStatsTemplate
+    <span class="md-ellipsis">
+      baseStatsTemplate
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#basetabletemplate" class="md-nav__link">
-    baseTableTemplate
+    <span class="md-ellipsis">
+      baseTableTemplate
+    </span>
   </a>
   
 </li>
@@ -651,32 +817,53 @@
     </ul>
   
 </nav>
-    
-  </li>
+      
+    </li>
+  
 
     
       
       
-      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AWS_doc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AWS
+    
+  </span>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../AWS_doc/" class="md-nav__link">
-      AWS
-    </a>
-  </li>
+      </a>
+    </li>
+  
 
     
       
       
-      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../helpers/FAQ/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
 
-
-  <li class="md-nav__item">
-    <a href="../../helpers/FAQ/" class="md-nav__link">
-      FAQ
-    </a>
-  </li>
+      </a>
+    </li>
+  
 
     
   </ul>
@@ -686,11 +873,14 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
   
   
     
@@ -700,18 +890,22 @@
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-    <ul class="md-nav__list" data-md-scrollfix>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
   <a href="#clustermonitoring" class="md-nav__link">
-    clusterMonitoring
+    <span class="md-ellipsis">
+      clusterMonitoring
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#dnation-kubernetes-jsonnet-translator" class="md-nav__link">
-    dnation-kubernetes-jsonnet-translator
+    <span class="md-ellipsis">
+      dnation-kubernetes-jsonnet-translator
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="dnation-kubernetes-jsonnet-translator">
@@ -719,7 +913,9 @@
         
           <li class="md-nav__item">
   <a href="#image" class="md-nav__link">
-    image
+    <span class="md-ellipsis">
+      image
+    </span>
   </a>
   
 </li>
@@ -731,7 +927,9 @@
       
         <li class="md-nav__item">
   <a href="#grafanadashboards" class="md-nav__link">
-    grafanaDashboards
+    <span class="md-ellipsis">
+      grafanaDashboards
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="grafanaDashboards">
@@ -739,42 +937,54 @@
         
           <li class="md-nav__item">
   <a href="#color" class="md-nav__link">
-    color
+    <span class="md-ellipsis">
+      color
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#constants" class="md-nav__link">
-    constants
+    <span class="md-ellipsis">
+      constants
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#ids" class="md-nav__link">
-    ids
+    <span class="md-ellipsis">
+      ids
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#selectors" class="md-nav__link">
-    selectors
+    <span class="md-ellipsis">
+      selectors
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#severitycolors" class="md-nav__link">
-    severityColors
+    <span class="md-ellipsis">
+      severityColors
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#tags" class="md-nav__link">
-    tags
+    <span class="md-ellipsis">
+      tags
+    </span>
   </a>
   
 </li>
@@ -786,28 +996,36 @@
       
         <li class="md-nav__item">
   <a href="#hostmonitoring" class="md-nav__link">
-    hostMonitoring
+    <span class="md-ellipsis">
+      hostMonitoring
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#kaasmonitoring" class="md-nav__link">
-    kaasMonitoring
+    <span class="md-ellipsis">
+      kaasMonitoring
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#prometheusrules" class="md-nav__link">
-    prometheusRules
+    <span class="md-ellipsis">
+      prometheusRules
+    </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#templates" class="md-nav__link">
-    templates
+    <span class="md-ellipsis">
+      templates
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="templates">
@@ -815,7 +1033,9 @@
         
           <li class="md-nav__item">
   <a href="#l0" class="md-nav__link">
-    L0
+    <span class="md-ellipsis">
+      L0
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="L0">
@@ -823,35 +1043,45 @@
         
           <li class="md-nav__item">
   <a href="#blackbox" class="md-nav__link">
-    blackbox
+    <span class="md-ellipsis">
+      blackbox
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#host" class="md-nav__link">
-    host
+    <span class="md-ellipsis">
+      host
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#k8s" class="md-nav__link">
-    k8s
+    <span class="md-ellipsis">
+      k8s
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#kaas" class="md-nav__link">
-    kaas
+    <span class="md-ellipsis">
+      kaas
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#testbed" class="md-nav__link">
-    testbed
+    <span class="md-ellipsis">
+      testbed
+    </span>
   </a>
   
 </li>
@@ -863,7 +1093,9 @@
         
           <li class="md-nav__item">
   <a href="#l1" class="md-nav__link">
-    L1
+    <span class="md-ellipsis">
+      L1
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="L1">
@@ -871,42 +1103,54 @@
         
           <li class="md-nav__item">
   <a href="#host_1" class="md-nav__link">
-    host
+    <span class="md-ellipsis">
+      host
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#hostapps" class="md-nav__link">
-    hostApps
+    <span class="md-ellipsis">
+      hostApps
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#k8s_1" class="md-nav__link">
-    k8s
+    <span class="md-ellipsis">
+      k8s
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#k8sapps" class="md-nav__link">
-    k8sApps
+    <span class="md-ellipsis">
+      k8sApps
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#vm" class="md-nav__link">
-    vm
+    <span class="md-ellipsis">
+      vm
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#vmapps" class="md-nav__link">
-    vmApps
+    <span class="md-ellipsis">
+      vmApps
+    </span>
   </a>
   
 </li>
@@ -918,7 +1162,9 @@
         
           <li class="md-nav__item">
   <a href="#l2" class="md-nav__link">
-    L2
+    <span class="md-ellipsis">
+      L2
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="L2">
@@ -926,91 +1172,117 @@
         
           <li class="md-nav__item">
   <a href="#containeroverview" class="md-nav__link">
-    containerOverview
+    <span class="md-ellipsis">
+      containerOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#cpupernode" class="md-nav__link">
-    cpuPerNode
+    <span class="md-ellipsis">
+      cpuPerNode
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#daemonsetoverview" class="md-nav__link">
-    daemonSetOverview
+    <span class="md-ellipsis">
+      daemonSetOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#deploymentoverview" class="md-nav__link">
-    deploymentOverview
+    <span class="md-ellipsis">
+      deploymentOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#diskpernode" class="md-nav__link">
-    diskPerNode
+    <span class="md-ellipsis">
+      diskPerNode
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#joboverview" class="md-nav__link">
-    jobOverview
+    <span class="md-ellipsis">
+      jobOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#memorypernode" class="md-nav__link">
-    memoryPerNode
+    <span class="md-ellipsis">
+      memoryPerNode
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#networkpernode" class="md-nav__link">
-    networkPerNode
+    <span class="md-ellipsis">
+      networkPerNode
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#nodeoverview" class="md-nav__link">
-    nodeOverview
+    <span class="md-ellipsis">
+      nodeOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#podoverview" class="md-nav__link">
-    podOverview
+    <span class="md-ellipsis">
+      podOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#pvcoverview" class="md-nav__link">
-    pvcOverview
+    <span class="md-ellipsis">
+      pvcOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#statefulsetoverview" class="md-nav__link">
-    statefulSetOverview
+    <span class="md-ellipsis">
+      statefulSetOverview
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#vm_1" class="md-nav__link">
-    vm
+    <span class="md-ellipsis">
+      vm
+    </span>
   </a>
   
 </li>
@@ -1022,7 +1294,9 @@
         
           <li class="md-nav__item">
   <a href="#commonthresholds" class="md-nav__link">
-    commonThresholds
+    <span class="md-ellipsis">
+      commonThresholds
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="commonThresholds">
@@ -1030,42 +1304,54 @@
         
           <li class="md-nav__item">
   <a href="#app" class="md-nav__link">
-    app
+    <span class="md-ellipsis">
+      app
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#controlplane" class="md-nav__link">
-    controlPlane
+    <span class="md-ellipsis">
+      controlPlane
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#criticalpanel" class="md-nav__link">
-    criticalPanel
+    <span class="md-ellipsis">
+      criticalPanel
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#k8s_2" class="md-nav__link">
-    k8s
+    <span class="md-ellipsis">
+      k8s
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#node" class="md-nav__link">
-    node
+    <span class="md-ellipsis">
+      node
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#warningpanel" class="md-nav__link">
-    warningPanel
+    <span class="md-ellipsis">
+      warningPanel
+    </span>
   </a>
   
 </li>
@@ -1077,7 +1363,9 @@
         
           <li class="md-nav__item">
   <a href="#templatebases" class="md-nav__link">
-    templateBases
+    <span class="md-ellipsis">
+      templateBases
+    </span>
   </a>
   
     <nav class="md-nav" aria-label="templateBases">
@@ -1085,28 +1373,36 @@
         
           <li class="md-nav__item">
   <a href="#basealert" class="md-nav__link">
-    baseAlert
+    <span class="md-ellipsis">
+      baseAlert
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#basepolystattemplate" class="md-nav__link">
-    basePolystatTemplate
+    <span class="md-ellipsis">
+      basePolystatTemplate
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#basestatstemplate" class="md-nav__link">
-    baseStatsTemplate
+    <span class="md-ellipsis">
+      baseStatsTemplate
+    </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#basetabletemplate" class="md-nav__link">
-    baseTableTemplate
+    <span class="md-ellipsis">
+      baseTableTemplate
+    </span>
   </a>
   
 </li>
@@ -1129,12 +1425,15 @@
               </div>
             
           
-          <div class="md-content">
-            <article class="md-content__inner md-typeset">
-              
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
                 
-                
-                <p><a href="https://dNation.cloud/"><img src="https://cdn.ifne.eu/public/icons/dnation.png" width="250" alt="dNationCloud"></a></p>
+                  
+
+
+
+<p><a href="https://dNation.cloud/"><img src="https://cdn.ifne.eu/public/icons/dnation.png" width="250" alt="dNationCloud"></a></p>
 <h1 id="dnation-kubernetes-monitoring-docs">dnation Kubernetes Monitoring Docs</h1>
 <p>This is generated documentation from configuration files of <a href="https://github.com/dNationCloud/kubernetes-monitoring">Kubernetes Monitoring</a>. </p>
 <p>Each configuration parameter can be overriden by providing custom <a href="https://github.com/dNationCloud/kubernetes-monitoring/blob/main/chart/values.yaml">values.yaml</a>
@@ -1144,6 +1443,9 @@ during helm installation.</p>
 </code></div>
 </td></tr>
 <tr><td>clusterMonitoring</td><td><a href='#clusterMonitoring_0'>clusterMonitoring</a>
+</td></tr>
+<tr><td>commonAnnotations</td><td><div class='my-pre'><code>{}
+</code></div>
 </td></tr>
 <tr><td>commonLabels</td><td><div class='my-pre'><code>{}
 </code></div>
@@ -1202,11 +1504,11 @@ during helm installation.</p>
 </td></tr>
 <tr><td>constants</td><td><a href='#constants_5'>constants</a>
 </td></tr>
-<tr><td>dataLinkCommonArgs</td><td><div class='my-pre'><code>"refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to"</code></div>
+<tr><td>dataLinkCommonArgs</td><td><div class='my-pre'><code>"var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to"</code></div>
 </td></tr>
-<tr><td>dataLinkCommonArgsBlackbox</td><td><div class='my-pre'><code>"refresh=10s&var-datasource=$datasource&var-target=$target&from=$__from&to=$__to"</code></div>
+<tr><td>dataLinkCommonArgsBlackbox</td><td><div class='my-pre'><code>"var-datasource=$datasource&var-target=$target&from=$__from&to=$__to"</code></div>
 </td></tr>
-<tr><td>dataLinkCommonArgsNoCluster</td><td><div class='my-pre'><code>"refresh=10s&var-datasource=$datasource&from=$__from&to=$__to"</code></div>
+<tr><td>dataLinkCommonArgsNoCluster</td><td><div class='my-pre'><code>"var-datasource=$datasource&from=$__from&to=$__to"</code></div>
 </td></tr>
 <tr><td>editable</td><td><div class='my-pre'><code>true</code></div>
 </td></tr>
@@ -1873,7 +2175,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: sum(rate(node_network_transmit_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) )
   by (job, nodename) + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
@@ -1913,7 +2216,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"$job", mode="idle"}[5m])
   * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
   nodename) )) * 100))
@@ -1956,14 +2260,15 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the disk utilization is calculated using the fraction:\n\
-  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>\
-  \ is reduced by  5% of the available disk capacity, because   \nthe file system\
-  \ marks 5% of the available disk capacity as reserved. \nIf less than 5% is free,\
-  \ using the remaining reserved space requires root privileges.\nAny non-privileged\
-  \ users and processes are unable to write new data to the partition. See the list\
-  \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the disk utilization is calculated using the fraction:\n
+  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>
+  is reduced by  5% of the available disk capacity, because   \nthe file system marks
+  5% of the available disk capacity as reserved. \nIf less than 5% is free, using
+  the remaining reserved space requires root privileges.\nAny non-privileged users
+  and processes are unable to write new data to the partition. See the list of explicitly
+  ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 expr: max(round((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance, job, cluster,
   pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
   * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
@@ -2007,9 +2312,10 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
-  \ (<memory available>/<memory total>)\n```"
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the memory utilization is calculated by:\n```\n1 -
+  (<memory available>/<memory total>)\n```"
 expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"$job"}
   * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) / sum
   by (job, nodename, cluster) (node_memory_MemTotal_bytes{job=~"$job"} * on(instance,
@@ -2537,7 +2843,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: Detail
-  url: /d/nginxingress?var-job=%(job)s&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nginxingress?var-job=%(job)s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 decimals: 0
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$cluster",
   %(job)s} - time()) OR on() vector(-100000000000000005366162204393472)
@@ -2845,7 +3152,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
+expr: (sum by (job, cluster) 
+  (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
   / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   + 100)
@@ -3073,7 +3381,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: (sum(up{cluster="$cluster", job="apiserver"}) / count(up{cluster="$cluster",
   job="apiserver"})) * 100 OR on() vector(-1)
 gridPos:
@@ -3115,7 +3423,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: (sum(up{cluster="$cluster", job="kube-controller-manager"}) / count(up{cluster="$cluster",
   job="kube-controller-manager"})) * 100 OR on() vector(-1)
 gridPos:
@@ -3157,7 +3465,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: round((sum(kube_daemonset_status_updated_number_scheduled{cluster="$cluster"}
   OR kube_daemonset_updated_number_scheduled{cluster="$cluster"}) + sum(kube_daemonset_status_number_available{cluster="$cluster"}))
   / (2 * sum(kube_daemonset_status_desired_number_scheduled{cluster="$cluster"}))
@@ -3194,7 +3502,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: round((sum(kube_deployment_status_replicas_updated{cluster="$cluster"}) + sum(kube_deployment_status_replicas_available{cluster="$cluster"}))
   / (2 * sum(kube_deployment_status_replicas{cluster="$cluster"})) * 100)
 gridPos:
@@ -3230,7 +3538,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: (sum(up{cluster="$cluster", job="kube-etcd"}) / count(up{cluster="$cluster",
   job="kube-etcd"})) * 100 OR on() vector(-1)
 gridPos:
@@ -3272,7 +3580,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: (sum(up{cluster="$cluster", job="kubelet", metrics_path="/metrics"}) / count(up{cluster="$cluster",
   job="kubelet", metrics_path="/metrics"})) * 100 OR on() vector(-1)
 gridPos:
@@ -3316,9 +3624,11 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/cpuoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/cpuoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/cpunamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/cpunamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: max(round((1 - (avg(irate(node_cpu_seconds_total{cluster="$cluster", job=~"$job",
   mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info))
   by (job, nodename) )) * 100))
@@ -3364,14 +3674,15 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/diskoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
-description: "The percentage of the disk utilization is calculated using the fraction:\n\
-  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>\
-  \ is reduced by  5% of the available disk capacity, because   \nthe file system\
-  \ marks 5% of the available disk capacity as reserved. \nIf less than 5% is free,\
-  \ using the remaining reserved space requires root privileges.\nAny non-privileged\
-  \ users and processes are unable to write new data to the partition. See the list\
-  \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
+  url: 
+    /d/diskoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+description: "The percentage of the disk utilization is calculated using the fraction:\n
+  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>
+  is reduced by  5% of the available disk capacity, because   \nthe file system marks
+  5% of the available disk capacity as reserved. \nIf less than 5% is free, using
+  the remaining reserved space requires root privileges.\nAny non-privileged users
+  and processes are unable to write new data to the partition. See the list of explicitly
+  ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 expr: max(round((sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"} *
   on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)
   - sum(node_filesystem_free_bytes{cluster="$cluster", job=~"$job"} * on(instance,
@@ -3419,9 +3730,11 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/networkoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/networkoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/networknamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/networknamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: max(sum(rate(node_network_transmit_errs_total{cluster="$cluster", job=~"$job",
   device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance,
   pod) group_left(nodename) (master_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster="$cluster",
@@ -3465,11 +3778,13 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/memoryoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/memoryoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/memorynamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
-  \ (<memory available>/<memory total>)\n```"
+  url: 
+    /d/memorynamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the memory utilization is calculated by:\n```\n1 -
+  (<memory available>/<memory total>)\n```"
 expr: max(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster="$cluster",
   job=~"$job"} * on(instance, pod) group_left(nodename) (master_uname_info)) / sum
   by (job, nodename) (node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job"}
@@ -3509,7 +3824,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: max(sum(((kubelet_volume_stats_capacity_bytes{cluster="$cluster"} - kubelet_volume_stats_available_bytes{cluster="$cluster"})
   / kubelet_volume_stats_capacity_bytes{cluster="$cluster"}) * 100) by (persistentvolumeclaim))
   OR on() vector(-1)
@@ -3554,9 +3869,11 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/cpuoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/cpuoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/cpunamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/cpunamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: max(round((1 - (avg(irate(node_cpu_seconds_total{cluster="$cluster", job=~"$job",
   mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info))
   by (job, nodename) )) * 100))
@@ -3602,14 +3919,15 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/diskoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
-description: "The percentage of the disk utilization is calculated using the fraction:\n\
-  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>\
-  \ is reduced by  5% of the available disk capacity, because   \nthe file system\
-  \ marks 5% of the available disk capacity as reserved. \nIf less than 5% is free,\
-  \ using the remaining reserved space requires root privileges.\nAny non-privileged\
-  \ users and processes are unable to write new data to the partition. See the list\
-  \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
+  url: 
+    /d/diskoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+description: "The percentage of the disk utilization is calculated using the fraction:\n
+  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>
+  is reduced by  5% of the available disk capacity, because   \nthe file system marks
+  5% of the available disk capacity as reserved. \nIf less than 5% is free, using
+  the remaining reserved space requires root privileges.\nAny non-privileged users
+  and processes are unable to write new data to the partition. See the list of explicitly
+  ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 expr: max(round((sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"} *
   on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)
   - sum(node_filesystem_free_bytes{cluster="$cluster", job=~"$job"} * on(instance,
@@ -3657,9 +3975,11 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/networkoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/networkoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/networknamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/networknamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: max(sum(rate(node_network_transmit_errs_total{cluster="$cluster", job=~"$job",
   device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance,
   pod) group_left(nodename) (worker_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster="$cluster",
@@ -3703,11 +4023,13 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/memoryoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/memoryoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/memorynamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
-  \ (<memory available>/<memory total>)\n```"
+  url: 
+    /d/memorynamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the memory utilization is calculated by:\n```\n1 -
+  (<memory available>/<memory total>)\n```"
 expr: max(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster="$cluster",
   job=~"$job"} * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum
   by (job, nodename) (node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job"}
@@ -3730,7 +4052,8 @@ title: Most Utilized Node
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
 expr: round(sum(kube_node_info) by (cluster) / (sum(kube_node_info) by (cluster) +
-  sum(kube_node_spec_unschedulable) by (cluster) + sum(kube_node_status_condition{condition=~"DiskPressure|MemoryPressure|PIDPressure",
+  sum(kube_node_spec_unschedulable) by (cluster) + 
+  sum(kube_node_status_condition{condition=~"DiskPressure|MemoryPressure|PIDPressure",
   status=~"true|unknown"}) by (cluster) + sum(kube_node_status_condition{condition="Ready",
   status=~"false|unknown"}) by (cluster)) * 100)
 linkGetParams: var-cluster={{ $labels.cluster }}
@@ -3747,7 +4070,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: round(sum(kube_node_info{cluster="$cluster"}) / (sum(kube_node_info{cluster="$cluster"})
   + sum(kube_node_spec_unschedulable{cluster="$cluster"}) + sum(kube_node_status_condition{cluster="$cluster",
   condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"})  +
@@ -3788,9 +4111,11 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/networknamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/networknamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: sum(sum(rate(node_network_transmit_errs_total{cluster="$cluster", job=~"$job",
   device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance,
   pod) group_left(nodename) (master_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster="$cluster",
@@ -3831,9 +4156,11 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/cpunamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/cpunamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster="$cluster", job=~"$job",
   mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info))
   by (job, nodename) )) * 100))
@@ -3877,14 +4204,15 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
-description: "The percentage of the disk utilization is calculated using the fraction:\n\
-  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>\
-  \ is reduced by  5% of the available disk capacity, because   \nthe file system\
-  \ marks 5% of the available disk capacity as reserved. \nIf less than 5% is free,\
-  \ using the remaining reserved space requires root privileges.\nAny non-privileged\
-  \ users and processes are unable to write new data to the partition. See the list\
-  \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
+  url: 
+    /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+description: "The percentage of the disk utilization is calculated using the fraction:\n
+  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>
+  is reduced by  5% of the available disk capacity, because   \nthe file system marks
+  5% of the available disk capacity as reserved. \nIf less than 5% is free, using
+  the remaining reserved space requires root privileges.\nAny non-privileged users
+  and processes are unable to write new data to the partition. See the list of explicitly
+  ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 expr: avg(round((sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"} *
   on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device)
   - sum(node_filesystem_free_bytes{cluster="$cluster", job=~"$job"} * on(instance,
@@ -3930,11 +4258,13 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/memorynamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
-  \ (<memory available>/<memory total>)\n```"
+  url: 
+    /d/memorynamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the memory utilization is calculated by:\n```\n1 -
+  (<memory available>/<memory total>)\n```"
 expr: avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster="$cluster",
   job=~"$job"} * on(instance, pod) group_left(nodename) (master_uname_info)) / sum
   by (job, nodename) (node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job"}
@@ -3973,9 +4303,11 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/cpunamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/cpunamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{cluster="$cluster", job=~"$job",
   mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info))
   by (job, nodename) )) * 100))
@@ -4019,14 +4351,15 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
-description: "The percentage of the disk utilization is calculated using the fraction:\n\
-  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>\
-  \ is reduced by  5% of the available disk capacity, because   \nthe file system\
-  \ marks 5% of the available disk capacity as reserved. \nIf less than 5% is free,\
-  \ using the remaining reserved space requires root privileges.\nAny non-privileged\
-  \ users and processes are unable to write new data to the partition. See the list\
-  \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
+  url: 
+    /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+description: "The percentage of the disk utilization is calculated using the fraction:\n
+  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>
+  is reduced by  5% of the available disk capacity, because   \nthe file system marks
+  5% of the available disk capacity as reserved. \nIf less than 5% is free, using
+  the remaining reserved space requires root privileges.\nAny non-privileged users
+  and processes are unable to write new data to the partition. See the list of explicitly
+  ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 expr: avg(round((sum(node_filesystem_size_bytes{cluster="$cluster", job=~"$job"} *
   on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device)
   - sum(node_filesystem_free_bytes{cluster="$cluster", job=~"$job"} * on(instance,
@@ -4072,11 +4405,13 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/memorynamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
-  \ (<memory available>/<memory total>)\n```"
+  url: 
+    /d/memorynamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the memory utilization is calculated by:\n```\n1 -
+  (<memory available>/<memory total>)\n```"
 expr: avg(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{cluster="$cluster",
   job=~"$job"} * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum
   by (job, nodename) (node_memory_MemTotal_bytes{cluster="$cluster", job=~"$job"}
@@ -4117,9 +4452,11 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
+  url: 
+    /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to&var-instance=All
 - title: K8s Overview
-  url: /d/networknamespaceoverview?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/networknamespaceoverview?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: sum(sum(rate(node_network_transmit_errs_total{cluster="$cluster", job=~"$job",
   device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance,
   pod) group_left(nodename) (worker_uname_info) ) by (job, nodename) + sum(rate(node_network_receive_errs_total{cluster="$cluster",
@@ -4160,7 +4497,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: (sum(up{cluster="$cluster", job="kube-proxy"}) / count(up{cluster="$cluster",
   job="kube-proxy"})) * 100 OR on() vector(-1)
 gridPos:
@@ -4185,11 +4522,10 @@ title: Proxy
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: Cluster
-expr: "round(sum(kube_persistentvolumeclaim_status_phase{phase=\"Bound\"}) by (cluster)\
-  \ / (\nsum(kube_persistentvolumeclaim_status_phase{phase=\"Bound\"}) by (cluster)\
-  \ + sum(kube_persistentvolumeclaim_status_phase{phase=\"Pending\"}) by (cluster)\
-  \ +\nsum(kube_persistentvolumeclaim_status_phase{phase=\"Lost\"}) by (cluster)\n\
-  ) * 100)"
+expr: "round(sum(kube_persistentvolumeclaim_status_phase{phase=\"Bound\"}) by (cluster)
+  / (\nsum(kube_persistentvolumeclaim_status_phase{phase=\"Bound\"}) by (cluster)
+  + sum(kube_persistentvolumeclaim_status_phase{phase=\"Pending\"}) by (cluster) +\n\
+  sum(kube_persistentvolumeclaim_status_phase{phase=\"Lost\"}) by (cluster)\n) * 100)"
 linkGetParams: var-cluster={{ $labels.cluster }}
 message: PVC Bound Rate Low {{ $value }}%
 name: PVCBoundRateLow
@@ -4205,9 +4541,9 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: "round(sum(kube_persistentvolumeclaim_status_phase{cluster=\"$cluster\", phase=\"\
-  Bound\"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=\"$cluster\"\
+  Bound\"}) / (\nsum(kube_persistentvolumeclaim_status_phase{cluster=\"$cluster\"
   , phase=\"Bound\"}) + sum(kube_persistentvolumeclaim_status_phase{cluster=\"$cluster\"\
   , phase=\"Pending\"}) +\nsum(kube_persistentvolumeclaim_status_phase{cluster=\"\
   $cluster\", phase=\"Lost\"})\n) * 100) OR on() vector(-1)"
@@ -4251,7 +4587,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: round(sum(kube_pod_container_status_running{cluster="$cluster"}) / (sum(kube_pod_container_status_running{cluster="$cluster"})
   + (sum(kube_pod_container_status_terminated_reason{cluster="$cluster", reason!="Completed"})
   OR vector(0)) + sum(kube_pod_container_status_waiting{cluster="$cluster"})) * 100)
@@ -4288,7 +4624,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: round(sum(kube_pod_status_phase{cluster="$cluster", phase="Running"}) / (sum(kube_pod_status_phase{cluster="$cluster",
   phase="Running"}) + sum(kube_pod_status_phase{cluster="$cluster", phase="Pending"})
   + sum(kube_pod_status_phase{cluster="$cluster", phase="Failed"}) + sum(kube_pod_status_phase{cluster="$cluster",
@@ -4325,7 +4661,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: round(sum(kube_statefulset_status_replicas_ready{cluster="$cluster"}) / sum(kube_statefulset_status_replicas{cluster="$cluster"})
   * 100)
 gridPos:
@@ -4361,7 +4697,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: (sum(up{cluster="$cluster", job="kube-scheduler"}) / count(up{cluster="$cluster",
   job="kube-scheduler"})) * 100 OR on() vector(-1)
 gridPos:
@@ -4403,7 +4739,7 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: K8s Overview
-  url: /d/{}?refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: /d/{}?var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: round(sum(kube_job_status_succeeded{cluster="$cluster"}) / (sum(kube_job_status_succeeded{cluster="$cluster"})
   + sum(kube_job_status_failed{cluster="$cluster"})) * 100) OR on() vector(-1)
 gridPos:
@@ -5058,7 +5394,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: Detail
-  url: /d/nginxingress?var-job=%(job)s&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nginxingress?var-job=%(job)s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 decimals: 0
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$cluster",
   %(job)s} - time()) OR on() vector(-100000000000000005366162204393472)
@@ -5366,7 +5703,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
+expr: (sum by (job, cluster) 
+  (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
   / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   + 100)
@@ -5898,7 +6236,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: Detail
-  url: /d/nginxingress?var-job=%(job)s&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nginxingress?var-job=%(job)s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 decimals: 0
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$cluster",
   %(job)s} - time()) OR on() vector(-100000000000000005366162204393472)
@@ -6206,7 +6545,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
+expr: (sum by (job, cluster) 
+  (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
   / sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   * 100) > 0 OR (sum by (job, cluster) (rate(flask_http_request_duration_seconds_count{job=~".+"}[5m]))
   + 100)
@@ -6365,36 +6705,36 @@ thresholds:
 </code></div>
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>expr:
-- "sum by (container, namespace, pod) ((kube_pod_container_status_terminated * 0 or\
-  \ kube_pod_container_status_terminated_reason{cluster=\"$cluster\", namespace=~\"\
-  $namespace\", pod=~\"$pod\", container=~\"$container\", reason=\"Completed\"}) *\
-  \ 1) + \nsum by (container, namespace, pod) (kube_pod_container_status_running{cluster=\"\
-  $cluster\"} * 2) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting\
-  \ * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
-  ContainerCreating\"}) * 3) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting\
-  \ * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
-  CrashLoopBackOff\"}) * 4) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting\
-  \ * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
-  CreateContainerConfigError\"}) * 5) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting\
-  \ * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
-  ErrImagePull\"}) * 6) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting\
-  \ * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
-  ImagePullBackOff\"}) * 7) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting\
-  \ * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
-  CreateContainerError\"}) * 8) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting\
-  \ * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
-  InvalidImageName\"}) * 9) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting\
-  \ * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
-  CrashLoopBackOff\"}) * 10) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated\
-  \ * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
-  OOMKilled\"}) * 11) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated\
-  \ * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
-  Error\"}) * 12) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated\
-  \ * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
-  ContainerCannotRun\"}) * 13) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated\
-  \ * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
-  DeadlineExceeded\"}) * 14) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated\
-  \ * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
+- "sum by (container, namespace, pod) ((kube_pod_container_status_terminated * 0 or
+  kube_pod_container_status_terminated_reason{cluster=\"$cluster\", namespace=~\"\
+  $namespace\", pod=~\"$pod\", container=~\"$container\", reason=\"Completed\"}) *
+  1) + \nsum by (container, namespace, pod) (kube_pod_container_status_running{cluster=\"\
+  $cluster\"} * 2) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting
+  * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
+  ContainerCreating\"}) * 3) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting
+  * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
+  CrashLoopBackOff\"}) * 4) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting
+  * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
+  CreateContainerConfigError\"}) * 5) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting
+  * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
+  ErrImagePull\"}) * 6) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting
+  * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
+  ImagePullBackOff\"}) * 7) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting
+  * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
+  CreateContainerError\"}) * 8) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting
+  * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
+  InvalidImageName\"}) * 9) + \nsum by (container, namespace, pod) ((kube_pod_container_status_waiting
+  * 0 or kube_pod_container_status_waiting_reason{cluster=\"$cluster\", reason=\"\
+  CrashLoopBackOff\"}) * 10) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated
+  * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
+  OOMKilled\"}) * 11) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated
+  * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
+  Error\"}) * 12) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated
+  * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
+  ContainerCannotRun\"}) * 13) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated
+  * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
+  DeadlineExceeded\"}) * 14) + \nsum by (container, namespace, pod) ((kube_pod_container_status_terminated
+  * 0 or kube_pod_container_status_terminated_reason{cluster=\"$cluster\", reason=\"\
   Evicted\"}) * 15)"
 - sum by (container, namespace, pod) (kube_pod_container_status_restarts_total{cluster="$cluster",
   namespace=~"$namespace", pod=~"$pod", container=~"$container"})
@@ -6461,7 +6801,8 @@ styles:
 - alias: Container
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-container=${__cell_3}&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-view=container&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/containerdetail?var-container=${__cell_3}&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-view=container&var-search=&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: container
 - alias: Namespace
   pattern: namespace
@@ -6502,10 +6843,11 @@ transformations:
   nodename)
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>default_click_through: /d/nodeexporter?var-job=$job&var-instance=${__cell_name}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+<tr><td>panel</td><td><div class='my-pre'><code>default_click_through: 
+  /d/nodeexporter?var-job=$job&var-instance=${__cell_name}&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: "avg(round((1 - (avg by (instance, pod) (irate(node_cpu_seconds_total{cluster=\"\
-  $cluster\", job=~\"$job\", mode=\"idle\"}[5m])))) * 100)\n* on(instance, pod) group_left(nodename)\
-  \ \n   node_uname_info{cluster=\"$cluster\", nodename=~\"$instance\"}) by (nodename)"
+  $cluster\", job=~\"$job\", mode=\"idle\"}[5m])))) * 100)\n* on(instance, pod) group_left(nodename)
+  \n   node_uname_info{cluster=\"$cluster\", nodename=~\"$instance\"}) by (nodename)"
 fontColor: '#ffffff'
 global_thresholds:
 - color: '#56a64b'
@@ -6639,7 +6981,8 @@ styles:
 - alias: Namespace
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/containerdetail?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: namespace
 title: DaemonSets
 transformations:
@@ -6734,7 +7077,8 @@ styles:
 - alias: Namespace
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/containerdetail?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: namespace
 title: Deployments
 transformations:
@@ -6768,21 +7112,22 @@ transformations:
   nodename)
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>default_click_through: /d/nodeexporter?var-job=$job&var-instance=${__cell_name}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the disk utilization is calculated using the fraction:\n\
-  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>\
-  \ is reduced by  5% of the available disk capacity, because   \nthe file system\
-  \ marks 5% of the available disk capacity as reserved. \nIf less than 5% is free,\
-  \ using the remaining reserved space requires root privileges.\nAny non-privileged\
-  \ users and processes are unable to write new data to the partition. See the list\
-  \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
+<tr><td>panel</td><td><div class='my-pre'><code>default_click_through: 
+  /d/nodeexporter?var-job=$job&var-instance=${__cell_name}&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the disk utilization is calculated using the fraction:\n
+  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>
+  is reduced by  5% of the available disk capacity, because   \nthe file system marks
+  5% of the available disk capacity as reserved. \nIf less than 5% is free, using
+  the remaining reserved space requires root privileges.\nAny non-privileged users
+  and processes are unable to write new data to the partition. See the list of explicitly
+  ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 expr: "max(round(\n(sum(node_filesystem_size_bytes{cluster=\"$cluster\", job=~\"$job\"\
   }) by (instance, device, pod) - sum(node_filesystem_free_bytes{cluster=\"$cluster\"\
   , job=~\"$job\"}) by (instance, device, pod)) /\n(sum(node_filesystem_size_bytes{cluster=\"\
   $cluster\", job=~\"$job\"}) by (instance, device, pod) - sum(node_filesystem_free_bytes{cluster=\"\
   $cluster\", job=~\"$job\"}) by (instance, device, pod) +\nsum(node_filesystem_avail_bytes{cluster=\"\
-  $cluster\", job=~\"$job\"}) by (instance, device, pod))\n * 100\n) * on(instance,\
-  \ pod) group_left(nodename) \n   node_uname_info{cluster=\"$cluster\", nodename=~\"\
+  $cluster\", job=~\"$job\"}) by (instance, device, pod))\n * 100\n) * on(instance,
+  pod) group_left(nodename) \n   node_uname_info{cluster=\"$cluster\", nodename=~\"\
   $instance\"}) by (nodename)"
 fontColor: '#ffffff'
 global_thresholds:
@@ -6816,14 +7161,14 @@ title: Disk per Node
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>expr:
 - "sum by (job_name, namespace) (clamp_max(kube_job_status_succeeded{cluster=\"$cluster\"\
-  , namespace=~\"$namespace\", job_name=~\"$job_name\"}, 1) * 1) * on(job_name, namespace)\
-  \ group_left(owner_name) kube_job_owner{cluster=\"$cluster\", namespace=~\"$namespace\"\
+  , namespace=~\"$namespace\", job_name=~\"$job_name\"}, 1) * 1) * on(job_name, namespace)
+  group_left(owner_name) kube_job_owner{cluster=\"$cluster\", namespace=~\"$namespace\"\
   , job_name=~\"$job_name\"} +\nsum by (job_name, namespace) (clamp_max(kube_job_status_active{cluster=\"\
-  $cluster\", namespace=~\"$namespace\", job_name=~\"$job_name\"}, 1) * 2) * on(job_name,\
-  \ namespace) group_left(owner_name) kube_job_owner{cluster=\"$cluster\", namespace=~\"\
+  $cluster\", namespace=~\"$namespace\", job_name=~\"$job_name\"}, 1) * 2) * on(job_name,
+  namespace) group_left(owner_name) kube_job_owner{cluster=\"$cluster\", namespace=~\"\
   $namespace\", job_name=~\"$job_name\"} +\nsum by (job_name, namespace) (clamp_max(kube_job_status_failed{cluster=\"\
-  $cluster\", namespace=~\"$namespace\", job_name=~\"$job_name\"}, 1) * 3) * on(job_name,\
-  \ namespace) group_left(owner_name) kube_job_owner{cluster=\"$cluster\", namespace=~\"\
+  $cluster\", namespace=~\"$namespace\", job_name=~\"$job_name\"}, 1) * 3) * on(job_name,
+  namespace) group_left(owner_name) kube_job_owner{cluster=\"$cluster\", namespace=~\"\
   $namespace\", job_name=~\"$job_name\"}\n"
 sort:
   col: 3
@@ -6859,7 +7204,8 @@ styles:
 - alias: Namespace
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-namespace=$__cell&var-container=All&var-view=container&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/containerdetail?var-namespace=$__cell&var-container=All&var-view=container&var-search=&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: namespace
 title: Jobs
 transformations:
@@ -6891,13 +7237,14 @@ transformations:
   nodename)
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>default_click_through: /d/nodeexporter?var-job=$job&var-instance=${__cell_name}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
-  \ (<memory available>/<memory total>)\n```"
+<tr><td>panel</td><td><div class='my-pre'><code>default_click_through: 
+  /d/nodeexporter?var-job=$job&var-instance=${__cell_name}&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the memory utilization is calculated by:\n```\n1 -
+  (<memory available>/<memory total>)\n```"
 expr: "avg(round((1 - (sum(node_memory_MemAvailable_bytes{cluster=\"$cluster\", job=~\"\
   $job\"}) by (instance, pod) / sum(node_memory_MemTotal_bytes{cluster=\"$cluster\"\
-  , job=~\"$job\"}) by (instance, pod) )) * 100)\n* on(instance, pod) group_left(nodename)\
-  \ \n   node_uname_info{cluster=\"$cluster\", nodename=~\"$instance\"}) by (nodename)"
+  , job=~\"$job\"}) by (instance, pod) )) * 100)\n* on(instance, pod) group_left(nodename)
+  \n   node_uname_info{cluster=\"$cluster\", nodename=~\"$instance\"}) by (nodename)"
 fontColor: '#ffffff'
 global_thresholds:
 - color: '#56a64b'
@@ -6928,7 +7275,8 @@ title: Memory per Node
   nodename)
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>default_click_through: /d/nodeexporter?var-job=$job&var-instance=${__cell_name}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+<tr><td>panel</td><td><div class='my-pre'><code>default_click_through: 
+  /d/nodeexporter?var-job=$job&var-instance=${__cell_name}&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: "avg((sum(rate(node_network_transmit_errs_total{cluster=\"$cluster\", job=~\"\
   $job\", device!~\"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+\"}[5m])) \
   \ by (instance, pod) \n   + sum(rate(node_network_receive_errs_total{cluster=\"\
@@ -7068,7 +7416,8 @@ styles:
 - alias: Node
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-view=pod&var-instance=$__cell&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/containerdetail?var-view=pod&var-instance=$__cell&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: node
 title: Nodes
 </code></div>
@@ -7091,8 +7440,8 @@ title: Nodes
 <tr><td>panel</td><td><div class='my-pre'><code>expr:
 - "sum by (namespace, pod) (kube_pod_status_phase{cluster=\"$cluster\", namespace=~\"\
   $namespace\", phase=\"Running\"} * 1) +\nsum by (namespace, pod) (kube_pod_status_phase{cluster=\"\
-  $cluster\", namespace=~\"$namespace\", phase=\"Succeeded\"} * 2) +\nsum by (namespace,\
-  \ pod) (kube_pod_status_phase{cluster=\"$cluster\", namespace=~\"$namespace\", phase=\"\
+  $cluster\", namespace=~\"$namespace\", phase=\"Succeeded\"} * 2) +\nsum by (namespace,
+  pod) (kube_pod_status_phase{cluster=\"$cluster\", namespace=~\"$namespace\", phase=\"\
   Unknown\"} * 3) +\nsum by (namespace, pod) (kube_pod_status_phase{cluster=\"$cluster\"\
   , namespace=~\"$namespace\", phase=\"Failed\"} * 4) +\nsum by (namespace, pod) (kube_pod_status_phase{cluster=\"\
   $cluster\", namespace=~\"$namespace\", pod=~\"$pod\", phase=\"Pending\"} * 5)\n"
@@ -7131,7 +7480,8 @@ styles:
 - alias: Pod
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-container=All&var-view=pod&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/containerdetail?var-container=All&var-view=pod&var-namespace=${__cell_1}&var-pod=${__cell_2}&var-search=&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: pod
 title: Pods
 </code></div>
@@ -7204,7 +7554,8 @@ styles:
 - alias: PVC
   link: true
   linkTooltip: Detail
-  linkUrl: /d/persistentvolumes?var-namespace=${__cell_1}&var-pvc=${__cell_2}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/persistentvolumes?var-namespace=${__cell_1}&var-pvc=${__cell_2}&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: persistentvolumeclaim
 - alias: Namespace
   pattern: namespace
@@ -7265,12 +7616,14 @@ styles:
 - alias: StatefulSet
   link: true
   linkTooltip: Detail
-  linkUrl: /d/statefulset?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/statefulset?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: statefulset
 - alias: Namespace
   link: true
   linkTooltip: Detail
-  linkUrl: /d/containerdetail?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  linkUrl: 
+    /d/containerdetail?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: namespace
 title: StatefulSets
 </code></div>
@@ -7330,7 +7683,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: max(round((1 - (avg(irate(node_cpu_seconds_total{job=~"$job", mode="idle"}[5m])
   * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100))
 gridPos:
@@ -7372,14 +7726,15 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the disk utilization is calculated using the fraction:\n\
-  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>\
-  \ is reduced by  5% of the available disk capacity, because   \nthe file system\
-  \ marks 5% of the available disk capacity as reserved. \nIf less than 5% is free,\
-  \ using the remaining reserved space requires root privileges.\nAny non-privileged\
-  \ users and processes are unable to write new data to the partition. See the list\
-  \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the disk utilization is calculated using the fraction:\n
+  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>
+  is reduced by  5% of the available disk capacity, because   \nthe file system marks
+  5% of the available disk capacity as reserved. \nIf less than 5% is free, using
+  the remaining reserved space requires root privileges.\nAny non-privileged users
+  and processes are unable to write new data to the partition. See the list of explicitly
+  ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 expr: max(round((sum(node_filesystem_size_bytes{job=~"$job"} * on(instance) group_left(nodename)
   (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"$job"}
   * on(instance) group_left(nodename) (node_uname_info)) by (job, nodename, device))
@@ -7423,7 +7778,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: max(sum(rate(node_network_transmit_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)
   + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
@@ -7464,9 +7820,10 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
-  \ (<memory available>/<memory total>)\n```"
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the memory utilization is calculated by:\n```\n1 -
+  (<memory available>/<memory total>)\n```"
 expr: max(round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{job=~"$job"}
   * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename)
   (node_memory_MemTotal_bytes{job=~"$job"} * on(instance) group_left(nodename) (node_uname_info)))
@@ -7505,7 +7862,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: sum(sum(rate(node_network_transmit_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance, cluster) group_left(nodename) (node_uname_info) ) by (job,
   nodename) + sum(rate(node_network_receive_errs_total{job=~"$job", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m])
@@ -7544,7 +7902,8 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"$job", mode="idle"}[5m])
   * on(instance, cluster) group_left(nodename) (node_uname_info)) by (job, nodename)
   )) * 100))
@@ -7581,14 +7940,15 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the disk utilization is calculated using the fraction:\n\
-  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>\
-  \ is reduced by  5% of the available disk capacity, because   \nthe file system\
-  \ marks 5% of the available disk capacity as reserved. \nIf less than 5% is free,\
-  \ using the remaining reserved space requires root privileges.\nAny non-privileged\
-  \ users and processes are unable to write new data to the partition. See the list\
-  \ of explicitly ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the disk utilization is calculated using the fraction:\n
+  ```\n<space used>/(<space used> + <space free>)\n```\nThe value of <space free>
+  is reduced by  5% of the available disk capacity, because   \nthe file system marks
+  5% of the available disk capacity as reserved. \nIf less than 5% is free, using
+  the remaining reserved space requires root privileges.\nAny non-privileged users
+  and processes are unable to write new data to the partition. See the list of explicitly
+  ignored mount points and file systems [here](https://github.com/dNationCloud/kubernetes-monitoring-stack/blob/main/chart/values.yaml)"
 expr: round((sum(node_filesystem_size_bytes{job=~"$job"}) - sum(node_filesystem_free_bytes{job=~"$job"}))
   / (sum(node_filesystem_size_bytes{job=~"$job"}) - sum(node_filesystem_free_bytes{job=~"$job"})
   + sum(node_filesystem_avail_bytes{job=~"$job"})) * 100 > 0)
@@ -7626,9 +7986,10 @@ thresholds:
 </td></tr>
 <tr><td>panel</td><td><div class='my-pre'><code>dataLinks:
 - title: System Overview
-  url: /d/nodeexporter?var-job=$job&refresh=10s&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
-description: "The percentage of the memory utilization is calculated by:\n```\n1 -\
-  \ (<memory available>/<memory total>)\n```"
+  url: 
+    /d/nodeexporter?var-job=$job&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
+description: "The percentage of the memory utilization is calculated by:\n```\n1 -
+  (<memory available>/<memory total>)\n```"
 expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"$job"}
   * on(instance, cluster) group_left(nodename) (node_uname_info)) / sum by (job, nodename,
   cluster) (node_memory_MemTotal_bytes{job=~"$job"} * on(instance, cluster) group_left(nodename)
@@ -8009,84 +8370,58 @@ y: 1
 </td></tr></table>
 
 <p><br></p>
-                
-              
-              
-                
 
 
-              
-            </article>
-          </div>
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
       </main>
       
-        
-<footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../.." class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Home
-              </div>
-            </div>
-          </a>
-        
-        
-          <a href="../AWS_doc/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                AWS
-              </div>
-            </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
+        <footer class="md-footer">
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
-      <div class="md-footer-copyright">
-        
-        Made with
-        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-          Material for MkDocs
-        </a>
-      </div>
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
       
     </div>
   </div>
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
     
-      <script src="../../assets/javascripts/vendor.0ac82a11.min.js"></script>
-      <script src="../../assets/javascripts/bundle.f81dfb4d.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+    
+    
       
-      <script>
-        app = initialize({
-          base: "../..",
-          features: [],
-          search: Object.assign({
-            worker: "../../assets/javascripts/worker/search.4ac00218.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+      <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.92b07e13.min.js"></script>
       
     
   </body>

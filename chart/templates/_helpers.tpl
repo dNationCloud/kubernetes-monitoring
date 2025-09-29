@@ -46,6 +46,15 @@ Generate basic labels
 {{- end -}}
 
 {{/*
+Generate basic annotations
+*/}}
+{{- define "k8s-monitoring.annotations" -}}
+{{- if .Values.commonAnnotations -}}
+{{- toYaml .Values.commonAnnotations -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Release name override
 For development purposes only.
 Prometheus operator discovers and filters service and pod monitors based on release label

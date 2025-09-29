@@ -58,7 +58,7 @@ local text = grafana.text;
           title='Critical',
           expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: $.addRefreshParam('/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s') % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
 
       local warningPanel =
@@ -66,7 +66,7 @@ local text = grafana.text;
           title='Warning',
           expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
         )
-        .addDataLink({ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
+        .addDataLink({ title: 'Detail', url: $.addRefreshParam('/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s') % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
         .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
 
       local vmStatsPanels = [
@@ -120,17 +120,19 @@ local text = grafana.text;
         .addTarget(prometheus.target(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName }))
         .addMappings(tpl.panel.mappings)
         .addDataLinks(
-          if std.length(tpl.panel.dataLinks) > 0 then
-            [
-              dataLink {
-                url: dataLink.url % { job: app.jobName },
-              }
-              for dataLink in tpl.panel.dataLinks
-            ]
-          else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
-            [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
-          else
-            []
+          $.updateDataLinksCommonArgs(
+            if std.length(tpl.panel.dataLinks) > 0 then
+              [
+                dataLink {
+                  url: dataLink.url % { job: app.jobName },
+                }
+                for dataLink in tpl.panel.dataLinks
+              ]
+            else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
+              [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
+            else
+              []
+          )
         )
         .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
         {

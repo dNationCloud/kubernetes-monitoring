@@ -55,7 +55,7 @@ local graphPanel = grafana.graphPanel;
             { alias: 'CPU Limit', pattern: 'Value #E', type: 'number', decimals: 2 },
             { alias: 'CPU Usage (only defined limit)', pattern: 'Value #F', type: 'number', decimals: 2 },
             { alias: 'CPU Usage (total)', pattern: 'Value #G', type: 'number', decimals: 2 },
-            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s' % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
+            { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: $.addRefreshParam('/d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s') % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs] },
           ]
         )
         .addTargets(

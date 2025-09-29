@@ -27,6 +27,7 @@ metadata:
     {{ $labelKey }}: {{ $labelValue | quote }}
     release: {{ include "k8s-monitoring.release" . }}
   annotations:
+{{ include "k8s-monitoring.annotations" . | indent 4 }}
 {{- if .Values.grafanaDashboards.destinationOverride }}
 {{ toYaml .Values.grafanaDashboards.destinationOverride | indent 4 }}
 {{- end }}
