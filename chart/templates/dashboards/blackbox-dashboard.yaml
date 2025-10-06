@@ -891,6 +891,60 @@ data:
           ],
           "title": "$target",
           "type": "row"
+        },
+    {
+          "type": "row",
+          "title": "Weekly Availability",
+          "gridPos": {
+            "h": 1,
+            "w": 24,
+            "x": 0,
+            "y": 28
+          },
+          "collapsed": false,
+          "panels": []
+        },
+        {
+          "type": "stat",
+          "title": "Weekly Availability (%)",
+          "id": 9,
+          "gridPos": {
+            "h": 6,
+            "w": 24,
+            "x": 0,
+            "y": 29
+          },
+          "datasource": "thanos",
+          "targets": [
+            {
+              "expr": "avg_over_time(probe_success{job=~\"$job\", target=~\"$target\"}[7d]) * 100",
+              "legendFormat": "{{`{{ instance }}`}}",
+              "refId": "H"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "decimals": 2,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 75
+                  },
+                  {
+                    "color": "green",
+                    "value": 90
+                  }
+                ]
+              }
+            }
+          }
         }
       ],
       "refresh": "10s",
