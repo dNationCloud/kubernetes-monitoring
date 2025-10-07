@@ -1,5 +1,18 @@
 # Changelog
 
+## [v2.7.4](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.4) (2025-10-07)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.3...v2.7.4)
+
+### Enhancements
+
+- Allow to add common annotations for all resources [\#201](https://github.com/dNationCloud/kubernetes-monitoring/issues/201)
+
+**Merged pull requests:**
+
+- Add availability panel for each service [\#211](https://github.com/dNationCloud/kubernetes-monitoring/pull/211)
+- fix: changelog and docs workflows [\#208](https://github.com/dNationCloud/kubernetes-monitoring/pull/208)
+
 ## [v2.7.3](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.3) (2025-09-09)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.2...v2.7.3)
@@ -549,6 +562,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
