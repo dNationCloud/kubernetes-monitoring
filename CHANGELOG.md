@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.7.5](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.5) (2025-10-31)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.4...v2.7.5)
+
+**Merged pull requests:**
+
+- Replace seriesToRows with merge\(byName\) in order to fix single alert [\#212](https://github.com/dNationCloud/kubernetes-monitoring/pull/212)
+
 ## [v2.7.4](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.4) (2025-10-07)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.3...v2.7.4)
@@ -562,6 +570,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
