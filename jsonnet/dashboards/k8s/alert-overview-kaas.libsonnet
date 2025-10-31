@@ -62,7 +62,10 @@ local table = grafana.tablePanel;
             },
           },
           {
-            id: 'seriesToRows',
+             id: 'merge',
+             options: {
+             strategy: 'byName',
+              },
           },
         ]);
 
