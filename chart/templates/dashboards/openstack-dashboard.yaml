@@ -21,7 +21,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   namespace: {{ include "k8s-monitoring.namespace" . }}
-  name: {{ include "k8s-monitoring.fullname" . }}-openstack-exporter-http-dashboard
+  name: {{ include "k8s-monitoring.fullname" . }}-openstack-dashboard
   labels:
     {{ include "k8s-monitoring.labels" . | indent 4 }}
     app: {{ include "k8s-monitoring.name" . }}
@@ -6833,11 +6833,6 @@ data:
                 "type": "query"
             },
             {
-                "current": {
-                    "selected": false,
-                    "text": "yaook-baremetal-cluster",
-                    "value": "yaook-baremetal-cluster"
-                },
                 "datasource": {
                     "type": "prometheus",
                     "uid": "PC96415006F908B67"
@@ -6868,7 +6863,7 @@ data:
     },
     "timepicker": {},
     "timezone": "",
-    "title": "OpenStack overview 2",
+    "title": "OpenStack overview",
     "uid": "bezm9dqxbdse8d",
     "version": 1,
     "weekStart": ""

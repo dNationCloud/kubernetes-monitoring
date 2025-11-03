@@ -102,7 +102,7 @@ blackboxMonitoring:
 ## OpenStack Monitoring
 ##
 openstackMonitoring:
-  enabled: true
+  enabled: false
 
 ## Kubernetes Monitoring
 ##
