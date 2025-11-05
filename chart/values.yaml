@@ -99,6 +99,11 @@ testbedMonitoring:
 blackboxMonitoring:
   enabled: false
 
+## OpenStack Monitoring
+##
+openstackMonitoring:
+  enabled: false
+
 ## Kubernetes Monitoring
 ##
 clusterMonitoring:
