@@ -17,12 +17,13 @@ local gaugePanel = grafana.gaugePanel;
           unit='none',
           colorMode='value',
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          { color: '#299c46', value: null },
-          { color: '#f4d598', value: 1 },
-          { color: '#d44a3a', value: 2 },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.orange, value: 1 },
+          { color: $._config.grafanaDashboards.color.red, value: 2 },
         ])
 
         .addMapping({
@@ -36,17 +37,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('ceph_health_status{cluster="$cluster"}', legendFormat='Health')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local writeThroughput =
         statPanel.new(
@@ -101,21 +92,13 @@ local gaugePanel = grafana.gaugePanel;
           unit='decbytes',
           decimals=2,
           graphMode='none',
+          reducerFunction='lastNotNull',
+
         )
 
         .addTarget(
           prometheus.target('ceph_cluster_total_bytes{cluster="$cluster"}', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local availableCapacity =
         gaugePanel.new(
@@ -124,27 +107,18 @@ local gaugePanel = grafana.gaugePanel;
           unit='percentunit',
           min=0,
           max=1,
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          { color: 'rgba(245, 54, 54, 0.9)', value: null },
-          { color: 'rgba(237, 129, 40, 0.89)', value: 0.1 },
-          { color: 'rgba(50, 172, 45, 0.97)', value: 0.3 },
+          { color: $._config.grafanaDashboards.color.red, value: null },
+          { color: $._config.grafanaDashboards.color.orange, value: 0.1 },
+          { color: $._config.grafanaDashboards.color.green, value: 0.3 },
         ])
 
         .addTarget(
           prometheus.target('(ceph_cluster_total_bytes{cluster="$cluster"} - ceph_cluster_total_used_bytes{cluster="$cluster"}) / ceph_cluster_total_bytes{cluster="$cluster"}', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local writeIOPS =
         statPanel.new(
@@ -153,21 +127,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='ops',
           decimals=0,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addTarget(
           prometheus.target('sum(irate(ceph_osd_op_w{cluster="$cluster"}[5m]))', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local readIOPS =
         statPanel.new(
@@ -176,21 +141,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='ops',
           decimals=0,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addTarget(
           prometheus.target('sum(irate(ceph_osd_op_r{cluster="$cluster"}[5m]))', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local numObjects =
         statPanel.new(
@@ -199,21 +155,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='short',
           decimals=2,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addTarget(
           prometheus.target('sum(ceph_pool_objects{cluster="$cluster"})', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local bytesWritten =
         statPanel.new(
@@ -222,21 +169,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='decbytes',
           decimals=1,
           graphMode='none',
+          reducerFunction='delta',
         )
 
         .addTarget(
           prometheus.target('ceph_cluster_total_used_bytes{cluster="$cluster"}', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['delta'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local bytesRead =
         statPanel.new(
@@ -245,21 +183,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='decbytes',
           decimals=1,
           graphMode='none',
+          reducerFunction='delta',
         )
 
         .addTarget(
           prometheus.target(expr='sum(ceph_osd_op_r_out_bytes{cluster="$cluster"})', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['delta'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local difference =
         statPanel.new(
@@ -268,21 +197,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='short',
           decimals=2,
           graphMode='none',
+          reducerFunction='diff',
         )
 
         .addTarget(
           prometheus.target('sum(ceph_pool_objects)', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['diff'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local monSessionNum =
         statPanel.new(
@@ -292,7 +212,7 @@ local gaugePanel = grafana.gaugePanel;
           decimals=0,
           graphMode='none',
           colorMode='background',
-
+          reducerFunction='lastNotNull',
         )
 
         .addTarget(
@@ -300,19 +220,9 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addThresholds([
-          { color: 'rgba(245, 54, 54, 0.9)', value: 128 },
-          { color: 'rgba(50, 172, 45, 0.97)', value: null },
-        ])
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+          { color: $._config.grafanaDashboards.color.red, value: 128 },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+        ]);
 
       local monitorsInQuorum =
         statPanel.new(
@@ -322,6 +232,7 @@ local gaugePanel = grafana.gaugePanel;
           decimals=0,
           graphMode='none',
           colorMode='background',
+          reducerFunction='lastNotNull',
         )
 
         .addTarget(
@@ -329,20 +240,10 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addThresholds([
-          { color: 'rgba(245, 54, 54, 0.9)', value: null },
-          { color: 'rgba(237, 129, 40, 0.89)', value: 2 },
-          { color: 'rgba(50, 172, 45, 0.97)', value: 3 },
-        ])
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+          { color: $._config.grafanaDashboards.color.red, value: null },
+          { color: $._config.grafanaDashboards.color.orange, value: 2 },
+          { color: $._config.grafanaDashboards.color.green, value: 3 },
+        ]);
 
       local usedCapacity =
         statPanel.new(
@@ -351,21 +252,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='decbytes',
           decimals=2,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addTarget(
           prometheus.target('ceph_cluster_total_used_bytes{cluster="$cluster"}', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local osdOut =
         statPanel.new(
@@ -374,12 +266,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='none',
           decimals=0,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          { color: '#9ac48a', value: null },
-          { color: 'rgba(237, 40, 40, 0.89)', value: 1 },
-          { color: 'rgba(245, 54, 54, 0.9)', value: 1 },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.red, value: 1 },
         ])
 
         .addMapping(
@@ -395,17 +287,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('count(ceph_osd_up{cluster="$cluster"}) - count(ceph_osd_in{cluster="$cluster"})', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local osdDown =
         statPanel.new(
@@ -414,12 +296,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='none',
           decimals=0,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          { color: '#9ac48a', value: null },
-          { color: 'rgba(237, 40, 40, 0.89)', value: 1 },
-          { color: 'rgba(245, 54, 54, 0.9)', value: 1 },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.red, value: 1 },
         ])
 
         .addMapping(
@@ -435,17 +317,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('count(ceph_osd_up{cluster="$cluster"} == 0.0) OR vector(0)', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local osdUP =
         statPanel.new(
@@ -454,11 +326,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='none',
           decimals=0,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          { color: '#9ac48a', value: null },
-          { color: 'rgba(245, 54, 54, 0.9)', value: 80 },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.red, value: 80 },
         ])
 
         .addMapping(
@@ -474,17 +347,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('sum(ceph_osd_up{cluster="$cluster"})', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local osdIN =
         statPanel.new(
@@ -493,11 +356,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='none',
           decimals=0,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          { color: '#9ac48a', value: null },
-          { color: 'rgba(245, 54, 54, 0.9)', value: 80 },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.red, value: 80 },
         ])
 
         .addMapping(
@@ -513,17 +377,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('sum(ceph_osd_in{cluster="$cluster"})', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local avgPGs =
         statPanel.new(
@@ -532,21 +386,14 @@ local gaugePanel = grafana.gaugePanel;
           unit='none',
           decimals=1,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          {
-            color: 'rgba(50, 172, 45, 0.97)',
-            value: null,
-          },
-          {
-            color: 'rgba(237, 129, 40, 0.89)',
-            value: 250,
-          },
-          {
-            color: 'rgba(245, 54, 54, 0.9)',
-            value: 300,
-          },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.orange, value: 250 },
+          { color: $._config.grafanaDashboards.color.red, value: 300 },
+
         ])
 
         .addMapping(
@@ -562,17 +409,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('sum(ceph_osd_numpg{cluster="$cluster"})', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local avgApplyLatency =
         statPanel.new(
@@ -581,21 +418,13 @@ local gaugePanel = grafana.gaugePanel;
           unit='ms',
           decimals=2,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          {
-            color: 'rgba(50, 172, 45, 0.97)',
-            value: null,
-          },
-          {
-            color: 'rgba(237, 129, 40, 0.89)',
-            value: 10,
-          },
-          {
-            color: 'rgba(245, 54, 54, 0.9)',
-            value: 50,
-          },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.orange, value: 10 },
+          { color: $._config.grafanaDashboards.color.red, value: 50 },
         ])
 
         .addMapping(
@@ -611,17 +440,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('avg(ceph_osd_apply_latency_ms{cluster="$cluster"})', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local avgCommitLatency =
         statPanel.new(
@@ -630,21 +449,13 @@ local gaugePanel = grafana.gaugePanel;
           unit='ms',
           decimals=2,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          {
-            color: 'rgba(50, 172, 45, 0.97)',
-            value: null,
-          },
-          {
-            color: 'rgba(237, 129, 40, 0.89)',
-            value: 10,
-          },
-          {
-            color: 'rgba(245, 54, 54, 0.9)',
-            value: 50,
-          },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.orange, value: 10 },
+          { color: $._config.grafanaDashboards.color.red, value: 50 },
         ])
 
         .addMapping(
@@ -660,17 +471,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('avg(ceph_osd_commit_latency_ms{cluster="$cluster"})', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local avgOPWriteLatency =
         statPanel.new(
@@ -679,21 +480,13 @@ local gaugePanel = grafana.gaugePanel;
           unit='ms',
           decimals=4,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          {
-            color: '#299c46',
-            value: null,
-          },
-          {
-            color: 'rgba(237, 129, 40, 0.89)',
-            value: 1,
-          },
-          {
-            color: '#d44a3a',
-            value: 2,
-          },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.orange, value: 1 },
+          { color: $._config.grafanaDashboards.color.red, value: 2 },
         ])
 
         .addMapping(
@@ -709,17 +502,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('clamp_min(avg(rate(ceph_osd_op_w_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_w_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local avgOPReadLatency =
         statPanel.new(
@@ -728,21 +511,13 @@ local gaugePanel = grafana.gaugePanel;
           unit='ms',
           decimals=4,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addThresholds([
-          {
-            color: '#299c46',
-            value: null,
-          },
-          {
-            color: 'rgba(237, 129, 40, 0.89)',
-            value: 1,
-          },
-          {
-            color: '#d44a3a',
-            value: 2,
-          },
+          { color: $._config.grafanaDashboards.color.green, value: null },
+          { color: $._config.grafanaDashboards.color.orange, value: 1 },
+          { color: $._config.grafanaDashboards.color.red, value: 2 },
         ])
 
         .addMapping(
@@ -758,17 +533,7 @@ local gaugePanel = grafana.gaugePanel;
 
         .addTarget(
           prometheus.target('clamp_min(avg(rate(ceph_osd_op_r_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_r_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local capacityPanel =
         graphPanel.new(
@@ -780,6 +545,24 @@ local gaugePanel = grafana.gaugePanel;
           linewidth=1,
           points=false,
           nullPointMode='null',
+          decimals=2,
+          format='bytes',
+          aliasColors={
+            Available: $._config.grafanaDashboards.color.orange,
+            Used: $._config.grafanaDashboards.color.red,
+            'Total Capacity': $._config.grafanaDashboards.color.blue,
+          },
+          legend_show=true,
+          legend_alignAsTable=true,
+          legend_rightSide=false,
+          legend_values=true,
+          legend_hideEmpty=false,
+          legend_hideZero=false,
+          legend_avg=true,  // mean
+          legend_current=true,  // lastNotNull
+          legend_max=true,  // max
+          legend_min=true,
+          min=0,
         )
 
         .addTarget(
@@ -801,35 +584,9 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'bytes',
-              decimals: 2,
-            },
-          },
-          aliasColors+: {
-            Available: '#EAB839',
-            Used: '#BF1B00',
-            'Total Capacity': '#447EBC',
-          },
-          seriesOverrides: [
-            { alias: 'Total Capacity', fill: 0, stack: false, linewidth: 3 },
-          ],
-
-          options+: {
-            tooltip: { mode: 'multi', sort: 'desc' },
-            legend: {
-              showLegend: true,
-              displayMode: 'table',
-              placement: 'bottom',
-              calcs: ['mean', 'lastNotNull', 'max', 'min'],
-              showValues: true,
-              hideEmpty: false,
-              hideZero: false,
-            },
-          },
-        };
+        .addSeriesOverride(
+          { alias: 'Total Capacity', fill: 0, stack: false, linewidth: 3 },
+        );
 
       local iopsPanel =
         graphPanel.new(
@@ -841,6 +598,23 @@ local gaugePanel = grafana.gaugePanel;
           linewidth=1,
           points=false,
           nullPointMode='null',
+          decimals=0,
+          format='iops',
+          aliasColors={
+            Write: $._config.grafanaDashboards.color.red,
+            Read: $._config.grafanaDashboards.color.blue,
+          },
+          legend_show=true,
+          legend_alignAsTable=true,
+          legend_rightSide=false,
+          legend_values=true,
+          legend_hideEmpty=false,
+          legend_hideZero=false,
+          legend_avg=true,
+          legend_current=true,
+          legend_max=true,
+          legend_min=true,
+          min=0,
         )
 
         .addTarget(
@@ -856,44 +630,17 @@ local gaugePanel = grafana.gaugePanel;
             legendFormat='Read'
           )
         )
+        .addSeriesOverride(
+          { alias: 'Write', fill: 6, stack: true, linewidth: 1 },
+        )
 
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'iops',
-              decimals: 0,
-              min: 0,
-            },
-          },
+        .addSeriesOverride(
+          { alias: 'Read', fill: 6, stack: true, linewidth: 1 },
+        )
 
-          aliasColors+: {
-            Write: '#E24D42',
-            Read: '#1F78C1',
-          },
+        .addYaxis('Bps', 0, null, null, true, 1, null)
 
-          seriesOverrides: [
-            { alias: 'Write', fill: 6, stack: true, linewidth: 1 },
-            { alias: 'Read', fill: 6, stack: true, linewidth: 1 },
-          ],
-
-          yaxes: [
-            { format: 'Bps', label: null, logBase: 1, max: null, min: 0, show: true },
-            { format: 'short', label: null, logBase: 1, max: null, min: null, show: true },
-          ],
-
-          options+: {
-            tooltip: { mode: 'multi', sort: 'desc' },
-            legend: {
-              showLegend: true,
-              displayMode: 'table',
-              placement: 'bottom',
-              calcs: ['mean', 'lastNotNull', 'max', 'min'],
-              showValues: true,
-              hideEmpty: false,
-              hideZero: false,
-            },
-          },
-        };
+        .addYaxis('short', 0, null, null, true, 1, null);
 
       local clusterThroughputPanel =
         graphPanel.new(
@@ -905,6 +652,23 @@ local gaugePanel = grafana.gaugePanel;
           linewidth=1,
           points=false,
           nullPointMode='null',
+          decimals=1,
+          format='decbytes',
+          aliasColors={
+            Write: $._config.grafanaDashboards.color.red,
+            Read: $._config.grafanaDashboards.color.blue,
+          },
+          legend_show=true,
+          legend_alignAsTable=true,
+          legend_rightSide=false,
+          legend_values=true,
+          legend_hideEmpty=false,
+          legend_hideZero=false,
+          legend_avg=true,
+          legend_current=true,
+          legend_max=true,
+          legend_min=true,
+          min=0,
         )
         .addTarget(
           prometheus.target(
@@ -920,44 +684,18 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'decbytes',
-              decimals: 1,
-              barAlignment: 0,
-            },
-          },
+        .addSeriesOverride(
+          { alias: 'Write', fill: 6, stack: true, linewidth: 1 },
+        )
 
-          aliasColors+: {
-            Write: '#E24D42',
-            Read: '#1F78C1',
-          },
+        .addSeriesOverride(
+          { alias: 'Read', fill: 6, stack: true, linewidth: 1 },
+        )
 
-          seriesOverrides: [
-            { alias: 'Write', fill: 6, stack: true, linewidth: 1 },
-            { alias: 'Read', fill: 6, stack: true, linewidth: 1 },
-          ],
+        .addYaxis('Bps', 0, null, null, true, 1, null)
 
-          yaxes: [
-            { format: 'Bps', label: null, logBase: 1, max: null, min: 0, show: true },
-            { format: 'short', label: null, logBase: 1, max: null, min: null, show: true },
-          ],
+        .addYaxis('short', 0, null, null, true, 1, null);
 
-
-          options+: {
-            tooltip: { mode: 'multi', sort: 'desc' },
-            legend: {
-              showLegend: true,
-              displayMode: 'table',
-              placement: 'bottom',
-              calcs: ['mean', 'lastNotNull', 'max', 'min'],
-              showValues: true,
-              hideEmpty: false,
-              hideZero: false,
-            },
-          },
-        };
 
       local poolUsedBytesPanel =
         graphPanel.new(
@@ -969,6 +707,11 @@ local gaugePanel = grafana.gaugePanel;
           nullPointMode='null',
           stack=false,
           fill=1,
+          decimals=2,
+          format='bytes',
+          legend_show=true,
+          legend_alignAsTable=false,
+          legend_rightSide=false
         )
 
         .addTarget(
@@ -978,30 +721,10 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'bytes',
-              decimals: 2,
-              min: 0,
-            },
-          },
+        .addYaxis('bytes', 0, null, null, true, 1, null)
 
-          options+: {
-            tooltip: { mode: 'multi', sort: 'none' },
-            legend: {
-              showLegend: true,
-              displayMode: 'list',
-              placement: 'bottom',
-              calcs: [],
-            },
-          },
+        .addYaxis('short', null, null, null, true, 1, null);
 
-          yaxes: [
-            { format: 'bytes', label: null, logBase: 1, max: null, min: 0, show: true },
-            { format: 'short', label: null, logBase: 1, max: null, min: null, show: true },
-          ],
-        };
 
       local poolRawBytesPanel =
         graphPanel.new(
@@ -1013,6 +736,19 @@ local gaugePanel = grafana.gaugePanel;
           nullPointMode='null',
           stack=false,
           fill=1,
+          legend_show=true,
+          legend_alignAsTable=true,
+          legend_rightSide=true,
+          legend_values=true,
+          legend_hideEmpty=false,
+          legend_hideZero=false,
+          legend_avg=false,
+          legend_current=false,
+          legend_max=false,
+          legend_min=false,
+          decimals=2,
+          format='bytes',
+          min=0,
         )
 
         .addTarget(
@@ -1029,30 +765,9 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'bytes',
-              decimals: 2,
-              min: 0,
-            },
-          },
+        .addYaxis('bytes', 0, null, null, true, 1, null)
 
-          options+: {
-            tooltip: { mode: 'multi', sort: 'none' },
-            legend: {
-              showLegend: true,
-              displayMode: 'table',
-              placement: 'right',
-              calcs: [],
-            },
-          },
-
-          yaxes: [
-            { format: 'bytes', label: null, logBase: 1, max: null, min: 0, show: true },
-            { format: 'short', label: null, logBase: 1, max: null, min: null, show: true },
-          ],
-        };
+        .addYaxis('short', null, null, null, true, 1, null);
 
       local objectsPerPoolPanel =
         graphPanel.new(
@@ -1064,6 +779,19 @@ local gaugePanel = grafana.gaugePanel;
           nullPointMode='null',
           stack=false,
           fill=1,
+          legend_show=true,
+          legend_alignAsTable=false,
+          legend_rightSide=true,
+          legend_values=false,
+          legend_hideEmpty=false,
+          legend_hideZero=false,
+          legend_avg=false,
+          legend_current=false,
+          legend_max=false,
+          legend_min=false,
+          format='short',
+          decimals=0,
+          min=0,
         )
 
         .addTarget(
@@ -1071,32 +799,7 @@ local gaugePanel = grafana.gaugePanel;
             '(ceph_pool_objects{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})',
             legendFormat='{{name}}'
           )
-        )
-
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'short',
-              decimals: 0,
-              min: 0,
-            },
-          },
-
-          options+: {
-            tooltip: { mode: 'multi', sort: 'none' },
-            legend: {
-              showLegend: true,
-              displayMode: 'list',
-              placement: 'right',
-              calcs: [],
-            },
-          },
-
-          yaxes: [
-            { format: 'short', label: null, logBase: 1, max: null, min: 0, show: true },
-            { format: 'short', label: null, logBase: 1, max: null, min: null, show: true },
-          ],
-        };
+        );
 
       local poolQuotaBytesPanel =
         graphPanel.new(
@@ -1108,6 +811,15 @@ local gaugePanel = grafana.gaugePanel;
           nullPointMode='null',
           stack=false,
           fill=1,
+          decimals=2,
+          format='bytes',
+          legend_show=true,
+          legend_alignAsTable=false,
+          legend_rightSide=false,
+          legend_values=false,
+          legend_hideEmpty=false,
+          legend_hideZero=false,
+          min=0,
         )
 
         .addTarget(
@@ -1117,30 +829,9 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'bytes',
-              decimals: 2,
-              min: 0,
-            },
-          },
+        .addYaxis('bytes', 0, null, null, true, 1, null)
 
-          options+: {
-            tooltip: { mode: 'multi', sort: 'none' },
-            legend: {
-              showLegend: true,
-              displayMode: 'list',
-              placement: 'bottom',
-              calcs: [],
-            },
-          },
-
-          yaxes: [
-            { format: 'bytes', label: null, logBase: 1, max: null, min: 0, show: true },
-            { format: 'short', label: null, logBase: 1, max: null, min: null, show: true },
-          ],
-        };
+        .addYaxis('short', 0, null, null, true, 1, null);
 
       local poolObjectsQuotaPanel =
         graphPanel.new(
@@ -1152,6 +843,19 @@ local gaugePanel = grafana.gaugePanel;
           nullPointMode='null',
           stack=false,
           fill=1,
+          legend_show=true,
+          legend_alignAsTable=false,
+          legend_rightSide=false,
+          legend_values=false,
+          legend_hideEmpty=false,
+          legend_hideZero=false,
+          legend_avg=false,
+          legend_current=false,
+          legend_max=false,
+          legend_min=false,
+          format='short',
+          decimals=0,
+          min=0,
         )
 
         .addTarget(
@@ -1161,30 +865,9 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'short',
-              decimals: 0,
-              min: 0,
-            },
-          },
+        .addYaxis('short', 0, null, null, true, 1, null)
 
-          options+: {
-            tooltip: { mode: 'multi', sort: 'none' },
-            legend: {
-              showLegend: true,
-              displayMode: 'list',
-              placement: 'bottom',  // presne ako v JSONe
-              calcs: [],
-            },
-          },
-
-          yaxes: [
-            { format: 'short', label: null, logBase: 1, max: null, min: 0, show: true },
-            { format: 'short', label: null, logBase: 1, max: null, min: null, show: true },
-          ],
-        };
+        .addYaxis('short', null, null, null, true, 1, null);
 
       local osdTypeCountPanel =
         graphPanel.new(
@@ -1196,6 +879,15 @@ local gaugePanel = grafana.gaugePanel;
           nullPointMode='null',
           stack=false,
           fill=1,
+          legend_show=true,
+          legend_alignAsTable=false,
+          legend_rightSide=false,
+          legend_values=true,
+          legend_hideEmpty=false,
+          legend_hideZero=false,
+          format='short',
+          decimals=0,
+          min=0,
         )
 
         .addTarget(
@@ -1204,38 +896,15 @@ local gaugePanel = grafana.gaugePanel;
             legendFormat='BlueStore'
           )
         )
-
-        + {
-          fieldConfig+: {
-            defaults+: {
-              unit: 'short',
-              decimals: 0,
-              min: 0,
-            },
-          },
-
-          options+: {
-            tooltip: { mode: 'multi', sort: 'none' },
-            legend: {
-              showLegend: true,
-              displayMode: 'list',
-              placement: 'bottom',
-              calcs: [],
-            },
-          },
-
-          yaxes: [
-            { format: 'short', label: null, logBase: 1, max: null, min: 0, show: true },
-            { format: 'short', label: null, logBase: 1, max: null, min: null, show: true },
-          ],
-        };
+        .addYaxis('short', 0, null, null, true, 1, null)
+        .addYaxis('short', null, null, null, true, 1, null);
 
       local panels = [
         row.new('CLUSTER STATE') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
         clusterHealth { gridPos: { x: 0, y: 1, w: 3, h: 6 } },
         writeThroughput { gridPos: { x: 3, y: 1, w: 3, h: 3 } },
         readThroughput { gridPos: { x: 6, y: 1, w: 3, h: 3 } },
-        clusterCapacity { gridPos: { x: 9, y: 1, w: 3, h: 3 } },
+        clusterCapacity { tooltip+: { mode: 'multi', sort: 'desc' }, gridPos: { x: 9, y: 1, w: 3, h: 3 } },
         availableCapacity { gridPos: { x: 12, y: 1, w: 3, h: 6 } },
         writeIOPS { gridPos: { x: 3, y: 4, w: 3, h: 3 } },
         readIOPS { gridPos: { x: 6, y: 4, w: 3, h: 3 } },
@@ -1247,15 +916,15 @@ local gaugePanel = grafana.gaugePanel;
         monSessionNum { gridPos: { x: 18, y: 4, w: 3, h: 3 } },
         monitorsInQuorum { gridPos: { x: 21, y: 4, w: 3, h: 3 } },
         row.new('OSD STATE', collapse=true) { gridPos: { x: 0, y: 8, w: 24, h: 1 } },
-        osdOut { gridPos: { x: 0, y: 9, w: 2.55, h: 3 } },
-        osdDown { gridPos: { x: 2.55, y: 9, w: 2.55, h: 3 } },
-        osdUP { gridPos: { x: 5.1, y: 9, w: 2.55, h: 3 } },
-        osdIN { gridPos: { x: 7.65, y: 9, w: 2.55, h: 3 } },
-        avgPGs { gridPos: { x: 10.2, y: 9, w: 2.55, h: 3 } },
-        avgApplyLatency { gridPos: { x: 12.75, y: 9, w: 2.55, h: 3 } },
-        avgCommitLatency { gridPos: { x: 15.3, y: 9, w: 2.55, h: 3 } },
-        avgOPWriteLatency { gridPos: { x: 17.85, y: 9, w: 3.15, h: 3 } },
-        avgOPReadLatency { gridPos: { x: 21, y: 9, w: 3, h: 3 } },
+        osdOut { gridPos: { x: 0, y: 9, w: 3, h: 3 } },
+        osdDown { gridPos: { x: 3, y: 9, w: 3, h: 3 } },
+        osdUP { gridPos: { x: 6, y: 9, w: 3, h: 3 } },
+        osdIN { gridPos: { x: 9, y: 9, w: 3, h: 3 } },
+        avgPGs { gridPos: { x: 12, y: 9, w: 3, h: 3 } },
+        avgApplyLatency { gridPos: { x: 15, y: 9, w: 3, h: 3 } },
+        avgCommitLatency { gridPos: { x: 18, y: 9, w: 2, h: 3 } },
+        avgOPWriteLatency { gridPos: { x: 20, y: 9, w: 2, h: 3 } },
+        avgOPReadLatency { gridPos: { x: 22, y: 9, w: 2, h: 3 } },
         row.new('CLUSTER STATS', collapse=true) { gridPos: { x: 0, y: 24, w: 24, h: 1 } },
         capacityPanel { gridPos: { x: 0, y: 25, w: 8, h: 8 } },
         iopsPanel { gridPos: { x: 8, y: 25, w: 8, h: 8 } },
