@@ -14,8 +14,6 @@ local gaugePanel = grafana.gaugePanel;
         statPanel.new(
           title='Cluster Health',
           datasource='$datasource',
-          unit='none',
-          colorMode='value',
           graphMode='none',
           reducerFunction='lastNotNull',
         )
@@ -46,21 +44,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='Bps',
           decimals='1',
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addTarget(
           prometheus.target('sum(irate(ceph_osd_op_w_in_bytes{cluster="$cluster"}[5m]))', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local readThroughput =
         statPanel.new(
@@ -69,21 +58,12 @@ local gaugePanel = grafana.gaugePanel;
           unit='Bps',
           decimals=1,
           graphMode='none',
+          reducerFunction='lastNotNull',
         )
 
         .addTarget(
           prometheus.target('sum(irate(ceph_osd_op_r_out_bytes{cluster="$cluster"}[5m]))', legendFormat='')
-        )
-
-        + {
-          options+: {
-            reduceOptions: {
-              values: false,
-              calcs: ['lastNotNull'],
-              fields: '',
-            },
-          },
-        };
+        );
 
       local clusterCapacity =
         statPanel.new(
@@ -93,7 +73,6 @@ local gaugePanel = grafana.gaugePanel;
           decimals=2,
           graphMode='none',
           reducerFunction='lastNotNull',
-
         )
 
         .addTarget(
@@ -211,7 +190,6 @@ local gaugePanel = grafana.gaugePanel;
           unit='short',
           decimals=0,
           graphMode='none',
-          colorMode='background',
           reducerFunction='lastNotNull',
         )
 
@@ -228,7 +206,6 @@ local gaugePanel = grafana.gaugePanel;
         statPanel.new(
           title='Monitors in Quorum',
           datasource='$datasource',
-          unit='none',
           decimals=0,
           graphMode='none',
           colorMode='background',
@@ -263,7 +240,6 @@ local gaugePanel = grafana.gaugePanel;
         statPanel.new(
           title='OSDs OUT',
           datasource='$datasource',
-          unit='none',
           decimals=0,
           graphMode='none',
           reducerFunction='lastNotNull',
@@ -293,7 +269,6 @@ local gaugePanel = grafana.gaugePanel;
         statPanel.new(
           title='OSDs DOWN',
           datasource='$datasource',
-          unit='none',
           decimals=0,
           graphMode='none',
           reducerFunction='lastNotNull',
@@ -323,7 +298,6 @@ local gaugePanel = grafana.gaugePanel;
         statPanel.new(
           title='OSDs UP',
           datasource='$datasource',
-          unit='none',
           decimals=0,
           graphMode='none',
           reducerFunction='lastNotNull',
@@ -353,7 +327,6 @@ local gaugePanel = grafana.gaugePanel;
         statPanel.new(
           title='OSDs IN',
           datasource='$datasource',
-          unit='none',
           decimals=0,
           graphMode='none',
           reducerFunction='lastNotNull',
@@ -383,7 +356,6 @@ local gaugePanel = grafana.gaugePanel;
         statPanel.new(
           title='Avg PGs',
           datasource='$datasource',
-          unit='none',
           decimals=1,
           graphMode='none',
           reducerFunction='lastNotNull',
@@ -541,9 +513,6 @@ local gaugePanel = grafana.gaugePanel;
           datasource='$datasource',
           stack=true,
           fill=5,
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
           decimals=2,
           format='bytes',
@@ -552,15 +521,13 @@ local gaugePanel = grafana.gaugePanel;
             Used: $._config.grafanaDashboards.color.red,
             'Total Capacity': $._config.grafanaDashboards.color.blue,
           },
-          legend_show=true,
           legend_alignAsTable=true,
-          legend_rightSide=false,
           legend_values=true,
           legend_hideEmpty=false,
           legend_hideZero=false,
-          legend_avg=true,  // mean
-          legend_current=true,  // lastNotNull
-          legend_max=true,  // max
+          legend_avg=true,  
+          legend_current=true,  
+          legend_max=true,  
           legend_min=true,
           min=0,
         )
@@ -594,9 +561,6 @@ local gaugePanel = grafana.gaugePanel;
           datasource='$datasource',
           stack=true,
           fill=5,
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
           decimals=0,
           format='iops',
@@ -604,9 +568,7 @@ local gaugePanel = grafana.gaugePanel;
             Write: $._config.grafanaDashboards.color.red,
             Read: $._config.grafanaDashboards.color.blue,
           },
-          legend_show=true,
           legend_alignAsTable=true,
-          legend_rightSide=false,
           legend_values=true,
           legend_hideEmpty=false,
           legend_hideZero=false,
@@ -648,9 +610,6 @@ local gaugePanel = grafana.gaugePanel;
           datasource='$datasource',
           stack=true,
           fill=5,
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
           decimals=1,
           format='decbytes',
@@ -658,9 +617,7 @@ local gaugePanel = grafana.gaugePanel;
             Write: $._config.grafanaDashboards.color.red,
             Read: $._config.grafanaDashboards.color.blue,
           },
-          legend_show=true,
           legend_alignAsTable=true,
-          legend_rightSide=false,
           legend_values=true,
           legend_hideEmpty=false,
           legend_hideZero=false,
@@ -701,17 +658,9 @@ local gaugePanel = grafana.gaugePanel;
         graphPanel.new(
           title='Pool Used Bytes',
           datasource='$datasource',
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
-          stack=false,
-          fill=1,
           decimals=2,
           format='bytes',
-          legend_show=true,
-          legend_alignAsTable=false,
-          legend_rightSide=false
         )
 
         .addTarget(
@@ -730,22 +679,12 @@ local gaugePanel = grafana.gaugePanel;
         graphPanel.new(
           title='Pool RAW Bytes',
           datasource='$datasource',
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
-          stack=false,
-          fill=1,
-          legend_show=true,
           legend_alignAsTable=true,
           legend_rightSide=true,
           legend_values=true,
           legend_hideEmpty=false,
           legend_hideZero=false,
-          legend_avg=false,
-          legend_current=false,
-          legend_max=false,
-          legend_min=false,
           decimals=2,
           format='bytes',
           min=0,
@@ -773,23 +712,10 @@ local gaugePanel = grafana.gaugePanel;
         graphPanel.new(
           title='Objects Per Pool',
           datasource='$datasource',
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
-          stack=false,
-          fill=1,
-          legend_show=true,
-          legend_alignAsTable=false,
           legend_rightSide=true,
-          legend_values=false,
           legend_hideEmpty=false,
           legend_hideZero=false,
-          legend_avg=false,
-          legend_current=false,
-          legend_max=false,
-          legend_min=false,
-          format='short',
           decimals=0,
           min=0,
         )
@@ -805,18 +731,9 @@ local gaugePanel = grafana.gaugePanel;
         graphPanel.new(
           title='Pool Quota Bytes',
           datasource='$datasource',
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
-          stack=false,
-          fill=1,
           decimals=2,
           format='bytes',
-          legend_show=true,
-          legend_alignAsTable=false,
-          legend_rightSide=false,
-          legend_values=false,
           legend_hideEmpty=false,
           legend_hideZero=false,
           min=0,
@@ -837,23 +754,9 @@ local gaugePanel = grafana.gaugePanel;
         graphPanel.new(
           title='Pool Objects Quota',
           datasource='$datasource',
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
-          stack=false,
-          fill=1,
-          legend_show=true,
-          legend_alignAsTable=false,
-          legend_rightSide=false,
-          legend_values=false,
           legend_hideEmpty=false,
           legend_hideZero=false,
-          legend_avg=false,
-          legend_current=false,
-          legend_max=false,
-          legend_min=false,
-          format='short',
           decimals=0,
           min=0,
         )
@@ -873,19 +776,10 @@ local gaugePanel = grafana.gaugePanel;
         graphPanel.new(
           title='OSD Type Count',
           datasource='$datasource',
-          lines=true,
-          linewidth=1,
-          points=false,
           nullPointMode='null',
-          stack=false,
-          fill=1,
-          legend_show=true,
-          legend_alignAsTable=false,
-          legend_rightSide=false,
           legend_values=true,
           legend_hideEmpty=false,
           legend_hideZero=false,
-          format='short',
           decimals=0,
           min=0,
         )
