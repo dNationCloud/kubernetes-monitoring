@@ -128,6 +128,7 @@
         //Monitoring dashboard
         monitoring: 'monitoring',
         kaasMonitoring: 'kaas-monitoring',
+        ceph: 'ceph',
       },
       selectors: {
         apiServer: 'job="apiserver"',

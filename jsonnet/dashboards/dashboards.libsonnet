@@ -71,6 +71,7 @@
 (import 'apps/prometheus.libsonnet') +
 (import 'apps/ssl-exporter.libsonnet') +
 (import 'apps/harbor.libsonnet') +
+(import 'apps/ceph.libsonnet') +
 
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +
