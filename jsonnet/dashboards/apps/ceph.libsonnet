@@ -8,8 +8,7 @@ local gaugePanel = grafana.gaugePanel;
 
 {
   grafanaDashboards+:: {
-    ceph: (
-
+    ceph:
       local clusterHealth =
         statPanel.new(
           title='Cluster Health',
@@ -48,7 +47,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('sum(irate(ceph_osd_op_w_in_bytes{cluster="$cluster"}[5m]))', legendFormat='')
+          prometheus.target('sum(irate(ceph_osd_op_w_in_bytes{cluster="$cluster"}[5m]))')
         );
 
       local readThroughput =
@@ -62,7 +61,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('sum(irate(ceph_osd_op_r_out_bytes{cluster="$cluster"}[5m]))', legendFormat='')
+          prometheus.target('sum(irate(ceph_osd_op_r_out_bytes{cluster="$cluster"}[5m]))')
         );
 
       local clusterCapacity =
@@ -76,7 +75,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('ceph_cluster_total_bytes{cluster="$cluster"}', legendFormat='')
+          prometheus.target('ceph_cluster_total_bytes{cluster="$cluster"}')
         );
 
       local availableCapacity =
@@ -96,7 +95,7 @@ local gaugePanel = grafana.gaugePanel;
         ])
 
         .addTarget(
-          prometheus.target('(ceph_cluster_total_bytes{cluster="$cluster"} - ceph_cluster_total_used_bytes{cluster="$cluster"}) / ceph_cluster_total_bytes{cluster="$cluster"}', legendFormat='')
+          prometheus.target('(ceph_cluster_total_bytes{cluster="$cluster"} - ceph_cluster_total_used_bytes{cluster="$cluster"}) / ceph_cluster_total_bytes{cluster="$cluster"}')
         );
 
       local writeIOPS =
@@ -110,7 +109,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('sum(irate(ceph_osd_op_w{cluster="$cluster"}[5m]))', legendFormat='')
+          prometheus.target('sum(irate(ceph_osd_op_w{cluster="$cluster"}[5m]))')
         );
 
       local readIOPS =
@@ -124,7 +123,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('sum(irate(ceph_osd_op_r{cluster="$cluster"}[5m]))', legendFormat='')
+          prometheus.target('sum(irate(ceph_osd_op_r{cluster="$cluster"}[5m]))')
         );
 
       local numObjects =
@@ -138,7 +137,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('sum(ceph_pool_objects{cluster="$cluster"})', legendFormat='')
+          prometheus.target('sum(ceph_pool_objects{cluster="$cluster"})')
         );
 
       local bytesWritten =
@@ -152,7 +151,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('ceph_cluster_total_used_bytes{cluster="$cluster"}', legendFormat='')
+          prometheus.target('ceph_cluster_total_used_bytes{cluster="$cluster"}')
         );
 
       local bytesRead =
@@ -166,7 +165,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target(expr='sum(ceph_osd_op_r_out_bytes{cluster="$cluster"})', legendFormat='')
+          prometheus.target(expr='sum(ceph_osd_op_r_out_bytes{cluster="$cluster"})')
         );
 
       local difference =
@@ -180,7 +179,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('sum(ceph_pool_objects)', legendFormat='')
+          prometheus.target('sum(ceph_pool_objects)')
         );
 
       local monSessionNum =
@@ -194,7 +193,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('sum(ceph_mon_num_sessions{cluster="$cluster"})', legendFormat='')
+          prometheus.target('sum(ceph_mon_num_sessions{cluster="$cluster"})')
         )
 
         .addThresholds([
@@ -213,7 +212,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('count(ceph_mon_quorum_status{cluster="$cluster"}) or vector(0)', legendFormat='')
+          prometheus.target('count(ceph_mon_quorum_status{cluster="$cluster"}) or vector(0)')
         )
 
         .addThresholds([
@@ -233,7 +232,7 @@ local gaugePanel = grafana.gaugePanel;
         )
 
         .addTarget(
-          prometheus.target('ceph_cluster_total_used_bytes{cluster="$cluster"}', legendFormat='')
+          prometheus.target('ceph_cluster_total_used_bytes{cluster="$cluster"}')
         );
 
       local osdOut =
@@ -250,19 +249,8 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.red, value: 1 },
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('count(ceph_osd_up{cluster="$cluster"}) - count(ceph_osd_in{cluster="$cluster"})', legendFormat='')
+          prometheus.target('count(ceph_osd_up{cluster="$cluster"}) - count(ceph_osd_in{cluster="$cluster"})')
         );
 
       local osdDown =
@@ -279,19 +267,8 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.red, value: 1 },
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('count(ceph_osd_up{cluster="$cluster"} == 0.0) OR vector(0)', legendFormat='')
+          prometheus.target('count(ceph_osd_up{cluster="$cluster"} == 0.0) OR vector(0)')
         );
 
       local osdUP =
@@ -308,19 +285,8 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.red, value: 80 },
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('sum(ceph_osd_up{cluster="$cluster"})', legendFormat='')
+          prometheus.target('sum(ceph_osd_up{cluster="$cluster"})')
         );
 
       local osdIN =
@@ -337,19 +303,8 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.red, value: 80 },
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('sum(ceph_osd_in{cluster="$cluster"})', legendFormat='')
+          prometheus.target('sum(ceph_osd_in{cluster="$cluster"})')
         );
 
       local avgPGs =
@@ -365,22 +320,10 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.green, value: null },
           { color: $._config.grafanaDashboards.color.orange, value: 250 },
           { color: $._config.grafanaDashboards.color.red, value: 300 },
-
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('sum(ceph_osd_numpg{cluster="$cluster"})', legendFormat='')
+          prometheus.target('sum(ceph_osd_numpg{cluster="$cluster"})')
         );
 
       local avgApplyLatency =
@@ -399,19 +342,8 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.red, value: 50 },
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('avg(ceph_osd_apply_latency_ms{cluster="$cluster"})', legendFormat='')
+          prometheus.target('avg(ceph_osd_apply_latency_ms{cluster="$cluster"})')
         );
 
       local avgCommitLatency =
@@ -430,19 +362,8 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.red, value: 50 },
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('avg(ceph_osd_commit_latency_ms{cluster="$cluster"})', legendFormat='')
+          prometheus.target('avg(ceph_osd_commit_latency_ms{cluster="$cluster"})')
         );
 
       local avgOPWriteLatency =
@@ -461,19 +382,8 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.red, value: 2 },
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('clamp_min(avg(rate(ceph_osd_op_w_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_w_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)', legendFormat='')
+          prometheus.target('clamp_min(avg(rate(ceph_osd_op_w_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_w_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)')
         );
 
       local avgOPReadLatency =
@@ -492,19 +402,8 @@ local gaugePanel = grafana.gaugePanel;
           { color: $._config.grafanaDashboards.color.red, value: 2 },
         ])
 
-        .addMapping(
-          {
-            id: 0,
-            type: 'special',
-            options: {
-              match: null,
-              result: { text: 'N/A' },
-            },
-          }
-        )
-
         .addTarget(
-          prometheus.target('clamp_min(avg(rate(ceph_osd_op_r_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_r_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)', legendFormat='')
+          prometheus.target('clamp_min(avg(rate(ceph_osd_op_r_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_r_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)')
         );
 
       local capacityPanel =
@@ -513,7 +412,6 @@ local gaugePanel = grafana.gaugePanel;
           datasource='$datasource',
           stack=true,
           fill=5,
-          nullPointMode='null',
           decimals=2,
           format='bytes',
           aliasColors={
@@ -523,11 +421,9 @@ local gaugePanel = grafana.gaugePanel;
           },
           legend_alignAsTable=true,
           legend_values=true,
-          legend_hideEmpty=false,
-          legend_hideZero=false,
-          legend_avg=true,  
-          legend_current=true,  
-          legend_max=true,  
+          legend_avg=true,
+          legend_current=true,
+          legend_max=true,
           legend_min=true,
           min=0,
         )
@@ -538,12 +434,14 @@ local gaugePanel = grafana.gaugePanel;
             legendFormat='Available'
           )
         )
+
         .addTarget(
           prometheus.target(
             'ceph_cluster_total_used_bytes{cluster="$cluster"}',
             legendFormat='Used'
           )
         )
+
         .addTarget(
           prometheus.target(
             'ceph_cluster_total_bytes{cluster="$cluster"}',
@@ -561,7 +459,6 @@ local gaugePanel = grafana.gaugePanel;
           datasource='$datasource',
           stack=true,
           fill=5,
-          nullPointMode='null',
           decimals=0,
           format='iops',
           aliasColors={
@@ -570,8 +467,6 @@ local gaugePanel = grafana.gaugePanel;
           },
           legend_alignAsTable=true,
           legend_values=true,
-          legend_hideEmpty=false,
-          legend_hideZero=false,
           legend_avg=true,
           legend_current=true,
           legend_max=true,
@@ -600,9 +495,7 @@ local gaugePanel = grafana.gaugePanel;
           { alias: 'Read', fill: 6, stack: true, linewidth: 1 },
         )
 
-        .addYaxis('Bps', 0, null, null, true, 1, null)
-
-        .addYaxis('short', 0, null, null, true, 1, null);
+        .addYaxis('Bps', 0, null, null, true, 1, null);
 
       local clusterThroughputPanel =
         graphPanel.new(
@@ -610,7 +503,6 @@ local gaugePanel = grafana.gaugePanel;
           datasource='$datasource',
           stack=true,
           fill=5,
-          nullPointMode='null',
           decimals=1,
           format='decbytes',
           aliasColors={
@@ -619,14 +511,13 @@ local gaugePanel = grafana.gaugePanel;
           },
           legend_alignAsTable=true,
           legend_values=true,
-          legend_hideEmpty=false,
-          legend_hideZero=false,
           legend_avg=true,
           legend_current=true,
           legend_max=true,
           legend_min=true,
           min=0,
         )
+
         .addTarget(
           prometheus.target(
             'sum(irate(ceph_osd_op_w_in_bytes{cluster="$cluster"}[5m]))',
@@ -649,16 +540,12 @@ local gaugePanel = grafana.gaugePanel;
           { alias: 'Read', fill: 6, stack: true, linewidth: 1 },
         )
 
-        .addYaxis('Bps', 0, null, null, true, 1, null)
-
-        .addYaxis('short', 0, null, null, true, 1, null);
-
+        .addYaxis('Bps', 0, null, null, true, 1, null);
 
       local poolUsedBytesPanel =
         graphPanel.new(
           title='Pool Used Bytes',
           datasource='$datasource',
-          nullPointMode='null',
           decimals=2,
           format='bytes',
         )
@@ -670,21 +557,15 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        .addYaxis('bytes', 0, null, null, true, 1, null)
-
-        .addYaxis('short', null, null, null, true, 1, null);
-
+        .addYaxis('bytes', 0, null, null, true, 1, null);
 
       local poolRawBytesPanel =
         graphPanel.new(
           title='Pool RAW Bytes',
           datasource='$datasource',
-          nullPointMode='null',
           legend_alignAsTable=true,
           legend_rightSide=true,
           legend_values=true,
-          legend_hideEmpty=false,
-          legend_hideZero=false,
           decimals=2,
           format='bytes',
           min=0,
@@ -704,18 +585,13 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        .addYaxis('bytes', 0, null, null, true, 1, null)
-
-        .addYaxis('short', null, null, null, true, 1, null);
+        .addYaxis('bytes', 0, null, null, true, 1, null);
 
       local objectsPerPoolPanel =
         graphPanel.new(
           title='Objects Per Pool',
           datasource='$datasource',
-          nullPointMode='null',
           legend_rightSide=true,
-          legend_hideEmpty=false,
-          legend_hideZero=false,
           decimals=0,
           min=0,
         )
@@ -731,11 +607,8 @@ local gaugePanel = grafana.gaugePanel;
         graphPanel.new(
           title='Pool Quota Bytes',
           datasource='$datasource',
-          nullPointMode='null',
           decimals=2,
           format='bytes',
-          legend_hideEmpty=false,
-          legend_hideZero=false,
           min=0,
         )
 
@@ -746,17 +619,12 @@ local gaugePanel = grafana.gaugePanel;
           )
         )
 
-        .addYaxis('bytes', 0, null, null, true, 1, null)
-
-        .addYaxis('short', 0, null, null, true, 1, null);
+        .addYaxis('bytes', 0, null, null, true, 1, null);
 
       local poolObjectsQuotaPanel =
         graphPanel.new(
           title='Pool Objects Quota',
           datasource='$datasource',
-          nullPointMode='null',
-          legend_hideEmpty=false,
-          legend_hideZero=false,
           decimals=0,
           min=0,
         )
@@ -766,20 +634,13 @@ local gaugePanel = grafana.gaugePanel;
             '(ceph_pool_quota_objects{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})',
             legendFormat='{{name}}'
           )
-        )
-
-        .addYaxis('short', 0, null, null, true, 1, null)
-
-        .addYaxis('short', null, null, null, true, 1, null);
+        );
 
       local osdTypeCountPanel =
         graphPanel.new(
           title='OSD Type Count',
           datasource='$datasource',
-          nullPointMode='null',
           legend_values=true,
-          legend_hideEmpty=false,
-          legend_hideZero=false,
           decimals=0,
           min=0,
         )
@@ -789,9 +650,7 @@ local gaugePanel = grafana.gaugePanel;
             'count(ceph_bluestore_kv_commit_lat_count{cluster="$cluster"})',
             legendFormat='BlueStore'
           )
-        )
-        .addYaxis('short', 0, null, null, true, 1, null)
-        .addYaxis('short', null, null, null, true, 1, null);
+        );
 
       local panels = [
         row.new('CLUSTER STATE') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
@@ -844,7 +703,6 @@ local gaugePanel = grafana.gaugePanel;
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
       ])
-      .addPanels(panels)
-    ),
+      .addPanels(panels),
   },
 }
