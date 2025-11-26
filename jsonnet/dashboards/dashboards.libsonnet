@@ -72,6 +72,7 @@
 (import 'apps/ssl-exporter.libsonnet') +
 (import 'apps/harbor.libsonnet') +
 (import 'apps/ceph.libsonnet') +
+(import 'apps/openstack.libsonnet') +
 
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +
