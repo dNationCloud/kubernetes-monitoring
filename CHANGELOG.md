@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.7.7](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.7) (2025-11-26)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.6...v2.7.7)
+
+**Merged pull requests:**
+
+- Add dashboard for Ceph monitoring [\#214](https://github.com/dNationCloud/kubernetes-monitoring/pull/214)
+
 ## [v2.7.6](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.6) (2025-11-05)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.5...v2.7.6)
@@ -578,6 +586,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
