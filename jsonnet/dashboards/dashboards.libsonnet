@@ -73,10 +73,15 @@
 (import 'apps/harbor.libsonnet') +
 (import 'apps/ceph.libsonnet') +
 
+// OpenStack dashboards
+(import 'openstack/openstack-detail.libsonnet') +
+(import 'openstack/openstack-k8s.libsonnet') +
+
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +
 (import 'vms/alert-overview.libsonnet') +
 
 // Monitoring dashboards
 (import 'kaas-monitoring.libsonnet') +
-(import 'monitoring.libsonnet')
+(import 'monitoring.libsonnet') +
+(import 'monitoring-itu.libsonnet')

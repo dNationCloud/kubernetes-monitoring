@@ -95,6 +95,11 @@ kaasMonitoring:
 testbedMonitoring:
   enabled: false
 
+## ITU Monitoring
+## Tech preview feature
+ITUMonitoring:
+  enabled: false
+
 ## Blackbox Monitoring
 blackboxMonitoring:
   enabled: false
