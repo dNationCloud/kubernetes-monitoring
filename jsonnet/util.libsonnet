@@ -89,6 +89,9 @@
   isTestbedMonitoring()::
     $._config.testbedMonitoring.enabled,
 
+  isITUMonitoring()::
+    $._config.ITUMonitoring.enabled,
+
   isBlackBoxMonitoring()::
     $._config.blackboxMonitoring.enabled,
 

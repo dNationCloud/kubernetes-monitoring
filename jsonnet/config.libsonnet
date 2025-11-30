@@ -125,9 +125,13 @@
         sslExporter: 'ssl-exporter',
         harbor: 'harbor',
         testbed: 'testbed',
+        // OpenStack
+        openstackDetail: 'openstack-detail',
+        openstackK8s: 'openstack-k8s',
         //Monitoring dashboard
         monitoring: 'monitoring',
         kaasMonitoring: 'kaas-monitoring',
+        ITUMonitoring: 'itu-monitoring',
         ceph: 'ceph',
       },
       selectors: {
@@ -155,6 +159,7 @@
         kaasMonitoringMain: ['kaas', 'cluster', 'L0'],
         testbed: ['testbed', 'L0'],
         testbedAlert: ['testbed', 'L1'],
+        openstack: ['openstack'],
       },
       constants: {
         infinity: 99999999999999999999999999999999,
@@ -177,6 +182,9 @@
       enabled: false,
     },
     testbedMonitoring: {
+      enabled: false,
+    },
+    ITUMonitoring: {
       enabled: false,
     },
     kaasMonitoring: {
