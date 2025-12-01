@@ -1816,6 +1816,40 @@
             },
           },
         },
+        ceph: {
+          default: false,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.ceph],
+          panel: {
+            expr: 'ceph_health_status{cluster="$cluster"}',
+            thresholds: {
+              operator: '>=',
+              lowest: 0,
+              warning: 1,
+              critical: 2,
+            },
+            mappings: [
+              { type: 1, text: 'HEALTHY', value: 0,},
+              { type: 1, text: 'WARNING', value: 1,},
+              { type: 1, text: 'ERROR', value: 2,},
+            ],
+            gridPos: {
+              w: 4,
+            },
+          },
+          alert: {
+            name: '%(prefix)sCephHealthStatus',
+            message: '%(prefix)s Ceph cluster health is "{{ $value }}" (0=HEALTHY, 1=WARNING, 2=ERROR)',
+            expr: 'ceph_health_status{%(job)s}' % {
+            job: 'job=~".+"',
+          },
+          linkGetParams: 'var-cluster={{ $labels.cluster }}',
+          thresholds: {
+            operator: '>=',
+            warning: 1,
+            critical: 2,
+            },
+          },
+        },
       },
       k8sApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
       hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
