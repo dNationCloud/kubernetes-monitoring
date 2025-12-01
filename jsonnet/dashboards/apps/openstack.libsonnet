@@ -279,63 +279,6 @@ local tablePanel = grafana.tablePanel;
           prometheus.target('openstack_object_store_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
         );
 
-      local containerInfraStatus =
-        statPanel.new(
-          title='Container infrastructure Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target(
-            'openstack_container_infra_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)'
-          )
-        );
-
-      local heatStatus =
-        statPanel.new(
-          title='Heat Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target(
-            'openstack_heat_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
       local gnocchiStatus =
         statPanel.new(
           title='Gnocchi Status',
@@ -362,34 +305,6 @@ local tablePanel = grafana.tablePanel;
         .addTarget(
           prometheus.target(
             'openstack_gnocchi_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local troveStatus =
-        statPanel.new(
-          title='Trove Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target(
-            'openstack_trove_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
         );
 
       local cpuUsagePanel =
@@ -578,7 +493,6 @@ local tablePanel = grafana.tablePanel;
           datasource='$datasource',
           transform='timeseries_to_columns',
           sort={ col: 0, desc: false },
-
           styles=[
             {
               pattern: 'Value #B',
@@ -586,21 +500,17 @@ local tablePanel = grafana.tablePanel;
               type: 'string',
               mappingType: 1,
               colorMode: 'cell',
-
               valueMaps: [
                 { value: 1, text: 'True' },
                 { value: 2, text: 'False' },
               ],
-
               thresholds: [1, 2],
-
               colors: [
                 $._config.grafanaDashboards.color.orange,
                 $._config.grafanaDashboards.color.green,
                 $._config.grafanaDashboards.color.red,
               ],
             },
-
             { pattern: 'name', alias: 'Name' },
             { pattern: 'id', alias: 'ID' },
             { pattern: 'instance', alias: 'Instance' },
@@ -802,12 +712,10 @@ local tablePanel = grafana.tablePanel;
               type: 'string',
               colorMode: 'cell',
               mappingType: 1,
-
               valueMaps: [
                 { text: 'Up', value: 1 },
                 { text: 'Down', value: 0 },
               ],
-
               thresholds: [0, 0],
               colors: [
                 $._config.grafanaDashboards.color.red,
@@ -815,7 +723,6 @@ local tablePanel = grafana.tablePanel;
                 $._config.grafanaDashboards.color.green,
               ],
             },
-
             { pattern: 'job', type: 'hidden' },
             { pattern: '__name__', type: 'hidden' },
             { pattern: 'Time', type: 'hidden' },
@@ -1062,21 +969,17 @@ local tablePanel = grafana.tablePanel;
               type: 'string',
               mappingType: 1,
               colorMode: 'cell',
-
               valueMaps: [
                 { value: 1, text: 'ACTIVE' },
                 { value: 2, text: 'DOWN' },
               ],
-
               thresholds: [1, 2],
-
               colors: [
                 $._config.grafanaDashboards.color.orange,
                 $._config.grafanaDashboards.color.green,
                 $._config.grafanaDashboards.color.red,
               ],
             },
-
             { pattern: 'status', type: 'hidden' },
             { pattern: 'Value #A', type: 'hidden' },
             { pattern: 'job', type: 'hidden' },
@@ -1144,21 +1047,17 @@ local tablePanel = grafana.tablePanel;
               type: 'string',
               mappingType: 1,
               colorMode: 'cell',
-
               valueMaps: [
                 { value: 1, text: 'ACTIVE' },
                 { value: 2, text: 'DOWN' },
               ],
-
               thresholds: [1, 2],
-
               colors: [
                 $._config.grafanaDashboards.color.orange,
                 $._config.grafanaDashboards.color.green,
                 $._config.grafanaDashboards.color.red,
               ],
             },
-
             { pattern: 'status', type: 'hidden' },
             { pattern: 'Value #A', type: 'hidden' },
             { pattern: 'job', type: 'hidden' },
@@ -1227,12 +1126,10 @@ local tablePanel = grafana.tablePanel;
               type: 'string',
               colorMode: 'cell',
               mappingType: 1,
-
               valueMaps: [
                 { text: 'Up', value: 1 },
                 { text: 'Down', value: 0 },
               ],
-
               thresholds: [0, 0],
               colors: [
                 $._config.grafanaDashboards.color.red,
@@ -1240,7 +1137,6 @@ local tablePanel = grafana.tablePanel;
                 $._config.grafanaDashboards.color.green,
               ],
             },
-
             { pattern: 'job', type: 'hidden' },
             { pattern: '__name__', type: 'hidden' },
             { pattern: 'Time', type: 'hidden' },
@@ -1453,12 +1349,10 @@ local tablePanel = grafana.tablePanel;
               type: 'string',
               colorMode: 'cell',
               mappingType: 1,
-
               valueMaps: [
                 { text: 'Up', value: 1 },
                 { text: 'Down', value: 0 },
               ],
-
               thresholds: [0, 0],
               colors: [
                 $._config.grafanaDashboards.color.red,
@@ -1466,7 +1360,6 @@ local tablePanel = grafana.tablePanel;
                 $._config.grafanaDashboards.color.green,
               ],
             },
-
             { pattern: 'job', type: 'hidden' },
             { pattern: '__name__', type: 'hidden' },
             { pattern: 'Time', type: 'hidden' },
@@ -1532,7 +1425,6 @@ local tablePanel = grafana.tablePanel;
             { pattern: 'Value', alias: 'Size', type: 'number', unit: 'decbytes' },
             { pattern: 'instance', alias: 'Instance' },
             { pattern: 'tenant_id', alias: 'Tenant ID' },
-
             { pattern: 'cluster', type: 'hidden' },
             { pattern: 'container', type: 'hidden' },
             { pattern: 'endpoint', type: 'hidden' },
@@ -1583,14 +1475,11 @@ local tablePanel = grafana.tablePanel;
         cinderStatus { gridPos: { x: 9, y: 1, w: 3, h: 3 } },
         glanceStatus { gridPos: { x: 12, y: 1, w: 3, h: 3 } },
         placementStatus { gridPos: { x: 15, y: 1, w: 3, h: 3 } },
-        ironicStatus { gridPos: { x: 18, y: 1, w: 3, h: 3 } },
-        designateStatus { gridPos: { x: 21, y: 1, w: 3, h: 3 } },
-        loadbalancerStatus { gridPos: { x: 0, y: 4, w: 3, h: 3 } },
-        objectStoreStatus { gridPos: { x: 3, y: 4, w: 3, h: 3 } },
-        containerInfraStatus { gridPos: { x: 6, y: 4, w: 3, h: 3 } },
-        heatStatus { gridPos: { x: 9, y: 4, w: 3, h: 3 } },
-        gnocchiStatus { gridPos: { x: 12, y: 4, w: 3, h: 3 } },
-        troveStatus { gridPos: { x: 15, y: 4, w: 3, h: 3 } },
+        gnocchiStatus { gridPos: { x: 18, y: 1, w: 3, h: 3 } },
+        ironicStatus { gridPos: { x: 21, y: 1, w: 3, h: 3 } },
+        designateStatus { gridPos: { x: 0, y: 4, w: 3, h: 3 } },
+        loadbalancerStatus { gridPos: { x: 3, y: 4, w: 3, h: 3 } },
+        objectStoreStatus { gridPos: { x: 6, y: 4, w: 3, h: 3 } },
 
         row.new('Resource Usage') { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
         cpuUsagePanel { gridPos: { x: 0, y: 5, w: 8, h: 8 } },
@@ -1647,11 +1536,10 @@ local tablePanel = grafana.tablePanel;
         glanceStatus { gridPos: { x: 0, y: 142, w: 3, h: 8 } },
         glanceImageCountPanel { gridPos: { x: 3, y: 142, w: 21, h: 8 } },
         glanceImagesPanel { gridPos: { x: 0, y: 150, w: 24, h: 10 } },
-
       ];
 
       dashboard.new(
-        'OpenStack Overview App',
+        'OpenStack Overview',
         editable=$._config.grafanaDashboards.editable,
         graphTooltip=$._config.grafanaDashboards.tooltip,
         refresh=$._config.grafanaDashboards.refresh,

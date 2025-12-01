@@ -1848,6 +1848,33 @@
             },
           },
         },
+        openstack: {
+          default: false,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.openstack],
+          panel: {
+            expr:'min({__name__=~"openstack_.*_up", job=~"$job", instance=~"$instance", cluster=~"$cluster"}) OR vector(-1)',
+            thresholds: {
+              operator: '<',
+              critical: 1,
+            },
+            mappings: [
+              { type: 1, value:  1, text: 'OK' },
+              { type: 1, value: -1, text: 'OFFLINE' },
+              { type: 1, value:  0, text: 'CRITICAL' },
+            ],
+            gridPos: { w: 4 },
+           },
+          alert: {
+            name: '%(prefix)sOpenStackHealthStatus',
+            message: '%(prefix)s OpenStack cluster health is \"{{ $value }}\" (1=OK, 0=CRITICAL, -1=OFFLINE)',
+            expr:'min({__name__=~"openstack_.*_up", cluster=~"$cluster"}) OR vector(-1)',
+            linkGetParams: 'var-cluster={{ $labels.cluster }}',
+            thresholds: {
+              operator: '==',
+              critical: 0,
+            },
+          },
+        },
       },
       k8sApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
       hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
