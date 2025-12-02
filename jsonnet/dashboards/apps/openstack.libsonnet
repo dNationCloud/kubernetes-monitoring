@@ -9,20 +9,18 @@ local tablePanel = grafana.tablePanel;
 {
   grafanaDashboards+:: {
     openstack: 
-      local keystoneStatus =
+      local statusPanel(name,metric)=
         statPanel.new(
-          title='Keystone status',
+          title=name + ' status',
           datasource='$datasource',
           unit='string',
           colorMode='background',
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: 'transparent', value: null },
         ])
-
         .addMapping({
           type: 'value',
           options: {
@@ -31,281 +29,21 @@ local tablePanel = grafana.tablePanel;
             '-1': { text: '-' },
           },
         })
-
         .addTarget(
-          prometheus.target('openstack_identity_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
+        prometheus.target('%s{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)' % metric)
         );
 
-      local novaStatus =
-        statPanel.new(
-          title='Nova Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_nova_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local neutronStatus =
-        statPanel.new(
-          title='Neutron Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_neutron_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local cinderStatus =
-        statPanel.new(
-          title='Cinder Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_cinder_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local glanceStatus =
-        statPanel.new(
-          title='Glance Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_glance_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local placementStatus =
-        statPanel.new(
-          title='Placement Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_placement_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local ironicStatus =
-        statPanel.new(
-          title='Ironic Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_ironic_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local designateStatus =
-        statPanel.new(
-          title='Designate Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_designate_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local loadbalancerStatus =
-        statPanel.new(
-          title='LoadBalancer Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_loadbalancer_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local objectStoreStatus =
-        statPanel.new(
-          title='Object store Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target('openstack_object_store_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
-
-      local gnocchiStatus =
-        statPanel.new(
-          title='Gnocchi Status',
-          datasource='$datasource',
-          unit='string',
-          colorMode='background',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: 'transparent', value: null },
-        ])
-
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'Down', color: $._config.grafanaDashboards.color.red },
-            '1': { text: 'Up', color: $._config.grafanaDashboards.color.green },
-            '-1': { text: '-' },
-          },
-        })
-
-        .addTarget(
-          prometheus.target(
-            'openstack_gnocchi_up{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)')
-        );
+      local keystoneStatus        = statusPanel('Keystone',        'openstack_identity_up');
+      local novaStatus            = statusPanel('Nova',            'openstack_nova_up');
+      local neutronStatus         = statusPanel('Neutron',         'openstack_neutron_up');
+      local cinderStatus          = statusPanel('Cinder',          'openstack_cinder_up');
+      local glanceStatus          = statusPanel('Glance',          'openstack_glance_up');
+      local placementStatus       = statusPanel('Placement',       'openstack_placement_up');
+      local ironicStatus          = statusPanel('Ironic',          'openstack_ironic_up');
+      local designateStatus       = statusPanel('Designate',       'openstack_designate_up');
+      local loadbalancerStatus    = statusPanel('LoadBalancer',    'openstack_loadbalancer_up');
+      local objectStoreStatus     = statusPanel('Object Store',    'openstack_object_store_up');
+      local gnocchiStatus         = statusPanel('Gnocchi',         'openstack_gnocchi_up');
 
       local cpuUsagePanel =
         graphPanel.new(
@@ -315,14 +53,12 @@ local tablePanel = grafana.tablePanel;
           min=0,
           labelY1='cores',
         )
-
         .addTarget(
           prometheus.target(
             'sum by (instance) (openstack_placement_resource_usage{job=~"$job", instance=~"$instance", cluster=~"$cluster", resourcetype="VCPU"})',
             legendFormat='{{instance}}-used-vcpu-cores',
           )
         )
-
         .addTarget(
           prometheus.target(
             'sum by (instance) (openstack_placement_resource_total{job=~"$job", instance=~"$instance", cluster=~"$cluster", resourcetype="VCPU"})',
@@ -338,14 +74,12 @@ local tablePanel = grafana.tablePanel;
           min=0,
           labelY1='Memory in TiB',
         )
-
         .addTarget(
           prometheus.target(
             'sum by (instance) (openstack_placement_resource_usage{job=~"$job", instance=~"$instance", cluster=~"$cluster", resourcetype="MEMORY_MB"}) / 1024 / 1024',
             legendFormat='{{instance}}-memory-in-use',
           )
         )
-
         .addTarget(
           prometheus.target(
             'sum by (instance) (openstack_placement_resource_total{job=~"$job", instance=~"$instance", cluster=~"$cluster", resourcetype="MEMORY_MB"}) / 1024 / 1024',
@@ -361,14 +95,12 @@ local tablePanel = grafana.tablePanel;
           min=0,
           labelY1='Local Storage (TB)',
         )
-
         .addTarget(
           prometheus.target(
             'sum by (instance) (openstack_placement_resource_usage{job=~"$job", instance=~"$instance", cluster=~"$cluster", resourcetype="DISK_GB"}) / 1024',
             legendFormat='{{instance}}-local-storage-used',
           )
         )
-
         .addTarget(
           prometheus.target(
             'sum by (instance) (openstack_placement_resource_total{job=~"$job", instance=~"$instance", cluster=~"$cluster", resourcetype="DISK_GB"}) / 1024',
@@ -385,19 +117,16 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: $._config.grafanaDashboards.color.green, value: null },
           { color: $._config.grafanaDashboards.color.red, value: 80 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-' },
           },
         })
-
         .addTarget(
           prometheus.target(
             'openstack_identity_groups{job=~"$job", instance=~"$instance", cluster=~"$cluster"} OR on() vector(-1)'
@@ -413,19 +142,16 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: $._config.grafanaDashboards.color.green, value: null },
           { color: $._config.grafanaDashboards.color.red, value: 80 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-' },
           },
         })
-
         .addTarget(
           prometheus.target('openstack_identity_domains{job=~"$job", instance=~"$instance", cluster=~"$cluster"} OR on() vector(-1)')
         );
@@ -439,19 +165,16 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: $._config.grafanaDashboards.color.green, value: null },
           { color: $._config.grafanaDashboards.color.red, value: 80 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-' },
           },
         })
-
         .addTarget(
           prometheus.target('openstack_identity_regions{job=~"$job", instance=~"$instance", cluster=~"$cluster"} OR on() vector(-1)')
         );
@@ -463,7 +186,6 @@ local tablePanel = grafana.tablePanel;
           decimals=0,
           min=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_identity_projects{job=~"$job", instance=~"$instance", cluster=~"$cluster"}',
@@ -478,7 +200,6 @@ local tablePanel = grafana.tablePanel;
           decimals=0,
           min=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_identity_users{job=~"$job", instance=~"$instance", cluster=~"$cluster"}',
@@ -530,7 +251,6 @@ local tablePanel = grafana.tablePanel;
             { pattern: 'service', type: 'hidden' },
           ]
         )
-
         .addTarget(
           prometheus.target(
             'openstack_identity_project_info{job=~"$job", instance=~"$instance", cluster=~"$cluster"}',
@@ -538,7 +258,6 @@ local tablePanel = grafana.tablePanel;
             instant=true,
           )
         )
-
         .addTarget(
           prometheus.target(
             '(openstack_identity_project_info{job=~"$job",instance=~"$instance",cluster=~"$cluster",enabled="true"} * 1)\n       or\n       (openstack_identity_project_info{job=~"$job",instance=~"$instance",cluster=~"$cluster",enabled="false"} * 2)',
@@ -547,12 +266,10 @@ local tablePanel = grafana.tablePanel;
             legendFormat='enabled_num'
           )
         )
-
         .addTransformation({
           id: 'merge',
           options: { reducers: [] },
         })
-
         .addTransformation({
           id: 'organize',
           options: {
@@ -576,20 +293,17 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: 'transparent', value: null },
           { color: $._config.grafanaDashboards.color.orange, value: 0 },
           { color: $._config.grafanaDashboards.color.green, value: 1 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-' },
           },
         })
-
         .addTarget(
           prometheus.target(
             'sum(openstack_nova_agent_state{job=~"$job", instance=~"$instance", adminState="enabled"}) OR on() vector(-1)')
@@ -604,20 +318,17 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: $._config.grafanaDashboards.color.green, value: null },
           { color: $._config.grafanaDashboards.color.orange, value: 0.1 },
           { color: $._config.grafanaDashboards.color.red, value: 1 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-' },
           },
         })
-
         .addTarget(
           prometheus.target(
             'count(openstack_nova_agent_state{job=~"$job", instance=~"$instance", adminState="enabled"})'
@@ -633,7 +344,6 @@ local tablePanel = grafana.tablePanel;
           min=0,
           labelY1='VMs',
         )
-
         .addTarget(
           prometheus.target(
             'openstack_nova_total_vms{job=~"$job", instance=~"$instance", cluster=~"$cluster"}',
@@ -651,7 +361,6 @@ local tablePanel = grafana.tablePanel;
           max=1,
           labelY1='%',
         )
-
         .addTarget(
           prometheus.target(
             'openstack_nova_limits_vcpus_used{job=~"$job", instance=~"$instance", cluster=~"$cluster"} '
@@ -670,7 +379,6 @@ local tablePanel = grafana.tablePanel;
           max=1,
           labelY1='%',
         )
-
         .addTarget(
           prometheus.target(
             'openstack_nova_limits_memory_used{job=~"$job", instance=~"$instance", cluster=~"$cluster"} '
@@ -689,7 +397,6 @@ local tablePanel = grafana.tablePanel;
           max=1,
           labelY1='%',
         )
-
         .addTarget(
           prometheus.target(
             'openstack_nova_limits_instances_used{job=~"$job", instance=~"$instance", cluster=~"$cluster"} '
@@ -704,7 +411,6 @@ local tablePanel = grafana.tablePanel;
           datasource='$datasource',
           transform='timeseries_to_columns',
           sort={ col: 0, desc: false },
-
           styles=[
             {
               pattern: 'Value',
@@ -735,7 +441,6 @@ local tablePanel = grafana.tablePanel;
             { pattern: 'service', type: 'hidden' },
           ],
         )
-
         .addTarget(
           prometheus.target(
             'openstack_nova_agent_state{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -767,20 +472,17 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: 'transparent', value: null },
           { color: $._config.grafanaDashboards.color.orange, value: 0 },
           { color: $._config.grafanaDashboards.color.green, value: 1 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-', color: 'transparent' },
           },
         })
-
         .addTarget(
           prometheus.target(
             'sum(openstack_neutron_agent_state{job=~"$job",instance=~"$instance", adminState="up"}) OR on() vector(-1)',
@@ -797,20 +499,17 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: $._config.grafanaDashboards.color.green, value: null },
           { color: $._config.grafanaDashboards.color.orange, value: 0.1 },
           { color: $._config.grafanaDashboards.color.red, value: 1 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-', color: 'transparent' },
           },
         })
-
         .addTarget(
           prometheus.target(
             'count(openstack_neutron_agent_state{job=~"$job",instance=~"$instance", adminState="up"}) - sum(openstack_neutron_agent_state{job=~"$job",instance=~"$instance", adminState="up"}) OR on() vector(-1)',
@@ -825,7 +524,6 @@ local tablePanel = grafana.tablePanel;
           decimals=0,
           min=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_networks{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -840,7 +538,6 @@ local tablePanel = grafana.tablePanel;
           decimals=0,
           min=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_subnets{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -855,14 +552,12 @@ local tablePanel = grafana.tablePanel;
           decimals=0,
           min=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_routers{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
             legendFormat='{{instance}}-routers-total'
           )
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_routers_not_active{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -877,21 +572,18 @@ local tablePanel = grafana.tablePanel;
           decimals=0,
           min=0,
         )
-
         .addTarget(
           prometheus.target(
             'count by (instance) (openstack_neutron_port{job=~"$job",instance=~"$instance",cluster=~"$cluster"})',
             legendFormat='{{instance}}-ports-total'
           )
         )
-
         .addTarget(
           prometheus.target(
             'count by (instance)(openstack_neutron_port{status!="ACTIVE", job=~"$job",instance=~"$instance",cluster=~"$cluster"})',
             legendFormat='{{instance}}-ports-inactive'
           )
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_ports_no_ips{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -906,14 +598,12 @@ local tablePanel = grafana.tablePanel;
           decimals=0,
           min=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_floating_ips{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
             legendFormat='{{instance}}-IP-total'
           )
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_floating_ips_associated_not_active{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -931,7 +621,6 @@ local tablePanel = grafana.tablePanel;
           max=1,
           format='percentunit',
         )
-
         .addTarget(
           prometheus.target(
             'sum by (job, instance, ip_version, subnet_name) (openstack_neutron_network_ip_availabilities_used{job=~"$job",instance=~"$instance",cluster=~"$cluster"}) / sum by (job, instance, ip_version, subnet_name)(openstack_neutron_network_ip_availabilities_total{job=~"$job",instance=~"$instance",cluster=~"$cluster"})',
@@ -946,7 +635,6 @@ local tablePanel = grafana.tablePanel;
           description='The number of Security groups managed by Neutron',
           decimals=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_security_groups{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -961,7 +649,6 @@ local tablePanel = grafana.tablePanel;
           datasource='$datasource',
           transform='timeseries_to_columns',
           sort={ col: 0, desc: false },
-
           styles=[
             {
               pattern: 'Value #B',
@@ -994,7 +681,6 @@ local tablePanel = grafana.tablePanel;
             { pattern: 'service', type: 'hidden' },
           ]
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_router{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -1002,7 +688,6 @@ local tablePanel = grafana.tablePanel;
             instant=true
           )
         )
-
         .addTarget(
           prometheus.target(
             '(openstack_neutron_router{job=~"$job",instance=~"$instance",cluster=~"$cluster",status="ACTIVE"} * 1)\n       or\n       (openstack_neutron_router{job=~"$job",instance=~"$instance",cluster=~"$cluster",status="DOWN"} * 2)',
@@ -1011,12 +696,10 @@ local tablePanel = grafana.tablePanel;
             legendFormat='status_num'
           )
         )
-
         .addTransformation({
           id: 'merge',
           options: { reducers: [] },
         })
-
         .addTransformation({
           id: 'organize',
           options: {
@@ -1039,7 +722,6 @@ local tablePanel = grafana.tablePanel;
           datasource='$datasource',
           transform='timeseries_to_columns',
           sort={ col: 0, desc: false },
-
           styles=[
             {
               pattern: 'Value #B',
@@ -1072,7 +754,6 @@ local tablePanel = grafana.tablePanel;
             { pattern: 'service', type: 'hidden' },
           ],
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_port{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -1080,7 +761,6 @@ local tablePanel = grafana.tablePanel;
             instant=true,
           )
         )
-
         .addTarget(
           prometheus.target(
             '(openstack_neutron_port{job=~"$job",instance=~"$instance",cluster=~"$cluster",status="ACTIVE"} * 1)\n     or\n     (openstack_neutron_port{job=~"$job",instance=~"$instance",cluster=~"$cluster",status="DOWN"} * 2)',
@@ -1089,12 +769,10 @@ local tablePanel = grafana.tablePanel;
             legendFormat='status_num'
           )
         )
-
         .addTransformation({
           id: 'merge',
           options: { reducers: [] },
         })
-
         .addTransformation({
           id: 'organize',
           options: {
@@ -1118,7 +796,6 @@ local tablePanel = grafana.tablePanel;
           datasource='$datasource',
           transform='timeseries_to_columns',
           sort={ col: 0, desc: false },
-
           styles=[
             {
               pattern: 'Value',
@@ -1149,7 +826,6 @@ local tablePanel = grafana.tablePanel;
             { pattern: 'service', type: 'hidden' },
           ],
         )
-
         .addTarget(
           prometheus.target(
             'openstack_neutron_agent_state{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -1157,7 +833,6 @@ local tablePanel = grafana.tablePanel;
             instant=true,
           )
         )
-
         .addTransformation({
           id: 'organize',
           options: {
@@ -1182,20 +857,17 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: 'transparent', value: null },
           { color: $._config.grafanaDashboards.color.orange, value: 0 },
           { color: $._config.grafanaDashboards.color.green, value: 1 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-', color: 'transparent' },
           },
         })
-
         .addTarget(
           prometheus.target(
             'sum(openstack_cinder_agent_state{job=~"$job",instance=~"$instance", adminState="enabled"}) OR on() vector(-1)',
@@ -1212,20 +884,17 @@ local tablePanel = grafana.tablePanel;
           graphMode='none',
           reducerFunction='lastNotNull',
         )
-
         .addThresholds([
           { color: $._config.grafanaDashboards.color.green, value: null },
           { color: $._config.grafanaDashboards.color.orange, value: 0.1 },
           { color: $._config.grafanaDashboards.color.red, value: 1 },
         ])
-
         .addMapping({
           type: 'value',
           options: {
             '-1': { text: '-', color: 'transparent' },
           },
         })
-
         .addTarget(
           prometheus.target(
             'count(openstack_cinder_agent_state{job=~"$job",instance=~"$instance", adminState="enabled"})'
@@ -1256,14 +925,12 @@ local tablePanel = grafana.tablePanel;
           description='The current status of volumes in Cinder',
           decimals=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_cinder_volume_status_counter{job=~"$job",instance=~"$instance",status=~"error|error_backing-up|error_deleting|error_extending|error_restoring"} > 0',
             legendFormat='{{instance}}-{{status}}'
           )
         )
-
         .addTarget(
           prometheus.target(
             'openstack_cinder_volume_status_counter{job=~"$job",instance=~"$instance",status!~"error|error_backing-up|error_deleting|error_extending|error_restoring"} > 0',
@@ -1279,7 +946,6 @@ local tablePanel = grafana.tablePanel;
           decimals=1,
           format='percentunit',
         )
-
         .addTarget(
           prometheus.target(
             'openstack_cinder_limits_volume_used_gb{job=~"$job",instance=~"$instance",cluster=~"$cluster"} / clamp_min(openstack_cinder_limits_volume_max_gb{job=~"$job",instance=~"$instance",cluster=~"$cluster"}, 1)',
@@ -1295,7 +961,6 @@ local tablePanel = grafana.tablePanel;
           decimals=1,
           format='percentunit',
         )
-
         .addTarget(
           prometheus.target(
             'openstack_cinder_limits_backup_used_gb{job=~"$job",instance=~"$instance",cluster=~"$cluster"} / clamp_min(openstack_cinder_limits_backup_max_gb{job=~"$job",instance=~"$instance",cluster=~"$cluster"}, 1)',
@@ -1311,7 +976,6 @@ local tablePanel = grafana.tablePanel;
           decimals=1,
           format='percentunit',
         )
-
         .addTarget(
           prometheus.target(
             '(openstack_cinder_pool_capacity_total_gb{job=~"$job",instance=~"$instance",cluster=~"$cluster"} - openstack_cinder_pool_capacity_free_gb{job=~"$job",instance=~"$instance",cluster=~"$cluster"}) / clamp_min(openstack_cinder_pool_capacity_total_gb{job=~"$job",instance=~"$instance",cluster=~"$cluster"}, 1)',
@@ -1327,7 +991,6 @@ local tablePanel = grafana.tablePanel;
           decimals=0,
           format='none',
         )
-
         .addTarget(
           prometheus.target(
             'openstack_cinder_snapshots{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -1341,7 +1004,6 @@ local tablePanel = grafana.tablePanel;
           datasource='$datasource',
           transform='timeseries_to_columns',
           sort={ col: 0, desc: false },
-
           styles=[
             {
               pattern: 'Value',
@@ -1372,7 +1034,6 @@ local tablePanel = grafana.tablePanel;
             { pattern: 'service', type: 'hidden' },
           ],
         )
-
         .addTarget(
           prometheus.target(
             'openstack_cinder_agent_state{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -1380,7 +1041,6 @@ local tablePanel = grafana.tablePanel;
             instant=true
           )
         )
-
         .addTransformation({
           id: 'organize',
           options: {
@@ -1403,7 +1063,6 @@ local tablePanel = grafana.tablePanel;
           description='The number of images present in Glance',
           decimals=0,
         )
-
         .addTarget(
           prometheus.target(
             'openstack_glance_images{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -1418,7 +1077,6 @@ local tablePanel = grafana.tablePanel;
           datasource='$datasource',
           transform='timeseries_to_columns',
           sort={ col: 0, desc: false },
-
           styles=[
             { pattern: 'name', alias: 'Name' },
             { pattern: 'id', alias: 'ID' },
@@ -1437,7 +1095,6 @@ local tablePanel = grafana.tablePanel;
             { pattern: 'Time', type: 'hidden' },
           ]
         )
-
         .addTarget(
           prometheus.target(
             'openstack_glance_image_bytes{job=~"$job",instance=~"$instance",cluster=~"$cluster"}',
@@ -1445,7 +1102,6 @@ local tablePanel = grafana.tablePanel;
             instant=true
           )
         )
-
         .addTransformation({
           id: 'joinByField',
           options: {
@@ -1453,7 +1109,6 @@ local tablePanel = grafana.tablePanel;
             mode: 'outer',
           },
         })
-
         .addTransformation({
           id: 'organize',
           options: {
@@ -1480,12 +1135,10 @@ local tablePanel = grafana.tablePanel;
         designateStatus { gridPos: { x: 0, y: 4, w: 3, h: 3 } },
         loadbalancerStatus { gridPos: { x: 3, y: 4, w: 3, h: 3 } },
         objectStoreStatus { gridPos: { x: 6, y: 4, w: 3, h: 3 } },
-
         row.new('Resource Usage') { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
         cpuUsagePanel { gridPos: { x: 0, y: 5, w: 8, h: 8 } },
         overallMemoryUsagePanel { gridPos: { x: 8, y: 5, w: 8, h: 8 } },
         localStoragePanel { gridPos: { x: 16, y: 5, w: 8, h: 8 } },
-
         row.new('Keystone') { gridPos: { x: 0, y: 6, w: 24, h: 1 } },
         keystoneStatus { gridPos: { x: 0, y: 7, w: 3, h: 3 } },
         groupsPanel { gridPos: { x: 0, y: 10, w: 3, h: 3 } },
@@ -1494,7 +1147,6 @@ local tablePanel = grafana.tablePanel;
         projectsPanel { gridPos: { x: 3, y: 7, w: 21, h: 6 } },
         usersPanel { gridPos: { x: 3, y: 13, w: 21, h: 6 } },
         projectDetailsPanel { gridPos: { x: 0, y: 20, w: 24, h: 12 } },
-
         row.new('Nova') { gridPos: { x: 0, y: 21, w: 24, h: 1 } },
         novaStatus { gridPos: { x: 0, y: 22, w: 3, h: 5 } },
         novaAgentsUp { gridPos: { x: 0, y: 27, w: 3, h: 5 } },
@@ -1504,7 +1156,6 @@ local tablePanel = grafana.tablePanel;
         memoryUsagePanel { gridPos: { x: 3, y: 29.5, w: 10.5, h: 7.5 } },
         instanceUsagePanel { gridPos: { x: 13.5, y: 29.5, w: 10.5, h: 7.5 } },
         novaAgentsStatusPanel { gridPos: { x: 0, y: 37, w: 24, h: 8 } },
-
         row.new('Neutron') { gridPos: { x: 0, y: 45, w: 24, h: 1 } },
         neutronStatus { gridPos: { x: 0, y: 46, w: 3, h: 5 } },
         neutronAgentsUp { gridPos: { x: 0, y: 51, w: 3, h: 5 } },
@@ -1519,7 +1170,6 @@ local tablePanel = grafana.tablePanel;
         routerDetailsPanel { gridPos: { x: 0, y: 76, w: 24, h: 10 } },
         portDetailsPanel { gridPos: { x: 0, y: 86, w: 24, h: 10 } },
         neutronAgentsStatusPanel { gridPos: { x: 0, y: 96, w: 24, h: 10 } },
-
         row.new('Cinder') { gridPos: { x: 0, y: 106, w: 24, h: 1 } },
         cinderStatus { gridPos: { x: 0, y: 107, w: 3, h: 5 } },
         cinderAgentsUp { gridPos: { x: 0, y: 112, w: 3, h: 5 } },
@@ -1531,7 +1181,6 @@ local tablePanel = grafana.tablePanel;
         poolUsagePanel { gridPos: { x: 3, y: 123, w: 10.5, h: 8 } },
         snapshotsPanel { gridPos: { x: 13.5, y: 123, w: 10.5, h: 8 } },
         cinderAgentsStatusPanel { gridPos: { x: 0, y: 131, w: 24, h: 10 } },
-
         row.new('Glance') { gridPos: { x: 0, y: 141, w: 24, h: 1 } },
         glanceStatus { gridPos: { x: 0, y: 142, w: 3, h: 8 } },
         glanceImageCountPanel { gridPos: { x: 3, y: 142, w: 21, h: 8 } },
