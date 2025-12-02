@@ -1816,6 +1816,7 @@
             },
           },
         },
+<<<<<<< HEAD
         ceph: {
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.ceph],
@@ -1848,6 +1849,8 @@
             },
           },
         },
+=======
+>>>>>>> 4eac668 (Fix MR - Openstack app window in cluster overview)
         openstack: {
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.openstack],
