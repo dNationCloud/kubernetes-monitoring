@@ -1838,10 +1838,8 @@
           },
           alert: {
             name: '%(prefix)sCephHealthStatus',
-            message: '%(prefix)s Ceph cluster health is "{{ $value }}" (0=HEALTHY, 1=WARNING, 2=ERROR)',
-            expr: 'ceph_health_status{%(job)s}' % {
-            job: 'job=~".+"',
-          },
+            message: '%(prefix)s Ceph cluster is UNHEALTHY, on cluster : {{ $labels.cluster }}',
+            expr: 'ceph_health_status{%(job)s}' % { job: 'job=~".+"' },
           linkGetParams: 'var-cluster={{ $labels.cluster }}',
           thresholds: {
             operator: '>=',
