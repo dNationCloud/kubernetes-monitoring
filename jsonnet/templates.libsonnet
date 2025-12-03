@@ -1816,7 +1816,6 @@
             },
           },
         },
-<<<<<<< HEAD
         ceph: {
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.ceph],
@@ -1848,9 +1847,7 @@
             critical: 2,
             },
           },
-        },
-=======
->>>>>>> 4eac668 (Fix MR - Openstack app window in cluster overview)
+        },        
         openstack: {
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.openstack],
@@ -1858,6 +1855,7 @@
             expr:'min({__name__=~"openstack_.*_up", job=~"$job", instance=~"$instance", cluster=~"$cluster"}) OR vector(-1)',
             thresholds: {
               operator: '<',
+              lowest: 0,
               critical: 1,
             },
             mappings: [
@@ -1869,8 +1867,8 @@
            },
           alert: {
             name: '%(prefix)sOpenStackHealthStatus',
-            message: '%(prefix)s OpenStack cluster health is \"{{ $value }}\" (1=OK, 0=CRITICAL, -1=OFFLINE)',
-            expr:'min({__name__=~"openstack_.*_up", cluster=~"$cluster"}) OR vector(-1)',
+            message: '%(prefix)s OpenStack cluster health is CRITICAL, on cluster : {{ $labels.cluster }}',
+            expr:'min by (cluster) ({__name__=~"openstack_.*_up"})',
             linkGetParams: 'var-cluster={{ $labels.cluster }}',
             thresholds: {
               operator: '==',

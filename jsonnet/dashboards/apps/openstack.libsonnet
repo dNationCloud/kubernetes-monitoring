@@ -9,7 +9,7 @@ local tablePanel = grafana.tablePanel;
 {
   grafanaDashboards+:: {
     openstack: 
-      local statusPanel(name,metric)=
+      local statusPanel(name, metric)=
         statPanel.new(
           title=name + ' status',
           datasource='$datasource',
@@ -32,18 +32,6 @@ local tablePanel = grafana.tablePanel;
         .addTarget(
         prometheus.target('%s{job=~"$job",instance=~"$instance", cluster="$cluster"} OR on() vector(-1)' % metric)
         );
-
-      local keystoneStatus        = statusPanel('Keystone',        'openstack_identity_up');
-      local novaStatus            = statusPanel('Nova',            'openstack_nova_up');
-      local neutronStatus         = statusPanel('Neutron',         'openstack_neutron_up');
-      local cinderStatus          = statusPanel('Cinder',          'openstack_cinder_up');
-      local glanceStatus          = statusPanel('Glance',          'openstack_glance_up');
-      local placementStatus       = statusPanel('Placement',       'openstack_placement_up');
-      local ironicStatus          = statusPanel('Ironic',          'openstack_ironic_up');
-      local designateStatus       = statusPanel('Designate',       'openstack_designate_up');
-      local loadbalancerStatus    = statusPanel('LoadBalancer',    'openstack_loadbalancer_up');
-      local objectStoreStatus     = statusPanel('Object Store',    'openstack_object_store_up');
-      local gnocchiStatus         = statusPanel('Gnocchi',         'openstack_gnocchi_up');
 
       local cpuUsagePanel =
         graphPanel.new(
@@ -1124,23 +1112,23 @@ local tablePanel = grafana.tablePanel;
 
       local panels = [
         row.new('Service Status') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        keystoneStatus { gridPos: { x: 0, y: 1, w: 3, h: 3 } },
-        novaStatus { gridPos: { x: 3, y: 1, w: 3, h: 3 } },
-        neutronStatus { gridPos: { x: 6, y: 1, w: 3, h: 3 } },
-        cinderStatus { gridPos: { x: 9, y: 1, w: 3, h: 3 } },
-        glanceStatus { gridPos: { x: 12, y: 1, w: 3, h: 3 } },
-        placementStatus { gridPos: { x: 15, y: 1, w: 3, h: 3 } },
-        gnocchiStatus { gridPos: { x: 18, y: 1, w: 3, h: 3 } },
-        ironicStatus { gridPos: { x: 21, y: 1, w: 3, h: 3 } },
-        designateStatus { gridPos: { x: 0, y: 4, w: 3, h: 3 } },
-        loadbalancerStatus { gridPos: { x: 3, y: 4, w: 3, h: 3 } },
-        objectStoreStatus { gridPos: { x: 6, y: 4, w: 3, h: 3 } },
+        statusPanel('Keystone', 'openstack_identity_up') { gridPos: { x: 0, y: 1, w: 3, h: 3 } },
+        statusPanel('Nova', 'openstack_nova_up') { gridPos: { x: 3, y: 1, w: 3, h: 3 } },
+        statusPanel('Neutron', 'openstack_neutron_up') { gridPos: { x: 6, y: 1, w: 3, h: 3 } },
+        statusPanel('Cinder', 'openstack_cinder_up') { gridPos: { x: 9, y: 1, w: 3, h: 3 } },
+        statusPanel('Glance', 'openstack_glance_up') { gridPos: { x: 12, y: 1, w: 3, h: 3 } },
+        statusPanel('Placement', 'openstack_placement_up') { gridPos: { x: 15, y: 1, w: 3, h: 3 } },
+        statusPanel('Gnocchi', 'openstack_gnocchi_up') { gridPos: { x: 18, y: 1, w: 3, h: 3 } },
+        statusPanel('Ironic', 'openstack_ironic_up') { gridPos: { x: 21, y: 1, w: 3, h: 3 } },
+        statusPanel('Designate', 'openstack_designate_up') { gridPos: { x: 0, y: 4, w: 3, h: 3 } },
+        statusPanel('LoadBalancer', 'openstack_loadbalancer_up') { gridPos: { x: 3, y: 4, w: 3, h: 3 } },
+        statusPanel('Object Store', 'openstack_object_store_up') { gridPos: { x: 6, y: 4, w: 3, h: 3 } },
         row.new('Resource Usage') { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
         cpuUsagePanel { gridPos: { x: 0, y: 5, w: 8, h: 8 } },
         overallMemoryUsagePanel { gridPos: { x: 8, y: 5, w: 8, h: 8 } },
         localStoragePanel { gridPos: { x: 16, y: 5, w: 8, h: 8 } },
         row.new('Keystone') { gridPos: { x: 0, y: 6, w: 24, h: 1 } },
-        keystoneStatus { gridPos: { x: 0, y: 7, w: 3, h: 3 } },
+        statusPanel('Keystone', 'openstack_identity_up') { gridPos: { x: 0, y: 7, w: 3, h: 3 } },
         groupsPanel { gridPos: { x: 0, y: 10, w: 3, h: 3 } },
         domainsPanel { gridPos: { x: 0, y: 13, w: 3, h: 3 } },
         regionsPanel { gridPos: { x: 0, y: 16, w: 3, h: 3 } },
@@ -1148,7 +1136,7 @@ local tablePanel = grafana.tablePanel;
         usersPanel { gridPos: { x: 3, y: 13, w: 21, h: 6 } },
         projectDetailsPanel { gridPos: { x: 0, y: 20, w: 24, h: 12 } },
         row.new('Nova') { gridPos: { x: 0, y: 21, w: 24, h: 1 } },
-        novaStatus { gridPos: { x: 0, y: 22, w: 3, h: 5 } },
+        statusPanel('Nova', 'openstack_nova_up') { gridPos: { x: 0, y: 22, w: 3, h: 5 } },
         novaAgentsUp { gridPos: { x: 0, y: 27, w: 3, h: 5 } },
         novaAgentsDown { gridPos: { x: 0, y: 32, w: 3, h: 5 } },
         vmsPanel { gridPos: { x: 3, y: 22, w: 10.5, h: 7.5 } },
@@ -1157,7 +1145,7 @@ local tablePanel = grafana.tablePanel;
         instanceUsagePanel { gridPos: { x: 13.5, y: 29.5, w: 10.5, h: 7.5 } },
         novaAgentsStatusPanel { gridPos: { x: 0, y: 37, w: 24, h: 8 } },
         row.new('Neutron') { gridPos: { x: 0, y: 45, w: 24, h: 1 } },
-        neutronStatus { gridPos: { x: 0, y: 46, w: 3, h: 5 } },
+        statusPanel('Neutron', 'openstack_neutron_up') { gridPos: { x: 0, y: 46, w: 3, h: 5 } },
         neutronAgentsUp { gridPos: { x: 0, y: 51, w: 3, h: 5 } },
         neutronAgentsDown { gridPos: { x: 0, y: 56, w: 3, h: 5 } },
         neutronNetworksPanel { gridPos: { x: 3, y: 46, w: 10.5, h: 10 } },
@@ -1171,7 +1159,7 @@ local tablePanel = grafana.tablePanel;
         portDetailsPanel { gridPos: { x: 0, y: 86, w: 24, h: 10 } },
         neutronAgentsStatusPanel { gridPos: { x: 0, y: 96, w: 24, h: 10 } },
         row.new('Cinder') { gridPos: { x: 0, y: 106, w: 24, h: 1 } },
-        cinderStatus { gridPos: { x: 0, y: 107, w: 3, h: 5 } },
+        statusPanel('Cinder', 'openstack_cinder_up') { gridPos: { x: 0, y: 107, w: 3, h: 5 } },
         cinderAgentsUp { gridPos: { x: 0, y: 112, w: 3, h: 5 } },
         cinderAgentsDown { gridPos: { x: 0, y: 117, w: 3, h: 5 } },
         volumesPanel { gridPos: { x: 3, y: 107, w: 10.5, h: 8 } },
@@ -1182,7 +1170,7 @@ local tablePanel = grafana.tablePanel;
         snapshotsPanel { gridPos: { x: 13.5, y: 123, w: 10.5, h: 8 } },
         cinderAgentsStatusPanel { gridPos: { x: 0, y: 131, w: 24, h: 10 } },
         row.new('Glance') { gridPos: { x: 0, y: 141, w: 24, h: 1 } },
-        glanceStatus { gridPos: { x: 0, y: 142, w: 3, h: 8 } },
+        statusPanel('Glance', 'openstack_glance_up') { gridPos: { x: 0, y: 142, w: 3, h: 8 } },
         glanceImageCountPanel { gridPos: { x: 3, y: 142, w: 21, h: 8 } },
         glanceImagesPanel { gridPos: { x: 0, y: 150, w: 24, h: 10 } },
       ];
