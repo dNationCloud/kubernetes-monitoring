@@ -129,6 +129,7 @@
         monitoring: 'monitoring',
         kaasMonitoring: 'kaas-monitoring',
         ceph: 'ceph',
+        openstack: 'openstack',
       },
       selectors: {
         apiServer: 'job="apiserver"',
