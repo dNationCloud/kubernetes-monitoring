@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.7.8](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.8) (2025-12-04)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.7...v2.7.8)
+
+**Merged pull requests:**
+
+- Add Ceph app window in cluster overview [\#217](https://github.com/dNationCloud/kubernetes-monitoring/pull/217)
+
 ## [v2.7.7](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.7) (2025-11-26)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.6...v2.7.7)
@@ -586,6 +594,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
