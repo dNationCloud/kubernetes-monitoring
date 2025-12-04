@@ -1847,6 +1847,34 @@
             critical: 2,
             },
           },
+        },        
+        openstack: {
+          default: false,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.openstack],
+          panel: {
+            expr:'min({__name__=~"openstack_.*_up", job=~"$job", instance=~"$instance", cluster=~"$cluster"}) OR vector(-1)',
+            thresholds: {
+              operator: '<',
+              lowest: 0,
+              critical: 1,
+            },
+            mappings: [
+              { type: 1, value:  1, text: 'OK' },
+              { type: 1, value: -1, text: 'OFFLINE' },
+              { type: 1, value:  0, text: 'CRITICAL' },
+            ],
+            gridPos: { w: 4 },
+           },
+          alert: {
+            name: '%(prefix)sOpenStackHealthStatus',
+            message: '%(prefix)s OpenStack cluster health is CRITICAL, on cluster : {{ $labels.cluster }}',
+            expr:'min by (cluster) ({__name__=~"openstack_.*_up"})',
+            linkGetParams: 'var-cluster={{ $labels.cluster }}',
+            thresholds: {
+              operator: '==',
+              critical: 0,
+            },
+          },
         },
       },
       k8sApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
