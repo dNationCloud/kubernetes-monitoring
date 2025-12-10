@@ -1820,7 +1820,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.ceph],
           panel: {
-            expr: 'ceph_health_status{cluster="$cluster"}',
+            expr: 'ceph_health_status{cluster="$cluster", %(job)s}',
             thresholds: {
               operator: '>=',
               lowest: 0,
@@ -1852,7 +1852,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.openstack],
           panel: {
-            expr:'min({__name__=~"openstack_.*_up", job=~"$job", instance=~"$instance", cluster=~"$cluster"}) OR vector(-1)',
+            expr:'min({__name__=~"openstack_.*_up", %(job)s, cluster=~"$cluster"}) OR vector(-1)',
             thresholds: {
               operator: '<',
               lowest: 0,
@@ -1868,8 +1868,8 @@
           alert: {
             name: '%(prefix)sOpenStackHealthStatus',
             message: '%(prefix)s OpenStack cluster health is CRITICAL, on cluster : {{ $labels.cluster }}',
-            expr:'min by (cluster) ({__name__=~"openstack_.*_up"})',
-            linkGetParams: 'var-cluster={{ $labels.cluster }}',
+            expr:'min by (cluster, job) ({__name__=~"openstack_.*_up", %(job)s})' % { job: 'job=~".+"' },
+            linkGetParams: 'var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}',
             thresholds: {
               operator: '==',
               critical: 0,
