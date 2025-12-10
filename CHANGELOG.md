@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.7.10](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.10) (2025-12-10)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.9...v2.7.10)
+
+**Merged pull requests:**
+
+- Fix expr for Openstack and Ceph [\#218](https://github.com/dNationCloud/kubernetes-monitoring/pull/218)
+
 ## [v2.7.9](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.9) (2025-12-04)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.8...v2.7.9)
@@ -602,6 +610,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
