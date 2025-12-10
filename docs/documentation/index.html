@@ -2629,7 +2629,7 @@ thresholds:
 <tr><td>linkTo</td><td><div class='my-pre'><code>- ceph
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>expr: ceph_health_status{cluster="$cluster"}
+<tr><td>panel</td><td><div class='my-pre'><code>expr: ceph_health_status{cluster="$cluster", %(job)s}
 gridPos:
   w: 4
 mappings:
@@ -3113,8 +3113,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: HostApp
-expr: min by (cluster) ({__name__=~"openstack_.*_up"})
-linkGetParams: var-cluster={{ $labels.cluster }}
+expr: min by (cluster, job) ({__name__=~"openstack_.*_up", job=~".+"})
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'HostApp OpenStack cluster health is CRITICAL, on cluster : {{ $labels.cluster
   }}'
 name: HostAppOpenStackHealthStatus
@@ -3128,8 +3128,7 @@ thresholds:
 <tr><td>linkTo</td><td><div class='my-pre'><code>- openstack
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>expr: min({__name__=~"openstack_.*_up", job=~"$job", instance=~"$instance", cluster=~"$cluster"})
-  OR vector(-1)
+<tr><td>panel</td><td><div class='my-pre'><code>expr: min({__name__=~"openstack_.*_up", %(job)s, cluster=~"$cluster"}) OR vector(-1)
 gridPos:
   w: 4
 mappings:
@@ -5266,7 +5265,7 @@ thresholds:
 <tr><td>linkTo</td><td><div class='my-pre'><code>- ceph
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>expr: ceph_health_status{cluster="$cluster"}
+<tr><td>panel</td><td><div class='my-pre'><code>expr: ceph_health_status{cluster="$cluster", %(job)s}
 gridPos:
   w: 4
 mappings:
@@ -5750,8 +5749,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterApp
-expr: min by (cluster) ({__name__=~"openstack_.*_up"})
-linkGetParams: var-cluster={{ $labels.cluster }}
+expr: min by (cluster, job) ({__name__=~"openstack_.*_up", job=~".+"})
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterApp OpenStack cluster health is CRITICAL, on cluster : {{ $labels.cluster
   }}'
 name: ClusterAppOpenStackHealthStatus
@@ -5765,8 +5764,7 @@ thresholds:
 <tr><td>linkTo</td><td><div class='my-pre'><code>- openstack
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>expr: min({__name__=~"openstack_.*_up", job=~"$job", instance=~"$instance", cluster=~"$cluster"})
-  OR vector(-1)
+<tr><td>panel</td><td><div class='my-pre'><code>expr: min({__name__=~"openstack_.*_up", %(job)s, cluster=~"$cluster"}) OR vector(-1)
 gridPos:
   w: 4
 mappings:
@@ -6195,7 +6193,7 @@ thresholds:
 <tr><td>linkTo</td><td><div class='my-pre'><code>- ceph
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>expr: ceph_health_status{cluster="$cluster"}
+<tr><td>panel</td><td><div class='my-pre'><code>expr: ceph_health_status{cluster="$cluster", %(job)s}
 gridPos:
   w: 4
 mappings:
@@ -6679,8 +6677,8 @@ thresholds:
 
 <table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
   alertgroup: ClusterVMApp
-expr: min by (cluster) ({__name__=~"openstack_.*_up"})
-linkGetParams: var-cluster={{ $labels.cluster }}
+expr: min by (cluster, job) ({__name__=~"openstack_.*_up", job=~".+"})
+linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $labels.cluster }}
 message: 'ClusterVMApp OpenStack cluster health is CRITICAL, on cluster : {{ $labels.cluster
   }}'
 name: ClusterVMAppOpenStackHealthStatus
@@ -6694,8 +6692,7 @@ thresholds:
 <tr><td>linkTo</td><td><div class='my-pre'><code>- openstack
 </code></div>
 </td></tr>
-<tr><td>panel</td><td><div class='my-pre'><code>expr: min({__name__=~"openstack_.*_up", job=~"$job", instance=~"$instance", cluster=~"$cluster"})
-  OR vector(-1)
+<tr><td>panel</td><td><div class='my-pre'><code>expr: min({__name__=~"openstack_.*_up", %(job)s, cluster=~"$cluster"}) OR vector(-1)
 gridPos:
   w: 4
 mappings:
