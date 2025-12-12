@@ -15,8 +15,8 @@
 
 apiVersion: v2
 name: dnation-kubernetes-monitoring
-version: 2.7.10
-appVersion: 2.7.9
+version: 2.7.11
+appVersion: 2.7.10
 description: A set of Grafana dashboards and Prometheus alerts to cover Kubernetes monitoring in an easy way using a drill-down principle.
 keywords:
 - dnation
