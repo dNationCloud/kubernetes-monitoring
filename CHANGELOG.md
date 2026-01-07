@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.7.12](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.12) (2026-01-07)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.11...v2.7.12)
+
+**Merged pull requests:**
+
+- Fix openstack alert [\#221](https://github.com/dNationCloud/kubernetes-monitoring/pull/221)
+
 ## [v2.7.11](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.11) (2025-12-12)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.10...v2.7.11)
@@ -618,6 +626,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
