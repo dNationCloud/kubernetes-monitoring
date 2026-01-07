@@ -159,6 +159,7 @@
       },
     ],
     L1: {
+      local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
       k8s: {
         local k8sCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupCluster },
         targetDown: {
@@ -1873,6 +1874,7 @@
             thresholds: {
               operator: '==',
               critical: 0,
+              warning: maxWarnings,
             },
           },
         },
