@@ -70,6 +70,7 @@
 (import 'apps/jvm.libsonnet') +
 (import 'apps/prometheus.libsonnet') +
 (import 'apps/ssl-exporter.libsonnet') +
+(import 'apps/ssl-exporter-new.libsonnet') +
 (import 'apps/harbor.libsonnet') +
 (import 'apps/ceph.libsonnet') +
 (import 'apps/openstack.libsonnet') +
