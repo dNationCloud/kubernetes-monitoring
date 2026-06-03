@@ -123,6 +123,7 @@
         jvm: 'jvm',
         prometheus: 'prometheus',
         sslExporter: 'ssl-exporter',
+        vfioGPU: 'vfio-gpu',
         harbor: 'harbor',
         testbed: 'testbed',
         //Monitoring dashboard
