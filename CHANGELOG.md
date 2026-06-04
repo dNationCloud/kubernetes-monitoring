@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.8.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.8.0) (2026-06-04)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.13...v2.8.0)
+
+**Closed issues:**
+
+- Support air-gapped installation [\#219](https://github.com/dNationCloud/kubernetes-monitoring/issues/219)
+
+**Merged pull requests:**
+
+- Add VFIO usage dashboard [\#223](https://github.com/dNationCloud/kubernetes-monitoring/pull/223)
+
 ## [v2.7.13](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.7.13) (2026-01-19)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.12...v2.7.13)
@@ -634,6 +646,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
