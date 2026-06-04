@@ -14,8 +14,8 @@
 /* SSL exporter dashboard */
 local grafana = import 'grafonnet/grafana.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
 local row = grafana.row;
+local prometheus = grafana.prometheus;
 local table = grafana.tablePanel;
 local statPanel = grafana.statPanel;
 

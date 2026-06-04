@@ -1878,6 +1878,20 @@
             },
           },
         },
+        vfioGPU: {
+          default: false,
+          linkTo: [$.defaultConfig.grafanaDashboards.ids.vfioGPU],
+          panel: {
+            expr: '(sum(node_vfio_gpu_in_use_count)/sum(node_vfio_gpu_total_count))*100',
+            unit: '%',
+            thresholds:{
+              operator: ">=",
+              lowest: 0,
+              critical: 100,
+              warning: 80,
+            },
+          },
+        },
       },
       k8sApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupClusterApp, self.appTemplates),
       hostApps: defaultTemplate.getTemplatesApp($.defaultConfig.prometheusRules.alertGroupHostApp, self.appTemplates),
