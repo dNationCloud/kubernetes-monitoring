@@ -1,663 +1,237 @@
-local grafana = import 'grafonnet/grafana.libsonnet';
+/*
+  Copyright 2020 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* K8s ceph dashboard */
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
-local row = grafana.row;
-local statPanel = grafana.statPanel;
-local gaugePanel = grafana.gaugePanel;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local statPanel = grafana.panel.stat;
+local gaugePanel = grafana.panel.gauge;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
+local fieldOverride = grafana.panel.timeSeries.fieldOverride;
 
 {
   grafanaDashboards+:: {
     ceph:
-      local clusterHealth =
-        statPanel.new(
-          title='Cluster Health',
-          datasource='$datasource',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
+      local color = $._config.grafanaDashboards.color;
 
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.orange, value: 1 },
-          { color: $._config.grafanaDashboards.color.red, value: 2 },
-        ])
+      local promTarget(expr, legendFormat=null) =
+        prometheus.withExpr(expr) + (if legendFormat != null then prometheus.withLegendFormat(legendFormat) else {});
 
-        .addMapping({
-          type: 'value',
-          options: {
-            '0': { text: 'HEALTHY' },
-            '1': { text: 'WARNING' },
-            '2': { text: 'ERROR' },
-          },
-        })
+      local statBase(title, expr, unit='none', decimals=null, reducer='lastNotNull', steps=[], cmode='value', mappings=null) =
+        statPanel.new(title)
+        + statPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + statPanel.standardOptions.withUnit(unit)
+        + (if decimals != null then statPanel.standardOptions.withDecimals(decimals) else {})
+        + statPanel.options.withColorMode(cmode)
+        + statPanel.options.withGraphMode('none')
+        + statPanel.options.reduceOptions.withCalcs([reducer])
+        + statPanel.standardOptions.thresholds.withMode('absolute')
+        + statPanel.standardOptions.thresholds.withSteps(steps)
+        + (if mappings != null then statPanel.standardOptions.withMappings(mappings) else {})
+        + statPanel.queryOptions.withTargets([promTarget(expr, if title == 'Cluster Health' then 'Health' else null)]);
 
-        .addTarget(
-          prometheus.target('ceph_health_status{cluster="$cluster"}', legendFormat='Health')
-        );
+      local clusterHealth = statBase('Cluster Health',
+                                     'ceph_health_status{cluster="$cluster"}',
+                                     steps=[{ color: color.green, value: null }, { color: color.orange, value: 1 }, { color: color.red, value: 2 }],
+                                     mappings=[{ type: 'value', options: { '0': { text: 'HEALTHY' }, '1': { text: 'WARNING' }, '2': { text: 'ERROR' } } }]);
 
-      local writeThroughput =
-        statPanel.new(
-          title='Write Throughput',
-          datasource='$datasource',
-          unit='Bps',
-          decimals='1',
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
+      local writeThroughput = statBase('Write Throughput', 'sum(irate(ceph_osd_op_w_in_bytes{cluster="$cluster"}[5m]))', 'Bps', 1);
+      local readThroughput = statBase('Read Throughput', 'sum(irate(ceph_osd_op_r_out_bytes{cluster="$cluster"}[5m]))', 'Bps', 1);
+      local clusterCapacity = statBase('Cluster Capacity', 'ceph_cluster_total_bytes{cluster="$cluster"}', 'decbytes', 2);
+      local writeIOPS = statBase('Write IOPS', 'sum(irate(ceph_osd_op_w{cluster="$cluster"}[5m]))', 'ops', 0);
+      local readIOPS = statBase('Read IOPS', 'sum(irate(ceph_osd_op_r{cluster="$cluster"}[5m]))', 'ops', 0);
+      local numObjects = statBase('Number of Objects', 'sum(ceph_pool_objects{cluster="$cluster"})', 'short', 2);
+      local bytesWritten = statBase('Bytes Written', 'ceph_cluster_total_used_bytes{cluster="$cluster"}', 'decbytes', 1, 'delta');
+      local bytesRead = statBase('Bytes Read', 'sum(ceph_osd_op_r_out_bytes{cluster="$cluster"})', 'decbytes', 1, 'delta');
+      local difference = statBase('Difference', 'sum(ceph_pool_objects)', 'short', 2, 'diff');
 
-        .addTarget(
-          prometheus.target('sum(irate(ceph_osd_op_w_in_bytes{cluster="$cluster"}[5m]))')
-        );
+      local monSessionNum = statBase('Mon Session Num',
+                                     'sum(ceph_mon_num_sessions{cluster="$cluster"})',
+                                     'short',
+                                     0,
+                                     steps=[{ color: color.green, value: null }, { color: color.red, value: 128 }]);
 
-      local readThroughput =
-        statPanel.new(
-          title='Read Throughput',
-          datasource='$datasource',
-          unit='Bps',
-          decimals=1,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
+      local monitorsInQuorum = statBase('Monitors in Quorum',
+                                        'count(ceph_mon_quorum_status{cluster="$cluster"}) or vector(0)',
+                                        'none',
+                                        0,
+                                        cmode='background',
+                                        steps=[{ color: color.red, value: null }, { color: color.orange, value: 2 }, { color: color.green, value: 3 }]);
 
-        .addTarget(
-          prometheus.target('sum(irate(ceph_osd_op_r_out_bytes{cluster="$cluster"}[5m]))')
-        );
+      local usedCapacity = statBase('Used Capacity', 'ceph_cluster_total_used_bytes{cluster="$cluster"}', 'decbytes', 2);
 
-      local clusterCapacity =
-        statPanel.new(
-          title='Cluster Capacity',
-          datasource='$datasource',
-          unit='decbytes',
-          decimals=2,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
+      local osdOut = statBase('OSDs OUT',
+                              'count(ceph_osd_up{cluster="$cluster"}) - count(ceph_osd_in{cluster="$cluster"})',
+                              'none',
+                              0,
+                              steps=[{ color: color.green, value: null }, { color: color.red, value: 1 }]);
 
-        .addTarget(
-          prometheus.target('ceph_cluster_total_bytes{cluster="$cluster"}')
-        );
+      local osdDown = statBase('OSDs DOWN',
+                               'count(ceph_osd_up{cluster="$cluster"} == 0.0) OR vector(0)',
+                               'none',
+                               0,
+                               steps=[{ color: color.green, value: null }, { color: color.red, value: 1 }]);
+
+      local osdUP = statBase('OSDs UP',
+                             'sum(ceph_osd_up{cluster="$cluster"})',
+                             'none',
+                             0,
+                             steps=[{ color: color.green, value: null }, { color: color.red, value: 80 }]);
+
+      local osdIN = statBase('OSDs IN',
+                             'sum(ceph_osd_in{cluster="$cluster"})',
+                             'none',
+                             0,
+                             steps=[{ color: color.green, value: null }, { color: color.red, value: 80 }]);
+
+      local avgPGs = statBase('Avg PGs',
+                              'sum(ceph_osd_numpg{cluster="$cluster"})',
+                              'none',
+                              1,
+                              steps=[{ color: color.green, value: null }, { color: color.orange, value: 250 }, { color: color.red, value: 300 }]);
+
+      local avgApplyLatency = statBase('Avg Apply Latency',
+                                       'avg(ceph_osd_apply_latency_ms{cluster="$cluster"})',
+                                       'ms',
+                                       2,
+                                       steps=[{ color: color.green, value: null }, { color: color.orange, value: 10 }, { color: color.red, value: 50 }]);
+
+      local avgCommitLatency = statBase('Avg Commit Latency',
+                                        'avg(ceph_osd_commit_latency_ms{cluster="$cluster"})',
+                                        'ms',
+                                        2,
+                                        steps=[{ color: color.green, value: null }, { color: color.orange, value: 10 }, { color: color.red, value: 50 }]);
+
+      local avgOPWriteLatency = statBase('Avg OP Write Latency',
+                                         'clamp_min(avg(rate(ceph_osd_op_w_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_w_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)',
+                                         'ms',
+                                         4,
+                                         steps=[{ color: color.green, value: null }, { color: color.orange, value: 1 }, { color: color.red, value: 2 }]);
+
+      local avgOPReadLatency = statBase('Avg OP Read Latency',
+                                        'clamp_min(avg(rate(ceph_osd_op_r_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_r_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)',
+                                        'ms',
+                                        4,
+                                        steps=[{ color: color.green, value: null }, { color: color.orange, value: 1 }, { color: color.red, value: 2 }]);
 
       local availableCapacity =
-        gaugePanel.new(
-          title='Available Capacity',
-          datasource='$datasource',
-          unit='percentunit',
-          min=0,
-          max=1,
-          reducerFunction='lastNotNull',
-        )
+        gaugePanel.new('Available Capacity')
+        + gaugePanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + gaugePanel.standardOptions.withUnit('percentunit')
+        + gaugePanel.standardOptions.withMin(0)
+        + gaugePanel.standardOptions.withMax(1)
+        + gaugePanel.options.reduceOptions.withCalcs(['lastNotNull'])
+        + gaugePanel.standardOptions.thresholds.withMode('absolute')
+        + gaugePanel.standardOptions.thresholds.withSteps([{ color: color.red, value: null }, { color: color.orange, value: 0.1 }, { color: color.green, value: 0.3 }])
+        + gaugePanel.queryOptions.withTargets([promTarget('(ceph_cluster_total_bytes{cluster="$cluster"} - ceph_cluster_total_used_bytes{cluster="$cluster"}) / ceph_cluster_total_bytes{cluster="$cluster"}')]);
 
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.red, value: null },
-          { color: $._config.grafanaDashboards.color.orange, value: 0.1 },
-          { color: $._config.grafanaDashboards.color.green, value: 0.3 },
-        ])
+      local legendTableFull =
+        timeSeriesPanel.options.legend.withDisplayMode('table') + timeSeriesPanel.options.legend.withPlacement('bottom')
+        + timeSeriesPanel.options.legend.withCalcs(['mean', 'lastNotNull', 'max', 'min']);
 
-        .addTarget(
-          prometheus.target('(ceph_cluster_total_bytes{cluster="$cluster"} - ceph_cluster_total_used_bytes{cluster="$cluster"}) / ceph_cluster_total_bytes{cluster="$cluster"}')
-        );
-
-      local writeIOPS =
-        statPanel.new(
-          title='Write IOPS',
-          datasource='$datasource',
-          unit='ops',
-          decimals=0,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addTarget(
-          prometheus.target('sum(irate(ceph_osd_op_w{cluster="$cluster"}[5m]))')
-        );
-
-      local readIOPS =
-        statPanel.new(
-          title='Read IOPS',
-          datasource='$datasource',
-          unit='ops',
-          decimals=0,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addTarget(
-          prometheus.target('sum(irate(ceph_osd_op_r{cluster="$cluster"}[5m]))')
-        );
-
-      local numObjects =
-        statPanel.new(
-          title='Number of Objects',
-          datasource='$datasource',
-          unit='short',
-          decimals=2,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addTarget(
-          prometheus.target('sum(ceph_pool_objects{cluster="$cluster"})')
-        );
-
-      local bytesWritten =
-        statPanel.new(
-          title='Bytes Written',
-          datasource='$datasource',
-          unit='decbytes',
-          decimals=1,
-          graphMode='none',
-          reducerFunction='delta',
-        )
-
-        .addTarget(
-          prometheus.target('ceph_cluster_total_used_bytes{cluster="$cluster"}')
-        );
-
-      local bytesRead =
-        statPanel.new(
-          title='Bytes Read',
-          datasource='$datasource',
-          unit='decbytes',
-          decimals=1,
-          graphMode='none',
-          reducerFunction='delta',
-        )
-
-        .addTarget(
-          prometheus.target(expr='sum(ceph_osd_op_r_out_bytes{cluster="$cluster"})')
-        );
-
-      local difference =
-        statPanel.new(
-          title='Difference',
-          datasource='$datasource',
-          unit='short',
-          decimals=2,
-          graphMode='none',
-          reducerFunction='diff',
-        )
-
-        .addTarget(
-          prometheus.target('sum(ceph_pool_objects)')
-        );
-
-      local monSessionNum =
-        statPanel.new(
-          title='Mon Session Num',
-          datasource='$datasource',
-          unit='short',
-          decimals=0,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addTarget(
-          prometheus.target('sum(ceph_mon_num_sessions{cluster="$cluster"})')
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.red, value: 128 },
-          { color: $._config.grafanaDashboards.color.green, value: null },
-        ]);
-
-      local monitorsInQuorum =
-        statPanel.new(
-          title='Monitors in Quorum',
-          datasource='$datasource',
-          decimals=0,
-          graphMode='none',
-          colorMode='background',
-          reducerFunction='lastNotNull',
-        )
-
-        .addTarget(
-          prometheus.target('count(ceph_mon_quorum_status{cluster="$cluster"}) or vector(0)')
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.red, value: null },
-          { color: $._config.grafanaDashboards.color.orange, value: 2 },
-          { color: $._config.grafanaDashboards.color.green, value: 3 },
-        ]);
-
-      local usedCapacity =
-        statPanel.new(
-          title='Used Capacity',
-          datasource='$datasource',
-          unit='decbytes',
-          decimals=2,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addTarget(
-          prometheus.target('ceph_cluster_total_used_bytes{cluster="$cluster"}')
-        );
-
-      local osdOut =
-        statPanel.new(
-          title='OSDs OUT',
-          datasource='$datasource',
-          decimals=0,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.red, value: 1 },
-        ])
-
-        .addTarget(
-          prometheus.target('count(ceph_osd_up{cluster="$cluster"}) - count(ceph_osd_in{cluster="$cluster"})')
-        );
-
-      local osdDown =
-        statPanel.new(
-          title='OSDs DOWN',
-          datasource='$datasource',
-          decimals=0,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.red, value: 1 },
-        ])
-
-        .addTarget(
-          prometheus.target('count(ceph_osd_up{cluster="$cluster"} == 0.0) OR vector(0)')
-        );
-
-      local osdUP =
-        statPanel.new(
-          title='OSDs UP',
-          datasource='$datasource',
-          decimals=0,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.red, value: 80 },
-        ])
-
-        .addTarget(
-          prometheus.target('sum(ceph_osd_up{cluster="$cluster"})')
-        );
-
-      local osdIN =
-        statPanel.new(
-          title='OSDs IN',
-          datasource='$datasource',
-          decimals=0,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.red, value: 80 },
-        ])
-
-        .addTarget(
-          prometheus.target('sum(ceph_osd_in{cluster="$cluster"})')
-        );
-
-      local avgPGs =
-        statPanel.new(
-          title='Avg PGs',
-          datasource='$datasource',
-          decimals=1,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.orange, value: 250 },
-          { color: $._config.grafanaDashboards.color.red, value: 300 },
-        ])
-
-        .addTarget(
-          prometheus.target('sum(ceph_osd_numpg{cluster="$cluster"})')
-        );
-
-      local avgApplyLatency =
-        statPanel.new(
-          title='Avg Apply Latency',
-          datasource='$datasource',
-          unit='ms',
-          decimals=2,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.orange, value: 10 },
-          { color: $._config.grafanaDashboards.color.red, value: 50 },
-        ])
-
-        .addTarget(
-          prometheus.target('avg(ceph_osd_apply_latency_ms{cluster="$cluster"})')
-        );
-
-      local avgCommitLatency =
-        statPanel.new(
-          title='Avg Commit Latency',
-          datasource='$datasource',
-          unit='ms',
-          decimals=2,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.orange, value: 10 },
-          { color: $._config.grafanaDashboards.color.red, value: 50 },
-        ])
-
-        .addTarget(
-          prometheus.target('avg(ceph_osd_commit_latency_ms{cluster="$cluster"})')
-        );
-
-      local avgOPWriteLatency =
-        statPanel.new(
-          title='Avg OP Write Latency',
-          datasource='$datasource',
-          unit='ms',
-          decimals=4,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.orange, value: 1 },
-          { color: $._config.grafanaDashboards.color.red, value: 2 },
-        ])
-
-        .addTarget(
-          prometheus.target('clamp_min(avg(rate(ceph_osd_op_w_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_w_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)')
-        );
-
-      local avgOPReadLatency =
-        statPanel.new(
-          title='Avg OP Read Latency',
-          datasource='$datasource',
-          unit='ms',
-          decimals=4,
-          graphMode='none',
-          reducerFunction='lastNotNull',
-        )
-
-        .addThresholds([
-          { color: $._config.grafanaDashboards.color.green, value: null },
-          { color: $._config.grafanaDashboards.color.orange, value: 1 },
-          { color: $._config.grafanaDashboards.color.red, value: 2 },
-        ])
-
-        .addTarget(
-          prometheus.target('clamp_min(avg(rate(ceph_osd_op_r_latency_sum{cluster="$cluster"}[5m]) / clamp_min(rate(ceph_osd_op_r_latency_count{cluster="$cluster"}[5m]), 1)), 0) or vector(0)')
-        );
+      local timeSeriesBase(title, unit, fillOpacity, decimals, min=null, stack=false, legend=null, overrides=[]) =
+        timeSeriesPanel.new(title)
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.standardOptions.withUnit(unit)
+        + timeSeriesPanel.standardOptions.withDecimals(decimals)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(fillOpacity)
+        + (if min != null then timeSeriesPanel.standardOptions.withMin(min) else {})
+        + (if stack then timeSeriesPanel.fieldConfig.defaults.custom.withStacking({ mode: 'normal', group: 'A' }) else {})
+        + (if std.length(overrides) > 0 then timeSeriesPanel.standardOptions.withOverrides(overrides) else {})
+        + (if legend != null then legend else {})
+        + timeSeriesPanel.options.tooltip.withMode('multi') + timeSeriesPanel.options.tooltip.withSort('desc');
 
       local capacityPanel =
-        graphPanel.new(
-          title='Capacity',
-          datasource='$datasource',
-          stack=true,
-          fill=5,
-          decimals=2,
-          format='bytes',
-          aliasColors={
-            Available: $._config.grafanaDashboards.color.orange,
-            Used: $._config.grafanaDashboards.color.red,
-            'Total Capacity': $._config.grafanaDashboards.color.blue,
-          },
-          legend_alignAsTable=true,
-          legend_values=true,
-          legend_avg=true,
-          legend_current=true,
-          legend_max=true,
-          legend_min=true,
-          min=0,
-        )
+        timeSeriesBase('Capacity', 'bytes', 50, 2, min=0, stack=true, legend=legendTableFull, overrides=[
+          fieldOverride.byName.new('Available')
+            + fieldOverride.byName.withProperty('color', { mode: 'fixed', fixedColor: color.orange }),
+          fieldOverride.byName.new('Used')
+            + fieldOverride.byName.withProperty('color', { mode: 'fixed', fixedColor: color.red }),
+          fieldOverride.byName.new('Total Capacity')
+            + fieldOverride.byName.withProperty('color', { mode: 'fixed', fixedColor: color.blue })
+            + fieldOverride.byName.withProperty('custom.fillOpacity', 0)
+            + fieldOverride.byName.withProperty('custom.stacking', { mode: 'none' })
+            + fieldOverride.byName.withProperty('custom.lineWidth', 3),
+        ])
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('ceph_cluster_total_bytes{cluster="$cluster"} - ceph_cluster_total_used_bytes{cluster="$cluster"}', 'Available'),
+          promTarget('ceph_cluster_total_used_bytes{cluster="$cluster"}', 'Used'),
+          promTarget('ceph_cluster_total_bytes{cluster="$cluster"}', 'Total Capacity'),
+        ]);
 
-        .addTarget(
-          prometheus.target(
-            'ceph_cluster_total_bytes{cluster="$cluster"} - ceph_cluster_total_used_bytes{cluster="$cluster"}',
-            legendFormat='Available'
-          )
-        )
-
-        .addTarget(
-          prometheus.target(
-            'ceph_cluster_total_used_bytes{cluster="$cluster"}',
-            legendFormat='Used'
-          )
-        )
-
-        .addTarget(
-          prometheus.target(
-            'ceph_cluster_total_bytes{cluster="$cluster"}',
-            legendFormat='Total Capacity'
-          )
-        )
-
-        .addSeriesOverride(
-          { alias: 'Total Capacity', fill: 0, stack: false, linewidth: 3 },
-        );
+      local wrReadOverrides = [
+        fieldOverride.byName.new('Write')
+          + fieldOverride.byName.withProperty('color', { mode: 'fixed', fixedColor: color.red })
+          + fieldOverride.byName.withProperty('custom.fillOpacity', 60)
+          + fieldOverride.byName.withProperty('custom.lineWidth', 1),
+        fieldOverride.byName.new('Read')
+          + fieldOverride.byName.withProperty('color', { mode: 'fixed', fixedColor: color.blue })
+          + fieldOverride.byName.withProperty('custom.fillOpacity', 60)
+          + fieldOverride.byName.withProperty('custom.lineWidth', 1),
+      ];
 
       local iopsPanel =
-        graphPanel.new(
-          title='IOPS',
-          datasource='$datasource',
-          stack=true,
-          fill=5,
-          decimals=0,
-          format='iops',
-          aliasColors={
-            Write: $._config.grafanaDashboards.color.red,
-            Read: $._config.grafanaDashboards.color.blue,
-          },
-          legend_alignAsTable=true,
-          legend_values=true,
-          legend_avg=true,
-          legend_current=true,
-          legend_max=true,
-          legend_min=true,
-          min=0,
-        )
-
-        .addTarget(
-          prometheus.target(
-            'sum(irate(ceph_osd_op_w{cluster="$cluster"}[5m]))',
-            legendFormat='Write'
-          )
-        )
-
-        .addTarget(
-          prometheus.target(
-            'sum(irate(ceph_osd_op_r{cluster="$cluster"}[5m]))',
-            legendFormat='Read'
-          )
-        )
-        .addSeriesOverride(
-          { alias: 'Write', fill: 6, stack: true, linewidth: 1 },
-        )
-
-        .addSeriesOverride(
-          { alias: 'Read', fill: 6, stack: true, linewidth: 1 },
-        )
-
-        .addYaxis('Bps', 0, null, null, true, 1, null);
+        timeSeriesBase('IOPS', 'iops', 50, 0, min=0, stack=true, legend=legendTableFull, overrides=wrReadOverrides)
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('sum(irate(ceph_osd_op_w{cluster="$cluster"}[5m]))', 'Write'),
+          promTarget('sum(irate(ceph_osd_op_r{cluster="$cluster"}[5m]))', 'Read'),
+        ]);
 
       local clusterThroughputPanel =
-        graphPanel.new(
-          title='Cluster Throughput',
-          datasource='$datasource',
-          stack=true,
-          fill=5,
-          decimals=1,
-          format='decbytes',
-          aliasColors={
-            Write: $._config.grafanaDashboards.color.red,
-            Read: $._config.grafanaDashboards.color.blue,
-          },
-          legend_alignAsTable=true,
-          legend_values=true,
-          legend_avg=true,
-          legend_current=true,
-          legend_max=true,
-          legend_min=true,
-          min=0,
-        )
-
-        .addTarget(
-          prometheus.target(
-            'sum(irate(ceph_osd_op_w_in_bytes{cluster="$cluster"}[5m]))',
-            legendFormat='Write'
-          )
-        )
-
-        .addTarget(
-          prometheus.target(
-            'sum(irate(ceph_osd_op_r_out_bytes{cluster="$cluster"}[5m]))',
-            legendFormat='Read'
-          )
-        )
-
-        .addSeriesOverride(
-          { alias: 'Write', fill: 6, stack: true, linewidth: 1 },
-        )
-
-        .addSeriesOverride(
-          { alias: 'Read', fill: 6, stack: true, linewidth: 1 },
-        )
-
-        .addYaxis('Bps', 0, null, null, true, 1, null);
+        timeSeriesBase('Cluster Throughput', 'decbytes', 50, 1, min=0, stack=true, legend=legendTableFull, overrides=wrReadOverrides)
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('sum(irate(ceph_osd_op_w_in_bytes{cluster="$cluster"}[5m]))', 'Write'),
+          promTarget('sum(irate(ceph_osd_op_r_out_bytes{cluster="$cluster"}[5m]))', 'Read'),
+        ]);
 
       local poolUsedBytesPanel =
-        graphPanel.new(
-          title='Pool Used Bytes',
-          datasource='$datasource',
-          decimals=2,
-          format='bytes',
-        )
-
-        .addTarget(
-          prometheus.target(
-            '(ceph_pool_bytes_used{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})',
-            legendFormat='{{name}}'
-          )
-        )
-
-        .addYaxis('bytes', 0, null, null, true, 1, null);
+        timeSeriesBase('Pool Used Bytes', 'bytes', 10, 2)
+        + timeSeriesPanel.queryOptions.withTargets([promTarget('(ceph_pool_bytes_used{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})', '{{name}}')]);
 
       local poolRawBytesPanel =
-        graphPanel.new(
-          title='Pool RAW Bytes',
-          datasource='$datasource',
-          legend_alignAsTable=true,
-          legend_rightSide=true,
-          legend_values=true,
-          decimals=2,
-          format='bytes',
-          min=0,
-        )
-
-        .addTarget(
-          prometheus.target(
-            '(ceph_pool_avail_raw{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})',
-            legendFormat='{{name}} Avail'
-          )
-        )
-
-        .addTarget(
-          prometheus.target(
-            '(ceph_pool_stored_raw{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})',
-            legendFormat='{{name}} Stored'
-          )
-        )
-
-        .addYaxis('bytes', 0, null, null, true, 1, null);
+        timeSeriesBase('Pool RAW Bytes', 'bytes', 10, 2, min=0, legend=timeSeriesPanel.options.legend.withDisplayMode('table') + timeSeriesPanel.options.legend.withPlacement('right') + timeSeriesPanel.options.legend.withCalcs(['lastNotNull']))
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('(ceph_pool_avail_raw{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})', '{{name}} Avail'),
+          promTarget('(ceph_pool_stored_raw{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})', '{{name}} Stored'),
+        ]);
 
       local objectsPerPoolPanel =
-        graphPanel.new(
-          title='Objects Per Pool',
-          datasource='$datasource',
-          legend_rightSide=true,
-          decimals=0,
-          min=0,
-        )
-
-        .addTarget(
-          prometheus.target(
-            '(ceph_pool_objects{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})',
-            legendFormat='{{name}}'
-          )
-        );
+        timeSeriesBase('Objects Per Pool', 'short', 10, 0, min=0, legend=timeSeriesPanel.options.legend.withPlacement('right'))
+        + timeSeriesPanel.queryOptions.withTargets([promTarget('(ceph_pool_objects{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})', '{{name}}')]);
 
       local poolQuotaBytesPanel =
-        graphPanel.new(
-          title='Pool Quota Bytes',
-          datasource='$datasource',
-          decimals=2,
-          format='bytes',
-          min=0,
-        )
-
-        .addTarget(
-          prometheus.target(
-            '(ceph_pool_quota_bytes{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})',
-            legendFormat='{{name}}'
-          )
-        )
-
-        .addYaxis('bytes', 0, null, null, true, 1, null);
+        timeSeriesBase('Pool Quota Bytes', 'bytes', 10, 2, min=0)
+        + timeSeriesPanel.queryOptions.withTargets([promTarget('(ceph_pool_quota_bytes{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})', '{{name}}')]);
 
       local poolObjectsQuotaPanel =
-        graphPanel.new(
-          title='Pool Objects Quota',
-          datasource='$datasource',
-          decimals=0,
-          min=0,
-        )
-
-        .addTarget(
-          prometheus.target(
-            '(ceph_pool_quota_objects{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})',
-            legendFormat='{{name}}'
-          )
-        );
+        timeSeriesBase('Pool Objects Quota', 'short', 10, 0, min=0)
+        + timeSeriesPanel.queryOptions.withTargets([promTarget('(ceph_pool_quota_objects{cluster="$cluster"}) * on (pool_id) group_left(name) (ceph_pool_metadata{cluster="$cluster"})', '{{name}}')]);
 
       local osdTypeCountPanel =
-        graphPanel.new(
-          title='OSD Type Count',
-          datasource='$datasource',
-          legend_values=true,
-          decimals=0,
-          min=0,
-        )
-
-        .addTarget(
-          prometheus.target(
-            'count(ceph_bluestore_kv_commit_lat_count{cluster="$cluster"})',
-            legendFormat='BlueStore'
-          )
-        );
+        timeSeriesBase('OSD Type Count', 'short', 10, 0, min=0, legend=timeSeriesPanel.options.legend.withCalcs(['lastNotNull']))
+        + timeSeriesPanel.queryOptions.withTargets([promTarget('count(ceph_bluestore_kv_commit_lat_count{cluster="$cluster"})', 'BlueStore')]);
 
       local panels = [
-        row.new('CLUSTER STATE') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        row.new('CLUSTER STATE') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
         clusterHealth { gridPos: { x: 0, y: 1, w: 3, h: 6 } },
         writeThroughput { gridPos: { x: 3, y: 1, w: 3, h: 3 } },
         readThroughput { gridPos: { x: 6, y: 1, w: 3, h: 3 } },
-        clusterCapacity { tooltip+: { mode: 'multi', sort: 'desc' }, gridPos: { x: 9, y: 1, w: 3, h: 3 } },
+        clusterCapacity { gridPos: { x: 9, y: 1, w: 3, h: 3 } },
         availableCapacity { gridPos: { x: 12, y: 1, w: 3, h: 6 } },
         writeIOPS { gridPos: { x: 3, y: 4, w: 3, h: 3 } },
         readIOPS { gridPos: { x: 6, y: 4, w: 3, h: 3 } },
@@ -668,41 +242,40 @@ local gaugePanel = grafana.gaugePanel;
         difference { gridPos: { x: 15, y: 4, w: 3, h: 3 } },
         monSessionNum { gridPos: { x: 18, y: 4, w: 3, h: 3 } },
         monitorsInQuorum { gridPos: { x: 21, y: 4, w: 3, h: 3 } },
-        row.new('OSD STATE', collapse=true) { gridPos: { x: 0, y: 8, w: 24, h: 1 } },
-        osdOut { gridPos: { x: 0, y: 9, w: 3, h: 3 } },
-        osdDown { gridPos: { x: 3, y: 9, w: 3, h: 3 } },
-        osdUP { gridPos: { x: 6, y: 9, w: 3, h: 3 } },
-        osdIN { gridPos: { x: 9, y: 9, w: 3, h: 3 } },
-        avgPGs { gridPos: { x: 12, y: 9, w: 3, h: 3 } },
-        avgApplyLatency { gridPos: { x: 15, y: 9, w: 3, h: 3 } },
-        avgCommitLatency { gridPos: { x: 18, y: 9, w: 2, h: 3 } },
-        avgOPWriteLatency { gridPos: { x: 20, y: 9, w: 2, h: 3 } },
-        avgOPReadLatency { gridPos: { x: 22, y: 9, w: 2, h: 3 } },
-        row.new('CLUSTER STATS', collapse=true) { gridPos: { x: 0, y: 24, w: 24, h: 1 } },
-        capacityPanel { gridPos: { x: 0, y: 25, w: 8, h: 8 } },
-        iopsPanel { gridPos: { x: 8, y: 25, w: 8, h: 8 } },
-        clusterThroughputPanel { gridPos: { x: 16, y: 25, w: 8, h: 8 } },
-        poolUsedBytesPanel { gridPos: { x: 0, y: 33, w: 8, h: 8 } },
-        poolRawBytesPanel { gridPos: { x: 8, y: 33, w: 8, h: 8 } },
-        objectsPerPoolPanel { gridPos: { x: 16, y: 33, w: 8, h: 8 } },
-        poolQuotaBytesPanel { gridPos: { x: 0, y: 41, w: 8, h: 8 } },
-        poolObjectsQuotaPanel { gridPos: { x: 8, y: 41, w: 8, h: 8 } },
-        osdTypeCountPanel { gridPos: { x: 16, y: 41, w: 8, h: 8 } },
+        row.new('OSD STATE') + { gridPos: { x: 0, y: 7, w: 24, h: 1 } },
+        osdOut { gridPos: { x: 0, y: 8, w: 3, h: 3 } },
+        osdDown { gridPos: { x: 3, y: 8, w: 3, h: 3 } },
+        osdUP { gridPos: { x: 6, y: 8, w: 3, h: 3 } },
+        osdIN { gridPos: { x: 9, y: 8, w: 3, h: 3 } },
+        avgPGs { gridPos: { x: 12, y: 8, w: 3, h: 3 } },
+        avgApplyLatency { gridPos: { x: 15, y: 8, w: 3, h: 3 } },
+        avgCommitLatency { gridPos: { x: 18, y: 8, w: 2, h: 3 } },
+        avgOPWriteLatency { gridPos: { x: 20, y: 8, w: 2, h: 3 } },
+        avgOPReadLatency { gridPos: { x: 22, y: 8, w: 2, h: 3 } },
+        row.new('CLUSTER STATS') + { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
+        capacityPanel { gridPos: { x: 0, y: 12, w: 8, h: 8 } },
+        iopsPanel { gridPos: { x: 8, y: 12, w: 8, h: 8 } },
+        clusterThroughputPanel { gridPos: { x: 16, y: 12, w: 8, h: 8 } },
+        poolUsedBytesPanel { gridPos: { x: 0, y: 20, w: 8, h: 8 } },
+        poolRawBytesPanel { gridPos: { x: 8, y: 20, w: 8, h: 8 } },
+        objectsPerPoolPanel { gridPos: { x: 16, y: 20, w: 8, h: 8 } },
+        poolQuotaBytesPanel { gridPos: { x: 0, y: 28, w: 8, h: 8 } },
+        poolObjectsQuotaPanel { gridPos: { x: 8, y: 28, w: 8, h: 8 } },
+        osdTypeCountPanel { gridPos: { x: 16, y: 28, w: 8, h: 8 } },
       ];
 
-      dashboard.new(
-        'Ceph Cluster Overview',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.ceph,
-      )
-      .addTemplates([
+      dashboard.new('Ceph Cluster Overview')
+      + dashboard.withUid($._config.grafanaDashboards.ids.ceph)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
       ])
-      .addPanels(panels),
+      + dashboard.withPanels(panels),
   },
 }

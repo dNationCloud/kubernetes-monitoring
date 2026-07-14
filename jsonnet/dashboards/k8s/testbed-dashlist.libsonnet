@@ -14,100 +14,64 @@
 */
 
 /* Testbed dashboard list */
-
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local dashlist = grafana.dashlist;
-local link = grafana.link;
-local statPanel = grafana.statPanel;
-local row = grafana.row;
+local statPanel = grafana.panel.stat;
+local dashboardListPanel = grafana.panel.dashboardList;
+local row = grafana.panel.row;
 
 {
   grafanaDashboards+::
     local testbedDashboard() = {
-
       local dNationLink =
-        link.dashboards(
-          title='dNation - Making Cloud Easy',
-          tags=[],
-          icon='cloud',
-          url='https://www.dNation.cloud/',
-          type='link',
-          targetBlank=true,
-        ),
+        dashboard.link.link.new('dNation - Making Cloud Easy', 'https://www.dNation.cloud/')
+        + dashboard.link.link.withIcon('cloud')
+        + dashboard.link.link.options.withTargetBlank(true),
 
       local dashboardList =
-        dashlist.new(
-          title='Dashboard list for Testbed',
-          description='List of all available dashboards for testbed',
-          recent=false,
-          search=true,
-          headings=false,
-          tags=[
-            'testbed-dashboard',
-          ],
-        ),
+        dashboardListPanel.new('Dashboard list for Testbed')
+        + dashboardListPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + dashboardListPanel.panelOptions.withDescription('List of all available dashboards for testbed')
+        + dashboardListPanel.options.withShowRecentlyViewed(false)
+        + dashboardListPanel.options.withShowSearch(true)
+        + dashboardListPanel.options.withShowHeadings(false)
+        + dashboardListPanel.options.withTags(['testbed-dashboard']),
 
-      local alertPanel(title, expr) =
-        statPanel.new(
-          title=title,
-          datasource='$datasource',
-          graphMode='none',
-          colorMode='background',
-          reducerFunction='last',
-        )
-        .addTarget({ type: 'single', expr: expr }),
+      local statAlert(title, expr) =
+        statPanel.new(title)
+        + statPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + statPanel.options.withGraphMode('none') + statPanel.options.withColorMode('background') + statPanel.options.reduceOptions.withCalcs(['last'])
+        + statPanel.queryOptions.withTargets([{ type: 'single', expr: expr, refId: 'A' }]),
 
       local criticalPanel =
-        alertPanel(
-          title='Critical',
-          expr='sum(ALERTS{infrastructure="testbed", alertname!="Watchdog", alertstate=~"firing", severity="critical"}) OR on() vector(0)'
-        )
-        .addDataLinks(
-          $.updateDataLinksCommonArgs(
-            [{ title: 'Testbed Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s' % [$._config.grafanaDashboards.ids.alertTestbedOverview, $._config.grafanaDashboards.dataLinkCommonArgsNoCluster] }]
-          )
-        )
-        .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
+        statAlert('Critical', 'sum(ALERTS{infrastructure="testbed", alertname!="Watchdog", alertstate=~"firing", severity="critical"}) OR on() vector(0)')
+        + statPanel.standardOptions.withLinks($.updateDataLinksCommonArgs([{ title: 'Testbed Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&%s' % [$._config.grafanaDashboards.ids.alertTestbedOverview, $._config.grafanaDashboards.dataLinkCommonArgsNoCluster] }]))
+        + statPanel.standardOptions.thresholds.withMode('absolute') + statPanel.standardOptions.thresholds.withSteps($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
 
       local warningPanel =
-        alertPanel(
-          title='Warning',
-          expr='sum(ALERTS{infrastructure="testbed", alertname!="Watchdog", alertstate=~"firing", severity="warning"}) OR on() vector(0)'
-        )
-        .addDataLinks(
-          $.updateDataLinksCommonArgs(
-            [{ title: 'Testbed Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s' % [$._config.grafanaDashboards.ids.alertTestbedOverview, $._config.grafanaDashboards.dataLinkCommonArgsNoCluster] }]
-          )
-        )
-        .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
-
+        statAlert('Warning', 'sum(ALERTS{infrastructure="testbed", alertname!="Watchdog", alertstate=~"firing", severity="warning"}) OR on() vector(0)')
+        + statPanel.standardOptions.withLinks($.updateDataLinksCommonArgs([{ title: 'Testbed Overview', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&%s' % [$._config.grafanaDashboards.ids.alertTestbedOverview, $._config.grafanaDashboards.dataLinkCommonArgsNoCluster] }]))
+        + statPanel.standardOptions.thresholds.withMode('absolute') + statPanel.standardOptions.thresholds.withSteps($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
 
       dashboard:
-        dashboard.new(
-          title='IaaS monitoring',
-          editable=$._config.grafanaDashboards.editable,
-          graphTooltip=$._config.grafanaDashboards.tooltip,
-          refresh=$._config.grafanaDashboards.refresh,
-          time_from=$._config.grafanaDashboards.time_from,
-          tags=$._config.grafanaDashboards.tags.testbed,
-          uid=$._config.grafanaDashboards.ids.testbed,
-        )
-        .addLink(dNationLink)
-        .addTemplates([$.grafanaTemplates.datasourceTemplate()])
-        .addPanels([
-          row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        dashboard.new('IaaS monitoring')
+        + dashboard.withUid($._config.grafanaDashboards.ids.testbed)
+        + dashboard.withTags($._config.grafanaDashboards.tags.testbed)
+        + dashboard.withEditable($._config.grafanaDashboards.editable) + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+        + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+        + $._config.grafanaDashboards.tooltip
+        + dashboard.withTimezone('browser')
+        + dashboard.withLinks([dNationLink])
+        + dashboard.withVariables([$.grafanaTemplates.datasourceTemplate()])
+        + dashboard.withPanels([
+          row.new('Alerts') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
           criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
           warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
-          row.new('Dashboards') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+          row.new('Dashboards') + { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
           dashboardList { gridPos: { x: 0, y: 5, w: 24, h: 20 } },
         ]),
     };
     if $.isTestbedMonitoring() then
-      {
-        'iaas-monitoring':
-          testbedDashboard().dashboard,
-      }
-    else
-      {},
+      { 'iaas-monitoring': testbedDashboard().dashboard }
+    else {},
 }

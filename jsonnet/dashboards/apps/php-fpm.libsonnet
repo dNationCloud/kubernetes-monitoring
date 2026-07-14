@@ -14,93 +14,88 @@
 */
 
 /* K8s php fpm dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
-local row = grafana.row;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+:: {
     'php-fpm':
+      local timeSeriesBase(title) =
+        timeSeriesPanel.new(title)
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(10)
+        + timeSeriesPanel.options.tooltip.withMode('multi')
+        + timeSeriesPanel.options.tooltip.withSort('desc');
+
+      local timeSeriesStacked(title) =
+        timeSeriesBase(title)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withStacking({ mode: 'normal', group: 'A' })
+        + timeSeriesPanel.fieldConfig.defaults.custom.withSpanNulls(false);
+
       local acceptedConnections =
-        graphPanel.new(
-          title='PHP FPM accepted connections',
-          datasource='$datasource',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTarget(prometheus.target('rate(fpm_accepted_conn_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='connections'));
+        timeSeriesStacked('PHP FPM accepted connections')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(fpm_accepted_conn_total{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('connections'),
+        ]);
 
       local slowRequests =
-        graphPanel.new(
-          title='PHP FPM slow requests',
-          datasource='$datasource',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTarget(prometheus.target('rate(fpm_slow_requests_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='requests'));
+        timeSeriesStacked('PHP FPM slow requests')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(fpm_slow_requests_total{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('requests'),
+        ]);
 
       local processes =
-        graphPanel.new(
-          title='PHP FPM processes',
-          datasource='$datasource',
-        )
-        .addTargets(
-          [
-            prometheus.target('rate(fpm_max_active_processes{cluster="$cluster", job=~"$job"}[5m])', legendFormat='max active processes'),
-            prometheus.target('rate(fpm_active_processes{cluster="$cluster", job=~"$job"}[5m])', legendFormat='active processes'),
-            prometheus.target('rate(fpm_total_processes{cluster="$cluster", job=~"$job"}[5m])', legendFormat='total processes'),
-            prometheus.target('rate(fpm_idle_processes{cluster="$cluster", job=~"$job"}[5m])', legendFormat='idle processes'),
-          ],
-        );
+        timeSeriesBase('PHP FPM processes')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(fpm_max_active_processes{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('max active processes'),
+          prometheus.withExpr('rate(fpm_active_processes{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('active processes'),
+          prometheus.withExpr('rate(fpm_total_processes{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('total processes'),
+          prometheus.withExpr('rate(fpm_idle_processes{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('idle processes'),
+        ]);
 
       local childrenProcesses =
-        graphPanel.new(
-          title='PHP FPM max children processes reached',
-          datasource='$datasource',
-        )
-        .addTarget(prometheus.target('rate(fpm_max_children_reached{cluster="$cluster", job=~"$job"}[5m])', legendFormat='children processes'));
+        timeSeriesBase('PHP FPM max children processes reached')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(fpm_max_children_reached{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('children processes'),
+        ]);
 
       local listenQueue =
-        graphPanel.new(
-          title='PHP FPM listen queue',
-          datasource='$datasource',
-        )
-        .addTargets(
-          [
-            prometheus.target('rate(fpm_max_listen_queue{cluster="$cluster", job=~"$job"}[5m])', legendFormat='max listen queue'),
-            prometheus.target('rate(fpm_listen_queue{cluster="$cluster", job=~"$job"}[5m])', legendFormat='listen queue'),
-            prometheus.target('rate(fpm_listen_queue_len{cluster="$cluster", job=~"$job"}[5m])', legendFormat='listen queue len'),
-          ],
-        );
+        timeSeriesBase('PHP FPM listen queue')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(fpm_max_listen_queue{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('max listen queue'),
+          prometheus.withExpr('rate(fpm_listen_queue{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('listen queue'),
+          prometheus.withExpr('rate(fpm_listen_queue_len{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('listen queue len'),
+        ]);
 
       local panels = [
-        row.new('Connections') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        acceptedConnections { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
-        row.new('Requests', collapse=true) { gridPos: { x: 0, y: 8, w: 24, h: 1 } }
-        .addPanel(slowRequests { tooltip+: { sort: 2 } }, { x: 0, y: 9, w: 24, h: 7 }),
-        row.new('Processes') { gridPos: { x: 0, y: 9, w: 24, h: 1 } },
-        processes { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 10, w: 12, h: 7 } },
-        childrenProcesses { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 10, w: 12, h: 7 } },
-        row.new('Queue') { gridPos: { x: 0, y: 17, w: 24, h: 1 } },
-        listenQueue { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 18, w: 24, h: 7 } },
+        row.new('Connections') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        acceptedConnections { gridPos: { x: 0, y: 1, w: 24, h: 7 } },
+        row.new('Requests') + { gridPos: { x: 0, y: 8, w: 24, h: 1 } },
+        slowRequests { gridPos: { x: 0, y: 9, w: 24, h: 7 } },
+        row.new('Processes') + { gridPos: { x: 0, y: 16, w: 24, h: 1 } },
+        processes { gridPos: { x: 0, y: 17, w: 12, h: 7 } },
+        childrenProcesses { gridPos: { x: 12, y: 17, w: 12, h: 7 } },
+        row.new('Queue') + { gridPos: { x: 0, y: 24, w: 24, h: 1 } },
+        listenQueue { gridPos: { x: 0, y: 25, w: 24, h: 7 } },
       ];
 
-      dashboard.new(
-        'PHP FPM',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.phpFpm,
-      )
-      .addTemplates([
+      dashboard.new('PHP FPM')
+      + dashboard.withUid($._config.grafanaDashboards.ids.phpFpm)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(fpm_accepted_conn_total{cluster="$cluster"}, job)'),
       ])
-      .addPanels(panels),
+      + dashboard.withPanels(panels),
   },
 }
