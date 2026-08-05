@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.0.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.0) (2026-08-05)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/cicd-jsonnet-v2.0.0...v3.0.0)
+
+**Merged pull requests:**
+
+- Migrate dashboards from grafonnet-lib to grafana/grafonnet v13 [\#225](https://github.com/dNationCloud/kubernetes-monitoring/pull/225)
+
+## [cicd-jsonnet-v2.0.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/cicd-jsonnet-v2.0.0) (2026-07-20)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.8.0...cicd-jsonnet-v2.0.0)
+
+**Merged pull requests:**
+
+- Update CI/CD jsonnet image to jsonnet 0.20 and grafonnet v13 [\#224](https://github.com/dNationCloud/kubernetes-monitoring/pull/224)
+
 ## [v2.8.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v2.8.0) (2026-06-04)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v2.7.13...v2.8.0)
@@ -646,6 +662,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
