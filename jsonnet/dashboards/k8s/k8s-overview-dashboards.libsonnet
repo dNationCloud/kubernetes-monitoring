@@ -14,53 +14,78 @@
 */
 
 /* K8s L2 k8s overview dashboards */
-
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local row = grafana.row;
-local table = grafana.tablePanel;
+local table = grafana.panel.table;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+::
+    local v1Thresholds(ths, cols) = {
+      mode: 'absolute',
+      steps: [{ color: cols[0], value: null }] + [{ color: cols[i + 1], value: ths[i] } for i in std.range(0, std.length(ths) - 1)],
+    };
+
+    local v1ValueMaps(vms) = [{ type: 'value', options: { [std.toString(vm.value)]: { text: vm.text } for vm in vms } }];
+
+    local v1RangeMaps(rms) = [
+      { type: 'range', options: { from: rms[i].from, to: rms[i].to, result: { text: rms[i].text, index: i } } }
+      for i in std.range(0, std.length(rms) - 1)
+    ];
+
+    local styleToOverride(s) = {
+      matcher: { id: 'byName', options: s.pattern },
+      properties:
+        (if std.objectHas(s, 'type') && s.type == 'hidden' then [{ id: 'custom.hidden', value: true }] else [])
+        + (if std.objectHas(s, 'alias') then [{ id: 'displayName', value: s.alias }] else [])
+        + (if std.objectHas(s, 'unit') then [{ id: 'unit', value: s.unit }] else [])
+        + (if std.objectHas(s, 'decimals') then [{ id: 'decimals', value: s.decimals }] else [])
+        + (if std.objectHas(s, 'link') && s.link then [{ id: 'links', value: [{ title: (if std.objectHas(s, 'linkTooltip') then s.linkTooltip else ''), url: s.linkUrl }] }] else [])
+        + (if std.objectHas(s, 'colorMode') then [{ id: 'custom.cellOptions', value: { type: 'color-background' } }] else [])
+        + (if std.objectHas(s, 'valueMaps') then [{ id: 'mappings', value: v1ValueMaps(s.valueMaps) }] else [])
+        + (if std.objectHas(s, 'rangeMaps') then [{ id: 'mappings', value: v1RangeMaps(s.rangeMaps) }] else [])
+        + (if std.objectHas(s, 'thresholds') && std.objectHas(s, 'colors') then [{ id: 'thresholds', value: v1Thresholds(s.thresholds, s.colors) }] else []),
+    };
+
+    local defaultSortBy = {
+      Containers: [{ displayName: 'Restarts', desc: true }],
+      Jobs: [{ displayName: 'Status', desc: true }],
+      Pods: [{ displayName: 'Status', desc: true }],
+      DaemonSets: [{ displayName: 'Ready', desc: true }],
+      Deployments: [{ displayName: 'Available', desc: true }],
+      StatefulSets: [{ displayName: 'Ready', desc: true }],
+      'Persistent Volumes': [{ displayName: 'Capacity', desc: true }],
+      Nodes: [{ displayName: 'Ready', desc: true }],
+    };
+
     local overviewDashboard(dashboardUid, dashboardName, mainTemplate, grafanaTemplates, customParams) = {
+      local tp = mainTemplate.panel,
+
       local overviewTable =
-        local templatePanel = mainTemplate.panel;
-        table.new(
-          title=templatePanel.title,
-          datasource=templatePanel.datasource,
-          sort=templatePanel.sort,
-          description=templatePanel.description,
-          styles=$.updateDataLinksCommonArgs(templatePanel.styles, tableLink=true),
-        )
-        .addTransformations(templatePanel.transformations)
-        .addTargets(
-          [
-            prometheus.target(format='table', instant=true, expr=expr)
-            for expr in templatePanel.expr
-          ]
-        )
-        { gridPos: templatePanel.gridPos },
+        table.new(tp.title)
+        + table.queryOptions.withDatasource('prometheus', '$datasource')
+        + (if std.objectHas(tp, 'description') then table.panelOptions.withDescription(tp.description) else {})
+        + (if std.objectHas(tp, 'transformations') && tp.transformations != null && std.length(tp.transformations) > 0 then table.queryOptions.withTransformations(tp.transformations) else {})
+        + table.standardOptions.withOverrides([styleToOverride(s) for s in $.updateDataLinksCommonArgs(tp.styles, tableLink=true)])
+        + table.queryOptions.withTargets([prometheus.withExpr(expr) + prometheus.withFormat('table') + prometheus.withInstant(true) for expr in tp.expr])
+        + (if std.objectHas(defaultSortBy, customParams.rowName) then { options+: { sortBy: defaultSortBy[customParams.rowName] } } else {})
+        + { gridPos: tp.gridPos },
 
       dashboard:
-        dashboard.new(
-          dashboardName,
-          editable=$._config.grafanaDashboards.editable,
-          graphTooltip=$._config.grafanaDashboards.tooltip,
-          refresh=$._config.grafanaDashboards.refresh,
-          time_from=$._config.grafanaDashboards.time_from,
-          tags=$._config.grafanaDashboards.tags.k8sOverview,
-          uid=dashboardUid,
-        )
-        .addTemplates([
-          $.grafanaTemplates.datasourceTemplate(),
-        ] + grafanaTemplates)
-        .addPanels(
-          [
-            row.new(customParams.rowName) { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-            overviewTable,
-          ]
-        ),
+        dashboard.new(dashboardName)
+        + dashboard.withUid(dashboardUid)
+        + dashboard.withTags($._config.grafanaDashboards.tags.k8sOverview)
+        + dashboard.withEditable($._config.grafanaDashboards.editable)
+        + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+        + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+        + $._config.grafanaDashboards.tooltip
+        + dashboard.withTimezone('browser')
+        + dashboard.withVariables([$.grafanaTemplates.datasourceTemplate()] + grafanaTemplates)
+        + dashboard.withPanels([
+          row.new(customParams.rowName) + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          overviewTable,
+        ]),
     };
 
     $.createOverviewDashboards(
@@ -76,9 +101,8 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_container_info{cluster="$cluster"}, namespace)'),
         $.grafanaTemplates.podTemplate('label_values(kube_pod_container_info{cluster="$cluster", namespace=~"$namespace"}, pod)'),
       ],
-    ) +
-
-    $.createOverviewDashboards(
+    )
+    + $.createOverviewDashboards(
       jsonName='job-overview',
       dashboardFunction=overviewDashboard,
       dashboardUid=$._config.grafanaDashboards.ids.jobOverview,
@@ -90,9 +114,8 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.clusterTemplate('label_values(kube_job_info, cluster)'),
         $.grafanaTemplates.namespaceTemplate('label_values(kube_job_info{cluster="$cluster"}, namespace)'),
       ],
-    ) +
-
-    $.createOverviewDashboards(
+    )
+    + $.createOverviewDashboards(
       jsonName='daemonset-overview',
       dashboardFunction=overviewDashboard,
       dashboardUid=$._config.grafanaDashboards.ids.daemonSetOverview,
@@ -104,9 +127,8 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.clusterTemplate('label_values(kube_daemonset_status_desired_number_scheduled, cluster)'),
         $.grafanaTemplates.namespaceTemplate('label_values(kube_daemonset_status_desired_number_scheduled{cluster="$cluster"}, namespace)'),
       ],
-    ) +
-
-    $.createOverviewDashboards(
+    )
+    + $.createOverviewDashboards(
       jsonName='deployment-overview',
       dashboardFunction=overviewDashboard,
       dashboardUid=$._config.grafanaDashboards.ids.deploymentOverview,
@@ -118,9 +140,8 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.clusterTemplate('label_values(kube_deployment_status_replicas, cluster)'),
         $.grafanaTemplates.namespaceTemplate('label_values(kube_deployment_status_replicas{cluster="$cluster"}, namespace)'),
       ],
-    ) +
-
-    $.createOverviewDashboards(
+    )
+    + $.createOverviewDashboards(
       jsonName='pod-overview',
       dashboardFunction=overviewDashboard,
       dashboardUid=$._config.grafanaDashboards.ids.podOverview,
@@ -132,9 +153,8 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.clusterTemplate('label_values(kube_pod_info, cluster)'),
         $.grafanaTemplates.namespaceTemplate('label_values(kube_pod_info{cluster="$cluster"}, namespace)'),
       ],
-    ) +
-
-    $.createOverviewDashboards(
+    )
+    + $.createOverviewDashboards(
       jsonName='statefulset-overview',
       dashboardFunction=overviewDashboard,
       dashboardUid=$._config.grafanaDashboards.ids.statefulSetOverview,
@@ -146,9 +166,8 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.clusterTemplate('label_values(kube_statefulset_status_replicas, cluster)'),
         $.grafanaTemplates.namespaceTemplate('label_values(kube_statefulset_status_replicas{cluster="$cluster"}, namespace)'),
       ],
-    ) +
-
-    $.createOverviewDashboards(
+    )
+    + $.createOverviewDashboards(
       jsonName='pvc-overview',
       dashboardFunction=overviewDashboard,
       dashboardUid=$._config.grafanaDashboards.ids.pvcOverview,
@@ -160,9 +179,8 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.clusterTemplate('label_values(kube_persistentvolumeclaim_info, cluster)'),
         $.grafanaTemplates.namespaceTemplate('label_values(kube_persistentvolumeclaim_info{cluster="$cluster"}, namespace)'),
       ],
-    ) +
-
-    $.createOverviewDashboards(
+    )
+    + $.createOverviewDashboards(
       jsonName='node-overview',
       dashboardFunction=overviewDashboard,
       dashboardUid=$._config.grafanaDashboards.ids.nodeOverview,
@@ -175,5 +193,4 @@ local table = grafana.tablePanel;
         $.grafanaTemplates.namespaceTemplate('label_values(kube_persistentvolumeclaim_info{cluster="$cluster"}, namespace)'),
       ],
     ),
-
 }

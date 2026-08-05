@@ -12,78 +12,76 @@
 */
 
 /* VFIO exporter dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local statPanel = grafana.statPanel;
-local gaugePanel = grafana.gaugePanel;
-local inUseGPUQuery='max( label_replace(node_vfio_gpu_in_use_count{cluster="$cluster"}, "node_ip", "$1", "instance", "([^:]+)(:.*)?") * on(node_ip) group_left(nodename) label_replace(node_uname_info{cluster="$cluster",nodename="$instance"}, "node_ip", "$1", "instance", "([^:]+)(:.*)?") )';
-local totalGPUQuery='max(label_replace(node_vfio_gpu_total_count{cluster="$cluster"}, "node_ip", "$1", "instance", "([^:]+)(:.*)?") * on(node_ip) group_left(nodename) label_replace(node_uname_info{cluster="$cluster",nodename="$instance"}, "node_ip", "$1", "instance", "([^:]+)(:.*)?"))';
-local percentGPUQuery='('+inUseGPUQuery+'/'+totalGPUQuery+')*100';
-local instanceQuery='query_result(node_uname_info and on(instance) node_vfio_gpu_total_count >0)';
-local instanceRegex='/.nodename="([^"]+)"./';
+local statPanel = grafana.panel.stat;
+local gaugePanel = grafana.panel.gauge;
+local prometheus = grafana.query.prometheus;
+local inUseGPUQuery = 'max( label_replace(node_vfio_gpu_in_use_count{cluster="$cluster"}, "node_ip", "$1", "instance", "([^:]+)(:.*)?") * on(node_ip) group_left(nodename) label_replace(node_uname_info{cluster="$cluster",nodename="$instance"}, "node_ip", "$1", "instance", "([^:]+)(:.*)?") )';
+local totalGPUQuery = 'max(label_replace(node_vfio_gpu_total_count{cluster="$cluster"}, "node_ip", "$1", "instance", "([^:]+)(:.*)?") * on(node_ip) group_left(nodename) label_replace(node_uname_info{cluster="$cluster",nodename="$instance"}, "node_ip", "$1", "instance", "([^:]+)(:.*)?"))';
+local percentGPUQuery = '(' + inUseGPUQuery + '/' + totalGPUQuery + ')*100';
+local instanceQuery = 'query_result(node_uname_info and on(instance) node_vfio_gpu_total_count >0)';
+local instanceRegex = '/.nodename="([^"]+)"./';
 
 {
   grafanaDashboards+:: {
     'vfio-gpu':
-    local vfioGPUusage =
-    statPanel.new(
-        title='$instance',
-        datasource='$datasource',
-        graphMode='none',
-        repeat='instance',
-    )
-    .addTarget(
-        prometheus.target(
-            expr=inUseGPUQuery,
-            instant=true,
-            legendFormat="In Use",
-       )
-    )
-    .addThreshold({ value: 0, color: $._config.grafanaDashboards.color.blue })
-    .addTarget(
-        prometheus.target(
-        expr=totalGPUQuery,
-        instant=true,
-        legendFormat="Total",
-        )
-    );
-    local vfioPercentage =
-    gaugePanel.new(
-        title="$instance",
-        datasource='$datasource',
-        min=0,
-        max=100,
-        repeat='instance',
-        unit='%',
-    )
-    .addThreshold({ value: 0, color: $._config.grafanaDashboards.color.green })
-    .addThreshold({ value: 75, color: $._config.grafanaDashboards.color.orange})
-    .addThreshold({ value: 90, color: $._config.grafanaDashboards.color.red })
-    .addTarget(
-        prometheus.target(
-            expr=percentGPUQuery,
-            instant=true,
-            legendFormat='Usage'
-        )
-    );
-   dashboard.new(
-        'Vfio GPU Devices',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.vfioGPU,
-   )
-   .addTemplates([
+      local color = $._config.grafanaDashboards.color;
+
+      local promTarget(expr, legendFormat) =
+        prometheus.withExpr(expr) + prometheus.withInstant(true) + prometheus.withLegendFormat(legendFormat);
+
+      local vfioGPUusage =
+        statPanel.new('$instance')
+        + statPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + statPanel.standardOptions.withUnit('none')
+        + statPanel.options.withColorMode('value')
+        + statPanel.options.withGraphMode('none')
+        + statPanel.options.reduceOptions.withCalcs(['mean'])
+        + statPanel.panelOptions.withRepeat('instance')
+        + statPanel.panelOptions.withRepeatDirection('h')
+        + statPanel.standardOptions.thresholds.withMode('absolute')
+        + statPanel.standardOptions.thresholds.withSteps([{ color: color.blue, value: 0 }])
+        + statPanel.queryOptions.withTargets([
+          promTarget(inUseGPUQuery, 'In Use'),
+          promTarget(totalGPUQuery, 'Total'),
+        ]);
+
+      local vfioPercentage =
+        gaugePanel.new('$instance')
+        + gaugePanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + gaugePanel.standardOptions.withUnit('%')
+        + gaugePanel.standardOptions.withMin(0)
+        + gaugePanel.standardOptions.withMax(100)
+        + gaugePanel.options.reduceOptions.withCalcs(['mean'])
+        + gaugePanel.panelOptions.withRepeat('instance')
+        + gaugePanel.panelOptions.withRepeatDirection('h')
+        + gaugePanel.standardOptions.thresholds.withMode('absolute')
+        + gaugePanel.standardOptions.thresholds.withSteps([
+          { color: color.green, value: 0 },
+          { color: color.orange, value: 75 },
+          { color: color.red, value: 90 },
+        ])
+        + gaugePanel.queryOptions.withTargets([
+          promTarget(percentGPUQuery, 'Usage'),
+        ]);
+
+      dashboard.new('Vfio GPU Devices')
+      + dashboard.withUid($._config.grafanaDashboards.ids.vfioGPU)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-        $.grafanaTemplates.instanceTemplate(query=instanceQuery, regex=instanceRegex)
-   ])
-   .addPanels([
-    vfioGPUusage {gridPos: {x:0,y:0,w:18,h:8}},
-    vfioPercentage{gridPos: {x:0,y:8,w:18,h:12}}
-    ])
- }
+        $.grafanaTemplates.instanceTemplate(instanceQuery, regex=instanceRegex),
+      ])
+      + dashboard.withPanels([
+        vfioGPUusage { gridPos: { x: 0, y: 0, w: 18, h: 8 } },
+        vfioPercentage { gridPos: { x: 0, y: 8, w: 18, h: 12 } },
+      ]),
+  },
 }

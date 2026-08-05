@@ -14,11 +14,21 @@
 */
 
 /* Common grafana templates */
-local grafana = import 'grafonnet/grafana.libsonnet';
-local template = grafana.template;
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
+local variable = grafana.dashboard.variable;
 
 {
   grafanaTemplates: {
+
+    local hideMap(hide) =
+      if hide == 'variable' then 2
+      else if hide == 'label' then 1
+      else 0,
+
+    local refreshMode(refresh) =
+      if refresh == 'onTime' then variable.query.refresh.onTime()
+      else if refresh == 'onLoad' then variable.query.refresh.onLoad()
+      else error "templateRefresh must be 'onTime' or 'onLoad', got: %s" % refresh,
 
     baseTemplate(
       name,
@@ -34,56 +44,38 @@ local template = grafana.template;
       allValues=null,
       current=null,
     )::
-      template.new(
-        name=name,
-        label=label,
-        query=query,
-        datasource=datasource,
-        refresh=refresh,
-        sort=sort,
-        hide=hide,
-        regex=regex,
-        includeAll=includeAll,
-        multi=multi,
-        allValues=allValues,
-        current=current,
-      ),
+      variable.query.new(name, query)
+      + variable.query.generalOptions.withLabel(label)
+      + variable.query.withDatasource('prometheus', datasource)
+      + refreshMode(refresh)
+      + variable.query.withSort(sort)
+      + variable.query.withRegex(regex)
+      + variable.query.selectionOptions.withIncludeAll(includeAll, allValues)
+      + variable.query.selectionOptions.withMulti(multi)
+      + { hide: hideMap(hide) }
+      + (if current != null then variable.query.generalOptions.withCurrent(current) else {}),
 
     local baseTemplate = $.grafanaTemplates.baseTemplate,
 
     datasourceTemplate()::
-      template.datasource(
-        name='datasource',
-        label='Datasource',
-        query='prometheus',
-        current='thanos',
-      ),
+      variable.datasource.new('datasource', 'prometheus')
+      + variable.datasource.generalOptions.withLabel('Datasource')
+      + variable.datasource.generalOptions.withCurrent('thanos'),
 
     alertManagerTemplate()::
-      template.datasource(
-        name='alertmanager',
-        label='Alertmanager',
-        query='camptocamp-prometheus-alertmanager-datasource',
-        current=null,
-        hide='variable',
-      ),
+      variable.datasource.new('alertmanager', 'camptocamp-prometheus-alertmanager-datasource')
+      + variable.datasource.generalOptions.withLabel('Alertmanager')
+      + { hide: hideMap('variable') },
 
     datasourceLogsTemplate(hide='')::
-      template.datasource(
-        name='datasource_logs',
-        label='Logs datasource',
-        query='loki',
-        current=null,
-        hide=hide,
-      ),
+      variable.datasource.new('datasource_logs', 'loki')
+      + variable.datasource.generalOptions.withLabel('Logs datasource')
+      + { hide: hideMap(hide) },
 
     intervalTemplate(query)::
-      template.interval(
-        name='interval',
-        label='Interval',
-        query=query,
-        current='All',
-      ),
+      variable.interval.new('interval', [std.stripChars(v, ' ') for v in std.split(query, ',')])
+      + variable.interval.generalOptions.withLabel('Interval')
+      + variable.interval.generalOptions.withCurrent('All'),
 
     alertGroupTemplate(query)::
       baseTemplate(
@@ -227,42 +219,25 @@ local template = grafana.template;
       ),
 
     searchTemplate()::
-      template.text(
-        name='search',
-        label='Logs Search',
-      ),
+      variable.textbox.new('search')
+      + variable.textbox.generalOptions.withLabel('Logs Search'),
 
     retentionTemplate()::
-      template.text(
-        name='retention',
-        label='Retention',
-      ) {
-        current: {
-          selected: false,
-          text: '300',
-          value: '300',
-        },
-      },
-
+      variable.textbox.new('retention', '300')
+      + variable.textbox.generalOptions.withLabel('Retention'),
 
     viewByTemplate(query)::
-      template.custom(
-        name='view',
-        label='View by',
-        query=query,
-        current='container',
-      ),
+      variable.custom.new('view', std.split(query, ','))
+      + variable.custom.generalOptions.withLabel('View by')
+      + variable.custom.generalOptions.withCurrent('container'),
 
     diskFileSystemsTemplate()::
-      template.custom(
-        name='diskfs',
-        label='Disk FileSystems',
-        query='ext2,ext3,ext4,btrfs,vfat,fuseblk,jfs,zfs,reiserfs,f2fs,xfs',
-        hide='variable',
-        includeAll=true,
-        multi=false,
-        current='All',
-      ),
+      variable.custom.new('diskfs', std.split('ext2,ext3,ext4,btrfs,vfat,fuseblk,jfs,zfs,reiserfs,f2fs,xfs', ','))
+      + variable.custom.generalOptions.withLabel('Disk FileSystems')
+      + variable.custom.selectionOptions.withIncludeAll(true)
+      + variable.custom.selectionOptions.withMulti(false)
+      + variable.custom.generalOptions.withCurrent('All')
+      + { hide: hideMap('variable') },
 
     masterInstanceTemplate()::
       baseTemplate(

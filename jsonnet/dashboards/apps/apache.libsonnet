@@ -14,96 +14,87 @@
 */
 
 /* K8s apache dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
-local row = grafana.row;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+:: {
     apache:
+      local timeSeriesBase(title) =
+        timeSeriesPanel.new(title)
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(10)
+        + timeSeriesPanel.options.tooltip.withMode('multi')
+        + timeSeriesPanel.options.tooltip.withSort('desc');
+
+      local timeSeriesStacked(title) =
+        timeSeriesBase(title)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withStacking({ mode: 'normal', group: 'A' })
+        + timeSeriesPanel.fieldConfig.defaults.custom.withSpanNulls(false);
+
       local requests =
-        graphPanel.new(
-          title='Apache Requests per second',
-          datasource='$datasource',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTarget(prometheus.target('rate(apache__req_per_sec{cluster="$cluster", job=~"$job"}[5m])', legendFormat='requests'));
+        timeSeriesStacked('Apache Requests per second')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(apache__req_per_sec{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('requests'),
+        ]);
 
       local cpuLoad =
-        graphPanel.new(
-          title='Apache CPU Load',
-          datasource='$datasource',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTarget(prometheus.target('rate(apache__c_p_u_load{cluster="$cluster", job=~"$job"}[5m])', legendFormat='load'));
+        timeSeriesStacked('Apache CPU Load')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(apache__c_p_u_load{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('load'),
+        ]);
 
       local memoryUtilization =
-        graphPanel.new(
-          title='Apache Memory Utilization',
-          datasource='$datasource',
-          format='bytes',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTarget(prometheus.target('rate(apache__total_k_bytes_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='total'));
+        timeSeriesStacked('Apache Memory Utilization')
+        + timeSeriesPanel.standardOptions.withUnit('bytes')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(apache__total_k_bytes_total{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('total'),
+        ]);
 
       local memoryUtilizationPer =
-        graphPanel.new(
-          title='Apache Memory Utilization per Sec/Req',
-          datasource='$datasource',
-          format='bytes',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTargets(
-          [
-            prometheus.target('rate(apache__bytes_per_sec{cluster="$cluster", job=~"$job"}[5m])', legendFormat='bytes per sec'),
-            prometheus.target('rate(apache__bytes_per_req{cluster="$cluster", job=~"$job"}[5m])', legendFormat='bytes per req'),
-          ],
-        );
+        timeSeriesStacked('Apache Memory Utilization per Sec/Req')
+        + timeSeriesPanel.standardOptions.withUnit('bytes')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(apache__bytes_per_sec{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('bytes per sec'),
+          prometheus.withExpr('rate(apache__bytes_per_req{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('bytes per req'),
+        ]);
 
       local workers =
-        graphPanel.new(
-          title='Apache Workers',
-          datasource='$datasource',
-        )
-        .addTargets(
-          [
-            prometheus.target('rate(apache__idle_workers{cluster="$cluster", job=~"$job"}[5m])', legendFormat='idle'),
-            prometheus.target('rate(apache__busy_workers{cluster="$cluster", job=~"$job"}[5m])', legendFormat='busy'),
-          ],
-        );
+        timeSeriesBase('Apache Workers')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(apache__idle_workers{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('idle'),
+          prometheus.withExpr('rate(apache__busy_workers{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('busy'),
+        ]);
 
       local panels = [
-        row.new('Requests') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        requests { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
-        row.new('CPU Load', collapse=true) { gridPos: { x: 0, y: 8, w: 24, h: 1 } }
-        .addPanel(cpuLoad { tooltip+: { sort: 2 } }, { x: 0, y: 9, w: 24, h: 7 }),
-        row.new('Memory Utilization', collapse=true) { gridPos: { x: 0, y: 9, w: 24, h: 1 } }
-        .addPanel(memoryUtilization { tooltip+: { sort: 2 } }, { x: 0, y: 10, w: 12, h: 7 })
-        .addPanel(memoryUtilizationPer { tooltip+: { sort: 2 } }, { x: 12, y: 10, w: 12, h: 7 }),
-        row.new('Workers') { gridPos: { x: 0, y: 10, w: 24, h: 1 } },
-        workers { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 11, w: 24, h: 7 } },
+        row.new('Requests') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        requests { gridPos: { x: 0, y: 1, w: 24, h: 7 } },
+        row.new('CPU Load') + { gridPos: { x: 0, y: 8, w: 24, h: 1 } },
+        cpuLoad { gridPos: { x: 0, y: 9, w: 24, h: 7 } },
+        row.new('Memory Utilization') + { gridPos: { x: 0, y: 16, w: 24, h: 1 } },
+        memoryUtilization { gridPos: { x: 0, y: 17, w: 12, h: 7 } },
+        memoryUtilizationPer { gridPos: { x: 12, y: 17, w: 12, h: 7 } },
+        row.new('Workers') + { gridPos: { x: 0, y: 24, w: 24, h: 1 } },
+        workers { gridPos: { x: 0, y: 25, w: 24, h: 7 } },
       ];
 
-      dashboard.new(
-        'Apache',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.apache,
-      )
-      .addTemplates([
+      dashboard.new('Apache')
+      + dashboard.withUid($._config.grafanaDashboards.ids.apache)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(apache__c_p_u_load{cluster="$cluster"}, job)'),
       ])
-      .addPanels(panels),
+      + dashboard.withPanels(panels),
   },
 }

@@ -14,76 +14,68 @@
 */
 
 /* K8s nginx nrpe dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
-local row = grafana.row;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+:: {
     'nginx-nrpe':
+      local timeSeriesStacked(title) =
+        timeSeriesPanel.new(title)
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(10)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withStacking({ mode: 'normal', group: 'A' })
+        + timeSeriesPanel.fieldConfig.defaults.custom.withSpanNulls(false)
+        + timeSeriesPanel.options.tooltip.withMode('multi')
+        + timeSeriesPanel.options.tooltip.withSort('desc');
+
       local connections1 =
-        graphPanel.new(
-          title='Nginx connections',
-          datasource='$datasource',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTargets(
-          [
-            prometheus.target('rate(nginx_accepts_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='accepts'),
-            prometheus.target('rate(nginx_handled_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='handled'),
-            prometheus.target('rate(nginx_active{cluster="$cluster", job=~"$job"}[5m])', legendFormat='active'),
-          ],
-        );
+        timeSeriesStacked('Nginx connections')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(nginx_accepts_total{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('accepts'),
+          prometheus.withExpr('rate(nginx_handled_total{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('handled'),
+          prometheus.withExpr('rate(nginx_active{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('active'),
+        ]);
 
       local connections2 =
-        graphPanel.new(
-          title='Nginx connections',
-          datasource='$datasource',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTargets(
-          [
-            prometheus.target('rate(nginx_reading{cluster="$cluster", job=~"$job"}[5m])', legendFormat='reading'),
-            prometheus.target('rate(nginx_writing{cluster="$cluster", job=~"$job"}[5m])', legendFormat='writing'),
-            prometheus.target('rate(nginx_waiting{cluster="$cluster", job=~"$job"}[5m])', legendFormat='waiting'),
-          ],
-        );
+        timeSeriesStacked('Nginx connections')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(nginx_reading{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('reading'),
+          prometheus.withExpr('rate(nginx_writing{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('writing'),
+          prometheus.withExpr('rate(nginx_waiting{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('waiting'),
+        ]);
 
       local requests =
-        graphPanel.new(
-          title='Nginx requests',
-          datasource='$datasource',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTarget(prometheus.target('rate(nginx_requests_total{cluster="$cluster", job=~"$job"}[5m])', legendFormat='requests'));
+        timeSeriesStacked('Nginx requests')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('rate(nginx_requests_total{cluster="$cluster", job=~"$job"}[5m])') + prometheus.withLegendFormat('requests'),
+        ]);
 
       local panels = [
-        row.new('Connections') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        connections1 { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
-        connections2 { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 8, w: 24, h: 7 } },
-        row.new('Requests') { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
-        requests { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 16, w: 24, h: 7 } },
+        row.new('Connections') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        connections1 { gridPos: { x: 0, y: 1, w: 24, h: 7 } },
+        connections2 { gridPos: { x: 0, y: 8, w: 24, h: 7 } },
+        row.new('Requests') + { gridPos: { x: 0, y: 15, w: 24, h: 1 } },
+        requests { gridPos: { x: 0, y: 16, w: 24, h: 7 } },
       ];
 
-      dashboard.new(
-        'Nginx Nrpe',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.nginxNrpe,
-      )
-      .addTemplates([
+      dashboard.new('Nginx Nrpe')
+      + dashboard.withUid($._config.grafanaDashboards.ids.nginxNrpe)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(nginx_accepts_total{cluster="$cluster"}, job)'),
       ])
-      .addPanels(panels),
+      + dashboard.withPanels(panels),
   },
 }
