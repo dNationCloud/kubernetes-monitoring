@@ -14,76 +14,64 @@
 */
 
 /* K8s nginx vts dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local template = grafana.template;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+:: {
     'nginx-vts':
-      local hostTemplate =
-        template.new(
-          name='host',
-          label='Host',
-          datasource='$datasource',
-          query='label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, host)',
-          refresh=$._config.grafanaDashboards.templateRefresh,
-          sort=$._config.grafanaDashboards.templateSort,
-          includeAll=true,
-          multi=true,
-        );
+      local timeSeriesBase(title) =
+        timeSeriesPanel.new(title)
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(10)
+        + timeSeriesPanel.options.tooltip.withMode('multi')
+        + timeSeriesPanel.options.tooltip.withSort('desc');
 
       local serverConnections =
-        graphPanel.new(
-          title='Server Connections',
-          datasource='$datasource',
-        )
-        .addTarget(prometheus.target('sum(nginx_vts_main_connections{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"active|writing|reading|waiting"}) by (status)', legendFormat='{{status}}'));
+        timeSeriesBase('Server Connections')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(nginx_vts_main_connections{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", status=~"active|writing|reading|waiting"}) by (status)') + prometheus.withLegendFormat('{{status}}'),
+        ]);
 
       local serverRequests =
-        graphPanel.new(
-          title='Server Requests',
-          datasource='$datasource',
-        )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_server_requests_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$", code!="total"}[5m])) by (code)', legendFormat='{{code}}'));
+        timeSeriesBase('Server Requests')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(irate(nginx_vts_server_requests_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$", code!="total"}[5m])) by (code)') + prometheus.withLegendFormat('{{code}}'),
+        ]);
 
       local serverBytes =
-        graphPanel.new(
-          title='Server Bytes',
-          datasource='$datasource',
-          format='bytes',
-          min=0,
-        )
-        .addTarget(prometheus.target('sum(irate(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (direction)', legendFormat='{{direction}}'));
-
-      local templates =
-        [
-          $.grafanaTemplates.datasourceTemplate(),
-          $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
-          $.grafanaTemplates.jobTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster"}, job)'),
-          $.grafanaTemplates.namespaceTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job"}, namespace)'),
-          $.grafanaTemplates.podTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
-          hostTemplate,
-        ];
+        timeSeriesBase('Server Bytes')
+        + timeSeriesPanel.standardOptions.withUnit('bytes')
+        + timeSeriesPanel.standardOptions.withMin(0)
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(irate(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod", host=~"^$host$"}[5m])) by (direction)') + prometheus.withLegendFormat('{{direction}}'),
+        ]);
 
       local panels = [
-        serverConnections { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 0, w: 24, h: 7 } },
-        serverRequests { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 7, w: 12, h: 7 } },
-        serverBytes { tooltip+: { sort: 2 }, gridPos: { x: 12, y: 7, w: 12, h: 7 } },
+        serverConnections { gridPos: { x: 0, y: 0, w: 24, h: 7 } },
+        serverRequests { gridPos: { x: 0, y: 7, w: 12, h: 7 } },
+        serverBytes { gridPos: { x: 12, y: 7, w: 12, h: 7 } },
       ];
 
-      dashboard.new(
-        'Nginx VTS',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.nginxVts,
-      )
-      .addTemplates(templates)
-      .addPanels(panels),
+      dashboard.new('Nginx VTS')
+      + dashboard.withUid($._config.grafanaDashboards.ids.nginxVts)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
+        $.grafanaTemplates.datasourceTemplate(),
+        $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
+        $.grafanaTemplates.jobTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster"}, job)'),
+        $.grafanaTemplates.namespaceTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job"}, namespace)'),
+        $.grafanaTemplates.podTemplate('label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace"}, pod)'),
+        $.grafanaTemplates.baseTemplate('host', 'Host', 'label_values(nginx_vts_server_bytes_total{cluster="$cluster", job=~"$job", namespace=~"$namespace", pod=~"$pod"}, host)'),
+      ])
+      + dashboard.withPanels(panels),
   },
 }

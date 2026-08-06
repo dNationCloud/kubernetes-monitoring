@@ -14,43 +14,46 @@
 */
 
 /* K8s postfix dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
-local row = grafana.row;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+:: {
     postfix:
       local queueSize =
-        graphPanel.new(
-          title='Postfix Queue Size',
-          datasource='$datasource',
-          stack=true,
-          nullPointMode='null as zero',
-        )
-        .addTarget(prometheus.target('sum(postfix_size{cluster="$cluster", job=~"$job"})', legendFormat='queue size'));
+        timeSeriesPanel.new('Postfix Queue Size')
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(10)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withStacking({ mode: 'normal', group: 'A' })
+        + timeSeriesPanel.fieldConfig.defaults.custom.withSpanNulls(false)
+        + timeSeriesPanel.options.tooltip.withMode('multi')
+        + timeSeriesPanel.options.tooltip.withSort('desc')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(postfix_size{cluster="$cluster", job=~"$job"})') + prometheus.withLegendFormat('queue size'),
+        ]);
 
       local panels = [
-        row.new('Queue Size') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        queueSize { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
+        row.new('Queue Size') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        queueSize { gridPos: { x: 0, y: 1, w: 24, h: 7 } },
       ];
 
-      dashboard.new(
-        'Postfix',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.postfix,
-      )
-      .addTemplates([
+      dashboard.new('Postfix')
+      + dashboard.withUid($._config.grafanaDashboards.ids.postfix)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(postfix_size{cluster="$cluster"}, job)'),
       ])
-      .addPanels(panels),
+      + dashboard.withPanels(panels),
   },
 }

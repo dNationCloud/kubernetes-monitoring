@@ -1470,13 +1470,14 @@ during helm installation.</p>
 </td></tr>
 <tr><td>tags</td><td><a href='#tags_7'>tags</a>
 </td></tr>
-<tr><td>templateRefresh</td><td><div class='my-pre'><code>"time"</code></div>
+<tr><td>templateRefresh</td><td><div class='my-pre'><code>"onTime"</code></div>
 </td></tr>
 <tr><td>templateSort</td><td><div class='my-pre'><code>5</code></div>
 </td></tr>
 <tr><td>time_from</td><td><div class='my-pre'><code>"now-5m"</code></div>
 </td></tr>
-<tr><td>tooltip</td><td><div class='my-pre'><code>"shared_crosshair"</code></div>
+<tr><td>tooltip</td><td><div class='my-pre'><code>graphTooltip: 1
+</code></div>
 </td></tr></table>
 
 <p><br></p>
@@ -1485,11 +1486,27 @@ during helm installation.</p>
 </td></tr>
 <tr><td>blue</td><td><div class='my-pre'><code>"#5794f2"</code></div>
 </td></tr>
+<tr><td>darkblue</td><td><div class='my-pre'><code>"#3274d9"</code></div>
+</td></tr>
+<tr><td>darkerred</td><td><div class='my-pre'><code>"#7e0505"</code></div>
+</td></tr>
+<tr><td>darkred</td><td><div class='my-pre'><code>"#a50000"</code></div>
+</td></tr>
+<tr><td>darkyellow</td><td><div class='my-pre'><code>"#f2cc0c"</code></div>
+</td></tr>
 <tr><td>gray</td><td><div class='my-pre'><code>"#858187"</code></div>
 </td></tr>
 <tr><td>green</td><td><div class='my-pre'><code>"#56a64b"</code></div>
 </td></tr>
 <tr><td>lightblue</td><td><div class='my-pre'><code>"#8ab8ff"</code></div>
+</td></tr>
+<tr><td>lightgreen</td><td><div class='my-pre'><code>"#96d98d"</code></div>
+</td></tr>
+<tr><td>lightorange</td><td><div class='my-pre'><code>"#ffb357"</code></div>
+</td></tr>
+<tr><td>lightpurple</td><td><div class='my-pre'><code>"#ca95e5"</code></div>
+</td></tr>
+<tr><td>lightyellow</td><td><div class='my-pre'><code>"#ffee52"</code></div>
 </td></tr>
 <tr><td>orange</td><td><div class='my-pre'><code>"#ff780a"</code></div>
 </td></tr>
@@ -1617,7 +1634,7 @@ during helm installation.</p>
 </td></tr>
 <tr><td>pythonFlask</td><td><div class='my-pre'><code>"pythonflask"</code></div>
 </td></tr>
-<tr><td>rabbitmq</td><td><div class='my-pre'><code>"rabbitmq"</code></div>
+<tr><td>rabbitmq</td><td><div class='my-pre'><code>"rabbitmq-overview"</code></div>
 </td></tr>
 <tr><td>scheduler</td><td><div class='my-pre'><code>"scheduler"</code></div>
 </td></tr>
@@ -1836,21 +1853,27 @@ gridPos:
   h: 3
   w: 4
 mappings:
-- from: -1
-  text: '-'
-  to: -1
-  type: 2
-  value: ''
-- from: 0
-  text: Critical
-  to: 0
-  type: 2
-  value: ''
-- from: 1
-  text: OK
-  to: 1
-  type: 2
-  value: ''
+- options:
+    from: -1
+    result:
+      index: 0
+      text: '-'
+    to: -1
+  type: range
+- options:
+    from: 0
+    result:
+      index: 1
+      text: Critical
+    to: 0
+  type: range
+- options:
+    from: 1
+    result:
+      index: 2
+      text: OK
+    to: 1
+  type: range
 thresholds:
   critical: 1
   lowest: 0
@@ -1877,26 +1900,34 @@ gridPos:
   h: 3
   w: 4
 mappings:
-- from: -1
-  text: Down
-  to: -1
-  type: 2
-  value: ''
-- from: 0
-  text: OK
-  to: 0
-  type: 2
-  value: ''
-- from: 1
-  text: Warning
-  to: 9999
-  type: 2
-  value: ''
-- from: 10000
-  text: Critical
-  to: 100000000000000005366162204393472
-  type: 2
-  value: ''
+- options:
+    from: -1
+    result:
+      index: 0
+      text: Down
+    to: -1
+  type: range
+- options:
+    from: 0
+    result:
+      index: 1
+      text: OK
+    to: 0
+  type: range
+- options:
+    from: 1
+    result:
+      index: 2
+      text: Warning
+    to: 9999
+  type: range
+- options:
+    from: 10000
+    result:
+      index: 3
+      text: Critical
+    to: 100000000000000005366162204393472
+  type: range
 thresholds:
   critical: 10000
   lowest: 0
@@ -1925,26 +1956,34 @@ gridPos:
   h: 3
   w: 4
 mappings:
-- from: -1
-  text: Down
-  to: -1
-  type: 2
-  value: ''
-- from: 0
-  text: OK
-  to: 0
-  type: 2
-  value: ''
-- from: 1
-  text: Warning
-  to: 9999
-  type: 2
-  value: ''
-- from: 10000
-  text: Critical
-  to: 100000000000000005366162204393472
-  type: 2
-  value: ''
+- options:
+    from: -1
+    result:
+      index: 0
+      text: Down
+    to: -1
+  type: range
+- options:
+    from: 0
+    result:
+      index: 1
+      text: OK
+    to: 0
+  type: range
+- options:
+    from: 1
+    result:
+      index: 2
+      text: Warning
+    to: 9999
+  type: range
+- options:
+    from: 10000
+    result:
+      index: 3
+      text: Critical
+    to: 100000000000000005366162204393472
+  type: range
 thresholds:
   critical: 10000
   lowest: 0
@@ -1974,31 +2013,41 @@ gridPos:
   h: 3
   w: 4
 mappings:
-- from: -2
-  text: '-'
-  to: -2
-  type: 2
-  value: ''
-- from: -1
-  text: Down
-  to: -1
-  type: 2
-  value: ''
-- from: 0
-  text: OK
-  to: 0
-  type: 2
-  value: ''
-- from: 1
-  text: Warning
-  to: 9999
-  type: 2
-  value: ''
-- from: 10000
-  text: Critical
-  to: 100000000000000005366162204393472
-  type: 2
-  value: ''
+- options:
+    from: -2
+    result:
+      index: 0
+      text: '-'
+    to: -2
+  type: range
+- options:
+    from: -1
+    result:
+      index: 1
+      text: Down
+    to: -1
+  type: range
+- options:
+    from: 0
+    result:
+      index: 2
+      text: OK
+    to: 0
+  type: range
+- options:
+    from: 1
+    result:
+      index: 3
+      text: Warning
+    to: 9999
+  type: range
+- options:
+    from: 10000
+    result:
+      index: 4
+      text: Critical
+    to: 100000000000000005366162204393472
+  type: range
 thresholds:
   critical: 10000
   lowest: 0
@@ -2025,26 +2074,34 @@ gridPos:
   h: 3
   w: 4
 mappings:
-- from: -1
-  text: Down
-  to: -1
-  type: 2
-  value: ''
-- from: 0
-  text: OK
-  to: 0
-  type: 2
-  value: ''
-- from: 1
-  text: Warning
-  to: 9999
-  type: 2
-  value: ''
-- from: 10000
-  text: Critical
-  to: 100000000000000005366162204393472
-  type: 2
-  value: ''
+- options:
+    from: -1
+    result:
+      index: 0
+      text: Down
+    to: -1
+  type: range
+- options:
+    from: 0
+    result:
+      index: 1
+      text: OK
+    to: 0
+  type: range
+- options:
+    from: 1
+    result:
+      index: 2
+      text: Warning
+    to: 9999
+  type: range
+- options:
+    from: 10000
+    result:
+      index: 3
+      text: Critical
+    to: 100000000000000005366162204393472
+  type: range
 thresholds:
   critical: 10000
   lowest: 0
@@ -2478,9 +2535,11 @@ unit: bytes
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -2516,9 +2575,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -2540,9 +2601,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -2576,15 +2639,21 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: HEALTHY
-  type: 1
-  value: 0
-- text: WARNING
-  type: 1
-  value: 1
-- text: ERROR
-  type: 1
-  value: 2
+- options:
+    '0':
+      index: 0
+      text: HEALTHY
+  type: value
+- options:
+    '1':
+      index: 1
+      text: WARNING
+  type: value
+- options:
+    '2':
+      index: 2
+      text: ERROR
+  type: value
 thresholds:
   critical: 2
   lowest: 0
@@ -2639,9 +2708,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -2685,9 +2756,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 90
   lowest: 0
@@ -2708,9 +2781,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -2732,9 +2807,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -2756,9 +2833,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -2799,9 +2878,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -2843,9 +2924,11 @@ expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$clus
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -100000000000000005366162204393472
+- options:
+    '-100000000000000005366162204393472':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 0
   lowest: -100000000000000005366162204393472
@@ -2868,9 +2951,11 @@ unit: s
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -2911,9 +2996,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -2954,9 +3041,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -2997,9 +3086,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -3040,9 +3131,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -3076,15 +3169,21 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: OK
-  type: 1
-  value: 1
-- text: OFFLINE
-  type: 1
-  value: -1
-- text: CRITICAL
-  type: 1
-  value: 0
+- options:
+    '1':
+      index: 0
+      text: OK
+  type: value
+- options:
+    '-1':
+      index: 1
+      text: OFFLINE
+  type: value
+- options:
+    '0':
+      index: 2
+      text: CRITICAL
+  type: value
 thresholds:
   critical: 1
   lowest: 0
@@ -3105,9 +3204,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -3124,9 +3225,11 @@ thresholds:
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 message: 'HostApp {{ $labels.job }}: Postfix Queue Size High {{ $value }}%'
 name: HostAppPostfixQueueSizeHigh
 thresholds:
@@ -3145,9 +3248,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 10
   lowest: 0
@@ -3169,9 +3274,11 @@ unit: mailq
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -3213,9 +3320,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -3237,9 +3346,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -3265,9 +3376,11 @@ expr: bottomk(1,ssl_cert_not_after{cluster="$cluster"}-time() OR ssl_file_cert_n
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -100000000000000005366162204393472
+- options:
+    '-100000000000000005366162204393472':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 0
   lowest: -100000000000000005366162204393472
@@ -3311,9 +3424,11 @@ unit: '%'
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -3443,9 +3558,11 @@ gridPos:
   x: 0
   y: 5
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -3485,9 +3602,11 @@ gridPos:
   x: 4
   y: 5
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -3600,9 +3719,11 @@ gridPos:
   x: 8
   y: 5
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -3642,9 +3763,11 @@ gridPos:
   x: 12
   y: 5
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -3887,9 +4010,11 @@ gridPos:
   x: 21
   y: 12
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 97
   lowest: 0
@@ -4559,9 +4684,11 @@ gridPos:
   x: 16
   y: 5
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -4606,9 +4733,11 @@ gridPos:
   x: 18
   y: 12
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -4759,9 +4888,11 @@ gridPos:
   x: 20
   y: 5
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -4800,9 +4931,11 @@ gridPos:
   x: 18
   y: 9
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5139,9 +5272,11 @@ unit: bytes
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5177,9 +5312,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -5201,9 +5338,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5237,15 +5376,21 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: HEALTHY
-  type: 1
-  value: 0
-- text: WARNING
-  type: 1
-  value: 1
-- text: ERROR
-  type: 1
-  value: 2
+- options:
+    '0':
+      index: 0
+      text: HEALTHY
+  type: value
+- options:
+    '1':
+      index: 1
+      text: WARNING
+  type: value
+- options:
+    '2':
+      index: 2
+      text: ERROR
+  type: value
 thresholds:
   critical: 2
   lowest: 0
@@ -5300,9 +5445,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5346,9 +5493,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 90
   lowest: 0
@@ -5369,9 +5518,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5393,9 +5544,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5417,9 +5570,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5460,9 +5615,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -5504,9 +5661,11 @@ expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$clus
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -100000000000000005366162204393472
+- options:
+    '-100000000000000005366162204393472':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 0
   lowest: -100000000000000005366162204393472
@@ -5529,9 +5688,11 @@ unit: s
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5572,9 +5733,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -5615,9 +5778,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -5658,9 +5823,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -5701,9 +5868,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -5737,15 +5906,21 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: OK
-  type: 1
-  value: 1
-- text: OFFLINE
-  type: 1
-  value: -1
-- text: CRITICAL
-  type: 1
-  value: 0
+- options:
+    '1':
+      index: 0
+      text: OK
+  type: value
+- options:
+    '-1':
+      index: 1
+      text: OFFLINE
+  type: value
+- options:
+    '0':
+      index: 2
+      text: CRITICAL
+  type: value
 thresholds:
   critical: 1
   lowest: 0
@@ -5766,9 +5941,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5785,9 +5962,11 @@ thresholds:
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 message: 'ClusterApp {{ $labels.job }}: Postfix Queue Size High {{ $value }}%'
 name: ClusterAppPostfixQueueSizeHigh
 thresholds:
@@ -5806,9 +5985,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 10
   lowest: 0
@@ -5830,9 +6011,11 @@ unit: mailq
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5874,9 +6057,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -5898,9 +6083,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -5926,9 +6113,11 @@ expr: bottomk(1,ssl_cert_not_after{cluster="$cluster"}-time() OR ssl_file_cert_n
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -100000000000000005366162204393472
+- options:
+    '-100000000000000005366162204393472':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 0
   lowest: -100000000000000005366162204393472
@@ -5972,9 +6161,11 @@ unit: '%'
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6000,21 +6191,27 @@ gridPos:
   h: 3
   w: 4
 mappings:
-- from: 0
-  text: OK
-  to: 0
-  type: 2
-  value: ''
-- from: 1
-  text: Warning
-  to: 9999
-  type: 2
-  value: ''
-- from: 10000
-  text: Critical
-  to: 100000000000000005366162204393472
-  type: 2
-  value: ''
+- options:
+    from: 0
+    result:
+      index: 0
+      text: OK
+    to: 0
+  type: range
+- options:
+    from: 1
+    result:
+      index: 1
+      text: Warning
+    to: 9999
+  type: range
+- options:
+    from: 10000
+    result:
+      index: 2
+      text: Critical
+    to: 100000000000000005366162204393472
+  type: range
 thresholds:
   critical: 10000
   operator: '>='
@@ -6091,9 +6288,11 @@ unit: none
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6129,9 +6328,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -6153,9 +6354,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6189,15 +6392,21 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: HEALTHY
-  type: 1
-  value: 0
-- text: WARNING
-  type: 1
-  value: 1
-- text: ERROR
-  type: 1
-  value: 2
+- options:
+    '0':
+      index: 0
+      text: HEALTHY
+  type: value
+- options:
+    '1':
+      index: 1
+      text: WARNING
+  type: value
+- options:
+    '2':
+      index: 2
+      text: ERROR
+  type: value
 thresholds:
   critical: 2
   lowest: 0
@@ -6252,9 +6461,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6298,9 +6509,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 90
   lowest: 0
@@ -6321,9 +6534,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6345,9 +6560,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6369,9 +6586,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6412,9 +6631,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -6456,9 +6677,11 @@ expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{cluster="$clus
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -100000000000000005366162204393472
+- options:
+    '-100000000000000005366162204393472':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 0
   lowest: -100000000000000005366162204393472
@@ -6481,9 +6704,11 @@ unit: s
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6524,9 +6749,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -6567,9 +6794,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -6610,9 +6839,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -6653,9 +6884,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -6689,15 +6922,21 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: OK
-  type: 1
-  value: 1
-- text: OFFLINE
-  type: 1
-  value: -1
-- text: CRITICAL
-  type: 1
-  value: 0
+- options:
+    '1':
+      index: 0
+      text: OK
+  type: value
+- options:
+    '-1':
+      index: 1
+      text: OFFLINE
+  type: value
+- options:
+    '0':
+      index: 2
+      text: CRITICAL
+  type: value
 thresholds:
   critical: 1
   lowest: 0
@@ -6718,9 +6957,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6737,9 +6978,11 @@ thresholds:
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 message: 'ClusterVMApp {{ $labels.job }}: Postfix Queue Size High {{ $value }}%'
 name: ClusterVMAppPostfixQueueSizeHigh
 thresholds:
@@ -6758,9 +7001,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 10
   lowest: 0
@@ -6782,9 +7027,11 @@ unit: mailq
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6826,9 +7073,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 85
   lowest: 0
@@ -6850,9 +7099,11 @@ thresholds:
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -6878,9 +7129,11 @@ expr: bottomk(1,ssl_cert_not_after{cluster="$cluster"}-time() OR ssl_file_cert_n
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -100000000000000005366162204393472
+- options:
+    '-100000000000000005366162204393472':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 0
   lowest: -100000000000000005366162204393472
@@ -6924,9 +7177,11 @@ unit: '%'
 gridPos:
   w: 4
 mappings:
-- text: '-'
-  type: 1
-  value: -1
+- options:
+    '-1':
+      index: 0
+      text: '-'
+  type: value
 thresholds:
   critical: 95
   lowest: 0
@@ -7694,6 +7949,22 @@ styles:
     /d/containerdetail?var-view=pod&var-instance=$__cell&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: node
 title: Nodes
+transformations:
+- id: merge
+  options: {}
+- id: organize
+  options:
+    excludeByName:
+      Time: true
+    indexByName:
+      Time: 0
+      'Value #A': 2
+      'Value #B': 3
+      'Value #C': 4
+      'Value #D': 5
+      'Value #E': 6
+      node: 1
+    renameByName: {}
 </code></div>
 </td></tr></table>
 
@@ -7835,6 +8106,20 @@ styles:
   pattern: namespace
   type: string
 title: Persistent Volumes
+transformations:
+- id: merge
+  options: {}
+- id: organize
+  options:
+    excludeByName:
+      Time: true
+    indexByName:
+      Time: 0
+      'Value #A': 3
+      'Value #B': 4
+      namespace: 1
+      persistentvolumeclaim: 2
+    renameByName: {}
 </code></div>
 </td></tr></table>
 
@@ -7900,6 +8185,20 @@ styles:
     /d/containerdetail?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to
   pattern: namespace
 title: StatefulSets
+transformations:
+- id: merge
+  options: {}
+- id: organize
+  options:
+    excludeByName:
+      Time: true
+    indexByName:
+      Time: 0
+      'Value #A': 3
+      'Value #B': 4
+      namespace: 1
+      statefulset: 2
+    renameByName: {}
 </code></div>
 </td></tr></table>
 

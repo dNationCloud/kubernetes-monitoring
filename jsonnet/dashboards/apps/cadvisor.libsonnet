@@ -14,186 +14,189 @@
 */
 
 /* K8s cadvisor dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
-local row = grafana.row;
-local statPanel = grafana.statPanel;
-local table = grafana.tablePanel;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local statPanel = grafana.panel.stat;
+local table = grafana.panel.table;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
+local fieldOverride = grafana.panel.timeSeries.fieldOverride;
 
 {
   grafanaDashboards+:: {
     cadvisor:
-      local containers =
-        statPanel.new(
-          title='Containers',
-          datasource='$datasource',
-          graphMode='none',
-        )
-        .addThresholds($.grafanaThresholds($._config.templates.L1.hostApps.genericApp.panel.thresholds))
-        .addTarget(
-          prometheus.target('count(rate(container_last_seen{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m]))')
-        );
+      local promTarget(expr, legendFormat=null) =
+        prometheus.withExpr(expr)
+        + (if legendFormat != null then prometheus.withLegendFormat(legendFormat) else {});
 
-      local imageTable =
-        table.new(
-          title='',
-          datasource='$datasource',
-          styles=[
-            { pattern: 'Time', type: 'hidden' },
-            { alias: 'Name', pattern: 'name', type: 'string' },
-            { alias: 'Image', pattern: 'image', type: 'string' },
-            { pattern: 'Value', type: 'hidden' },
-          ]
-        )
-        .addTarget(prometheus.target(format='table', instant=true, expr='sum(container_cpu_user_seconds_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}) by (name,image)'));
+      local tooltipSortDesc =
+        timeSeriesPanel.options.tooltip.withMode('multi')
+        + timeSeriesPanel.options.tooltip.withSort('desc');
 
-      local cpu =
-        graphPanel.new(
-          title='CPU Usage',
-          datasource='$datasource',
-          format='percent',
-          min=0,
-          max=100,
-          stack=true,
-          nullPointMode='null as zero',
-          linewidth=2,
-          fill=2,
-        )
-        .addTarget(prometheus.target('rate(container_cpu_user_seconds_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m]) * 100', legendFormat='{{name}}'));
+      local timeSeriesStacked(title, unit) =
+        timeSeriesPanel.new(title)
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.standardOptions.withUnit(unit)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(20)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withLineWidth(2)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withStacking({ mode: 'normal', group: 'A' })
+        + timeSeriesPanel.fieldConfig.defaults.custom.withSpanNulls(false)
+        + tooltipSortDesc;
 
-      local memory =
-        graphPanel.new(
-          title='Memory Utilization',
-          datasource='$datasource',
-          format='bytes',
-          min=0,
-          linewidth=2,
-          fill=2,
-        )
-        .addTarget(prometheus.target('container_memory_usage_bytes{cluster="$cluster", job=~"$job", image!="", name=~"$container"}', legendFormat='{{name}}'));
-
-      local containerDiskUsage =
-        graphPanel.new(
-          title='Container Disk Usage',
-          datasource='$datasource',
-          format='bytes',
-          linewidth=2,
-          fill=2,
-          min=0,
-        )
-        .addTarget(prometheus.target('container_fs_usage_bytes{cluster="$cluster", job=~"$job", image!="", name=~"$container"}', legendFormat='{{name}}'));
-
-      local DiskIO =
-        graphPanel.new(
-          title='Disk I/O',
-          datasource='$datasource',
-          formatY1='bytes',
-          formatY2='s',
-          fill=0,
-        )
-        .addSeriesOverride({ alias: '/read*|written*/', yaxis: 1 })
-        .addSeriesOverride({ alias: '/io time*/', yaxis: 2 })
-        .addTargets(
-          [
-            prometheus.target('sum(rate(container_fs_reads_bytes_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='read {{name}}'),
-            prometheus.target('sum(rate(container_fs_writes_bytes_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='written {{name}}'),
-            prometheus.target('sum(rate(container_fs_io_time_seconds_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', legendFormat='io time {{name}}'),
-          ],
-        );
-
-      local bandwidth =
-        graphPanel.new(
-          title='Transmit/Receive Bandwidth',
-          datasource='$datasource',
-          format='Bps',
-          stack=true,
-          nullPointMode='null as zero',
-          linewidth=2,
-          fill=2,
-        )
-        .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
-        .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
-        .addTargets(
-          [
-            prometheus.target('irate(container_network_transmit_bytes_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
-            prometheus.target('irate(container_network_receive_bytes_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
-          ],
-        );
-
-      local drops =
-        graphPanel.new(
-          title='Transmit/Receive Drops',
-          datasource='$datasource',
-          format='pps',
-          stack=true,
-          nullPointMode='null as zero',
-          linewidth=2,
-          fill=2,
-        )
-        .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
-        .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
-        .addTargets(
-          [
-            prometheus.target('irate(container_network_transmit_packets_dropped_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
-            prometheus.target('irate(container_network_receive_packets_dropped_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
-          ],
-        );
-
-      local errors =
-        graphPanel.new(
-          title='Transmit/Receive Errors',
-          datasource='$datasource',
-          format='pps',
-          stack=true,
-          nullPointMode='null as zero',
-          linewidth=2,
-          fill=2,
-        )
-        .addSeriesOverride({ alias: '/Rx_/', stack: 'B', transform: 'negative-Y' })
-        .addSeriesOverride({ alias: '/Tx_/', stack: 'A' })
-        .addTargets(
-          [
-            prometheus.target('irate(container_network_transmit_errors_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Tx_{{name}}'),
-            prometheus.target('irate(container_network_receive_errors_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', legendFormat='Rx_{{name}}'),
-          ],
-        );
-
-      local panels = [
-        row.new('Overview') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        containers { gridPos: { x: 0, y: 1, w: 4, h: 5 } },
-        imageTable { gridPos: { x: 4, y: 1, w: 20, h: 5 } },
-        row.new('CPU Utilization') { gridPos: { x: 0, y: 6, w: 24, h: 1 } },
-        cpu { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 7, w: 24, h: 7 } },
-        row.new('Memory Utilization', collapse=true) { gridPos: { x: 0, y: 14, w: 24, h: 1 } }
-        .addPanel(memory { tooltip+: { sort: 2 } }, { x: 0, y: 15, w: 24, h: 7 }),
-        row.new('Disk Utilization', collapse=true) { gridPos: { x: 0, y: 15, w: 24, h: 1 } }
-        .addPanel(containerDiskUsage { tooltip+: { sort: 2 } }, { x: 0, y: 16, w: 12, h: 7 })
-        .addPanel(DiskIO { tooltip+: { sort: 2 } }, { x: 12, y: 16, w: 12, h: 7 }),
-        row.new('Network Bandwith', collapse=true) { gridPos: { x: 0, y: 16, w: 24, h: 1 } }
-        .addPanel(bandwidth { tooltip+: { sort: 2 } }, { x: 0, y: 17, w: 24, h: 7 }),
-        row.new('Network Drops', collapse=true) { gridPos: { x: 0, y: 17, w: 24, h: 1 } }
-        .addPanel(drops { tooltip+: { sort: 2 } }, { x: 0, y: 18, w: 24, h: 7 }),
-        row.new('Network Errors', collapse=true) { gridPos: { x: 0, y: 18, w: 24, h: 1 } }
-        .addPanel(errors { tooltip+: { sort: 2 } }, { x: 0, y: 19, w: 24, h: 7 }),
+      local rxTxOverrides = [
+        fieldOverride.byRegexp.new('/Rx_/')
+          + fieldOverride.byRegexp.withProperty('custom.stacking', { mode: 'normal', group: 'B' })
+          + fieldOverride.byRegexp.withProperty('custom.transform', 'negative-Y'),
+        fieldOverride.byRegexp.new('/Tx_/')
+          + fieldOverride.byRegexp.withProperty('custom.stacking', { mode: 'normal', group: 'A' }),
       ];
 
-      dashboard.new(
-        'CAdvisor',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.cAdvisor,
-      )
-      .addTemplates([
+      local containers =
+        statPanel.new('Containers')
+        + statPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + statPanel.options.withGraphMode('none')
+        + statPanel.options.reduceOptions.withCalcs(['lastNotNull'])
+        + statPanel.standardOptions.thresholds.withMode('absolute')
+        + statPanel.standardOptions.thresholds.withSteps($.grafanaThresholds($._config.templates.L1.hostApps.genericApp.panel.thresholds))
+        + statPanel.queryOptions.withTargets([
+          promTarget('count(rate(container_last_seen{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m]))'),
+        ]);
+
+      local imageTable =
+        table.new('')
+        + table.queryOptions.withDatasource('prometheus', '$datasource')
+        + table.standardOptions.withOverrides([
+          fieldOverride.byName.new('Time')
+          + fieldOverride.byName.withProperty('custom.hidden', true),
+          fieldOverride.byName.new('name')
+          + fieldOverride.byName.withProperty('displayName', 'Name'),
+          fieldOverride.byName.new('image')
+          + fieldOverride.byName.withProperty('displayName', 'Image'),
+          fieldOverride.byName.new('Value')
+          + fieldOverride.byName.withProperty('custom.hidden', true),
+        ])
+        + table.queryOptions.withTargets([
+          prometheus.withExpr('sum(container_cpu_user_seconds_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}) by (name,image)') + prometheus.withFormat('table') + prometheus.withInstant(true),
+        ]);
+
+      local cpu =
+        timeSeriesPanel.new('CPU Usage')
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.standardOptions.withUnit('percent')
+        + timeSeriesPanel.standardOptions.withMin(0)
+        + timeSeriesPanel.standardOptions.withMax(100)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(20)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withLineWidth(2)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withStacking({ mode: 'normal', group: 'A' })
+        + timeSeriesPanel.fieldConfig.defaults.custom.withSpanNulls(false)
+        + tooltipSortDesc
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('rate(container_cpu_user_seconds_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m]) * 100', '{{name}}'),
+        ]);
+
+      local timeSeriesBase(title, unit) =
+        timeSeriesPanel.new(title)
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.standardOptions.withUnit(unit)
+        + timeSeriesPanel.standardOptions.withMin(0)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(20)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withLineWidth(2)
+        + tooltipSortDesc;
+
+      local memory =
+        timeSeriesBase('Memory Utilization', 'bytes')
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('container_memory_usage_bytes{cluster="$cluster", job=~"$job", image!="", name=~"$container"}', '{{name}}'),
+        ]);
+
+      local containerDiskUsage =
+        timeSeriesBase('Container Disk Usage', 'bytes')
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('container_fs_usage_bytes{cluster="$cluster", job=~"$job", image!="", name=~"$container"}', '{{name}}'),
+        ]);
+
+      local DiskIO =
+        timeSeriesPanel.new('Disk I/O')
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.standardOptions.withUnit('bytes')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(0)
+        + timeSeriesPanel.fieldConfig.defaults.custom.withAxisPlacement('left')
+        + tooltipSortDesc
+        + timeSeriesPanel.standardOptions.withOverrides([
+          fieldOverride.byRegexp.new('/io time.*/')
+            + fieldOverride.byRegexp.withProperty('unit', 's')
+            + fieldOverride.byRegexp.withProperty('custom.axisPlacement', 'right'),
+          fieldOverride.byRegexp.new('/read.*|written.*/')
+            + fieldOverride.byRegexp.withProperty('custom.axisPlacement', 'left'),
+        ])
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('sum(rate(container_fs_reads_bytes_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', 'read {{name}}'),
+          promTarget('sum(rate(container_fs_writes_bytes_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', 'written {{name}}'),
+          promTarget('sum(rate(container_fs_io_time_seconds_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])) by (name)', 'io time {{name}}'),
+        ]);
+
+      local bandwidth =
+        timeSeriesStacked('Transmit/Receive Bandwidth', 'Bps')
+        + timeSeriesPanel.standardOptions.withOverrides(rxTxOverrides)
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('irate(container_network_transmit_bytes_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', 'Tx_{{name}}'),
+          promTarget('irate(container_network_receive_bytes_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', 'Rx_{{name}}'),
+        ]);
+
+      local drops =
+        timeSeriesStacked('Transmit/Receive Drops', 'pps')
+        + timeSeriesPanel.standardOptions.withOverrides(rxTxOverrides)
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('irate(container_network_transmit_packets_dropped_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', 'Tx_{{name}}'),
+          promTarget('irate(container_network_receive_packets_dropped_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', 'Rx_{{name}}'),
+        ]);
+
+      local errors =
+        timeSeriesStacked('Transmit/Receive Errors', 'pps')
+        + timeSeriesPanel.standardOptions.withOverrides(rxTxOverrides)
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('irate(container_network_transmit_errors_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', 'Tx_{{name}}'),
+          promTarget('irate(container_network_receive_errors_total{cluster="$cluster", job=~"$job", image!="", name=~"$container"}[5m])', 'Rx_{{name}}'),
+        ]);
+
+      local panels = [
+        row.new('Overview') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        containers { gridPos: { x: 0, y: 1, w: 4, h: 5 } },
+        imageTable { gridPos: { x: 4, y: 1, w: 20, h: 5 } },
+        row.new('CPU Utilization') + { gridPos: { x: 0, y: 6, w: 24, h: 1 } },
+        cpu { gridPos: { x: 0, y: 7, w: 24, h: 7 } },
+        row.new('Memory Utilization') + { gridPos: { x: 0, y: 14, w: 24, h: 1 } },
+        memory { gridPos: { x: 0, y: 15, w: 24, h: 7 } },
+        row.new('Disk Utilization') + { gridPos: { x: 0, y: 22, w: 24, h: 1 } },
+        containerDiskUsage { gridPos: { x: 0, y: 23, w: 12, h: 7 } },
+        DiskIO { gridPos: { x: 12, y: 23, w: 12, h: 7 } },
+        row.new('Network Bandwith') + { gridPos: { x: 0, y: 30, w: 24, h: 1 } },
+        bandwidth { gridPos: { x: 0, y: 31, w: 24, h: 7 } },
+        row.new('Network Drops') + { gridPos: { x: 0, y: 38, w: 24, h: 1 } },
+        drops { gridPos: { x: 0, y: 39, w: 24, h: 7 } },
+        row.new('Network Errors') + { gridPos: { x: 0, y: 46, w: 24, h: 1 } },
+        errors { gridPos: { x: 0, y: 47, w: 24, h: 7 } },
+      ];
+
+      dashboard.new('CAdvisor')
+      + dashboard.withUid($._config.grafanaDashboards.ids.cAdvisor)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(container_cpu_user_seconds_total{cluster="$cluster"}, job)'),
         $.grafanaTemplates.containerTemplate('label_values(container_cpu_user_seconds_total{cluster="$cluster", job=~"$job"}, name)'),
       ])
-      .addPanels(panels),
+      + dashboard.withPanels(panels),
   },
 }

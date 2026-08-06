@@ -14,6 +14,8 @@
 */
 
 /* Default configuration file */
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
+
 (import 'templates.libsonnet') +
 
 {
@@ -35,22 +37,30 @@
     grafanaDashboards: {
       isLoki: true,
       editable: true,
-      tooltip: 'shared_crosshair',
       // refresh: "" (empty string) to disable refresh
       refresh: '10s',
       time_from: 'now-5m',
+      tooltip: grafana.dashboard.graphTooltip.withSharedCrosshair(),
       color: {
-        red: '#e02f44',  // semi-dark-red
-        orange: '#ff780a',  // semi-dark-orange
-        green: '#56a64b',  // semi-dark-green
-        white: '#ffffff',  // white
-        black: '#000000',  // black
-        pink: '#fce2de',  // pink
-        purple: '#a352cc',  // semi-dark-purple
-        yellow: '#fade2a',  // yellow
-        blue: '#5794f2',  // blue
-        lightblue: '#8ab8ff',  // light-blue
-        gray: '#858187',  //gray
+        red: '#e02f44',
+        orange: '#ff780a',
+        green: '#56a64b',
+        white: '#ffffff',
+        black: '#000000',
+        pink: '#fce2de',
+        purple: '#a352cc',
+        yellow: '#fade2a',
+        blue: '#5794f2',
+        lightblue: '#8ab8ff', 
+        lightgreen: '#96d98d', 
+        lightyellow: '#ffee52',  
+        lightorange: '#ffb357',  
+        lightpurple: '#ca95e5',  
+        darkyellow: '#f2cc0c', 
+        darkblue: '#3274d9',
+        darkred: '#a50000',
+        darkerred: '#7e0505', 
+        gray: '#858187',
       },
       severityColors: {
         default: 'green',
@@ -61,7 +71,7 @@
       dataLinkCommonArgs: 'var-datasource=$datasource&var-cluster=$cluster&from=$__from&to=$__to',
       dataLinkCommonArgsNoCluster: 'var-datasource=$datasource&from=$__from&to=$__to',
       dataLinkCommonArgsBlackbox: 'var-datasource=$datasource&var-target=$target&from=$__from&to=$__to',
-      templateRefresh: 'time',  // on time range change
+      templateRefresh: 'onTime',  // onTime - on time range change, onLoad - on dashboard load
       templateSort: 5,  // case insensitive ascent sort
       ids: {
         // dNation dashboards
@@ -114,7 +124,7 @@
         nginxVtsEnhancedLegacy: 'nginxvtsenhancedlegacy',
         nginxNrpe: 'nginxnrpe',
         nginxIngress: 'nginxingress',
-        rabbitmq: 'rabbitmq',
+        rabbitmq: 'rabbitmq-overview',
         postfix: 'postfix',
         autoscaler: 'autoscaler',
         apache: 'apache',

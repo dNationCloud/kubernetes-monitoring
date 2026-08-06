@@ -47,3 +47,4 @@ plugins:
 - exclude:
     glob:
     - docs/project/*
+    - jsonnet/vendor/*

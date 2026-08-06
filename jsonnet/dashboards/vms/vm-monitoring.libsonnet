@@ -14,183 +14,106 @@
 */
 
 /* VM main dashboard */
-
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local statPanel = grafana.statPanel;
-local row = grafana.row;
-local link = grafana.link;
-local text = grafana.text;
+local statPanel = grafana.panel.stat;
+local row = grafana.panel.row;
+local text = grafana.panel.text;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+::
     local vmDashboard(vmUid, dashboardName, alertJobs, vmTemplates, vmApps=[]) = {
       local monitoringLink =
-        link.dashboards(
-          title='Monitoring',
-          tags=[],
-          url='/d/%s' % $._config.grafanaDashboards.ids.monitoring,
-          type='link',
-        ),
+        dashboard.link.link.new('Monitoring', '/d/%s' % $._config.grafanaDashboards.ids.monitoring),
 
       local dNationLink =
-        link.dashboards(
-          title='dNation - Making Cloud Easy',
-          tags=[],
-          icon='cloud',
-          url='https://www.dNation.cloud/',
-          type='link',
-          targetBlank=true,
-        ),
+        dashboard.link.link.new('dNation - Making Cloud Easy', 'https://www.dNation.cloud/')
+        + dashboard.link.link.withIcon('cloud')
+        + dashboard.link.link.options.withTargetBlank(true),
 
-      local alertPanel(title, expr) =
-        statPanel.new(
-          title=title,
-          datasource='$datasource',
-          graphMode='none',
-          colorMode='background',
-        )
-        .addTarget({ type: 'single', expr: expr }),
+      local statAlert(title, expr) =
+        statPanel.new(title)
+        + statPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + statPanel.options.withGraphMode('none') + statPanel.options.withColorMode('background')
+        + statPanel.queryOptions.withTargets([{ type: 'single', expr: expr, refId: 'A' }]),
 
       local criticalPanel =
-        alertPanel(
-          title='Critical',
-          expr='ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
-        )
-        .addDataLink({ title: 'Detail', url: $.addRefreshParam('/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s') % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
-        .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
+        statAlert('Critical', 'ALERTS{alertname!="Watchdog", severity="critical", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)])
+        + statPanel.standardOptions.withLinks($.updateDataLinksCommonArgs([{ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=critical&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] }]))
+        + statPanel.standardOptions.thresholds.withMode('absolute') + statPanel.standardOptions.thresholds.withSteps($.grafanaThresholds($._config.templates.commonThresholds.criticalPanel)),
 
       local warningPanel =
-        alertPanel(
-          title='Warning',
-          expr='ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)],
-        )
-        .addDataLink({ title: 'Detail', url: $.addRefreshParam('/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s') % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] })
-        .addThresholds($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
+        statAlert('Warning', 'ALERTS{alertname!="Watchdog", severity="warning", alertgroup=~"%s|%s", job=~"%s"} OR on() vector(0)' % [$._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, std.join('|', alertJobs)])
+        + statPanel.standardOptions.withLinks($.updateDataLinksCommonArgs([{ title: 'Detail', url: '/d/%s?var-alertmanager=$alertmanager&var-severity=warning&var-job=%s&var-alertgroup=%s&var-alertgroup=%s&%s' % [$._config.grafanaDashboards.ids.alertVMOverview, std.join('&var-job=', alertJobs), $._config.prometheusRules.alertGroupClusterVM, $._config.prometheusRules.alertGroupClusterVMApp, $._config.grafanaDashboards.dataLinkCommonArgs] }]))
+        + statPanel.standardOptions.thresholds.withMode('absolute') + statPanel.standardOptions.thresholds.withSteps($.grafanaThresholds($._config.templates.commonThresholds.warningPanel)),
+
+      local statBase(title, p, desc) =
+        statPanel.new(title)
+        + statPanel.queryOptions.withDatasource('prometheus', '$datasource') + statPanel.panelOptions.withDescription(desc)
+        + (if std.objectHas(p, 'colorMode') then statPanel.options.withColorMode(p.colorMode) else {})
+        + (if std.objectHas(p, 'graphMode') then statPanel.options.withGraphMode(p.graphMode) else {})
+        + (if std.objectHas(p, 'unit') then statPanel.standardOptions.withUnit(p.unit) else {})
+        + (if std.objectHas(p, 'decimals') && p.decimals != null then statPanel.standardOptions.withDecimals(p.decimals) else {}),
 
       local vmStatsPanels = [
-        statPanel.new(
-          title=tpl.panel.title,
-          description='%s\n\nVM monitoring template: _%s_' % [tpl.panel.description, tpl.templateName],
-          datasource=tpl.panel.datasource,
-          colorMode=tpl.panel.colorMode,
-          graphMode=tpl.panel.graphMode,
-          unit=tpl.panel.unit,
-          decimals=tpl.panel.decimals,
-        )
-        .addTarget(prometheus.target(tpl.panel.expr))
-        .addMappings(tpl.panel.mappings)
-        .addDataLinks(tpl.panel.dataLinks)
-        .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
-        {
-          gridPos: {
-            x: tpl.panel.gridPos.x,
-            y: tpl.panel.gridPos.y,
-            w: tpl.panel.gridPos.w,
-            h: tpl.panel.gridPos.h,
-          },
-        }
+        statBase(tpl.panel.title, tpl.panel, '%s\n\nVM monitoring template: _%s_' % [tpl.panel.description, tpl.templateName])
+        + statPanel.queryOptions.withTargets([prometheus.withExpr(tpl.panel.expr)])
+        + statPanel.standardOptions.withMappings(tpl.panel.mappings)
+        + statPanel.standardOptions.withLinks(tpl.panel.dataLinks)
+        + statPanel.standardOptions.thresholds.withMode('absolute') + statPanel.standardOptions.thresholds.withSteps($.grafanaThresholds(tpl.panel.thresholds))
+        + { gridPos: { x: tpl.panel.gridPos.x, y: tpl.panel.gridPos.y, w: tpl.panel.gridPos.w, h: tpl.panel.gridPos.h } }
         for tpl in vmTemplates
         if (std.objectHas(tpl, 'panel') && tpl.panel != {})
       ],
 
       local vmAppStatsPanels(index, app) = [
         local tpl = template.item;
-        local tplIndex = template.index;
-        local appGridX =
-          if std.type(tpl.panel.gridPos.x) == 'number' then
-            tpl.panel.gridPos.x
-          else
-            (index + tplIndex) * tpl.panel.gridPos.w;
-        local appGridY =
-          if std.type(tpl.panel.gridPos.y) == 'number' then
-            tpl.panel.gridPos.y
-          else
-            12;  // `12` -> init Y position in application row;
-        statPanel.new(
-          title='%s %s' % [tpl.templateName, app.name],
-          description='%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName],
-          datasource=tpl.panel.datasource,
-          colorMode=tpl.panel.colorMode,
-          graphMode=tpl.panel.graphMode,
-          unit=tpl.panel.unit,
-          decimals=tpl.panel.decimals,
-        )
-        .addTarget(prometheus.target(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName }))
-        .addMappings(tpl.panel.mappings)
-        .addDataLinks(
-          $.updateDataLinksCommonArgs(
-            if std.length(tpl.panel.dataLinks) > 0 then
-              [
-                dataLink {
-                  url: dataLink.url % { job: app.jobName },
-                }
-                for dataLink in tpl.panel.dataLinks
-              ]
-            else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then
-              [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
-            else
-              []
-          )
-        )
-        .addThresholds($.grafanaThresholds(tpl.panel.thresholds))
-        {
-          gridPos: {
-            x: appGridX,
-            y: appGridY,
-            w: tpl.panel.gridPos.w,
-            h: tpl.panel.gridPos.h,
-          },
-        }
+        local appGridX = if std.type(tpl.panel.gridPos.x) == 'number' then tpl.panel.gridPos.x else (index + template.index) * tpl.panel.gridPos.w;
+        local appGridY = if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y else 12;
+        statBase('%s %s' % [tpl.templateName, app.name], tpl.panel, '%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName])
+        + statPanel.queryOptions.withTargets([prometheus.withExpr(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName })])
+        + statPanel.standardOptions.withMappings(tpl.panel.mappings)
+        + statPanel.standardOptions.withLinks($.updateDataLinksCommonArgs(
+          if std.length(tpl.panel.dataLinks) > 0 then [dataLink { url: dataLink.url % { job: app.jobName } } for dataLink in tpl.panel.dataLinks]
+          else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
+          else []
+        ))
+        + statPanel.standardOptions.thresholds.withMode('absolute') + statPanel.standardOptions.thresholds.withSteps($.grafanaThresholds(tpl.panel.thresholds))
+        + { gridPos: { x: appGridX, y: appGridY, w: tpl.panel.gridPos.w, h: tpl.panel.gridPos.h } }
         for template in $.zipWithIndex(app.templates)
       ],
-
       local applicationPanels(apps) =
         if std.length(apps) > 0 then
-          [
-            row.new('Applications') { gridPos: { x: 0, y: 11, w: 24, h: 1 } },
-          ] +
-          std.flattenArrays([
-            vmAppStatsPanels(app.index, app.item)
-            for app in $.zipWithIndex(apps)
-          ])
-        else
-          [],
+          [row.new('Applications') + { gridPos: { x: 0, y: 11, w: 24, h: 1 } }]
+          + std.flattenArrays([vmAppStatsPanels(app.index, app.item) for app in $.zipWithIndex(apps)])
+        else [],
+
+      local txt(t, x, y, w) = text.new(t) + { gridPos: { x: x, y: y, w: w, h: 1 } },
 
       dashboard:
-        dashboard.new(
-          dashboardName,
-          editable=$._config.grafanaDashboards.editable,
-          graphTooltip=$._config.grafanaDashboards.tooltip,
-          refresh=$._config.grafanaDashboards.refresh,
-          time_from=$._config.grafanaDashboards.time_from,
-          tags=$._config.grafanaDashboards.tags.k8sVMs,
-          uid=vmUid,
-        )
-        .addLinks(
-          [
-            monitoringLink,
-            dNationLink,
-          ]
-        )
-        .addTemplates([
+        dashboard.new(dashboardName)
+        + dashboard.withUid(vmUid) + dashboard.withTags($._config.grafanaDashboards.tags.k8sVMs)
+        + dashboard.withEditable($._config.grafanaDashboards.editable) + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+        + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+        + $._config.grafanaDashboards.tooltip
+        + dashboard.withTimezone('browser')
+        + dashboard.withLinks([monitoringLink, dNationLink])
+        + dashboard.withVariables([
           $.grafanaTemplates.datasourceTemplate(),
           $.grafanaTemplates.alertManagerTemplate(),
           $.grafanaTemplates.jobTemplate('label_values(node_uname_info{cluster="$cluster", pod=~"virt-launcher.*"}, job)', hide='variable'),
         ])
-        .addPanels(
-          [
-            row.new('Alerts') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-            criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
-            warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
-            row.new('VM') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
-            text.new('CPU') { gridPos: { x: 0, y: 5, w: 6, h: 1 } },
-            text.new('RAM') { gridPos: { x: 6, y: 5, w: 6, h: 1 } },
-            text.new('Disk') { gridPos: { x: 12, y: 5, w: 6, h: 1 } },
-            text.new('Network') { gridPos: { x: 18, y: 5, w: 6, h: 1 } },
-          ] + vmStatsPanels + applicationPanels(vmApps)
-        ),
+        + dashboard.withPanels([
+          row.new('Alerts') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+          criticalPanel { gridPos: { x: 0, y: 1, w: 12, h: 3 } },
+          warningPanel { gridPos: { x: 12, y: 1, w: 12, h: 3 } },
+          row.new('VM') + { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+          txt('CPU', 0, 5, 6),
+          txt('RAM', 6, 5, 6),
+          txt('Disk', 12, 5, 6),
+          txt('Network', 18, 5, 6),
+        ] + vmStatsPanels + applicationPanels(vmApps)),
     };
     if $.isClusterMonitoring() then
       local isMulti = std.length($._config.clusterMonitoring.clusters) > 1;
@@ -209,6 +132,5 @@ local text = grafana.text;
         if (std.objectHas(cluster, 'vms') && std.length(cluster.vms) > 0)
         for vm in cluster.vms
       }
-    else
-      {},
+    else {},
 }

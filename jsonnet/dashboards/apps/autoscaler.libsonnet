@@ -14,47 +14,46 @@
 */
 
 /* K8s autoscaler dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
-local row = grafana.row;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+:: {
     autoscaler:
       local managedObjects =
-        graphPanel.new(
-          title='Autoscaler Managed Objects',
-          datasource='$datasource',
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(autoscaler_instances{cluster="$cluster", job=~"$job"})', legendFormat='instances'),
-            prometheus.target('sum(autoscaler_healthy{cluster="$cluster", job=~"$job"})', legendFormat='instances healthy'),
-            prometheus.target('sum(autoscaler_groups{cluster="$cluster", job=~"$job"})', legendFormat='groups'),
-          ],
-        );
+        timeSeriesPanel.new('Autoscaler Managed Objects')
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(10)
+        + timeSeriesPanel.options.tooltip.withMode('multi')
+        + timeSeriesPanel.options.tooltip.withSort('desc')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(autoscaler_instances{cluster="$cluster", job=~"$job"})') + prometheus.withLegendFormat('instances'),
+          prometheus.withExpr('sum(autoscaler_healthy{cluster="$cluster", job=~"$job"})') + prometheus.withLegendFormat('instances healthy'),
+          prometheus.withExpr('sum(autoscaler_groups{cluster="$cluster", job=~"$job"})') + prometheus.withLegendFormat('groups'),
+        ]);
 
       local panels = [
-        row.new('Autoscaler Managed Objects') { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        managedObjects { tooltip+: { sort: 2 }, gridPos: { x: 0, y: 1, w: 24, h: 7 } },
+        row.new('Autoscaler Managed Objects') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
+        managedObjects { gridPos: { x: 0, y: 1, w: 24, h: 7 } },
       ];
 
-      dashboard.new(
-        'Autoscaler',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.autoscaler,
-      )
-      .addTemplates([
+      dashboard.new('Autoscaler')
+      + dashboard.withUid($._config.grafanaDashboards.ids.autoscaler)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.clusterTemplate('label_values(node_uname_info, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(autoscaler_instances{cluster="$cluster"}, job)'),
       ])
-      .addPanels(panels),
+      + dashboard.withPanels(panels),
   },
 }

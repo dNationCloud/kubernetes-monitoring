@@ -375,7 +375,7 @@
         true
         for tplName in std.objectFields(obj.templates)
         if utils.isMember(templateGroupTemlates, tplName) ||
-            (std.objectHas(obj.templates[tplName], 'parent') && utils.isMember(templateGroupTemlates, obj.templates[tplName].parent))
+           (std.objectHas(obj.templates[tplName], 'parent') && utils.isMember(templateGroupTemlates, obj.templates[tplName].parent))
       ]
     ) == 0,
 
@@ -440,11 +440,11 @@
      * @param preprocess_url might be with or without refresh parameter.
      * @return url with added refresh parameter from config if suitable.
      */
-      local refreh_sep =  if std.length(std.findSubstr('?', preprocess_url)) > 0 then '&' else '?';
-      // remove &refresh= if disabled to be consistent with how "refresh" from a dashboard JSON displays in URL
-      local refresh_param = if std.length(std.findSubstr('refresh=', preprocess_url)) > 0 ||  $._config.grafanaDashboards.refresh == "" then ""
-                            else "%srefresh=%s" % [refreh_sep, $._config.grafanaDashboards.refresh];
-      preprocess_url + refresh_param,
+    local refreh_sep = if std.length(std.findSubstr('?', preprocess_url)) > 0 then '&' else '?';
+    // remove &refresh= if disabled to be consistent with how "refresh" from a dashboard JSON displays in URL
+    local refresh_param = if std.length(std.findSubstr('refresh=', preprocess_url)) > 0 || $._config.grafanaDashboards.refresh == '' then ''
+    else '%srefresh=%s' % [refreh_sep, $._config.grafanaDashboards.refresh];
+    preprocess_url + refresh_param,
 
   updateDataLinksCommonArgs(datalinks, tableLink=false)::
     /**

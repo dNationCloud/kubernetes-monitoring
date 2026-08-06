@@ -60,7 +60,7 @@
 (import 'apps/nginx-nrpe.libsonnet') +
 (import 'apps/nginx-ingress.libsonnet') +
 (import 'apps/cadvisor.libsonnet') +
-(import 'apps/rabbitmq.libsonnet') +
+(import 'apps/rabbitmq-overview.libsonnet') +
 (import 'apps/postfix.libsonnet') +
 (import 'apps/autoscaler.libsonnet') +
 (import 'apps/apache.libsonnet') +

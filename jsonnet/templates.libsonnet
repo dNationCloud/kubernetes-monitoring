@@ -279,7 +279,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 18,
               y: 12,
@@ -352,7 +352,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 18,
               y: 9,
@@ -381,7 +381,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: 'max(%s) OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 21,
               y: 12,
@@ -406,7 +406,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 0,
               y: 5,
@@ -431,7 +431,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 4,
               y: 5,
@@ -456,7 +456,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 8,
               y: 5,
@@ -481,7 +481,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 12,
               y: 5,
@@ -506,7 +506,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 16,
               y: 5,
@@ -531,7 +531,7 @@
             dataLinks: [{ title: 'K8s Overview', url: '/d/{}?%s' % $.defaultConfig.grafanaDashboards.dataLinkCommonArgs }],
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               x: 20,
               y: 5,
@@ -1419,9 +1419,9 @@
             graphMode: 'none',
             unit: 'none',
             mappings: [
-              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
-              { from: 1, text: 'Warning', to: maxWarnings - 1, type: 2, value: '' },
-              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+              { type: 'range', options: { from: 0, to: 0, result: { text: 'OK', index: 0 } } },
+              { type: 'range', options: { from: 1, to: maxWarnings - 1, result: { text: 'Warning', index: 1 } } },
+              { type: 'range', options: { from: maxWarnings, to: $.defaultConfig.grafanaDashboards.constants.infinity, result: { text: 'Critical', index: 2 } } },
             ],
             gridPos: {
               w: 4,
@@ -1443,7 +1443,7 @@
           panel: {
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1469,7 +1469,7 @@
           panel: {
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1496,7 +1496,7 @@
           panel: {
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1524,7 +1524,7 @@
           panel: {
             expr: '%s OR on() vector(%s)' % [expr, invalid],
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: invalid }],
+            mappings: [{ type: 'value', options: { [std.toString(invalid)]: { text: '-', index: 0 } } }],
             unit: 's',
             decimals: 0,
             dataLinks: [{ title: 'Detail', url: '/d/%s?var-job=%(job)s&%s' % [$.defaultConfig.grafanaDashboards.ids.nginxIngress, '%(job)s', $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] }],
@@ -1556,7 +1556,7 @@
           panel: {
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1583,7 +1583,7 @@
           panel: {
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1610,7 +1610,7 @@
           panel: {
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1636,7 +1636,7 @@
           panel: {
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             unit: 'mailq',
             gridPos: {
               w: 4,
@@ -1648,7 +1648,7 @@
             expr: '(sum by (job, cluster) (postfix_size{%(job)s}))' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
           },
         },
         apache: {
@@ -1656,7 +1656,7 @@
           panel: {
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1667,7 +1667,7 @@
           panel: {
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1678,7 +1678,7 @@
           panel: {
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1689,7 +1689,7 @@
           panel: {
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1700,7 +1700,7 @@
           panel: {
             expr: '(sum(up{%(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1711,7 +1711,7 @@
           panel: {
             expr: '(sum(up{%(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1722,7 +1722,7 @@
           panel: {
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1733,7 +1733,7 @@
           panel: {
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1744,7 +1744,7 @@
           panel: {
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1766,7 +1766,7 @@
           panel: {
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1778,7 +1778,7 @@
           panel: {
             expr: '(sum(harbor_up{cluster="$cluster", %(job)s}) / count(harbor_up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: -1 }],
+            mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
             gridPos: {
               w: 4,
             },
@@ -1809,7 +1809,7 @@
           panel: {
             expr: 'bottomk(1,ssl_cert_not_after{cluster="$cluster"}-time() OR ssl_file_cert_not_after{cluster="$cluster"}-time() OR ssl_kubeconfig_cert_not_after{cluster="$cluster"}-time() OR ssl_kubernetes_cert_not_after{cluster="$cluster"}-time())',
             thresholds: thresholds,  // invalid range is always from minus infinity to 'lowest' thredhold,
-            mappings: [{ text: '-', type: 1, value: invalid }],
+            mappings: [{ type: 'value', options: { [std.toString(invalid)]: { text: '-', index: 0 } } }],
             unit: 's',
             decimals: 0,
             gridPos: {
@@ -1829,9 +1829,9 @@
               critical: 2,
             },
             mappings: [
-              { type: 1, text: 'HEALTHY', value: 0,},
-              { type: 1, text: 'WARNING', value: 1,},
-              { type: 1, text: 'ERROR', value: 2,},
+              { type: 'value', options: { '0': { text: 'HEALTHY', index: 0 } } },
+              { type: 'value', options: { '1': { text: 'WARNING', index: 1 } } },
+              { type: 'value', options: { '2': { text: 'ERROR', index: 2 } } },
             ],
             gridPos: {
               w: 4,
@@ -1841,35 +1841,35 @@
             name: '%(prefix)sCephHealthStatus',
             message: '%(prefix)s Ceph cluster is UNHEALTHY, on cluster : {{ $externalLabels.cluster }}',
             expr: 'ceph_health_status{%(job)s}' % { job: 'job=~".+"' },
-          linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
-          thresholds: {
-            operator: '>=',
-            warning: 1,
-            critical: 2,
+            linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
+            thresholds: {
+              operator: '>=',
+              warning: 1,
+              critical: 2,
             },
           },
-        },        
+        },
         openstack: {
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.openstack],
           panel: {
-            expr:'min({__name__=~"openstack_.*_up", %(job)s, cluster=~"$cluster"}) OR vector(-1)',
+            expr: 'min({__name__=~"openstack_.*_up", %(job)s, cluster=~"$cluster"}) OR vector(-1)',
             thresholds: {
               operator: '<',
               lowest: 0,
               critical: 1,
             },
             mappings: [
-              { type: 1, value:  1, text: 'OK' },
-              { type: 1, value: -1, text: 'OFFLINE' },
-              { type: 1, value:  0, text: 'CRITICAL' },
+              { type: 'value', options: { '1': { text: 'OK', index: 0 } } },
+              { type: 'value', options: { '-1': { text: 'OFFLINE', index: 1 } } },
+              { type: 'value', options: { '0': { text: 'CRITICAL', index: 2 } } },
             ],
             gridPos: { w: 4 },
-           },
+          },
           alert: {
             name: '%(prefix)sOpenStackHealthStatus',
             message: '%(prefix)s OpenStack cluster health is CRITICAL, on cluster : {{ $externalLabels.cluster }}',
-            expr:'min by (cluster, job) ({__name__=~"openstack_.*_up", %(job)s})' % { job: 'job=~".+"' },
+            expr: 'min by (cluster, job) ({__name__=~"openstack_.*_up", %(job)s})' % { job: 'job=~".+"' },
             linkGetParams: 'var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: {
               operator: '==',
@@ -1884,8 +1884,8 @@
           panel: {
             expr: '(sum(node_vfio_gpu_in_use_count)/sum(node_vfio_gpu_total_count))*100',
             unit: '%',
-            thresholds:{
-              operator: ">=",
+            thresholds: {
+              operator: '>=',
               lowest: 0,
               critical: 100,
               warning: 80,
@@ -1913,9 +1913,9 @@
             graphMode: 'none',
             unit: 'none',
             mappings: [
-              { from: -1, text: '-', to: -1, type: 2, value: '' },
-              { from: 0, text: 'Critical', to: 0, type: 2, value: '' },
-              { from: 1, text: 'OK', to: 1, type: 2, value: '' },
+              { type: 'range', options: { from: -1, to: -1, result: { text: '-', index: 0 } } },
+              { type: 'range', options: { from: 0, to: 0, result: { text: 'Critical', index: 1 } } },
+              { type: 'range', options: { from: 1, to: 1, result: { text: 'OK', index: 2 } } },
             ],
             gridPos: {
               w: 4,
@@ -1939,11 +1939,11 @@
             graphMode: 'none',
             unit: 'none',
             mappings: [
-              { from: -2, text: '-', to: -2, type: 2, value: '' },
-              { from: -1, text: 'Down', to: -1, type: 2, value: '' },
-              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
-              { from: 1, text: 'Warning', to: maxWarnings - 1, type: 2, value: '' },
-              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+              { type: 'range', options: { from: -2, to: -2, result: { text: '-', index: 0 } } },
+              { type: 'range', options: { from: -1, to: -1, result: { text: 'Down', index: 1 } } },
+              { type: 'range', options: { from: 0, to: 0, result: { text: 'OK', index: 2 } } },
+              { type: 'range', options: { from: 1, to: maxWarnings - 1, result: { text: 'Warning', index: 3 } } },
+              { type: 'range', options: { from: maxWarnings, to: $.defaultConfig.grafanaDashboards.constants.infinity, result: { text: 'Critical', index: 4 } } },
             ],
             gridPos: {
               w: 4,
@@ -1967,10 +1967,10 @@
             graphMode: 'none',
             unit: 'none',
             mappings: [
-              { from: -1, text: 'Down', to: -1, type: 2, value: '' },
-              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
-              { from: 1, text: 'Warning', to: maxWarnings - 1, type: 2, value: '' },
-              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+              { type: 'range', options: { from: -1, to: -1, result: { text: 'Down', index: 0 } } },
+              { type: 'range', options: { from: 0, to: 0, result: { text: 'OK', index: 1 } } },
+              { type: 'range', options: { from: 1, to: maxWarnings - 1, result: { text: 'Warning', index: 2 } } },
+              { type: 'range', options: { from: maxWarnings, to: $.defaultConfig.grafanaDashboards.constants.infinity, result: { text: 'Critical', index: 3 } } },
             ],
             gridPos: {
               w: 4,
@@ -1994,10 +1994,10 @@
             graphMode: 'none',
             unit: 'none',
             mappings: [
-              { from: -1, text: 'Down', to: -1, type: 2, value: '' },
-              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
-              { from: 1, text: 'Warning', to: maxWarnings - 1, type: 2, value: '' },
-              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+              { type: 'range', options: { from: -1, to: -1, result: { text: 'Down', index: 0 } } },
+              { type: 'range', options: { from: 0, to: 0, result: { text: 'OK', index: 1 } } },
+              { type: 'range', options: { from: 1, to: maxWarnings - 1, result: { text: 'Warning', index: 2 } } },
+              { type: 'range', options: { from: maxWarnings, to: $.defaultConfig.grafanaDashboards.constants.infinity, result: { text: 'Critical', index: 3 } } },
             ],
             gridPos: {
               w: 4,
@@ -2021,10 +2021,10 @@
             graphMode: 'none',
             unit: 'none',
             mappings: [
-              { from: -1, text: 'Down', to: -1, type: 2, value: '' },
-              { from: 0, text: 'OK', to: 0, type: 2, value: '' },
-              { from: 1, text: 'Warning', to: maxWarnings - 1, type: 2, value: '' },
-              { from: maxWarnings, text: 'Critical', to: $.defaultConfig.grafanaDashboards.constants.infinity, type: 2, value: '' },
+              { type: 'range', options: { from: -1, to: -1, result: { text: 'Down', index: 0 } } },
+              { type: 'range', options: { from: 0, to: 0, result: { text: 'OK', index: 1 } } },
+              { type: 'range', options: { from: 1, to: maxWarnings - 1, result: { text: 'Warning', index: 2 } } },
+              { type: 'range', options: { from: maxWarnings, to: $.defaultConfig.grafanaDashboards.constants.infinity, result: { text: 'Critical', index: 3 } } },
             ],
             gridPos: {
               w: 4,
@@ -2057,6 +2057,17 @@
               { alias: 'Status', pattern: 'Value #B', colors: colors, colorMode: 'cell', type: 'string', thresholds: [2, 2], valueMaps: valueMaps, mappingType: 1 },
               { alias: 'PVC', pattern: 'persistentvolumeclaim', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-pvc=${__cell_2}&%s' % [$.defaultConfig.grafanaDashboards.ids.persistentVolumes, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
               { alias: 'Namespace', pattern: 'namespace', type: 'string' },
+            ],
+            transformations: [
+              { id: 'merge', options: {} },
+              {
+                id: 'organize',
+                options: {
+                  excludeByName: { Time: true },
+                  indexByName: { Time: 0, namespace: 1, persistentvolumeclaim: 2, 'Value #A': 3, 'Value #B': 4 },
+                  renameByName: {},
+                },
+              },
             ],
             expr: [
               'sum by (persistentvolumeclaim, namespace) (((kubelet_volume_stats_capacity_bytes{cluster="$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc"} - kubelet_volume_stats_available_bytes{cluster="$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc"}) / kubelet_volume_stats_capacity_bytes{cluster="$cluster", namespace=~"$namespace", persistentvolumeclaim=~"$pvc"}) * 100)',
@@ -2091,6 +2102,17 @@
               { alias: 'Ready', pattern: 'Value #E', colors: colors, colorMode: 'cell', type: 'string', thresholds: thresholds, valueMaps: valueMaps, mappingType: 1 },
               { alias: 'Node', pattern: 'node', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-view=pod&var-instance=$__cell&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
             ],
+            transformations: [
+              { id: 'merge', options: {} },
+              {
+                id: 'organize',
+                options: {
+                  excludeByName: { Time: true },
+                  indexByName: { Time: 0, node: 1, 'Value #A': 2, 'Value #B': 3, 'Value #C': 4, 'Value #D': 5, 'Value #E': 6 },
+                  renameByName: {},
+                },
+              },
+            ],
             expr: [
               'sum by (node) (kube_node_spec_unschedulable{cluster="$cluster"})',
               'sum by (node) (kube_node_status_condition{cluster="$cluster", condition="DiskPressure", status=~"true|unknown"})',
@@ -2122,6 +2144,17 @@
               { alias: 'Ready', pattern: 'Value #B', type: 'string', mappingType: 2, rangeMaps: rangeMaps, thresholds: thresholds, colorMode: 'cell', colors: colors },
               { alias: 'StatefulSet', pattern: 'statefulset', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=${__cell_1}&var-statefulset=${__cell_2}&%s' % [$.defaultConfig.grafanaDashboards.ids.statefulSet, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
               { alias: 'Namespace', pattern: 'namespace', link: true, linkTooltip: 'Detail', linkUrl: '/d/%s?var-namespace=$__cell&var-pod=All&var-view=pod&var-search=&%s' % [$.defaultConfig.grafanaDashboards.ids.containerDetail, $.defaultConfig.grafanaDashboards.dataLinkCommonArgs] },
+            ],
+            transformations: [
+              { id: 'merge', options: {} },
+              {
+                id: 'organize',
+                options: {
+                  excludeByName: { Time: true },
+                  indexByName: { Time: 0, namespace: 1, statefulset: 2, 'Value #A': 3, 'Value #B': 4 },
+                  renameByName: {},
+                },
+              },
             ],
             expr: [
               'sum by (statefulset, namespace) (kube_statefulset_status_replicas_updated{cluster="$cluster", namespace=~"$namespace", statefulset=~"$statefulset"})',

@@ -14,186 +14,151 @@
 */
 
 /* Websocket dashboard */
-local grafana = import 'grafonnet/grafana.libsonnet';
+local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
-local prometheus = grafana.prometheus;
-local graphPanel = grafana.graphPanel;
-local row = grafana.row;
-local statPanel = grafana.statPanel;
+local timeSeriesPanel = grafana.panel.timeSeries;
+local statPanel = grafana.panel.stat;
+local row = grafana.panel.row;
+local prometheus = grafana.query.prometheus;
 
 {
   grafanaDashboards+:: {
     websocket:
+      local statBase(title, unit, calc, gmode, steps, fields=null) =
+        statPanel.new(title)
+        + statPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + statPanel.standardOptions.withUnit(unit)
+        + statPanel.options.withColorMode('value')
+        + statPanel.options.withGraphMode(gmode)
+        + statPanel.options.reduceOptions.withCalcs([calc])
+        + statPanel.options.reduceOptions.withValues(false)
+        + (if fields != null then statPanel.options.reduceOptions.withFields(fields) else {})
+        + statPanel.standardOptions.thresholds.withMode('absolute')
+        + statPanel.standardOptions.thresholds.withSteps(steps);
+
       local memory =
-        statPanel.new(
-          title='Memory usage',
-          datasource='$datasource',
-          unit='bytes',
-          reducerFunction='last',
-          fields='/^Value$/',
-          graphMode='none',
-        ).addThresholds(
-          [
-            { color: $._config.grafanaDashboards.color.green, value: null },
-          ]
-        )
-        .addTarget(prometheus.target('sum(container_memory_usage_bytes{pod=~"mt-websocket-.*", namespace="$namespace",container!="", container!="POD"})', legendFormat=''));
+        statBase('Memory usage', 'bytes', 'last', 'none', [{ color: $._config.grafanaDashboards.color.green, value: null }], '/^Value$/')
+        + statPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(container_memory_usage_bytes{pod=~"mt-websocket-.*", namespace="$namespace",container!="", container!="POD"})'),
+        ]);
 
       local cpu =
-        statPanel.new(
-          title='CPU usage',
-          datasource='$datasource',
-          unit='short',
-        ).addThresholds(
-          [
-            { color: $._config.grafanaDashboards.color.green, value: null },
-            { color: $._config.grafanaDashboards.color.red, value: 80 },
-          ]
-        )
-        .addTarget(prometheus.target('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{namespace=~"$namespace", pod=~"mt-websocket.*", container!=""})', legendFormat=''));
+        statBase('CPU usage', 'short', 'mean', 'area', [{ color: $._config.grafanaDashboards.color.green, value: null }, { color: $._config.grafanaDashboards.color.red, value: 80 }])
+        + statPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_rate{namespace=~"$namespace", pod=~"mt-websocket.*", container!=""})'),
+        ]);
 
       local traffic =
-        statPanel.new(
-          title='Network traffic',
-          datasource='$datasource',
-          unit='bytes',
-        ).addThresholds(
-          [
-            { color: $._config.grafanaDashboards.color.green, value: null },
-          ]
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(rate(container_network_transmit_bytes_total{namespace=~"$namespace", pod=~"mt-websocket-.*"}[10m]))', legendFormat='transmit'),
-            prometheus.target('sum(rate(container_network_receive_bytes_total{namespace=~"$namespace", pod=~"mt-websocket-.*"}[10m]))', legendFormat='receive'),
-          ],
-        );
+        statBase('Network traffic', 'bytes', 'mean', 'area', [{ color: $._config.grafanaDashboards.color.green, value: null }])
+        + statPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(rate(container_network_transmit_bytes_total{namespace=~"$namespace", pod=~"mt-websocket-.*"}[10m]))') + prometheus.withLegendFormat('transmit'),
+          prometheus.withExpr('sum(rate(container_network_receive_bytes_total{namespace=~"$namespace", pod=~"mt-websocket-.*"}[10m]))') + prometheus.withLegendFormat('receive'),
+        ]);
 
       local fileSystem =
-        statPanel.new(
-          title='Filesystem usage',
-          datasource='$datasource',
-          unit='bytes',
-        ).addThresholds(
-          [
-            { color: $._config.grafanaDashboards.color.green, value: null },
-          ]
-        )
-        .addTarget(prometheus.target('sum(container_fs_usage_bytes{pod=~"mt-websocket-.*", namespace="$namespace", container!="POD", container!=""})', legendFormat=''));
+        statBase('Filesystem usage', 'bytes', 'mean', 'area', [{ color: $._config.grafanaDashboards.color.green, value: null }])
+        + statPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(container_fs_usage_bytes{pod=~"mt-websocket-.*", namespace="$namespace", container!="POD", container!=""})'),
+        ]);
 
+      local timeSeriesBase(title) =
+        timeSeriesPanel.new(title)
+        + timeSeriesPanel.queryOptions.withDatasource('prometheus', '$datasource')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withShowPoints('never')
+        + timeSeriesPanel.fieldConfig.defaults.custom.withFillOpacity(10);
+
+      local logY2 =
+        timeSeriesPanel.fieldConfig.defaults.custom.scaleDistribution.withType('log')
+        + timeSeriesPanel.fieldConfig.defaults.custom.scaleDistribution.withLog(2);
 
       local activeConnnections =
-        graphPanel.new(
-          title='Active connections',
-          datasource='$datasource',
-        )
-        .addTarget(prometheus.target('sum by(connections)(om_customer_connections{namespace="$namespace",service="mt-websocket"})', legendFormat='{{ connections }}'));
-
+        timeSeriesBase('Active connections')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum by(connections)(om_customer_connections{namespace="$namespace",service="mt-websocket"})') + prometheus.withLegendFormat('{{ connections }}'),
+        ]);
 
       local eventRate =
-        graphPanel.new(
-          title='Event rate / 10min',
-          datasource='$datasource',
-          logBase1Y=2,
-          logBase2Y=2,
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(rate(om_mq_recv_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='MQ received'),
-            prometheus.target('sum(rate(om_ws_send_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='WS sent'),
-            prometheus.target('sum(rate(om_ws_received_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='WS received'),
-            prometheus.target('sum(rate(om_ws_broadcast_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='WS broadcast'),
-            prometheus.target('sum(rate(om_ws_disconn_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='WS disconnected'),
-            prometheus.target('sum(rate(om_ws_connected_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='WS connected'),
-          ],
-        );
+        timeSeriesBase('Event rate / 10min')
+        + logY2
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(rate(om_mq_recv_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('MQ received'),
+          prometheus.withExpr('sum(rate(om_ws_send_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('WS sent'),
+          prometheus.withExpr('sum(rate(om_ws_received_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('WS received'),
+          prometheus.withExpr('sum(rate(om_ws_broadcast_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('WS broadcast'),
+          prometheus.withExpr('sum(rate(om_ws_disconn_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('WS disconnected'),
+          prometheus.withExpr('sum(rate(om_ws_connected_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('WS connected'),
+        ]);
 
       local sentFrames =
-        graphPanel.new(
-          title='Sent frames rate / 10min',
-          datasource='$datasource',
-          logBase1Y=2,
-          logBase2Y=2,
-        )
-        .addTarget(prometheus.target('sum by(writes)(rate(om_customer_writes_total{namespace="$namespace"}[10m]))', legendFormat='{{ writes }}'));
+        timeSeriesBase('Sent frames rate / 10min')
+        + logY2
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum by(writes)(rate(om_customer_writes_total{namespace="$namespace"}[10m]))') + prometheus.withLegendFormat('{{ writes }}'),
+        ]);
 
       local errorRate =
-        graphPanel.new(
-          title='Connection error rate / 10min',
-          datasource='$datasource',
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(rate(om_ws_conn_abort_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='Aborted WS connections'),
-            prometheus.target('sum(rate(om_mq_conn_abort_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='Aborted MQ connections'),
-            prometheus.target('sum(rate(om_mq_reconnect_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='MQ reconnects'),
-            prometheus.target('sum(rate(om_ws_invalid{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='WS invalid'),
-          ],
-        );
+        timeSeriesBase('Connection error rate / 10min')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(rate(om_ws_conn_abort_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('Aborted WS connections'),
+          prometheus.withExpr('sum(rate(om_mq_conn_abort_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('Aborted MQ connections'),
+          prometheus.withExpr('sum(rate(om_mq_reconnect_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('MQ reconnects'),
+          prometheus.withExpr('sum(rate(om_ws_invalid{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('WS invalid'),
+        ]);
 
       local threads =
-        graphPanel.new(
-          title='Threads cumulative',
-          description='Sum of all threads across all pods',
-          datasource='$datasource',
-        )
-        .addTargets(
-          [
-            prometheus.target('sum(jvm_threads_current{namespace="$namespace",service="mt-websocket"})', legendFormat='current'),
-            prometheus.target('sum by(state)(jvm_threads_state{namespace="$namespace",service="mt-websocket"})', legendFormat='{{ state }}'),
-          ],
-        );
+        timeSeriesBase('Threads cumulative')
+        + timeSeriesPanel.panelOptions.withDescription('Sum of all threads across all pods')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(jvm_threads_current{namespace="$namespace",service="mt-websocket"})') + prometheus.withLegendFormat('current'),
+          prometheus.withExpr('sum by(state)(jvm_threads_state{namespace="$namespace",service="mt-websocket"})') + prometheus.withLegendFormat('{{ state }}'),
+        ]);
 
       local memoryPoolAllocation =
-        graphPanel.new(
-          title='Memory pool allocation rate / 10min',
-          description='Memory pool allocation rate, cumulative from all pods',
-          datasource='$datasource',
-        )
-        .addTarget(prometheus.target('sum by(pool)(rate(jvm_memory_pool_allocated_bytes_total{namespace="$namespace", service="mt-websocket"}[10m]))', legendFormat='{{pool}}'));
+        timeSeriesBase('Memory pool allocation rate / 10min')
+        + timeSeriesPanel.panelOptions.withDescription('Memory pool allocation rate, cumulative from all pods')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum by(pool)(rate(jvm_memory_pool_allocated_bytes_total{namespace="$namespace", service="mt-websocket"}[10m]))') + prometheus.withLegendFormat('{{pool}}'),
+        ]);
 
       local bytes =
-        graphPanel.new(
-          title='Bytes used',
-          description='Cumulative memory usage by all pods',
-          datasource='$datasource',
-          formatY1='bytes',
-        )
-        .addTarget(prometheus.target('sum(jvm_memory_bytes_used{namespace="$namespace",area="heap",service="mt-websocket"})', legendFormat='used bytes'));
-
+        timeSeriesBase('Bytes used')
+        + timeSeriesPanel.panelOptions.withDescription('Cumulative memory usage by all pods')
+        + timeSeriesPanel.standardOptions.withUnit('bytes')
+        + timeSeriesPanel.queryOptions.withTargets([
+          prometheus.withExpr('sum(jvm_memory_bytes_used{namespace="$namespace",area="heap",service="mt-websocket"})') + prometheus.withLegendFormat('used bytes'),
+        ]);
 
       local panels = [
         memory { gridPos: { x: 0, y: 0, w: 6, h: 4 } },
         cpu { gridPos: { x: 6, y: 0, w: 6, h: 4 } },
         traffic { gridPos: { x: 12, y: 0, w: 6, h: 4 } },
         fileSystem { gridPos: { x: 18, y: 0, w: 6, h: 4 } },
-        row.new('Connections') { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
+        row.new('Connections') + { gridPos: { x: 0, y: 4, w: 24, h: 1 } },
         activeConnnections { gridPos: { x: 0, y: 5, w: 24, h: 7 } },
-        row.new('Events and frames') { gridPos: { x: 0, y: 12, w: 24, h: 1 } },
+        row.new('Events and frames') + { gridPos: { x: 0, y: 12, w: 24, h: 1 } },
         eventRate { gridPos: { x: 0, y: 13, w: 24, h: 6 } },
         sentFrames { gridPos: { x: 0, y: 19, w: 24, h: 7 } },
-        row.new('Errors') { gridPos: { x: 0, y: 26, w: 24, h: 1 } },
+        row.new('Errors') + { gridPos: { x: 0, y: 26, w: 24, h: 1 } },
         errorRate { gridPos: { x: 0, y: 27, w: 24, h: 6 } },
-        row.new('JVM') { gridPos: { x: 0, y: 33, w: 24, h: 1 } },
+        row.new('JVM') + { gridPos: { x: 0, y: 33, w: 24, h: 1 } },
         threads { gridPos: { x: 0, y: 34, w: 24, h: 7 } },
         memoryPoolAllocation { gridPos: { x: 0, y: 41, w: 24, h: 8 } },
         bytes { gridPos: { x: 0, y: 49, w: 24, h: 7 } },
       ];
 
-      dashboard.new(
-        'Websocket',
-        description='Websocket summary',
-        editable=$._config.grafanaDashboards.editable,
-        graphTooltip=$._config.grafanaDashboards.tooltip,
-        refresh=$._config.grafanaDashboards.refresh,
-        time_from=$._config.grafanaDashboards.time_from,
-        tags=$._config.grafanaDashboards.tags.k8sApps,
-        uid=$._config.grafanaDashboards.ids.websocket,
-      )
-      .addTemplates([
+      dashboard.new('Websocket')
+      + dashboard.withDescription('Websocket summary')
+      + dashboard.withUid($._config.grafanaDashboards.ids.websocket)
+      + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
+      + dashboard.withEditable($._config.grafanaDashboards.editable)
+      + dashboard.withRefresh($._config.grafanaDashboards.refresh)
+      + dashboard.time.withFrom($._config.grafanaDashboards.time_from)
+      + $._config.grafanaDashboards.tooltip
+      + dashboard.withTimezone('browser')
+      + dashboard.withVariables([
         $.grafanaTemplates.datasourceTemplate(),
         $.grafanaTemplates.namespaceTemplate('label_values(om_ws_active{}, namespace)', includeAll=false, multi=false),
       ])
-      .addPanels(panels),
+      + dashboard.withPanels(panels),
   },
 }
