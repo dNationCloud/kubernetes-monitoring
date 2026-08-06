@@ -10,6 +10,10 @@
 chart/charts/*
 chart/release/*
 chart/Chart.lock
+# Jsonnet files
+jsonnet/vendor/
+jsonnet/jsonnetfile.lock.json
+chart/jsonnet-*.tar.gz
 # Test files
 json/*
 # Docs files

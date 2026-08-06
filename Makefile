@@ -42,6 +42,7 @@ docs-generate:
 	@echo "[Generating documentation]"
 	rm -rf docs/project docs/site
 	mkdir docs/project
+	cd jsonnet && jb install
 	rsync -Rr ./ ./docs/project --exclude=".*"
 	cd docs/project && python3 docs/generate_md_docs.py
 	cd docs/ && python3 -m mkdocs build -f mkdocs.yml

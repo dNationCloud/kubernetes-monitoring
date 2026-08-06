@@ -59,6 +59,7 @@ def generate_json_config(jsonnet_config_path, values):
         "merge_configs_jsonnet",
         merge_configs_jsonnet,
         tla_codes={"customConfig": json.dumps(values)},
+        jpathdir="jsonnet/vendor",
     )
 
 

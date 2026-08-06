@@ -41,6 +41,12 @@ jobs:
       run: |
         pip3 install -r "docs/requirements.txt"
 
+    - name: Install jsonnet-bundler
+      run: |
+        sudo curl -sSL -o /usr/local/bin/jb \
+          https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/v0.6.0/jb-linux-amd64
+        sudo chmod +x /usr/local/bin/jb
+
     - name: Generate docs
       run: make docs-generate
 
