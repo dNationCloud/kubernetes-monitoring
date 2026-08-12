@@ -119,6 +119,7 @@ local variable = grafana.dashboard.variable;
         label=label,
         query=query,
         regex=regex,
+        allValues='.+',
       ),
 
     nodeTemplate(query)::
@@ -126,6 +127,7 @@ local variable = grafana.dashboard.variable;
         name='instance',
         label='Nodes',
         query=query,
+        allValues='.+',
       ),
 
     namespaceTemplate(query, includeAll=true, multi=true)::
@@ -135,6 +137,7 @@ local variable = grafana.dashboard.variable;
         query=query,
         includeAll=includeAll,
         multi=multi,
+        allValues='.+',
       ),
 
     podTemplate(query, hide='', includeAll=true, multi=true)::
@@ -145,6 +148,7 @@ local variable = grafana.dashboard.variable;
         hide=hide,
         includeAll=includeAll,
         multi=multi,
+        allValues='.+',
       ),
 
     containerTemplate(query)::
