@@ -141,6 +141,8 @@ local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.l
         kaasMonitoring: 'kaas-monitoring',
         ceph: 'ceph',
         openstack: 'openstack',
+        proxmox: 'proxmox',
+        proxmoxNode: 'proxmox-node',
       },
       selectors: {
         apiServer: 'job="apiserver"',
