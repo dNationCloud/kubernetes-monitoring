@@ -108,7 +108,7 @@ clusterMonitoring:
     #
     # Application Monitoring using the ServiceMonitor CRD.
     #
-    #  - name: app-example-service
+    #  - name: app-example-service  # Application panel title in Grafana. Mandatory if there is a ServiceMonitor required. No spaces, and underlines are allowed.
     #    description: Example of App Monitoring by ServiceMonitor
     #    jobName: app-example-service  # The job name should be the same as the name which will be retrieved from the `jobLabel`, see the `serviceMonitor` section
     #    templates:
