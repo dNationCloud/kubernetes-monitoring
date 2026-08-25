@@ -1277,7 +1277,7 @@ See some examples from layer 2 of host monitoring:</p>
 <span class="w">  </span><span class="nt">clusters</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K8sCluster</span>
 <span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">observer-cluster</span><span class="w">  </span><span class="c1"># The label should be the same as the external_label `cluster` from prometheus</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">monitoring'</span>
 <span class="w">    </span><span class="nt">apps</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </code></pre></div>
 It means that your k8s cluster is being monitored right after installation of dNation k8s monitoring.
@@ -1295,7 +1295,7 @@ For full list of k8s templates see the <a href="https://dnationcloud.github.io/k
 <span class="w">    </span><span class="c1"># Override stats panel title and warning thresholds for the etcd health panel</span>
 <span class="w">    </span><span class="nt">etcdHealth</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">panel</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Custom</span><span class="nv"> </span><span class="s">Title&quot;</span>
+<span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">"Custom</span><span class="nv"> </span><span class="s">Title"</span>
 <span class="w">        </span><span class="nt">thresholds</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">warning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">96</span>
 <span class="w">      </span><span class="nt">alert</span><span class="p">:</span>
@@ -1319,7 +1319,7 @@ To enable it just create application monitoring definition as follows:
 <span class="w">  </span><span class="nt">clusters</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">K8sCluster</span>
 <span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">observer-cluster</span><span class="w">  </span><span class="c1"># The label should be the same as the external_label `cluster` from prometheus</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring'</span>
 <span class="w">    </span><span class="nt">apps</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-example</span>
 <span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Example of App Monitoring</span>
@@ -1338,7 +1338,7 @@ To enable it just create application monitoring definition as follows:
 <span class="w">        </span><span class="c1"># Endpoints of the selected service to be monitored</span>
 <span class="w">        </span><span class="c1"># ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#endpoint</span>
 <span class="w">        </span><span class="nt">endpoints</span><span class="p">:</span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span><span class="w">  </span><span class="c1"># Name or number of the endpoint&#39;s target port</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metrics</span><span class="w">  </span><span class="c1"># Name or number of the endpoint's target port</span>
 <span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/metrics</span><span class="w">  </span><span class="c1"># HTTP path to scrape for metrics</span>
 </code></pre></div></p>
 <p>Application monitoring definition contains two main sections: <code>template</code> and <code>serviceMonitor</code> or <code>podMonitor</code> respectively.
@@ -1410,7 +1410,7 @@ To enable it just create application monitoring definition as follows:
 <span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host-01</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Host</span><span class="nv"> </span><span class="s">01</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Host</span><span class="nv"> </span><span class="s">01</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring'</span>
 <span class="w">    </span><span class="nt">host</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2.3.4</span>
 <span class="w">    </span><span class="nt">apps</span><span class="p">:</span>
@@ -1484,8 +1484,8 @@ Edit kube-proxy config map
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>edit<span class="w"> </span>cm<span class="w"> </span>kube-proxy
 ...
 <span class="w">    </span>kind:<span class="w"> </span>KubeProxyConfiguration
-<span class="w">    </span>metricsBindAddress:<span class="w"> </span><span class="s2">&quot;0.0.0.0:10249&quot;</span><span class="w"> </span><span class="c1"># Add metrics-bind-address host:port</span>
-<span class="w">    </span>mode:<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">    </span>metricsBindAddress:<span class="w"> </span><span class="s2">"0.0.0.0:10249"</span><span class="w"> </span><span class="c1"># Add metrics-bind-address host:port</span>
+<span class="w">    </span>mode:<span class="w"> </span><span class="s2">""</span>
 </code></pre></div>
 Delete the kube-proxy pods and reapply the new configuration
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>delete<span class="w"> </span>po<span class="w"> </span>-l<span class="w"> </span>k8s-app<span class="o">=</span>kube-proxy
@@ -1534,11 +1534,11 @@ If you don't want to set up TLS, you can skip validation as shown <a href="https
 <span class="w">  </span><span class="nt">clusters</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Observer</span>
 <span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">observer-cluster</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring'</span>
 <span class="w">    </span><span class="nt">apps</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Workload</span>
 <span class="w">    </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">workload-cluster</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring&#39;</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Kubernetes</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">application</span><span class="nv"> </span><span class="s">monitoring'</span>
 <span class="w">    </span><span class="nt">apps</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </code></pre></div></p>
 <p>Do not forget to set the correct labels for your clusters!</p>

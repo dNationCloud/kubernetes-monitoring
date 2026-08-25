@@ -343,7 +343,7 @@ docker run --rm -it -v `pwd`:/src dnationcloud/jsonnet:&lt;tagname&gt; jsonnet-l
 docker run --rm -it -v `pwd`:/src dnationcloud/jsonnet:&lt;tagname&gt; yq -h
 </code></pre></div>
 <p>Inspect versions
-<div class="highlight"><pre><span></span><code>docker inspect --format &#39;{{ index .Config.Labels }}&#39; dnationcloud/jsonnet:&lt;tagname&gt;
+<div class="highlight"><pre><span></span><code>docker inspect --format '{{ index .Config.Labels }}' dnationcloud/jsonnet:&lt;tagname&gt;
 </code></pre></div></p>
 
 
