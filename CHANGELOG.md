@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.0.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.1) (2026-08-25)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v3.0.0...v3.0.1)
+
+### Enhancements
+
+- Replace deprecated grafonnet-lib dependency [\#172](https://github.com/dNationCloud/kubernetes-monitoring/issues/172)
+
+**Merged pull requests:**
+
+- Fix dashboards [\#228](https://github.com/dNationCloud/kubernetes-monitoring/pull/228)
+- Fix documentation pipeline [\#226](https://github.com/dNationCloud/kubernetes-monitoring/pull/226)
+
 ## [v3.0.0](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.0) (2026-08-05)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/cicd-jsonnet-v2.0.0...v3.0.0)
@@ -662,6 +675,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
