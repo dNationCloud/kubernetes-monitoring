@@ -70,7 +70,7 @@ local prometheus = grafana.query.prometheus;
       local hostAppStatsPanels(index, app) = [
         local tpl = template.item;
         local appGridX = if std.type(tpl.panel.gridPos.x) == 'number' then tpl.panel.gridPos.x else (index + template.index) * tpl.panel.gridPos.w;
-        local appGridY = if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y else 12;
+        local appGridY = if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y else 13;
 
         local datalinks =
           if std.length(tpl.panel.dataLinks) > 0 then [dataLink { url: dataLink.url % { job: app.jobName } } for dataLink in tpl.panel.dataLinks]
@@ -87,7 +87,7 @@ local prometheus = grafana.query.prometheus;
 
       local applicationPanels(apps) =
         if std.length(apps) > 0 then
-          [row.new('Applications') + { gridPos: { x: 0, y: 11, w: 24, h: 1 } }]
+          [row.new('Applications') + { gridPos: { x: 0, y: 12, w: 24, h: 1 } }]
           + std.flattenArrays([hostAppStatsPanels(app.index, app.item) for app in $.zipWithIndex(apps)])
         else [],
 

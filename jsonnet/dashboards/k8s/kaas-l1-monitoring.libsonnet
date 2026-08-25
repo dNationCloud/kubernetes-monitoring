@@ -100,11 +100,11 @@ local prometheus = grafana.query.prometheus;
           txt('RAM', 6, 16, 6),
           txt('Disk', 12, 16, 6),
           txt('Network', 18, 16, 6),
-          row.new('Worker Nodes Metrics') + { gridPos: { x: 0, y: 22, w: 24, h: 1 } },
-          txt('CPU', 0, 23, 6),
-          txt('RAM', 6, 23, 6),
-          txt('Disk', 12, 23, 6),
-          txt('Network', 18, 23, 6),
+          row.new('Worker Nodes Metrics') + { gridPos: { x: 0, y: 23, w: 24, h: 1 } },
+          txt('CPU', 0, 24, 6),
+          txt('RAM', 6, 24, 6),
+          txt('Disk', 12, 24, 6),
+          txt('Network', 18, 24, 6),
         ] + k8sStatsPanels),
     };
     if $.isKaasMonitoring() then
