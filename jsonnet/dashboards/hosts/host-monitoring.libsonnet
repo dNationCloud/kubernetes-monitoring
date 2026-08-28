@@ -76,7 +76,7 @@ local prometheus = grafana.query.prometheus;
           if std.length(tpl.panel.dataLinks) > 0 then [dataLink { url: dataLink.url % { job: app.jobName } } for dataLink in tpl.panel.dataLinks]
           else if std.objectHas($._config.grafanaDashboards.ids, tpl.templateName) then [{ title: 'Detail', url: '/d/%s?var-job=%s&%s' % [$._config.grafanaDashboards.ids[tpl.templateName], app.jobName, $._config.grafanaDashboards.dataLinkCommonArgs] }]
           else [];
-        statBase('%s %s' % [tpl.templateName, app.name], tpl.panel, '%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName])
+        statBase($.getAppPanelTitle(tpl, app), tpl.panel, '%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName])
         + statPanel.queryOptions.withTargets([prometheus.withExpr(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName })])
         + statPanel.standardOptions.withMappings(tpl.panel.mappings)
         + statPanel.standardOptions.withLinks($.updateDataLinksCommonArgs(datalinks))

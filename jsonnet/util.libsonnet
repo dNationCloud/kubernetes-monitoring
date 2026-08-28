@@ -342,6 +342,20 @@
     else
       [],
 
+  getAppPanelTitle(tpl, app)::
+    /**
+     * Get title of an application panel.
+     *
+     * The `name` of the application, defined in values, has the highest priority. When it is not
+     * set, the title of the application is used instead.
+     *
+     * @param tpl Application monitoring template.
+     * @param app Application.
+     * @return string with the panel title.
+     */
+    if std.objectHas(app, 'name') then app.name
+    else tpl.panel.title,
+
   getAlertJobs(obj)::
     /**
      * Retrieve all jobs for obj.

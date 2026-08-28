@@ -157,7 +157,7 @@ local sumTempWidth(templates) =
           if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y
           else 32 + tpl.panel.gridPos.h * std.floor(prevAppLenght / rowWidth);
         statBase(
-          '%s %s' % [tpl.templateName, app.name],
+          $.getAppPanelTitle(tpl, app),
           tpl.panel,
           '%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName]
         )

@@ -1441,6 +1441,7 @@
           },
           linkTo: [$.defaultConfig.grafanaDashboards.ids.pythonFlask],
           panel: {
+            title: 'Python Flask',
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1467,6 +1468,7 @@
           },
           linkTo: [$.defaultConfig.grafanaDashboards.ids.javaActuator],
           panel: {
+            title: 'Java Actuator',
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1494,6 +1496,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxIngress],
           panel: {
+            title: 'Nginx Ingress',
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1522,6 +1525,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxIngress],
           panel: {
+            title: 'Certificate Expiry',
             expr: '%s OR on() vector(%s)' % [expr, invalid],
             thresholds: thresholds,
             mappings: [{ type: 'value', options: { [std.toString(invalid)]: { text: '-', index: 0 } } }],
@@ -1554,6 +1558,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxVts],
           panel: {
+            title: 'Nginx VTS',
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1581,6 +1586,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.nginxVtsLegacy],
           panel: {
+            title: 'Nginx VTS (legacy)',
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1608,6 +1614,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.autoscaler],
           panel: {
+            title: 'Autoscaler',
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1634,6 +1641,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.postfix],
           panel: {
+            title: 'Postfix',
             expr: '%s OR on() vector(-1)' % expr,
             thresholds: thresholds,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1654,6 +1662,7 @@
         apache: {
           default: false,
           panel: {
+            title: 'Apache',
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1665,6 +1674,7 @@
         cAdvisor: {
           default: false,
           panel: {
+            title: 'cAdvisor',
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1676,6 +1686,7 @@
         lokiDistributed: {
           default: false,
           panel: {
+            title: 'Loki Distributed',
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1687,6 +1698,7 @@
         websocket: {
           default: false,
           panel: {
+            title: 'WebSocket',
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1698,6 +1710,7 @@
         jvm: {
           default: false,
           panel: {
+            title: 'JVM',
             expr: '(sum(up{%(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1709,6 +1722,7 @@
         prometheus: {
           default: false,
           panel: {
+            title: 'Prometheus',
             expr: '(sum(up{%(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1720,6 +1734,7 @@
         phpFpm: {
           default: false,
           panel: {
+            title: 'PHP-FPM',
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1731,6 +1746,7 @@
         rabbitmq: {
           default: false,
           panel: {
+            title: 'RabbitMQ',
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1742,6 +1758,7 @@
         nginxNrpe: {
           default: false,
           panel: {
+            title: 'Nginx NRPE',
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1753,6 +1770,7 @@
         genericApp: {
           default: false,
           panel: {
+            title: 'Application',
             description: 'GenericApp template. Used when application monitoring is requested but appropriate template was not found.',
             expr: '(sum(up{%(job)s}) / count(up{cluster="$cluster", %(job)s}))*100',
             thresholds: defaultTemplate.commonThresholds.app,
@@ -1764,6 +1782,7 @@
         mysqlExporter: {
           default: false,
           panel: {
+            title: 'MySQL',
             expr: '(sum(up{cluster="$cluster", %(job)s}) / count(up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1776,6 +1795,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.harbor],
           panel: {
+            title: 'Harbor',
             expr: '(sum(harbor_up{cluster="$cluster", %(job)s}) / count(harbor_up{cluster="$cluster", %(job)s}))*100 OR on() vector(-1)',
             thresholds: defaultTemplate.commonThresholds.app { lowest: 0 },  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { '-1': { text: '-', index: 0 } } }],
@@ -1807,6 +1827,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.sslExporter],
           panel: {
+            title: 'SSL Exporter',
             expr: 'bottomk(1,ssl_cert_not_after{cluster="$cluster"}-time() OR ssl_file_cert_not_after{cluster="$cluster"}-time() OR ssl_kubeconfig_cert_not_after{cluster="$cluster"}-time() OR ssl_kubernetes_cert_not_after{cluster="$cluster"}-time())',
             thresholds: thresholds,  // invalid range is always from minus infinity to 'lowest' thredhold,
             mappings: [{ type: 'value', options: { [std.toString(invalid)]: { text: '-', index: 0 } } }],
@@ -1821,6 +1842,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.ceph],
           panel: {
+            title: 'Ceph',
             expr: 'ceph_health_status{cluster="$cluster", %(job)s}',
             thresholds: {
               operator: '>=',
@@ -1853,6 +1875,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.openstack],
           panel: {
+            title: 'OpenStack',
             expr: 'min({__name__=~"openstack_.*_up", %(job)s, cluster=~"$cluster"}) OR vector(-1)',
             thresholds: {
               operator: '<',
@@ -1882,6 +1905,7 @@
           default: false,
           linkTo: [$.defaultConfig.grafanaDashboards.ids.vfioGPU],
           panel: {
+            title: 'VFIO GPU',
             expr: '(sum(node_vfio_gpu_in_use_count)/sum(node_vfio_gpu_total_count))*100',
             unit: '%',
             thresholds: {
