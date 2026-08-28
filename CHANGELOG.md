@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.0.2](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.2) (2026-08-28)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v3.0.1...v3.0.2)
+
+**Merged pull requests:**
+
+- Change application naming [\#229](https://github.com/dNationCloud/kubernetes-monitoring/pull/229)
+
 ## [v3.0.1](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.1) (2026-08-25)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v3.0.0...v3.0.1)
@@ -675,6 +683,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
