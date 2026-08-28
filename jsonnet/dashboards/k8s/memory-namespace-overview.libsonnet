@@ -39,7 +39,7 @@ local prometheus = grafana.query.prometheus;
           prometheus.withExpr('sum(\ncontainer_memory_working_set_bytes{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$workload_type"}\n) by (pod) or on() sum(container_memory_working_set_bytes{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}) by (pod)') + prometheus.withLegendFormat('{{pod}}'),
         ]);
 
-      local nsLinkUrl = $.addRefreshParam('/d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s') % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs];
+      local nsLinkUrl = $.addRefreshParam('/d/%s?var-namespace=${__value.raw}&var-instance=${instance:text}&%s') % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs];
       local tableTarget(expr) = prometheus.withExpr(expr) + prometheus.withFormat('table') + prometheus.withInstant(true);
 
       local memReqTable =

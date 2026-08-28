@@ -155,7 +155,7 @@ local sumTempWidth(templates) =
 
         local appGridY =
           if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y
-          else 29 + tpl.panel.gridPos.h * std.floor(prevAppLenght / rowWidth);
+          else 32 + tpl.panel.gridPos.h * std.floor(prevAppLenght / rowWidth);
         statBase(
           $.getAppPanelTitle(tpl, app),
           tpl.panel,
@@ -178,7 +178,7 @@ local sumTempWidth(templates) =
 
       local applicationPanels(apps) =
         if std.length(apps) > 0 then
-          [row.new('Applications') + { gridPos: { x: 0, y: 28, w: 24, h: 1 } }]
+          [row.new('Applications') + { gridPos: { x: 0, y: 31, w: 24, h: 1 } }]
           + std.flattenArrays([
             if app.index > 0 then k8sAppStatsPanels(app.item, sumAppWidth(std.slice(apps, 0, app.index, 1)))
             else k8sAppStatsPanels(app.item, 0)
@@ -219,7 +219,7 @@ local sumTempWidth(templates) =
             if appLength > 0 then
               local sortAppPanels = std.sort(appPanels, function(app) app.gridPos.y + app.gridPos.h);
               sortAppPanels[appLength - 1].gridPos.y + sortAppPanels[appLength - 1].gridPos.h + 1
-            else 22;
+            else 31;
           [row.new('Virtual Machines') + { gridPos: { x: 0, y: offset, w: 24, h: 1 } }]
           + std.flattenArrays([vmPanel(vm.index, vm.item, offset + 1) for vm in $.zipWithIndex(vms)])
         else [],
@@ -260,11 +260,11 @@ local sumTempWidth(templates) =
             txt('RAM', 6, 16, 6),
             txt('Disk', 12, 16, 6),
             txt('Network', 18, 16, 6),
-            row.new('Worker Nodes Metrics') + { gridPos: { x: 0, y: 22, w: 24, h: 1 } },
-            txt('CPU', 0, 23, 6),
-            txt('RAM', 6, 23, 6),
-            txt('Disk', 12, 23, 6),
-            txt('Network', 18, 23, 6),
+            row.new('Worker Nodes Metrics') + { gridPos: { x: 0, y: 23, w: 24, h: 1 } },
+            txt('CPU', 0, 24, 6),
+            txt('RAM', 6, 24, 6),
+            txt('Disk', 12, 24, 6),
+            txt('Network', 18, 24, 6),
           ] + k8sStatsPanels + appPanels + vmPanels(clusterVMs)
         ),
     };

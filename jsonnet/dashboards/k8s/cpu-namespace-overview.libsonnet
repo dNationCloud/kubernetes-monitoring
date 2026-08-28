@@ -38,7 +38,7 @@ local fieldOverride = grafana.panel.table.fieldOverride;
           prometheus.withExpr('sum(rate(\ncontainer_cpu_usage_seconds_total{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}[5m])\n* on(namespace, pod)\ngroup_left(workload, workload_type) namespace_workload_pod:kube_pod_owner:relabel{cluster="$cluster", namespace=~"$namespace", workload=~"$workload", workload_type=~"$workload_type"})\nby (pod) or on() sum(rate(container_cpu_usage_seconds_total{cluster="$cluster", node=~"$instance", namespace=~"$namespace", container!~"POD|", id!=""}[5m])) by (pod)') + prometheus.withLegendFormat('{{pod}}'),
         ]);
 
-      local nsLinkUrl = $.addRefreshParam('/d/%s?var-namespace=$__cell&var-instance=${instance:text}&%s') % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs];
+      local nsLinkUrl = $.addRefreshParam('/d/%s?var-namespace=${__value.raw}&var-instance=${instance:text}&%s') % [$._config.grafanaDashboards.ids.containerDetail, $._config.grafanaDashboards.dataLinkCommonArgs];
       local tableTarget(expr) = prometheus.withExpr(expr) + prometheus.withFormat('table') + prometheus.withInstant(true);
 
       local cpuQuotaTable =
