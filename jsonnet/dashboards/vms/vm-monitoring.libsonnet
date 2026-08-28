@@ -70,8 +70,8 @@ local prometheus = grafana.query.prometheus;
       local vmAppStatsPanels(index, app) = [
         local tpl = template.item;
         local appGridX = if std.type(tpl.panel.gridPos.x) == 'number' then tpl.panel.gridPos.x else (index + template.index) * tpl.panel.gridPos.w;
-        local appGridY = if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y else 13;
-        statBase('%s %s' % [tpl.templateName, app.name], tpl.panel, '%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName])
+        local appGridY = if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y else 12;
+        statBase($.getAppPanelTitle(tpl, app), tpl.panel, '%s\n\nApplication monitoring template: _%s_' % [app.description, tpl.templateName])
         + statPanel.queryOptions.withTargets([prometheus.withExpr(tpl.panel.expr % { job: 'job=~"%s"' % app.jobName })])
         + statPanel.standardOptions.withMappings(tpl.panel.mappings)
         + statPanel.standardOptions.withLinks($.updateDataLinksCommonArgs(
