@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-/* K8s proxmox dashboard */
+/* K8s proxmox dashboard (pve_exporter + node_exporter + smartctl_exporter) */
 local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
 local timeSeriesPanel = grafana.panel.timeSeries;
@@ -27,11 +27,14 @@ local prometheus = grafana.query.prometheus;
   grafanaDashboards+:: {
     proxmox:
       local color = $._config.grafanaDashboards.color;
-
       local nodeSelector = 'cluster="$cluster", job=~"$job", instance=~"$instance", id=~"node/.*"';
       local storageSelector = 'cluster="$cluster", job=~"$job", instance=~"$instance", id=~"storage/.*"';
       local guestSelector = 'cluster="$cluster", job=~"$job", instance=~"$instance", id=~"(qemu|lxc)/.*"';
       local commonSelector = 'cluster="$cluster", job=~"$job", instance=~"$instance"';
+      local osSelector = 'cluster="$cluster", job=~"$node_job", instance=~"$node_instance"';
+      local smartctlSelector = 'cluster="$cluster", instance=~"$node_instance"';
+      local versionSelector = 'cluster="$cluster", job=~"$job", id=~"node/.*"';
+      local blackboxSelector = 'cluster="$cluster", id=~"node/.*"';
 
       local promTarget(expr, legendFormat=null, instant=false) =
         prometheus.withExpr(expr)
@@ -90,18 +93,21 @@ local prometheus = grafana.query.prometheus;
         + fieldOverride.byName.withProperty('decimals', decimals)
         + (if width != null then fieldOverride.byName.withProperty('custom.width', width) else {});
 
-      local statusCol(name, disp, mapOptions, steps, width) =
+      local statusCol(name, disp, mapOptions, steps, width, unit=null, decimals=null) =
         fieldOverride.byName.new(name)
         + fieldOverride.byName.withProperty('displayName', disp)
         + fieldOverride.byName.withProperty('mappings', [{ type: 'value', options: mapOptions }])
         + fieldOverride.byName.withProperty('custom.cellOptions', { type: 'color-background' })
         + fieldOverride.byName.withProperty('thresholds', { mode: 'absolute', steps: steps })
-        + fieldOverride.byName.withProperty('custom.width', width);
+        + fieldOverride.byName.withProperty('custom.width', width)
+        + (if unit != null then fieldOverride.byName.withProperty('unit', unit) else {})
+        + (if decimals != null then fieldOverride.byName.withProperty('decimals', decimals) else {});
 
-      local tableBase(title, desc, overrides, transformations, targets) =
+      local tableBase(title, desc, overrides, transformations, targets, noValue=null) =
         table.new(title)
         + table.queryOptions.withDatasource('prometheus', '$datasource')
         + (if desc != null then table.panelOptions.withDescription(desc) else {})
+        + (if noValue != null then table.standardOptions.withNoValue(noValue) else {})
         + table.standardOptions.withOverrides([hide(n) for n in commonHidden] + overrides)
         + table.queryOptions.withTransformations(transformations)
         + table.queryOptions.withTargets(targets);
@@ -110,6 +116,7 @@ local prometheus = grafana.query.prometheus;
       local usageSteps = [{ color: color.green, value: null }, { color: color.orange, value: 75 }, { color: color.red, value: 90 }];
       local countSteps = [{ color: 'transparent', value: null }];
       local statusSteps = [{ color: color.red, value: null }, { color: color.green, value: 1 }];
+      local certSteps = [{ color: color.red, value: null }, { color: color.orange, value: 0 }, { color: color.green, value: 2592000 }];
 
       local quorumPanel =
         statBase('Cluster quorum',
@@ -130,13 +137,6 @@ local prometheus = grafana.query.prometheus;
                  'count(pve_up{%s}) OR on() vector(-1)' % nodeSelector,
                  countSteps,
                  { '-1': { text: '-' } });
-
-      local versionPanel =
-        statBase('Proxmox VE version',
-                 'pve_version_info{%s}' % commonSelector,
-                 [{ color: color.blue, value: null }],
-                 legendFormat='{{version}}')
-        + statPanel.options.withTextMode('name');
 
       local clusterStoragePanel =
         statBase('Storage used',
@@ -171,20 +171,25 @@ local prometheus = grafana.query.prometheus;
                     valueCol('Value #D', 'Memory used', 'bytes', 1, 130),
                     valueCol('Value #E', 'Memory total', 'bytes', 1, 130),
                     valueCol('Value #F', 'Uptime', 's', 0, 130),
+                    rename('version', 'PVE version'),
+                    hide('Value #G'),
+                    statusCol('Value #H', 'Cert expiry', {}, certSteps, 120, 's', 1),
                   ],
                   [{ id: 'merge', options: { reducers: [] } }],
                   [
-                    tableTarget('max by (id, name) (pve_up{%s} * on(id) group_left(name) pve_node_info{%s})' % [nodeSelector, commonSelector]),
+                    tableTarget('max by (id, name) (pve_up{%s} * on(id) group_left(name) max by (id, name) (pve_node_info{%s}))' % [nodeSelector, commonSelector]),
                     tableTarget('max by (id) (pve_cpu_usage_ratio{%s}) * 100' % nodeSelector),
                     tableTarget('max by (id) (pve_cpu_usage_limit{%s})' % nodeSelector),
                     tableTarget('max by (id) (pve_memory_usage_bytes{%s})' % nodeSelector),
                     tableTarget('max by (id) (pve_memory_size_bytes{%s})' % nodeSelector),
                     tableTarget('max by (id) (pve_uptime_seconds{%s})' % nodeSelector),
+                    tableTarget('max by (id, version) (pve_version_info{%s})' % versionSelector),
+                    tableTarget('max by (id) (probe_ssl_earliest_cert_expiry{%s} - time())' % blackboxSelector),
                   ]);
 
       local nodeCpuPanel =
         timeSeriesBase('Node CPU usage',
-                       [promTarget('(pve_cpu_usage_ratio{%s} * on(id) group_left(name) pve_node_info{%s}) * 100' % [nodeSelector, commonSelector], '{{name}}')],
+                       [promTarget('(pve_cpu_usage_ratio{%s} * on(id) group_left(name) max by (id, name) (pve_node_info{%s})) * 100' % [nodeSelector, commonSelector], '{{name}}')],
                        labelY1='CPU',
                        unit='percent',
                        decimals=1,
@@ -193,7 +198,7 @@ local prometheus = grafana.query.prometheus;
 
       local nodeMemoryPanel =
         timeSeriesBase('Node memory usage',
-                       [promTarget('(pve_memory_usage_bytes{%s} / pve_memory_size_bytes{%s} * on(id) group_left(name) pve_node_info{%s}) * 100' % [nodeSelector, nodeSelector, commonSelector], '{{name}}')],
+                       [promTarget('(pve_memory_usage_bytes{%s} / pve_memory_size_bytes{%s} * on(id) group_left(name) max by (id, name) (pve_node_info{%s})) * 100' % [nodeSelector, nodeSelector, commonSelector], '{{name}}')],
                        labelY1='Memory',
                        unit='percent',
                        decimals=1,
@@ -202,7 +207,7 @@ local prometheus = grafana.query.prometheus;
 
       local nodeDiskPanel =
         timeSeriesBase('Node root filesystem usage',
-                       [promTarget('(pve_disk_usage_bytes{%s} / pve_disk_size_bytes{%s} * on(id) group_left(name) pve_node_info{%s}) * 100' % [nodeSelector, nodeSelector, commonSelector], '{{name}}')],
+                       [promTarget('(pve_disk_usage_bytes{%s} / pve_disk_size_bytes{%s} * on(id) group_left(name) max by (id, name) (pve_node_info{%s})) * 100' % [nodeSelector, nodeSelector, commonSelector], '{{name}}')],
                        labelY1='Disk',
                        unit='percent',
                        decimals=1,
@@ -226,7 +231,7 @@ local prometheus = grafana.query.prometheus;
                   ],
                   [{ id: 'merge', options: { reducers: [] } }],
                   [
-                    tableTarget('max by (id, storage, node, plugintype, content) (pve_up{%s} * on(id) group_left(storage, node, plugintype, content) pve_storage_info{%s})' % [storageSelector, commonSelector]),
+                    tableTarget('max by (id, storage, node, plugintype, content) (pve_up{%s} * on(id) group_left(storage, node, plugintype, content) max by (id, storage, node, plugintype, content) (pve_storage_info{%s}))' % [storageSelector, commonSelector]),
                     tableTarget('max by (id) (pve_storage_shared{%s})' % storageSelector),
                     tableTarget('max by (id) (pve_disk_usage_bytes{%s})' % storageSelector),
                     tableTarget('max by (id) (pve_disk_size_bytes{%s})' % storageSelector),
@@ -235,7 +240,7 @@ local prometheus = grafana.query.prometheus;
 
       local storageUsagePanel =
         timeSeriesBase('Storage usage',
-                       [promTarget('(pve_disk_usage_bytes{%s} / pve_disk_size_bytes{%s} * on(id) group_left(storage, node) pve_storage_info{%s}) * 100' % [storageSelector, storageSelector, commonSelector], '{{node}} / {{storage}}')],
+                       [promTarget('(pve_disk_usage_bytes{%s} / pve_disk_size_bytes{%s} * on(id) group_left(storage, node) max by (id, storage, node) (pve_storage_info{%s})) * 100' % [storageSelector, storageSelector, commonSelector], '{{node}} / {{storage}}')],
                        labelY1='Usage',
                        unit='percent',
                        decimals=1,
@@ -260,7 +265,7 @@ local prometheus = grafana.query.prometheus;
                   ],
                   [{ id: 'merge', options: { reducers: [] } }],
                   [
-                    tableTarget('max by (id, name, type, node) (pve_up{%s} * on(id) group_left(name, type, node) pve_guest_info{%s})' % [guestSelector, commonSelector]),
+                    tableTarget('max by (id, name, type, node) (pve_up{%s} * on(id) group_left(name, type, node) max by (id, name, type, node) (pve_guest_info{%s}))' % [guestSelector, commonSelector]),
                     tableTarget('max by (id) (pve_cpu_usage_limit{%s})' % guestSelector),
                     tableTarget('max by (id) (pve_memory_usage_bytes{%s})' % guestSelector),
                     tableTarget('max by (id) (pve_memory_size_bytes{%s})' % guestSelector),
@@ -272,14 +277,15 @@ local prometheus = grafana.query.prometheus;
 
       local guestLocksPanel =
         tableBase('Guest locks',
-                  'Guests whose configuration is currently locked, for example while a backup, migration or snapshot runs. Empty when nothing is running.',
+                  'Guests whose configuration is currently locked, for example while a backup, migration or snapshot runs. A lock is normal operation, not a fault.',
                   [show('id', 'Guest'), rename('state', 'Lock'), hide('Value')],
                   [{ id: 'organize', options: { indexByName: { id: 0, state: 1 } } }],
-                  [tableTarget('pve_lock_state{%s} == 1' % commonSelector)]);
+                  [tableTarget('pve_lock_state{%s} == 1' % commonSelector)],
+                  noValue='No guest is locked');
 
       local guestCpuPanel =
         timeSeriesBase('Guest CPU usage',
-                       [promTarget('(pve_cpu_usage_ratio{%s} / pve_cpu_usage_limit{%s} * on(id) group_left(name, type) pve_guest_info{%s}) * 100' % [guestSelector, guestSelector, commonSelector], '{{name}} ({{type}})')],
+                       [promTarget('(pve_cpu_usage_ratio{%s} * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})) * 100' % [guestSelector, commonSelector], '{{name}} ({{type}})')],
                        labelY1='CPU',
                        unit='percent',
                        decimals=1,
@@ -287,18 +293,20 @@ local prometheus = grafana.query.prometheus;
 
       local guestMemoryPanel =
         timeSeriesBase('Guest memory usage',
-                       [promTarget('(pve_memory_usage_bytes{%s} / pve_memory_size_bytes{%s} * on(id) group_left(name, type) pve_guest_info{%s}) * 100' % [guestSelector, guestSelector, commonSelector], '{{name}} ({{type}})')],
+                       [
+                         promTarget('pve_memory_usage_bytes{%s} * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} used'),
+                         promTarget('pve_memory_size_bytes{%s} * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} limit'),
+                       ],
                        labelY1='Memory',
-                       unit='percent',
+                       unit='bytes',
                        decimals=1,
-                       min=0,
-                       max=100);
+                       min=0);
 
       local guestNetworkPanel =
         timeSeriesBase('Guest network I/O',
                        [
-                         promTarget('rate(pve_network_receive_bytes_total{%s}[$__rate_interval]) * on(id) group_left(name, type) pve_guest_info{%s}' % [guestSelector, commonSelector], '{{name}} received'),
-                         promTarget('rate(pve_network_transmit_bytes_total{%s}[$__rate_interval]) * on(id) group_left(name, type) pve_guest_info{%s}' % [guestSelector, commonSelector], '{{name}} sent'),
+                         promTarget('rate(pve_network_receive_bytes_total{%s}[5m]) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} received'),
+                         promTarget('rate(pve_network_transmit_bytes_total{%s}[5m]) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} sent'),
                        ],
                        labelY1='Throughput',
                        unit='Bps',
@@ -307,8 +315,8 @@ local prometheus = grafana.query.prometheus;
       local guestDiskPanel =
         timeSeriesBase('Guest disk I/O',
                        [
-                         promTarget('rate(pve_disk_read_bytes_total{%s}[$__rate_interval]) * on(id) group_left(name, type) pve_guest_info{%s}' % [guestSelector, commonSelector], '{{name}} read'),
-                         promTarget('rate(pve_disk_written_bytes_total{%s}[$__rate_interval]) * on(id) group_left(name, type) pve_guest_info{%s}' % [guestSelector, commonSelector], '{{name}} written'),
+                         promTarget('rate(pve_disk_read_bytes_total{%s}[5m]) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} read'),
+                         promTarget('rate(pve_disk_written_bytes_total{%s}[5m]) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} written'),
                        ],
                        labelY1='Throughput',
                        unit='Bps',
@@ -374,10 +382,6 @@ local prometheus = grafana.query.prometheus;
                  { '-1': { text: '-' } },
                  desc='Guests not covered by any backup job.');
 
-      // Corosync metrics come from ClusterLabs ha_cluster_exporter running on the
-      // nodes. Its job label differs from the PVE exporter one and its instance
-      // label holds node hostnames, while $instance on this dashboard is built
-      // from pve_up (a single cluster-scoped value) — so only cluster is filtered.
       local corosyncSelector = 'cluster="$cluster"';
 
       local corosyncQuoratePanel =
@@ -405,9 +409,6 @@ local prometheus = grafana.query.prometheus;
                   [],
                   [tableTarget('max by (type) (ha_cluster_corosync_quorum_votes{%s})' % corosyncSelector)]);
 
-      // Note: the per-ring metric (ha_cluster_corosync_rings) is not emitted on
-      // corosync 3 with knet transport, whose corosync-cfgtool output the
-      // exporter cannot parse into rings — only ring_errors is available.
       local corosyncMembersPanel =
         tableBase('Corosync members',
                   'Member nodes and the votes each contributes to the quorum.',
@@ -419,15 +420,172 @@ local prometheus = grafana.query.prometheus;
                   [],
                   [tableTarget('max by (node, node_id) (ha_cluster_corosync_member_votes{%s})' % corosyncSelector)]);
 
+      local osNodesOnlinePanel =
+        statBase('Nodes online',
+                 'count(up{%s} == 1) OR on() vector(-1)' % osSelector,
+                 countSteps,
+                 { '-1': { text: '-' } },
+                 desc='Nodes whose node_exporter answers scrapes.');
+
+      local osNodesTablePanel =
+        tableBase('Nodes',
+                  'Basic inventory of the nodes as reported by node_exporter.',
+                  [
+                    show('instance', 'Node'),
+                    statusCol('Value #A', 'Status', upMap, statusSteps, 90),
+                    valueCol('Value #B', 'Cores', 'none', 0, 80),
+                    valueCol('Value #C', 'Memory total', 'bytes', 1, 130),
+                    valueCol('Value #D', 'Root FS used', 'percent', 1, 120),
+                    valueCol('Value #E', 'Uptime', 's', 0, 130),
+                  ],
+                  [{ id: 'merge', options: { reducers: [] } }],
+                  [
+                    tableTarget('max by (instance) (up{%s})' % osSelector),
+                    tableTarget('count by (instance) (node_cpu_seconds_total{mode="idle", %s})' % osSelector),
+                    tableTarget('max by (instance) (node_memory_MemTotal_bytes{%s})' % osSelector),
+                    tableTarget('max by (instance) ((1 - node_filesystem_avail_bytes{mountpoint="/", %s} / node_filesystem_size_bytes{mountpoint="/", %s}) * 100)' % [osSelector, osSelector]),
+                    tableTarget('max by (instance) (node_time_seconds{%s} - node_boot_time_seconds{%s})' % [osSelector, osSelector]),
+                  ]);
+
+      local osCpuPanel =
+        timeSeriesBase('CPU usage',
+                       [promTarget('(1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle", %s}[5m]))) * 100' % osSelector, '{{instance}}')],
+                       labelY1='CPU',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osMemoryPanel =
+        timeSeriesBase('Memory usage',
+                       [promTarget('(1 - node_memory_MemAvailable_bytes{%s} / node_memory_MemTotal_bytes{%s}) * 100' % [osSelector, osSelector], '{{instance}}')],
+                       labelY1='Memory',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osLoadPanel =
+        timeSeriesBase('Load 1m',
+                       [promTarget('node_load1{%s}' % osSelector, '{{instance}}')],
+                       labelY1='Load',
+                       min=0);
+
+      local osOomPanel =
+        timeSeriesBase('OOM kills',
+                       [promTarget('round(increase(node_vmstat_oom_kill{%s}[5m]))' % osSelector, '{{instance}}')],
+                       labelY1='Kills',
+                       decimals=0,
+                       min=0);
+
+      local osCpuPerCorePanel =
+        timeSeriesBase('CPU usage per core',
+                       [promTarget('(1 - rate(node_cpu_seconds_total{mode="idle", %s}[5m])) * 100' % osSelector, '{{instance}} cpu{{cpu}}')],
+                       labelY1='CPU',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osCpuPerSocketPanel =
+        timeSeriesBase('CPU usage per socket',
+                       [promTarget('avg by (instance, package) ((1 - rate(node_cpu_seconds_total{mode="idle", %s}[5m])) * on(instance, cpu) group_left(package) max by (instance, cpu, package) (node_cpu_info{%s})) * 100' % [osSelector, osSelector], '{{instance}} socket {{package}}')],
+                       labelY1='CPU',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osFilesystemPanel =
+        timeSeriesBase('Filesystem usage',
+                       [promTarget('(1 - node_filesystem_avail_bytes{fstype!~"tmpfs|ramfs", %s} / node_filesystem_size_bytes{fstype!~"tmpfs|ramfs", %s}) * 100' % [osSelector, osSelector], '{{instance}} {{mountpoint}}')],
+                       labelY1='Used',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osDiskIOPanel =
+        timeSeriesBase('Disk I/O',
+                       [
+                         promTarget('rate(node_disk_read_bytes_total{%s}[5m])' % osSelector, '{{instance}} {{device}} read'),
+                         promTarget('rate(node_disk_written_bytes_total{%s}[5m])' % osSelector, '{{instance}} {{device}} written'),
+                       ],
+                       labelY1='Throughput',
+                       unit='Bps',
+                       min=0);
+
+      local osNetworkPanel =
+        timeSeriesBase('Network I/O',
+                       [
+                         promTarget('rate(node_network_receive_bytes_total{device!~"lo", %s}[5m])' % osSelector, '{{instance}} {{device}} received'),
+                         promTarget('rate(node_network_transmit_bytes_total{device!~"lo", %s}[5m])' % osSelector, '{{instance}} {{device}} sent'),
+                       ],
+                       labelY1='Throughput',
+                       unit='Bps',
+                       min=0);
+
+      local smartDevicesPanel =
+        statBase('Monitored disks',
+                 'sum(smartctl_devices{%s}) OR on() vector(-1)' % smartctlSelector,
+                 countSteps,
+                 { '-1': { text: '-' } },
+                 desc='Disks discovered by smartctl_exporter across all nodes. Virtual disks do not expose SMART, so this is 0 on VM based test clusters.');
+
+      local smartIssuesPanel =
+        statBase('Disks failing SMART',
+                 'count(smartctl_device_smart_status{%s} == 0) OR on() vector(0)' % smartctlSelector,
+                 [{ color: color.green, value: null }, { color: color.red, value: 1 }],
+                 {},
+                 desc='Disks whose overall SMART self-assessment is failed. 0 also when no SMART capable disks are present.');
+
+      local smartTablePanel =
+        tableBase('Disks',
+                  'SMART overview per disk: overall health, current temperature and the NVMe wearout (percentage used) estimate.',
+                  [
+                    show('instance', 'Node'),
+                    rename('device', 'Device'),
+                    statusCol('Value #A',
+                              'SMART status',
+                              { '0': { text: 'Failed', color: color.red }, '1': { text: 'Passed', color: color.green } },
+                              statusSteps,
+                              110),
+                    valueCol('Value #B', 'Temperature', 'celsius', 0, 110),
+                    valueCol('Value #C', 'Wearout used', 'percent', 0, 110),
+                  ],
+                  [{ id: 'merge', options: { reducers: [] } }],
+                  [
+                    tableTarget('max by (instance, device) (smartctl_device_smart_status{%s})' % smartctlSelector),
+                    tableTarget('max by (instance, device) (smartctl_device_temperature{temperature_type="current", %s})' % smartctlSelector),
+                    tableTarget('max by (instance, device) (smartctl_device_percentage_used{%s})' % smartctlSelector),
+                  ]);
+
+      local smartTemperaturePanel =
+        timeSeriesBase('Disk temperature',
+                       [promTarget('smartctl_device_temperature{temperature_type="current", %s}' % smartctlSelector, '{{instance}} {{device}}')],
+                       labelY1='Temperature',
+                       unit='celsius',
+                       decimals=0,
+                       min=0);
+
+      local smartWearoutPanel =
+        timeSeriesBase('Disk wearout (percentage used)',
+                       [promTarget('smartctl_device_percentage_used{%s}' % smartctlSelector, '{{instance}} {{device}}')],
+                       labelY1='Used',
+                       unit='percent',
+                       decimals=0,
+                       min=0,
+                       max=100,
+                       desc='NVMe endurance estimate: 100 % means the rated write endurance is exhausted.');
+
       local panels = [
         row.new('Cluster') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        quorumPanel { gridPos: { x: 0, y: 1, w: 4, h: 4 } },
-        nodesOnlinePanel { gridPos: { x: 4, y: 1, w: 3, h: 4 } },
-        nodesTotalPanel { gridPos: { x: 7, y: 1, w: 3, h: 4 } },
-        versionPanel { gridPos: { x: 10, y: 1, w: 4, h: 4 } },
-        clusterStoragePanel { gridPos: { x: 14, y: 1, w: 4, h: 4 } },
-        guestsRunningPanel { gridPos: { x: 18, y: 1, w: 3, h: 4 } },
-        guestsTotalPanel { gridPos: { x: 21, y: 1, w: 3, h: 4 } },
+        quorumPanel { gridPos: { x: 0, y: 1, w: 5, h: 4 } },
+        nodesOnlinePanel { gridPos: { x: 5, y: 1, w: 3, h: 4 } },
+        nodesTotalPanel { gridPos: { x: 8, y: 1, w: 3, h: 4 } },
+        clusterStoragePanel { gridPos: { x: 11, y: 1, w: 5, h: 4 } },
+        guestsRunningPanel { gridPos: { x: 16, y: 1, w: 4, h: 4 } },
+        guestsTotalPanel { gridPos: { x: 20, y: 1, w: 4, h: 4 } },
         row.new('Nodes') + { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
         nodesTablePanel { gridPos: { x: 0, y: 6, w: 24, h: 7 } },
         nodeCpuPanel { gridPos: { x: 0, y: 13, w: 8, h: 7 } },
@@ -454,19 +612,30 @@ local prometheus = grafana.query.prometheus;
         corosyncRingErrorsPanel { gridPos: { x: 4, y: 81, w: 4, h: 4 } },
         corosyncQuorumVotesPanel { gridPos: { x: 8, y: 81, w: 16, h: 6 } },
         corosyncMembersPanel { gridPos: { x: 0, y: 87, w: 24, h: 7 } },
+        row.new('Node OS overview') + { gridPos: { x: 0, y: 94, w: 24, h: 1 } },
+        osNodesOnlinePanel { gridPos: { x: 0, y: 95, w: 4, h: 5 } },
+        osNodesTablePanel { gridPos: { x: 4, y: 95, w: 20, h: 5 } },
+        row.new('Node CPU & memory') + { gridPos: { x: 0, y: 100, w: 24, h: 1 } },
+        osCpuPanel { gridPos: { x: 0, y: 101, w: 6, h: 7 } },
+        osMemoryPanel { gridPos: { x: 6, y: 101, w: 6, h: 7 } },
+        osLoadPanel { gridPos: { x: 12, y: 101, w: 6, h: 7 } },
+        osOomPanel { gridPos: { x: 18, y: 101, w: 6, h: 7 } },
+        osCpuPerCorePanel { gridPos: { x: 0, y: 108, w: 12, h: 7 } },
+        osCpuPerSocketPanel { gridPos: { x: 12, y: 108, w: 12, h: 7 } },
+        row.new('Node disk & network') + { gridPos: { x: 0, y: 115, w: 24, h: 1 } },
+        osFilesystemPanel { gridPos: { x: 0, y: 116, w: 8, h: 7 } },
+        osDiskIOPanel { gridPos: { x: 8, y: 116, w: 8, h: 7 } },
+        osNetworkPanel { gridPos: { x: 16, y: 116, w: 8, h: 7 } },
+        row.new('SMART (disk health)') + { gridPos: { x: 0, y: 123, w: 24, h: 1 } },
+        smartDevicesPanel { gridPos: { x: 0, y: 124, w: 4, h: 4 } },
+        smartIssuesPanel { gridPos: { x: 4, y: 124, w: 4, h: 4 } },
+        smartTablePanel { gridPos: { x: 8, y: 124, w: 16, h: 6 } },
+        smartTemperaturePanel { gridPos: { x: 0, y: 130, w: 12, h: 7 } },
+        smartWearoutPanel { gridPos: { x: 12, y: 130, w: 12, h: 7 } },
       ];
 
-      dashboard.new('Proxmox VE Overview')
+      dashboard.new('Proxmox VE')
       + dashboard.withUid($._config.grafanaDashboards.ids.proxmox)
-      + dashboard.withLinks([
-        dashboard.link.link.withTitle('Proxmox Nodes (OS & disks)')
-        + dashboard.link.link.withType('link')
-        + dashboard.link.link.withUrl('/d/%s?var-datasource=$datasource&var-cluster=$cluster' % $._config.grafanaDashboards.ids.proxmoxNode)
-        + dashboard.link.link.withIcon('dashboard')
-        + dashboard.link.link.options.withKeepTime(true)
-        + dashboard.link.link.options.withIncludeVars(false)
-        + dashboard.link.link.options.withTargetBlank(false),
-      ])
       + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
       + dashboard.withEditable($._config.grafanaDashboards.editable)
       + dashboard.withRefresh($._config.grafanaDashboards.refresh)
@@ -478,6 +647,8 @@ local prometheus = grafana.query.prometheus;
         $.grafanaTemplates.clusterTemplate('label_values(pve_up, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(pve_up{cluster="$cluster"}, job)'),
         $.grafanaTemplates.instanceTemplate('label_values(pve_up{cluster="$cluster", job=~"$job"}, instance)'),
+        $.grafanaTemplates.baseTemplate('node_job', 'Node Exporter Job', 'label_values(node_uname_info{cluster="$cluster"}, job)'),
+        $.grafanaTemplates.baseTemplate('node_instance', 'Node Exporter Instance', 'label_values(node_uname_info{cluster="$cluster", job=~"$node_job"}, instance)'),
       ])
       + dashboard.withPanels(panels),
   },
