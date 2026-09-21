@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-/* K8s proxmox dashboard */
+/* K8s proxmox dashboard (pve_exporter + node_exporter + smartctl_exporter) */
 local grafana = import 'github.com/grafana/grafonnet/gen/grafonnet-latest/main.libsonnet';
 local dashboard = grafana.dashboard;
 local timeSeriesPanel = grafana.panel.timeSeries;
@@ -27,11 +27,16 @@ local prometheus = grafana.query.prometheus;
   grafanaDashboards+:: {
     proxmox:
       local color = $._config.grafanaDashboards.color;
-
       local nodeSelector = 'cluster="$cluster", job=~"$job", instance=~"$instance", id=~"node/.*"';
       local storageSelector = 'cluster="$cluster", job=~"$job", instance=~"$instance", id=~"storage/.*"';
       local guestSelector = 'cluster="$cluster", job=~"$job", instance=~"$instance", id=~"(qemu|lxc)/.*"';
       local commonSelector = 'cluster="$cluster", job=~"$job", instance=~"$instance"';
+      local osSelector = 'cluster="$cluster", job=~"$node_job", instance=~"$node_instance"';
+      local smartctlSelector = 'cluster="$cluster", instance=~"$node_instance"';
+      local versionSelector = 'cluster="$cluster", job=~"$job", id=~"node/.*"';
+      local blackboxSelector = 'cluster="$cluster", id=~"node/.*"';
+      local oomSelector = 'cluster="$cluster"';
+      local guestOsSelector = 'cluster="$cluster", job="pve-guest"';
 
       local promTarget(expr, legendFormat=null, instant=false) =
         prometheus.withExpr(expr)
@@ -90,18 +95,21 @@ local prometheus = grafana.query.prometheus;
         + fieldOverride.byName.withProperty('decimals', decimals)
         + (if width != null then fieldOverride.byName.withProperty('custom.width', width) else {});
 
-      local statusCol(name, disp, mapOptions, steps, width) =
+      local statusCol(name, disp, mapOptions, steps, width, unit=null, decimals=null) =
         fieldOverride.byName.new(name)
         + fieldOverride.byName.withProperty('displayName', disp)
         + fieldOverride.byName.withProperty('mappings', [{ type: 'value', options: mapOptions }])
         + fieldOverride.byName.withProperty('custom.cellOptions', { type: 'color-background' })
         + fieldOverride.byName.withProperty('thresholds', { mode: 'absolute', steps: steps })
-        + fieldOverride.byName.withProperty('custom.width', width);
+        + fieldOverride.byName.withProperty('custom.width', width)
+        + (if unit != null then fieldOverride.byName.withProperty('unit', unit) else {})
+        + (if decimals != null then fieldOverride.byName.withProperty('decimals', decimals) else {});
 
-      local tableBase(title, desc, overrides, transformations, targets) =
+      local tableBase(title, desc, overrides, transformations, targets, noValue=null) =
         table.new(title)
         + table.queryOptions.withDatasource('prometheus', '$datasource')
         + (if desc != null then table.panelOptions.withDescription(desc) else {})
+        + (if noValue != null then table.standardOptions.withNoValue(noValue) else {})
         + table.standardOptions.withOverrides([hide(n) for n in commonHidden] + overrides)
         + table.queryOptions.withTransformations(transformations)
         + table.queryOptions.withTargets(targets);
@@ -110,6 +118,7 @@ local prometheus = grafana.query.prometheus;
       local usageSteps = [{ color: color.green, value: null }, { color: color.orange, value: 75 }, { color: color.red, value: 90 }];
       local countSteps = [{ color: 'transparent', value: null }];
       local statusSteps = [{ color: color.red, value: null }, { color: color.green, value: 1 }];
+      local certSteps = [{ color: color.red, value: null }, { color: color.orange, value: 0 }, { color: color.green, value: 2592000 }];
 
       local quorumPanel =
         statBase('Cluster quorum',
@@ -130,13 +139,6 @@ local prometheus = grafana.query.prometheus;
                  'count(pve_up{%s}) OR on() vector(-1)' % nodeSelector,
                  countSteps,
                  { '-1': { text: '-' } });
-
-      local versionPanel =
-        statBase('Proxmox VE version',
-                 'pve_version_info{%s}' % commonSelector,
-                 [{ color: color.blue, value: null }],
-                 legendFormat='{{version}}')
-        + statPanel.options.withTextMode('name');
 
       local clusterStoragePanel =
         statBase('Storage used',
@@ -171,20 +173,25 @@ local prometheus = grafana.query.prometheus;
                     valueCol('Value #D', 'Memory used', 'bytes', 1, 130),
                     valueCol('Value #E', 'Memory total', 'bytes', 1, 130),
                     valueCol('Value #F', 'Uptime', 's', 0, 130),
+                    rename('version', 'PVE version'),
+                    hide('Value #G'),
+                    statusCol('Value #H', 'Cert expiry', {}, certSteps, 120, 's', 1),
                   ],
                   [{ id: 'merge', options: { reducers: [] } }],
                   [
-                    tableTarget('max by (id, name) (pve_up{%s} * on(id) group_left(name) pve_node_info{%s})' % [nodeSelector, commonSelector]),
+                    tableTarget('max by (id, name) (pve_up{%s} * on(id) group_left(name) max by (id, name) (pve_node_info{%s}))' % [nodeSelector, commonSelector]),
                     tableTarget('max by (id) (pve_cpu_usage_ratio{%s}) * 100' % nodeSelector),
                     tableTarget('max by (id) (pve_cpu_usage_limit{%s})' % nodeSelector),
                     tableTarget('max by (id) (pve_memory_usage_bytes{%s})' % nodeSelector),
                     tableTarget('max by (id) (pve_memory_size_bytes{%s})' % nodeSelector),
                     tableTarget('max by (id) (pve_uptime_seconds{%s})' % nodeSelector),
+                    tableTarget('max by (id, version) (pve_version_info{%s})' % versionSelector),
+                    tableTarget('max by (id) (probe_ssl_earliest_cert_expiry{%s} - time())' % blackboxSelector),
                   ]);
 
       local nodeCpuPanel =
         timeSeriesBase('Node CPU usage',
-                       [promTarget('(pve_cpu_usage_ratio{%s} * on(id) group_left(name) pve_node_info{%s}) * 100' % [nodeSelector, commonSelector], '{{name}}')],
+                       [promTarget('(pve_cpu_usage_ratio{%s} * on(id) group_left(name) max by (id, name) (pve_node_info{%s})) * 100' % [nodeSelector, commonSelector], '{{name}}')],
                        labelY1='CPU',
                        unit='percent',
                        decimals=1,
@@ -193,7 +200,7 @@ local prometheus = grafana.query.prometheus;
 
       local nodeMemoryPanel =
         timeSeriesBase('Node memory usage',
-                       [promTarget('(pve_memory_usage_bytes{%s} / pve_memory_size_bytes{%s} * on(id) group_left(name) pve_node_info{%s}) * 100' % [nodeSelector, nodeSelector, commonSelector], '{{name}}')],
+                       [promTarget('(pve_memory_usage_bytes{%s} / pve_memory_size_bytes{%s} * on(id) group_left(name) max by (id, name) (pve_node_info{%s})) * 100' % [nodeSelector, nodeSelector, commonSelector], '{{name}}')],
                        labelY1='Memory',
                        unit='percent',
                        decimals=1,
@@ -202,7 +209,7 @@ local prometheus = grafana.query.prometheus;
 
       local nodeDiskPanel =
         timeSeriesBase('Node root filesystem usage',
-                       [promTarget('(pve_disk_usage_bytes{%s} / pve_disk_size_bytes{%s} * on(id) group_left(name) pve_node_info{%s}) * 100' % [nodeSelector, nodeSelector, commonSelector], '{{name}}')],
+                       [promTarget('(pve_disk_usage_bytes{%s} / pve_disk_size_bytes{%s} * on(id) group_left(name) max by (id, name) (pve_node_info{%s})) * 100' % [nodeSelector, nodeSelector, commonSelector], '{{name}}')],
                        labelY1='Disk',
                        unit='percent',
                        decimals=1,
@@ -226,7 +233,7 @@ local prometheus = grafana.query.prometheus;
                   ],
                   [{ id: 'merge', options: { reducers: [] } }],
                   [
-                    tableTarget('max by (id, storage, node, plugintype, content) (pve_up{%s} * on(id) group_left(storage, node, plugintype, content) pve_storage_info{%s})' % [storageSelector, commonSelector]),
+                    tableTarget('max by (id, storage, node, plugintype, content) (pve_up{%s} * on(id) group_left(storage, node, plugintype, content) max by (id, storage, node, plugintype, content) (pve_storage_info{%s}))' % [storageSelector, commonSelector]),
                     tableTarget('max by (id) (pve_storage_shared{%s})' % storageSelector),
                     tableTarget('max by (id) (pve_disk_usage_bytes{%s})' % storageSelector),
                     tableTarget('max by (id) (pve_disk_size_bytes{%s})' % storageSelector),
@@ -235,7 +242,7 @@ local prometheus = grafana.query.prometheus;
 
       local storageUsagePanel =
         timeSeriesBase('Storage usage',
-                       [promTarget('(pve_disk_usage_bytes{%s} / pve_disk_size_bytes{%s} * on(id) group_left(storage, node) pve_storage_info{%s}) * 100' % [storageSelector, storageSelector, commonSelector], '{{node}} / {{storage}}')],
+                       [promTarget('(pve_disk_usage_bytes{%s} / pve_disk_size_bytes{%s} * on(id) group_left(storage, node) max by (id, storage, node) (pve_storage_info{%s})) * 100' % [storageSelector, storageSelector, commonSelector], '{{node}} / {{storage}}')],
                        labelY1='Usage',
                        unit='percent',
                        decimals=1,
@@ -244,7 +251,7 @@ local prometheus = grafana.query.prometheus;
 
       local guestsTablePanel =
         tableBase('Guests',
-                  'Virtual machines and containers. Empty until the first guest is created on the cluster.',
+                  "Virtual machines and containers. Empty until the first guest is created on the cluster. OOM killed by host counts processes in the guest killed by the host OOM killer within the selected time range: for a VM that is the VM itself, for a container every process inside it. OOM killed inside counts processes the VM's own kernel killed, and needs node_exporter inside the VM; empty means none is installed.",
                   [
                     rename('name', 'Guest'),
                     rename('type', 'Type'),
@@ -257,10 +264,12 @@ local prometheus = grafana.query.prometheus;
                     valueCol('Value #F', 'Uptime', 's', 0, 130),
                     statusCol('Value #G', 'Start on boot', { '0': { text: 'No' }, '1': { text: 'Yes' } }, [{ color: 'transparent', value: null }], 120),
                     statusCol('Value #H', 'Backup', { '1': { text: 'Missing', color: color.orange } }, [{ color: 'transparent', value: null }], 100),
+                    statusCol('Value #I', 'OOM killed by host', { '0': { text: '-' } }, [{ color: 'transparent', value: null }, { color: color.red, value: 1 }], 150, decimals=0),
+                    statusCol('Value #J', 'OOM killed inside', { '0': { text: '-' } }, [{ color: 'transparent', value: null }, { color: color.red, value: 1 }], 140, decimals=0),
                   ],
                   [{ id: 'merge', options: { reducers: [] } }],
                   [
-                    tableTarget('max by (id, name, type, node) (pve_up{%s} * on(id) group_left(name, type, node) pve_guest_info{%s})' % [guestSelector, commonSelector]),
+                    tableTarget('max by (id, name, type, node) (pve_up{%s} * on(id) group_left(name, type, node) max by (id, name, type, node) (pve_guest_info{%s}))' % [guestSelector, commonSelector]),
                     tableTarget('max by (id) (pve_cpu_usage_limit{%s})' % guestSelector),
                     tableTarget('max by (id) (pve_memory_usage_bytes{%s})' % guestSelector),
                     tableTarget('max by (id) (pve_memory_size_bytes{%s})' % guestSelector),
@@ -268,18 +277,32 @@ local prometheus = grafana.query.prometheus;
                     tableTarget('max by (id) (pve_uptime_seconds{%s})' % guestSelector),
                     tableTarget('max by (id) (pve_onboot_status{%s})' % commonSelector),
                     tableTarget('max by (id) (pve_not_backed_up_info{%s})' % commonSelector),
+                    tableTarget('round(sum by (id) (increase(pve_guest_oom_kills_total{%s}[$__range]))) and on(id) pve_guest_info{%s}' % [oomSelector, commonSelector]),
+                    tableTarget('round(max by (id) (increase(node_vmstat_oom_kill{%s}[$__range]))) and on(id) pve_guest_info{%s}' % [guestOsSelector, commonSelector]),
                   ]);
 
       local guestLocksPanel =
         tableBase('Guest locks',
-                  'Guests whose configuration is currently locked, for example while a backup, migration or snapshot runs. Empty when nothing is running.',
+                  'Guests whose configuration is currently locked, for example while a backup, migration or snapshot runs. A lock is normal operation, not a fault.',
                   [show('id', 'Guest'), rename('state', 'Lock'), hide('Value')],
                   [{ id: 'organize', options: { indexByName: { id: 0, state: 1 } } }],
-                  [tableTarget('pve_lock_state{%s} == 1' % commonSelector)]);
+                  [tableTarget('pve_lock_state{%s} == 1' % commonSelector)],
+                  noValue='No guest is locked');
+
+      local guestOomPanel =
+        timeSeriesBase('Guest OOM kills',
+                       [
+                         promTarget('round(sum by (id) (increase(pve_guest_oom_kills_total{%s}[5m]))) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [oomSelector, commonSelector], '{{name}} ({{type}})'),
+                         promTarget('round(max by (id) (increase(node_vmstat_oom_kill{%s}[5m]))) * on(id) group_left(name) max by (id, name) (pve_guest_info{%s})' % [guestOsSelector, commonSelector], '{{name}} inside'),
+                       ],
+                       labelY1='Kills',
+                       decimals=0,
+                       min=0,
+                       desc='Processes killed by the OOM killer. "(qemu)" and "(lxc)" lines are kills by the host: for a VM that is the VM itself. "inside" lines are kills by the VM\'s own kernel, from node_exporter inside the VM.');
 
       local guestCpuPanel =
         timeSeriesBase('Guest CPU usage',
-                       [promTarget('(pve_cpu_usage_ratio{%s} / pve_cpu_usage_limit{%s} * on(id) group_left(name, type) pve_guest_info{%s}) * 100' % [guestSelector, guestSelector, commonSelector], '{{name}} ({{type}})')],
+                       [promTarget('(pve_cpu_usage_ratio{%s} * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})) * 100' % [guestSelector, commonSelector], '{{name}} ({{type}})')],
                        labelY1='CPU',
                        unit='percent',
                        decimals=1,
@@ -287,18 +310,20 @@ local prometheus = grafana.query.prometheus;
 
       local guestMemoryPanel =
         timeSeriesBase('Guest memory usage',
-                       [promTarget('(pve_memory_usage_bytes{%s} / pve_memory_size_bytes{%s} * on(id) group_left(name, type) pve_guest_info{%s}) * 100' % [guestSelector, guestSelector, commonSelector], '{{name}} ({{type}})')],
+                       [
+                         promTarget('pve_memory_usage_bytes{%s} * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} used'),
+                         promTarget('pve_memory_size_bytes{%s} * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} limit'),
+                       ],
                        labelY1='Memory',
-                       unit='percent',
+                       unit='bytes',
                        decimals=1,
-                       min=0,
-                       max=100);
+                       min=0);
 
       local guestNetworkPanel =
         timeSeriesBase('Guest network I/O',
                        [
-                         promTarget('rate(pve_network_receive_bytes_total{%s}[$__rate_interval]) * on(id) group_left(name, type) pve_guest_info{%s}' % [guestSelector, commonSelector], '{{name}} received'),
-                         promTarget('rate(pve_network_transmit_bytes_total{%s}[$__rate_interval]) * on(id) group_left(name, type) pve_guest_info{%s}' % [guestSelector, commonSelector], '{{name}} sent'),
+                         promTarget('rate(pve_network_receive_bytes_total{%s}[5m]) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} received'),
+                         promTarget('rate(pve_network_transmit_bytes_total{%s}[5m]) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} sent'),
                        ],
                        labelY1='Throughput',
                        unit='Bps',
@@ -307,8 +332,8 @@ local prometheus = grafana.query.prometheus;
       local guestDiskPanel =
         timeSeriesBase('Guest disk I/O',
                        [
-                         promTarget('rate(pve_disk_read_bytes_total{%s}[$__rate_interval]) * on(id) group_left(name, type) pve_guest_info{%s}' % [guestSelector, commonSelector], '{{name}} read'),
-                         promTarget('rate(pve_disk_written_bytes_total{%s}[$__rate_interval]) * on(id) group_left(name, type) pve_guest_info{%s}' % [guestSelector, commonSelector], '{{name}} written'),
+                         promTarget('rate(pve_disk_read_bytes_total{%s}[5m]) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} read'),
+                         promTarget('rate(pve_disk_written_bytes_total{%s}[5m]) * on(id) group_left(name, type) max by (id, name, type) (pve_guest_info{%s})' % [guestSelector, commonSelector], '{{name}} written'),
                        ],
                        labelY1='Throughput',
                        unit='Bps',
@@ -374,60 +399,315 @@ local prometheus = grafana.query.prometheus;
                  { '-1': { text: '-' } },
                  desc='Guests not covered by any backup job.');
 
-      // Corosync metrics come from ClusterLabs ha_cluster_exporter running on the
-      // nodes. Its job label differs from the PVE exporter one and its instance
-      // label holds node hostnames, while $instance on this dashboard is built
-      // from pve_up (a single cluster-scoped value) — so only cluster is filtered.
-      local corosyncSelector = 'cluster="$cluster"';
+      local corosyncSelector = osSelector;
 
       local corosyncQuoratePanel =
-        statBase('Corosync quorum',
-                 'min(ha_cluster_corosync_quorate{%s}) OR on() vector(0)' % corosyncSelector,
+        statBase('Quorum',
+                 'min(corosync_quorate{%s}) OR on() vector(0)' % corosyncSelector,
                  statusSteps,
                  { '0': { text: 'No quorum', color: color.red }, '1': { text: 'Quorate', color: color.green } },
                  unit='string',
-                 desc='Quorum state as reported by corosync-quorumtool on the nodes. Worst value across nodes.');
+                 desc='Quorum as corosync reports it on each node; shows the worst node. Without quorum /etc/pve is read-only and nodes with HA services reboot after 60 s.');
 
-      local corosyncRingErrorsPanel =
-        statBase('Corosync ring errors',
-                 'max(ha_cluster_corosync_ring_errors{%s}) OR on() vector(-1)' % corosyncSelector,
-                 [{ color: color.green, value: null }, { color: color.red, value: 1 }],
+      local corosyncMarginPanel =
+        statBase('Nodes that may fail',
+                 'min(max by (instance) (corosync_quorum_votes{%s, type="total"}) - max by (instance) (corosync_quorum_votes{%s, type="quorum"})) OR on() vector(-1)' % [corosyncSelector, corosyncSelector],
+                 [{ color: color.red, value: null }, { color: color.orange, value: 0 }, { color: color.green, value: 1 }],
                  { '-1': { text: '-' } },
-                 desc='Total number of faulty corosync rings. Highest value across nodes.');
+                 desc='Votes present minus votes needed for quorum: how many more nodes can fail before the cluster loses quorum. 0 means the next failure stops the cluster.');
 
-      local corosyncQuorumVotesPanel =
-        tableBase('Quorum votes',
-                  'Cluster quorum vote counts as reported by corosync-quorumtool.',
-                  [
-                    rename('type', 'Type'),
-                    valueCol('Value', 'Votes', 'none', 0, 100),
-                  ],
-                  [],
-                  [tableTarget('max by (type) (ha_cluster_corosync_quorum_votes{%s})' % corosyncSelector)]);
+      local corosyncLinksDownPanel =
+        statBase('Links down',
+                 'count(corosync_link_connected{%s} == 0) OR on() vector(0)' % corosyncSelector,
+                 [{ color: color.green, value: null }, { color: color.red, value: 1 }],
+                 {},
+                 desc='Corosync links that are down at this moment, counted from every node. An outage between two nodes is seen by both of them.');
 
-      // Note: the per-ring metric (ha_cluster_corosync_rings) is not emitted on
-      // corosync 3 with knet transport, whose corosync-cfgtool output the
-      // exporter cannot parse into rings — only ring_errors is available.
-      local corosyncMembersPanel =
-        tableBase('Corosync members',
-                  'Member nodes and the votes each contributes to the quorum.',
+      local corosyncFlapsPanel =
+        statBase('Link flaps',
+                 'round(sum(increase(corosync_link_down_total{%s}[$__range])))' % corosyncSelector,
+                 [{ color: color.green, value: null }, { color: color.orange, value: 1 }],
+                 {},
+                 desc='Times a corosync link went down within the selected time range, counted from every node. Short outages fall between two scrapes, so only this counter shows them.');
+
+      local corosyncTokenLossPanel =
+        statBase('Token losses',
+                 'round(max(sum by (instance) (increase(corosync_token_lost_total{%s}[$__range]))))' % corosyncSelector,
+                 [{ color: color.green, value: null }, { color: color.orange, value: 1 }],
+                 {},
+                 desc='Times the cluster lost its token and re-formed its membership within the selected time range. Every node counts the same event, so the highest node is shown.');
+
+      local corosyncRetransmitsPanel =
+        statBase('Retransmits',
+                 'round(max(increase(corosync_retransmits_total{%s}[$__range])))' % corosyncSelector,
+                 [{ color: color.green, value: null }, { color: color.orange, value: 1 }],
+                 {},
+                 desc='Cluster messages that had to be sent again within the selected time range, highest node. A sign of packet loss on the corosync network.');
+
+      local corosyncNodesPanel =
+        tableBase('Corosync per node',
+                  "Each node's own view of the cluster. The views differ only when the network splits, which is exactly when they matter.",
                   [
-                    rename('node', 'Node'),
-                    rename('node_id', 'Node ID'),
-                    valueCol('Value', 'Votes', 'none', 0, 100),
+                    show('instance', 'Node'),
+                    statusCol('Value #A', 'Corosync', { '0': { text: 'Down', color: color.red }, '1': { text: 'Up', color: color.green } }, statusSteps, 90),
+                    statusCol('Value #B', 'Quorum', { '0': { text: 'No quorum', color: color.red }, '1': { text: 'Quorate', color: color.green } }, statusSteps, 110),
+                    valueCol('Value #C', 'Members', 'none', 0, 90),
+                    valueCol('Value #D', 'Votes present', 'none', 0, 120),
+                    valueCol('Value #E', 'Votes needed', 'none', 0, 120),
+                    valueCol('Value #F', 'Votes expected', 'none', 0, 130),
+                    valueCol('Value #G', 'Token round time', 's', 3, 140),
+                    valueCol('Value #H', 'Token timeout', 's', 2, 120),
+                    valueCol('Value #I', 'Backlog', 'none', 0, 90),
                   ],
-                  [],
-                  [tableTarget('max by (node, node_id) (ha_cluster_corosync_member_votes{%s})' % corosyncSelector)]);
+                  [{ id: 'merge', options: { reducers: [] } }],
+                  [
+                    tableTarget('max by (instance) (corosync_up{%s})' % corosyncSelector),
+                    tableTarget('max by (instance) (corosync_quorate{%s})' % corosyncSelector),
+                    tableTarget('count by (instance) (corosync_member_votes{%s})' % corosyncSelector),
+                    tableTarget('max by (instance) (corosync_quorum_votes{%s, type="total"})' % corosyncSelector),
+                    tableTarget('max by (instance) (corosync_quorum_votes{%s, type="quorum"})' % corosyncSelector),
+                    tableTarget('max by (instance) (corosync_quorum_votes{%s, type="expected"})' % corosyncSelector),
+                    tableTarget('max by (instance) (corosync_token_round_time_seconds{%s})' % corosyncSelector),
+                    tableTarget('max by (instance) (corosync_token_timeout_seconds{%s})' % corosyncSelector),
+                    tableTarget('max by (instance) (corosync_backlog{%s})' % corosyncSelector),
+                  ]);
+
+      local corosyncLinksPanel =
+        tableBase('Corosync links',
+                  "Every link from each node to each peer. Network is the corosync link number: 0 for the first corosync network (link0), 1 for a redundant second one, and so on. Latency is knet's average over its last 2048 pings, so it shows the level, not short spikes; Proxmox VE requires under 5 ms. Flaps are counted within the selected time range.",
+                  [
+                    show('instance', 'From'),
+                    rename('peer', 'To'),
+                    rename('link', 'Network'),
+                    hide('peer_id'),
+                    statusCol('Value #A', 'Status', upMap, statusSteps, 90),
+                    statusCol('Value #B', 'Latency', {}, [{ color: color.green, value: null }, { color: color.orange, value: 0.002 }, { color: color.red, value: 0.005 }], 110, 's', 2),
+                    statusCol('Value #C', 'Flaps', { '0': { text: '-' } }, [{ color: 'transparent', value: null }, { color: color.orange, value: 1 }], 90, decimals=0),
+                  ],
+                  [
+                    { id: 'merge', options: { reducers: [] } },
+                    { id: 'organize', options: { indexByName: { instance: 0, peer: 1, link: 2, 'Value #A': 3, 'Value #B': 4, 'Value #C': 5 } } },
+                  ],
+                  [
+                    tableTarget('max by (instance, peer, peer_id, link) (corosync_link_connected{%s})' % corosyncSelector),
+                    tableTarget('max by (instance, peer, peer_id, link) (corosync_link_latency_seconds{%s})' % corosyncSelector),
+                    tableTarget('round(max by (instance, peer, peer_id, link) (increase(corosync_link_down_total{%s}[$__range])))' % corosyncSelector),
+                  ]);
+
+      local corosyncLatencyPanel =
+        timeSeriesBase('Corosync link latency',
+                       [promTarget('max by (instance, peer, link) (corosync_link_latency_seconds{%s})' % corosyncSelector, '{{instance}} → {{peer}} (link {{link}})')],
+                       labelY1='Latency',
+                       unit='s',
+                       min=0,
+                       desc='Round-trip time between nodes, averaged by knet over its last 2048 pings. Proxmox VE requires under 5 ms. A rising line over hours or days means the corosync network is getting worse.');
+
+      local corosyncTokenRoundPanel =
+        timeSeriesBase('Token round time',
+                       [promTarget('max by (instance) (corosync_token_round_time_seconds{%s})' % corosyncSelector, '{{instance}}')],
+                       labelY1='Time',
+                       unit='s',
+                       min=0,
+                       desc='Mean time for the token to pass around all nodes. Compare with the token timeout in the per-node table: the closer it gets, the less margin is left before a token loss.');
+
+      local corosyncFlapsTimePanel =
+        timeSeriesBase('Link flaps',
+                       [promTarget('round(sum by (instance, peer) (increase(corosync_link_down_total{%s}[5m])))' % corosyncSelector, '{{instance}} → {{peer}}')],
+                       labelY1='Flaps',
+                       decimals=0,
+                       min=0,
+                       desc='Times a link went down, per pair of nodes, in 5 minute windows.');
+
+      local corosyncTokenLossTimePanel =
+        timeSeriesBase('Token losses',
+                       [promTarget('round(sum by (instance) (increase(corosync_token_lost_total{%s}[5m])))' % corosyncSelector, '{{instance}}')],
+                       labelY1='Losses',
+                       decimals=0,
+                       min=0,
+                       desc='Times the cluster lost its token and re-formed its membership, per node, in 5 minute windows.');
+
+      local corosyncRetransmitsTimePanel =
+        timeSeriesBase('Retransmits',
+                       [promTarget('round(max by (instance) (increase(corosync_retransmits_total{%s}[5m])))' % corosyncSelector, '{{instance}}')],
+                       labelY1='Messages',
+                       decimals=0,
+                       min=0,
+                       desc='Cluster messages that had to be sent again, per node, in 5 minute windows. Points to packet loss on the corosync network.');
+
+      local corosyncBacklogPanel =
+        timeSeriesBase('Backlog',
+                       [promTarget('max by (instance) (corosync_backlog{%s})' % corosyncSelector, '{{instance}}')],
+                       labelY1='Messages',
+                       decimals=0,
+                       min=0,
+                       desc='Average number of cluster messages waiting to be sent. Normally 0; a sustained non-zero value means corosync cannot keep up.');
+
+      local osNodesOnlinePanel =
+        statBase('Nodes online',
+                 'count(up{%s} == 1) OR on() vector(-1)' % osSelector,
+                 countSteps,
+                 { '-1': { text: '-' } },
+                 desc='Nodes whose node_exporter answers scrapes.');
+
+      local osNodesTablePanel =
+        tableBase('Nodes',
+                  'Basic inventory of the nodes as reported by node_exporter.',
+                  [
+                    show('instance', 'Node'),
+                    statusCol('Value #A', 'Status', upMap, statusSteps, 90),
+                    valueCol('Value #B', 'Cores', 'none', 0, 80),
+                    valueCol('Value #C', 'Memory total', 'bytes', 1, 130),
+                    valueCol('Value #D', 'Root FS used', 'percent', 1, 120),
+                    valueCol('Value #E', 'Uptime', 's', 0, 130),
+                  ],
+                  [{ id: 'merge', options: { reducers: [] } }],
+                  [
+                    tableTarget('max by (instance) (up{%s})' % osSelector),
+                    tableTarget('count by (instance) (node_cpu_seconds_total{mode="idle", %s})' % osSelector),
+                    tableTarget('max by (instance) (node_memory_MemTotal_bytes{%s})' % osSelector),
+                    tableTarget('max by (instance) ((1 - node_filesystem_avail_bytes{mountpoint="/", %s} / node_filesystem_size_bytes{mountpoint="/", %s}) * 100)' % [osSelector, osSelector]),
+                    tableTarget('max by (instance) (node_time_seconds{%s} - node_boot_time_seconds{%s})' % [osSelector, osSelector]),
+                  ]);
+
+      local osCpuPanel =
+        timeSeriesBase('CPU usage',
+                       [promTarget('(1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle", %s}[5m]))) * 100' % osSelector, '{{instance}}')],
+                       labelY1='CPU',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osMemoryPanel =
+        timeSeriesBase('Memory usage',
+                       [promTarget('(1 - node_memory_MemAvailable_bytes{%s} / node_memory_MemTotal_bytes{%s}) * 100' % [osSelector, osSelector], '{{instance}}')],
+                       labelY1='Memory',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osLoadPanel =
+        timeSeriesBase('Load 1m',
+                       [promTarget('node_load1{%s}' % osSelector, '{{instance}}')],
+                       labelY1='Load',
+                       min=0);
+
+      local osOomPanel =
+        timeSeriesBase('OOM kills',
+                       [promTarget('round(increase(node_vmstat_oom_kill{%s}[5m]))' % osSelector, '{{instance}}')],
+                       labelY1='Kills',
+                       decimals=0,
+                       min=0);
+
+      local osCpuPerCorePanel =
+        timeSeriesBase('CPU usage per core',
+                       [promTarget('(1 - rate(node_cpu_seconds_total{mode="idle", %s}[5m])) * 100' % osSelector, '{{instance}} cpu{{cpu}}')],
+                       labelY1='CPU',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osCpuPerSocketPanel =
+        timeSeriesBase('CPU usage per socket',
+                       [promTarget('avg by (instance, package) ((1 - rate(node_cpu_seconds_total{mode="idle", %s}[5m])) * on(instance, cpu) group_left(package) max by (instance, cpu, package) (node_cpu_info{%s})) * 100' % [osSelector, osSelector], '{{instance}} socket {{package}}')],
+                       labelY1='CPU',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osFilesystemPanel =
+        timeSeriesBase('Filesystem usage',
+                       [promTarget('(1 - node_filesystem_avail_bytes{fstype!~"tmpfs|ramfs", %s} / node_filesystem_size_bytes{fstype!~"tmpfs|ramfs", %s}) * 100' % [osSelector, osSelector], '{{instance}} {{mountpoint}}')],
+                       labelY1='Used',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100);
+
+      local osDiskIOPanel =
+        timeSeriesBase('Disk I/O',
+                       [
+                         promTarget('rate(node_disk_read_bytes_total{%s}[5m])' % osSelector, '{{instance}} {{device}} read'),
+                         promTarget('rate(node_disk_written_bytes_total{%s}[5m])' % osSelector, '{{instance}} {{device}} written'),
+                       ],
+                       labelY1='Throughput',
+                       unit='Bps',
+                       min=0);
+
+      local osNetworkPanel =
+        timeSeriesBase('Network I/O',
+                       [
+                         promTarget('rate(node_network_receive_bytes_total{device!~"lo", %s}[5m])' % osSelector, '{{instance}} {{device}} received'),
+                         promTarget('rate(node_network_transmit_bytes_total{device!~"lo", %s}[5m])' % osSelector, '{{instance}} {{device}} sent'),
+                       ],
+                       labelY1='Throughput',
+                       unit='Bps',
+                       min=0);
+
+      local smartDevicesPanel =
+        statBase('Monitored disks',
+                 'sum(smartctl_devices{%s}) OR on() vector(-1)' % smartctlSelector,
+                 countSteps,
+                 { '-1': { text: '-' } },
+                 desc='Disks discovered by smartctl_exporter across all nodes. Virtual disks do not expose SMART, so this is 0 on VM based test clusters.');
+
+      local smartIssuesPanel =
+        statBase('Disks failing SMART',
+                 'count(smartctl_device_smart_status{%s} == 0) OR on() vector(0)' % smartctlSelector,
+                 [{ color: color.green, value: null }, { color: color.red, value: 1 }],
+                 {},
+                 desc='Disks whose overall SMART self-assessment is failed. 0 also when no SMART capable disks are present.');
+
+      local smartTablePanel =
+        tableBase('Disks',
+                  'SMART overview per disk: overall health, current temperature and the NVMe wearout (percentage used) estimate.',
+                  [
+                    show('instance', 'Node'),
+                    rename('device', 'Device'),
+                    statusCol('Value #A',
+                              'SMART status',
+                              { '0': { text: 'Failed', color: color.red }, '1': { text: 'Passed', color: color.green } },
+                              statusSteps,
+                              110),
+                    valueCol('Value #B', 'Temperature', 'celsius', 0, 110),
+                    valueCol('Value #C', 'Wearout used', 'percent', 0, 110),
+                  ],
+                  [{ id: 'merge', options: { reducers: [] } }],
+                  [
+                    tableTarget('max by (instance, device) (smartctl_device_smart_status{%s})' % smartctlSelector),
+                    tableTarget('max by (instance, device) (smartctl_device_temperature{temperature_type="current", %s})' % smartctlSelector),
+                    tableTarget('max by (instance, device) (smartctl_device_percentage_used{%s})' % smartctlSelector),
+                  ]);
+
+      local smartTemperaturePanel =
+        timeSeriesBase('Disk temperature',
+                       [promTarget('smartctl_device_temperature{temperature_type="current", %s}' % smartctlSelector, '{{instance}} {{device}}')],
+                       labelY1='Temperature',
+                       unit='celsius',
+                       decimals=0,
+                       min=0);
+
+      local smartWearoutPanel =
+        timeSeriesBase('Disk wearout (percentage used)',
+                       [promTarget('smartctl_device_percentage_used{%s}' % smartctlSelector, '{{instance}} {{device}}')],
+                       labelY1='Used',
+                       unit='percent',
+                       decimals=0,
+                       min=0,
+                       max=100,
+                       desc='NVMe endurance estimate: 100 % means the rated write endurance is exhausted.');
 
       local panels = [
         row.new('Cluster') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
-        quorumPanel { gridPos: { x: 0, y: 1, w: 4, h: 4 } },
-        nodesOnlinePanel { gridPos: { x: 4, y: 1, w: 3, h: 4 } },
-        nodesTotalPanel { gridPos: { x: 7, y: 1, w: 3, h: 4 } },
-        versionPanel { gridPos: { x: 10, y: 1, w: 4, h: 4 } },
-        clusterStoragePanel { gridPos: { x: 14, y: 1, w: 4, h: 4 } },
-        guestsRunningPanel { gridPos: { x: 18, y: 1, w: 3, h: 4 } },
-        guestsTotalPanel { gridPos: { x: 21, y: 1, w: 3, h: 4 } },
+        quorumPanel { gridPos: { x: 0, y: 1, w: 5, h: 4 } },
+        nodesOnlinePanel { gridPos: { x: 5, y: 1, w: 3, h: 4 } },
+        nodesTotalPanel { gridPos: { x: 8, y: 1, w: 3, h: 4 } },
+        clusterStoragePanel { gridPos: { x: 11, y: 1, w: 5, h: 4 } },
+        guestsRunningPanel { gridPos: { x: 16, y: 1, w: 4, h: 4 } },
+        guestsTotalPanel { gridPos: { x: 20, y: 1, w: 4, h: 4 } },
         row.new('Nodes') + { gridPos: { x: 0, y: 5, w: 24, h: 1 } },
         nodesTablePanel { gridPos: { x: 0, y: 6, w: 24, h: 7 } },
         nodeCpuPanel { gridPos: { x: 0, y: 13, w: 8, h: 7 } },
@@ -442,7 +722,8 @@ local prometheus = grafana.query.prometheus;
         guestMemoryPanel { gridPos: { x: 12, y: 44, w: 12, h: 7 } },
         guestNetworkPanel { gridPos: { x: 0, y: 51, w: 12, h: 7 } },
         guestDiskPanel { gridPos: { x: 12, y: 51, w: 12, h: 7 } },
-        guestLocksPanel { gridPos: { x: 0, y: 58, w: 24, h: 6 } },
+        guestLocksPanel { gridPos: { x: 0, y: 58, w: 12, h: 6 } },
+        guestOomPanel { gridPos: { x: 12, y: 58, w: 12, h: 6 } },
         row.new('Replication') + { gridPos: { x: 0, y: 64, w: 24, h: 1 } },
         replicationPanel { gridPos: { x: 0, y: 65, w: 24, h: 7 } },
         row.new('Operations') + { gridPos: { x: 0, y: 72, w: 24, h: 1 } },
@@ -451,22 +732,43 @@ local prometheus = grafana.query.prometheus;
         notBackedUpPanel { gridPos: { x: 20, y: 73, w: 4, h: 7 } },
         row.new('Corosync') + { gridPos: { x: 0, y: 80, w: 24, h: 1 } },
         corosyncQuoratePanel { gridPos: { x: 0, y: 81, w: 4, h: 4 } },
-        corosyncRingErrorsPanel { gridPos: { x: 4, y: 81, w: 4, h: 4 } },
-        corosyncQuorumVotesPanel { gridPos: { x: 8, y: 81, w: 16, h: 6 } },
-        corosyncMembersPanel { gridPos: { x: 0, y: 87, w: 24, h: 7 } },
+        corosyncMarginPanel { gridPos: { x: 4, y: 81, w: 4, h: 4 } },
+        corosyncLinksDownPanel { gridPos: { x: 8, y: 81, w: 4, h: 4 } },
+        corosyncFlapsPanel { gridPos: { x: 12, y: 81, w: 4, h: 4 } },
+        corosyncTokenLossPanel { gridPos: { x: 16, y: 81, w: 4, h: 4 } },
+        corosyncRetransmitsPanel { gridPos: { x: 20, y: 81, w: 4, h: 4 } },
+        corosyncNodesPanel { gridPos: { x: 0, y: 85, w: 12, h: 7 } },
+        corosyncLinksPanel { gridPos: { x: 12, y: 85, w: 12, h: 7 } },
+        corosyncLatencyPanel { gridPos: { x: 0, y: 92, w: 12, h: 7 } },
+        corosyncTokenRoundPanel { gridPos: { x: 12, y: 92, w: 12, h: 7 } },
+        corosyncFlapsTimePanel { gridPos: { x: 0, y: 99, w: 6, h: 7 } },
+        corosyncTokenLossTimePanel { gridPos: { x: 6, y: 99, w: 6, h: 7 } },
+        corosyncRetransmitsTimePanel { gridPos: { x: 12, y: 99, w: 6, h: 7 } },
+        corosyncBacklogPanel { gridPos: { x: 18, y: 99, w: 6, h: 7 } },
+        row.new('Node OS overview') + { gridPos: { x: 0, y: 106, w: 24, h: 1 } },
+        osNodesOnlinePanel { gridPos: { x: 0, y: 107, w: 4, h: 5 } },
+        osNodesTablePanel { gridPos: { x: 4, y: 107, w: 20, h: 5 } },
+        row.new('Node CPU & memory') + { gridPos: { x: 0, y: 112, w: 24, h: 1 } },
+        osCpuPanel { gridPos: { x: 0, y: 113, w: 6, h: 7 } },
+        osMemoryPanel { gridPos: { x: 6, y: 113, w: 6, h: 7 } },
+        osLoadPanel { gridPos: { x: 12, y: 113, w: 6, h: 7 } },
+        osOomPanel { gridPos: { x: 18, y: 113, w: 6, h: 7 } },
+        osCpuPerCorePanel { gridPos: { x: 0, y: 120, w: 12, h: 7 } },
+        osCpuPerSocketPanel { gridPos: { x: 12, y: 120, w: 12, h: 7 } },
+        row.new('Node disk & network') + { gridPos: { x: 0, y: 127, w: 24, h: 1 } },
+        osFilesystemPanel { gridPos: { x: 0, y: 128, w: 8, h: 7 } },
+        osDiskIOPanel { gridPos: { x: 8, y: 128, w: 8, h: 7 } },
+        osNetworkPanel { gridPos: { x: 16, y: 128, w: 8, h: 7 } },
+        row.new('SMART (disk health)') + { gridPos: { x: 0, y: 135, w: 24, h: 1 } },
+        smartDevicesPanel { gridPos: { x: 0, y: 136, w: 4, h: 4 } },
+        smartIssuesPanel { gridPos: { x: 4, y: 136, w: 4, h: 4 } },
+        smartTablePanel { gridPos: { x: 8, y: 136, w: 16, h: 6 } },
+        smartTemperaturePanel { gridPos: { x: 0, y: 142, w: 12, h: 7 } },
+        smartWearoutPanel { gridPos: { x: 12, y: 142, w: 12, h: 7 } },
       ];
 
-      dashboard.new('Proxmox VE Overview')
+      dashboard.new('Proxmox VE')
       + dashboard.withUid($._config.grafanaDashboards.ids.proxmox)
-      + dashboard.withLinks([
-        dashboard.link.link.withTitle('Proxmox Nodes (OS & disks)')
-        + dashboard.link.link.withType('link')
-        + dashboard.link.link.withUrl('/d/%s?var-datasource=$datasource&var-cluster=$cluster' % $._config.grafanaDashboards.ids.proxmoxNode)
-        + dashboard.link.link.withIcon('dashboard')
-        + dashboard.link.link.options.withKeepTime(true)
-        + dashboard.link.link.options.withIncludeVars(false)
-        + dashboard.link.link.options.withTargetBlank(false),
-      ])
       + dashboard.withTags($._config.grafanaDashboards.tags.k8sApps)
       + dashboard.withEditable($._config.grafanaDashboards.editable)
       + dashboard.withRefresh($._config.grafanaDashboards.refresh)
@@ -478,6 +780,8 @@ local prometheus = grafana.query.prometheus;
         $.grafanaTemplates.clusterTemplate('label_values(pve_up, cluster)'),
         $.grafanaTemplates.jobTemplate('label_values(pve_up{cluster="$cluster"}, job)'),
         $.grafanaTemplates.instanceTemplate('label_values(pve_up{cluster="$cluster", job=~"$job"}, instance)'),
+        $.grafanaTemplates.baseTemplate('node_job', 'Node Exporter Job', 'label_values(node_uname_info{cluster="$cluster"}, job)'),
+        $.grafanaTemplates.baseTemplate('node_instance', 'Node Exporter Instance', 'label_values(node_uname_info{cluster="$cluster", job=~"$node_job"}, instance)'),
       ])
       + dashboard.withPanels(panels),
   },

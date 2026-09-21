@@ -75,7 +75,6 @@
 (import 'apps/ceph.libsonnet') +
 (import 'apps/openstack.libsonnet') +
 (import 'apps/proxmox.libsonnet') +
-(import 'apps/proxmox-node.libsonnet') +
 
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +
