@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.0.3](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.3) (2026-10-07)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v3.0.2...v3.0.3)
+
+**Merged pull requests:**
+
+- Fix Services row position when clusters wrap to multiple rows [\#230](https://github.com/dNationCloud/kubernetes-monitoring/pull/230)
+
 ## [v3.0.2](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.2) (2026-08-28)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v3.0.1...v3.0.2)
@@ -683,6 +691,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
