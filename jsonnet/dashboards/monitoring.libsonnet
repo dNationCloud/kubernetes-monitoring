@@ -53,17 +53,19 @@ local getClusterRowGridY(numOfClusters, panelWidth, panelHeight) =
   */
   getGridY(2 + panelHeight, numOfClusters - 1, panelWidth, panelHeight);
 
-local getHostRowGridY(numOfHosts, panelWidth, panelHeightHosts, panelHeightClusters) =
+local getHostRowGridY(numOfClusters, numOfHosts, panelWidthClusters, panelHeightClusters, panelWidthHosts, panelHeightHosts) =
   /**
-   * Compute grid Y coordinate of services row based on number of hosts.
+   * Compute grid Y coordinate of services row based on number of clusters and hosts.
    *
+   * @param numOfClusters The number of clusters above the row.
    * @param numOfHosts The number of hosts above the row.
-   * @param panelWidth Width of panels.
-   * @param panelHeightHosts Height of host panels.
+   * @param panelWidthClusters Width of cluster panels.
    * @param panelHeightClusters Height of cluster panels.
+   * @param panelWidthHosts Width of host panels.
+   * @param panelHeightHosts Height of host panels.
    * @return grid Y coordinate as number.
   */
-  getGridY(3 + panelHeightHosts + panelHeightClusters, numOfHosts - 1, panelWidth, panelHeightHosts);
+  getGridY(getClusterRowGridY(numOfClusters, panelWidthClusters, panelHeightClusters) + panelHeightHosts + 1, numOfHosts - 1, panelWidthHosts, panelHeightHosts);
 
 {
   grafanaDashboards+::
@@ -132,7 +134,7 @@ local getHostRowGridY(numOfHosts, panelWidth, panelHeightHosts, panelHeightClust
             local panelWidth = tpl.panel.gridPos.w;
             local dataLinkCommonArgsBlackbox = $._config.grafanaDashboards.dataLinkCommonArgsBlackbox;
             local gridX = if std.type(tpl.panel.gridPos.x) == 'number' then tpl.panel.gridPos.x else 0;
-            local gridY = if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y else getHostRowGridY(numOfHosts, $._config.templates.L0.host.main.panel.gridPos.w, $._config.templates.L0.host.main.panel.gridPos.h, $._config.templates.L0.k8s.main.panel.gridPos.h);
+            local gridY = if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y else getHostRowGridY(numOfClusters, numOfHosts, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h, $._config.templates.L0.host.main.panel.gridPos.w, $._config.templates.L0.host.main.panel.gridPos.h);
             statBase('Service $target', tpl.panel)
             + statPanel.panelOptions.withRepeat('target') + statPanel.panelOptions.withMaxPerRow(4)
             + statPanel.queryOptions.withTargets([{ type: 'single', instant: true, expr: tpl.panel.expr % { target: '$target' }, refId: 'A' }])
@@ -166,7 +168,7 @@ local getHostRowGridY(numOfHosts, panelWidth, panelHeightHosts, panelHeightClust
           + dashboard.withPanels(
             (if $.isClusterMonitoring() then [row.new('Clusters') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } }] + clusterPanels else [])
             + (if $.isHostMonitoring() then [row.new('Hosts') + { gridPos: { x: 0, y: getClusterRowGridY(numOfClusters, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1, w: 24, h: 1 } }] + hostPanels else [])
-            + (if $.isBlackBoxMonitoring() then [row.new('Services') + { gridPos: { x: 0, y: getHostRowGridY(numOfHosts, $._config.templates.L0.host.main.panel.gridPos.w, $._config.templates.L0.host.main.panel.gridPos.h, $._config.templates.L0.k8s.main.panel.gridPos.h) - 1, w: 24, h: 1 } }] + blackBoxPanels else [])
+            + (if $.isBlackBoxMonitoring() then [row.new('Services') + { gridPos: { x: 0, y: getHostRowGridY(numOfClusters, numOfHosts, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h, $._config.templates.L0.host.main.panel.gridPos.w, $._config.templates.L0.host.main.panel.gridPos.h) - 1, w: 24, h: 1 } }] + blackBoxPanels else [])
           ),
       } else {},
 }
