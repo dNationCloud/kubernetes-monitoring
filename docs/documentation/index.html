@@ -2154,7 +2154,7 @@ unit: none
 <p><br></p>
 <p> <a name='overallNetworkErrors_25'>overallNetworkErrors</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Host
 expr: sum(rate(node_network_transmit_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info) )
@@ -2198,7 +2198,7 @@ unit: pps
 <p><br></p>
 <p> <a name='overallUtilizationCPU_26'>overallUtilizationCPU</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Host
 expr: round((1 - (avg(irate(node_cpu_seconds_total{job=~"%s", mode="idle"}[5m]) *
   on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) by (job,
@@ -2236,7 +2236,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationDisk_27'>overallUtilizationDisk</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Host
 expr: round((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance, job, cluster,
   pod) group_left(nodename) (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
@@ -2293,7 +2293,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationRAM_28'>overallUtilizationRAM</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Host
 expr: round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"%s"}
   * on(instance, job, cluster, pod) group_left(nodename) (node_uname_info)) / sum
@@ -2335,7 +2335,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='targetDown_29'>targetDown</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Host
 expr: 100 * (count by(job, namespace, service) (up{job=~"%s"} == 0) / count by(job,
   namespace, service) (up{job=~"%s"}))
@@ -2552,7 +2552,7 @@ title: Apache
 <p><br></p>
 <p> <a name='autoscaler_38'>autoscaler</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
   (autoscaler_instances{job=~".+"}) * 100)
@@ -2620,7 +2620,7 @@ title: cAdvisor
 <p><br></p>
 <p> <a name='ceph_40'>ceph</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: ceph_health_status{job=~".+"}
 linkGetParams: var-cluster={{ $externalLabels.cluster }}
@@ -2690,7 +2690,7 @@ title: Application
 <p><br></p>
 <p> <a name='harbor_42'>harbor</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: harbor_up{job=~".+"}
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -2730,7 +2730,7 @@ title: Harbor
 <p><br></p>
 <p> <a name='javaActuator_43'>javaActuator</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100/sum  by
   (job, cluster) (jvm_memory_max_bytes{job=~".+", area="nonheap"}) > sum  by (job,
@@ -2859,7 +2859,7 @@ title: MySQL
 <p><br></p>
 <p> <a name='nginxIngress_47'>nginxIngress</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+", status!~"[4-5].*"}[5m]))
   / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
@@ -2905,7 +2905,7 @@ title: Nginx Ingress
 <p><br></p>
 <p> <a name='nginxIngressCertificateExpiry_48'>nginxIngressCertificateExpiry</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
   / 60 / 60 / 24
@@ -2980,7 +2980,7 @@ title: Nginx NRPE
 <p><br></p>
 <p> <a name='nginxVts_50'>nginxVts</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
@@ -3026,7 +3026,7 @@ title: Nginx VTS
 <p><br></p>
 <p> <a name='nginxVtsEnhanced_51'>nginxVtsEnhanced</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
@@ -3072,7 +3072,7 @@ title: Nginx VTS
 <p><br></p>
 <p> <a name='nginxVtsEnhancedLegacy_52'>nginxVtsEnhancedLegacy</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
@@ -3118,7 +3118,7 @@ title: Nginx VTS (legacy)
 <p><br></p>
 <p> <a name='nginxVtsLegacy_53'>nginxVtsLegacy</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
@@ -3164,7 +3164,7 @@ title: Nginx VTS (legacy)
 <p><br></p>
 <p> <a name='openstack_54'>openstack</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: min by (cluster, job) ({__name__=~"openstack_.*_up", job=~".+"})
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -3239,7 +3239,7 @@ title: PHP-FPM
 <p><br></p>
 <p> <a name='postfix_56'>postfix</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -3311,7 +3311,7 @@ title: Prometheus
 <p><br></p>
 <p> <a name='pythonFlask_58'>pythonFlask</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: HostApp
 expr: (sum by (job, cluster) 
   (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
@@ -3557,7 +3557,7 @@ title: WebSocket
 <p><br></p>
 <p> <a name='apiServerHealth_64'>apiServerHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: (sum(up{job="apiserver"}) by (cluster) / count(up{job="apiserver"}) by (cluster))
   * 100
@@ -3601,7 +3601,7 @@ title: API Server
 <p><br></p>
 <p> <a name='controllerManagerHealth_65'>controllerManagerHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: (sum(up{job="kube-controller-manager"}) by (cluster) / count(up{job="kube-controller-manager"})
   by (cluster)) * 100
@@ -3645,7 +3645,7 @@ title: Controller Manager
 <p><br></p>
 <p> <a name='daemonSetsHealth_66'>daemonSetsHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round((sum(kube_daemonset_status_updated_number_scheduled OR kube_daemonset_updated_number_scheduled)
   by (cluster) + sum(kube_daemonset_status_number_available) by (cluster)) / (2 *
@@ -3683,7 +3683,7 @@ title: DaemonSets Health
 <p><br></p>
 <p> <a name='deploymentsHealth_67'>deploymentsHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round((sum(kube_deployment_status_replicas_updated) by (cluster) + sum(kube_deployment_status_replicas_available)
   by (cluster)) / (2 * sum(kube_deployment_status_replicas) by (cluster)) * 100)
@@ -3718,7 +3718,7 @@ title: Deployments Health
 <p><br></p>
 <p> <a name='etcdHealth_68'>etcdHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: (sum(up{job="kube-etcd"}) by (cluster) / count(up{job="kube-etcd"}) by (cluster))
   * 100
@@ -3762,7 +3762,7 @@ title: Etcd
 <p><br></p>
 <p> <a name='kubeletHealth_69'>kubeletHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: (sum(up{job="kubelet", metrics_path="/metrics"}) by (cluster) / count(up{job="kubelet",
   metrics_path="/metrics"}) by (cluster)) * 100
@@ -3806,7 +3806,7 @@ title: Kubelet
 <p><br></p>
 <p> <a name='mostUtilizedMasterNodeCPU_70'>mostUtilizedMasterNodeCPU</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round((1 - (avg(irate(node_cpu_seconds_total{job=~"node-exporter", mode="idle"}[5m])
   * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename,
@@ -3850,7 +3850,7 @@ title: Most Utilized Node
 <p><br></p>
 <p> <a name='mostUtilizedMasterNodeDisk_71'>mostUtilizedMasterNodeDisk</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round((sum(node_filesystem_size_bytes{job=~"node-exporter"} * on(instance, pod)
   group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster) -
@@ -3910,7 +3910,7 @@ title: Most Utilized Node
 <p><br></p>
 <p> <a name='mostUtilizedMasterNodeNetworkErrors_72'>mostUtilizedMasterNodeNetworkErrors</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: sum(rate(node_network_transmit_errs_total{job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename,
@@ -3959,7 +3959,7 @@ unit: pps
 <p><br></p>
 <p> <a name='mostUtilizedMasterNodeRAM_73'>mostUtilizedMasterNodeRAM</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"node-exporter"}
   * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename,
@@ -4007,7 +4007,7 @@ title: Most Utilized Node
 <p><br></p>
 <p> <a name='mostUtilizedPVC_74'>mostUtilizedPVC</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: sum(((kubelet_volume_stats_capacity_bytes - kubelet_volume_stats_available_bytes)
   / kubelet_volume_stats_capacity_bytes) * 100) by (persistentvolumeclaim, cluster)
@@ -4053,7 +4053,7 @@ title: Most Utilized PVC
 <p><br></p>
 <p> <a name='mostUtilizedWorkerNodeCPU_75'>mostUtilizedWorkerNodeCPU</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round((1 - (avg(irate(node_cpu_seconds_total{job=~"node-exporter", mode="idle"}[5m])
   * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename,
@@ -4097,7 +4097,7 @@ title: Most Utilized Node
 <p><br></p>
 <p> <a name='mostUtilizedWorkerNodeDisk_76'>mostUtilizedWorkerNodeDisk</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round((sum(node_filesystem_size_bytes{job=~"node-exporter"} * on(instance, pod)
   group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster) -
@@ -4157,7 +4157,7 @@ title: Most Utilized Node
 <p><br></p>
 <p> <a name='mostUtilizedWorkerNodeNetworkErrors_77'>mostUtilizedWorkerNodeNetworkErrors</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: sum(rate(node_network_transmit_errs_total{job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename,
@@ -4206,7 +4206,7 @@ unit: pps
 <p><br></p>
 <p> <a name='mostUtilizedWorkerNodeRAM_78'>mostUtilizedWorkerNodeRAM</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"node-exporter"}
   * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename,
@@ -4254,7 +4254,7 @@ title: Most Utilized Node
 <p><br></p>
 <p> <a name='nodeHealth_79'>nodeHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round(sum(kube_node_info) by (cluster) / (sum(kube_node_info) by (cluster) +
   sum(kube_node_spec_unschedulable) by (cluster) + 
@@ -4295,7 +4295,7 @@ title: Nodes Health
 <p><br></p>
 <p> <a name='overallMasterNodesNetworkErrors_80'>overallMasterNodesNetworkErrors</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: sum(sum(rate(node_network_transmit_errs_total{job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename,
@@ -4342,7 +4342,7 @@ unit: pps
 <p><br></p>
 <p> <a name='overallUtilizationMasterNodesCPU_81'>overallUtilizationMasterNodesCPU</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"node-exporter", mode="idle"}[5m])
   * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename,
@@ -4384,7 +4384,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationMasterNodesDisk_82'>overallUtilizationMasterNodesDisk</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: avg(round((sum(node_filesystem_size_bytes{job=~"node-exporter"} * on(instance,
   pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster)
@@ -4443,7 +4443,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationMasterNodesRAM_83'>overallUtilizationMasterNodesRAM</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"node-exporter"}
   * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename,
@@ -4489,7 +4489,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationWorkerNodesCPU_84'>overallUtilizationWorkerNodesCPU</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"node-exporter", mode="idle"}[5m])
   * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename,
@@ -4531,7 +4531,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationWorkerNodesDisk_85'>overallUtilizationWorkerNodesDisk</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: avg(round((sum(node_filesystem_size_bytes{job=~"node-exporter"} * on(instance,
   pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster)
@@ -4590,7 +4590,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationWorkerNodesRAM_86'>overallUtilizationWorkerNodesRAM</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"node-exporter"}
   * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename,
@@ -4636,7 +4636,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallWorkerNodesNetworkErrors_87'>overallWorkerNodesNetworkErrors</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: sum(sum(rate(node_network_transmit_errs_total{job=~"node-exporter", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename,
@@ -4683,7 +4683,7 @@ unit: pps
 <p><br></p>
 <p> <a name='proxyHealth_88'>proxyHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: (sum(up{job="kube-proxy"}) by (cluster) / count(up{job="kube-proxy"}) by (cluster))
   * 100
@@ -4727,7 +4727,7 @@ title: Proxy
 <p><br></p>
 <p> <a name='pvcBound_89'>pvcBound</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: "round(sum(kube_persistentvolumeclaim_status_phase{phase=\"Bound\"}) by (cluster)
   / (\nsum(kube_persistentvolumeclaim_status_phase{phase=\"Bound\"}) by (cluster)
@@ -4776,7 +4776,7 @@ title: PVC Bound
 <p><br></p>
 <p> <a name='runningContainers_90'>runningContainers</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round(sum(kube_pod_container_status_running) by (cluster) / (sum(kube_pod_container_status_running)
   by (cluster) + (count(kube_pod_container_status_terminated) by (cluster) - count(kube_pod_container_status_terminated
@@ -4814,7 +4814,7 @@ title: Running Containers
 <p><br></p>
 <p> <a name='runningPods_91'>runningPods</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round(sum(kube_pod_status_phase{phase="Running"}) by (cluster) / (sum(kube_pod_status_phase{phase="Running"})
   by (cluster) + sum(kube_pod_status_phase{phase="Pending"}) by (cluster) + sum(kube_pod_status_phase{phase="Failed"})
@@ -4852,7 +4852,7 @@ title: Running Pods
 <p><br></p>
 <p> <a name='runningStatefulSets_92'>runningStatefulSets</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round(sum(kube_statefulset_status_replicas_ready) by (cluster) / sum(kube_statefulset_status_replicas)
   by (cluster) * 100)
@@ -4887,7 +4887,7 @@ title: Running StatefulSets
 <p><br></p>
 <p> <a name='schedulerHealth_93'>schedulerHealth</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: (sum(up{job="kube-scheduler"}) by (cluster) / count(up{job="kube-scheduler"})
   by (cluster)) * 100
@@ -4931,7 +4931,7 @@ title: Scheduler
 <p><br></p>
 <p> <a name='succeededJobs_94'>succeededJobs</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: round(sum(kube_job_status_succeeded) by (cluster) / (sum(kube_job_status_succeeded)
   by (cluster) + sum(kube_job_status_failed) by (cluster)) * 100)
@@ -4974,7 +4974,7 @@ title: Succeeded Jobs
 <p><br></p>
 <p> <a name='targetDown_95'>targetDown</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: Cluster
 expr: 100 * (count by(job, namespace, service, cluster) (up{pod!~"virt-launcher.*|"}
   == 0) / count by(job, namespace, service, cluster) (up{pod!~"virt-launcher.*|"}))
@@ -5315,7 +5315,7 @@ title: Apache
 <p><br></p>
 <p> <a name='autoscaler_110'>autoscaler</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
   (autoscaler_instances{job=~".+"}) * 100)
@@ -5383,7 +5383,7 @@ title: cAdvisor
 <p><br></p>
 <p> <a name='ceph_112'>ceph</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: ceph_health_status{job=~".+"}
 linkGetParams: var-cluster={{ $externalLabels.cluster }}
@@ -5453,7 +5453,7 @@ title: Application
 <p><br></p>
 <p> <a name='harbor_114'>harbor</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: harbor_up{job=~".+"}
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -5493,7 +5493,7 @@ title: Harbor
 <p><br></p>
 <p> <a name='javaActuator_115'>javaActuator</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100/sum  by
   (job, cluster) (jvm_memory_max_bytes{job=~".+", area="nonheap"}) > sum  by (job,
@@ -5622,7 +5622,7 @@ title: MySQL
 <p><br></p>
 <p> <a name='nginxIngress_119'>nginxIngress</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+", status!~"[4-5].*"}[5m]))
   / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
@@ -5668,7 +5668,7 @@ title: Nginx Ingress
 <p><br></p>
 <p> <a name='nginxIngressCertificateExpiry_120'>nginxIngressCertificateExpiry</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
   / 60 / 60 / 24
@@ -5743,7 +5743,7 @@ title: Nginx NRPE
 <p><br></p>
 <p> <a name='nginxVts_122'>nginxVts</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
@@ -5789,7 +5789,7 @@ title: Nginx VTS
 <p><br></p>
 <p> <a name='nginxVtsEnhanced_123'>nginxVtsEnhanced</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
@@ -5835,7 +5835,7 @@ title: Nginx VTS
 <p><br></p>
 <p> <a name='nginxVtsEnhancedLegacy_124'>nginxVtsEnhancedLegacy</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
@@ -5881,7 +5881,7 @@ title: Nginx VTS (legacy)
 <p><br></p>
 <p> <a name='nginxVtsLegacy_125'>nginxVtsLegacy</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
@@ -5927,7 +5927,7 @@ title: Nginx VTS (legacy)
 <p><br></p>
 <p> <a name='openstack_126'>openstack</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: min by (cluster, job) ({__name__=~"openstack_.*_up", job=~".+"})
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -6002,7 +6002,7 @@ title: PHP-FPM
 <p><br></p>
 <p> <a name='postfix_128'>postfix</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -6074,7 +6074,7 @@ title: Prometheus
 <p><br></p>
 <p> <a name='pythonFlask_130'>pythonFlask</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterApp
 expr: (sum by (job, cluster) 
   (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
@@ -6357,7 +6357,7 @@ title: Apache
 <p><br></p>
 <p> <a name='autoscaler_139'>autoscaler</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (autoscaler_healthy{job=~".+"}) / sum by (job, cluster)
   (autoscaler_instances{job=~".+"}) * 100)
@@ -6425,7 +6425,7 @@ title: cAdvisor
 <p><br></p>
 <p> <a name='ceph_141'>ceph</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: ceph_health_status{job=~".+"}
 linkGetParams: var-cluster={{ $externalLabels.cluster }}
@@ -6495,7 +6495,7 @@ title: Application
 <p><br></p>
 <p> <a name='harbor_143'>harbor</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: harbor_up{job=~".+"}
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -6535,7 +6535,7 @@ title: Harbor
 <p><br></p>
 <p> <a name='javaActuator_144'>javaActuator</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (jvm_memory_used_bytes{job=~".+", area="heap"})*100/sum  by
   (job, cluster) (jvm_memory_max_bytes{job=~".+", area="nonheap"}) > sum  by (job,
@@ -6664,7 +6664,7 @@ title: MySQL
 <p><br></p>
 <p> <a name='nginxIngress_148'>nginxIngress</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: ((sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+", status!~"[4-5].*"}[5m]))
   / sum by (job, cluster) (rate(nginx_ingress_controller_requests{job=~".+"}[5m]))
@@ -6710,7 +6710,7 @@ title: Nginx Ingress
 <p><br></p>
 <p> <a name='nginxIngressCertificateExpiry_149'>nginxIngressCertificateExpiry</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: bottomk(1, nginx_ingress_controller_ssl_expire_time_seconds{job=~".+"} - time())
   / 60 / 60 / 24
@@ -6785,7 +6785,7 @@ title: Nginx NRPE
 <p><br></p>
 <p> <a name='nginxVts_151'>nginxVts</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
@@ -6831,7 +6831,7 @@ title: Nginx VTS
 <p><br></p>
 <p> <a name='nginxVtsEnhanced_152'>nginxVtsEnhanced</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_vts_server_requests_total{job=~".+",
@@ -6877,7 +6877,7 @@ title: Nginx VTS
 <p><br></p>
 <p> <a name='nginxVtsEnhancedLegacy_153'>nginxVtsEnhancedLegacy</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
@@ -6923,7 +6923,7 @@ title: Nginx VTS (legacy)
 <p><br></p>
 <p> <a name='nginxVtsLegacy_154'>nginxVtsLegacy</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (rate(nginx_server_requests{job=~".+", code!~"[4-5].*",
   code!="total"}[5m])) / sum by (job, cluster) (rate(nginx_server_requests{job=~".+",
@@ -6969,7 +6969,7 @@ title: Nginx VTS (legacy)
 <p><br></p>
 <p> <a name='openstack_155'>openstack</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: min by (cluster, job) ({__name__=~"openstack_.*_up", job=~".+"})
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -7044,7 +7044,7 @@ title: PHP-FPM
 <p><br></p>
 <p> <a name='postfix_157'>postfix</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) (postfix_size{job=~".+"}))
 linkGetParams: var-job={{ $labels.job }}&var-cluster={{ $externalLabels.cluster }}
@@ -7116,7 +7116,7 @@ title: Prometheus
 <p><br></p>
 <p> <a name='pythonFlask_159'>pythonFlask</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVMApp
 expr: (sum by (job, cluster) 
   (rate(flask_http_request_duration_seconds_count{job=~".+",status!~"[4-5].*"}[5m]))
@@ -8316,7 +8316,7 @@ transformations:
 <p><br></p>
 <p> <a name='mostUtilizedVMCPU_190'>mostUtilizedVMCPU</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: round((1 - (avg(irate(node_cpu_seconds_total{job=~"%s", mode="idle"}[5m]) *
   on(instance) group_left(nodename) (node_uname_info)) by (job, nodename) )) * 100)
@@ -8353,7 +8353,7 @@ title: Most Utilized VM
 <p><br></p>
 <p> <a name='mostUtilizedVMDisk_191'>mostUtilizedVMDisk</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: round((sum(node_filesystem_size_bytes{job=~"%s"} * on(instance) group_left(nodename)
   (node_uname_info)) by (job, nodename, device) - sum(node_filesystem_free_bytes{job=~"%s"}
@@ -8409,7 +8409,7 @@ title: Most Utilized VM
 <p><br></p>
 <p> <a name='mostUtilizedVMNetworkErrors_192'>mostUtilizedVMNetworkErrors</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: sum(rate(node_network_transmit_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance) group_left(nodename) (node_uname_info) ) by (job, nodename)
@@ -8451,7 +8451,7 @@ unit: pps
 <p><br></p>
 <p> <a name='mostUtilizedVMRAM_193'>mostUtilizedVMRAM</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: round((1 - sum by (job, nodename) (node_memory_MemAvailable_bytes{job=~"%s"}
   * on(instance) group_left(nodename) (node_uname_info)) / sum by (job, nodename)
@@ -8494,7 +8494,7 @@ title: Most Utilized VM
 <p><br></p>
 <p> <a name='overallNetworkErrors_194'>overallNetworkErrors</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: sum(sum(rate(node_network_transmit_errs_total{job=~"%s", device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}
   [5m]) * on(instance, cluster) group_left(nodename) (node_uname_info) ) by (job,
@@ -8535,7 +8535,7 @@ unit: pps
 <p><br></p>
 <p> <a name='overallUtilizationCPU_195'>overallUtilizationCPU</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: avg(round((1 - (avg(irate(node_cpu_seconds_total{job=~"%s", mode="idle"}[5m])
   * on(instance, cluster) group_left(nodename) (node_uname_info)) by (job, nodename)
@@ -8573,7 +8573,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationDisk_196'>overallUtilizationDisk</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: round((sum(node_filesystem_size_bytes{job=~"%s"}) - sum(node_filesystem_free_bytes{job=~"%s"}))
   / (sum(node_filesystem_size_bytes{job=~"%s"}) - sum(node_filesystem_free_bytes{job=~"%s"})
@@ -8618,7 +8618,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='overallUtilizationRAM_197'>overallUtilizationRAM</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: avg(round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{job=~"%s"}
   * on(instance, cluster) group_left(nodename) (node_uname_info)) / sum by (job, nodename,
@@ -8660,7 +8660,7 @@ title: Overall Utilization
 <p><br></p>
 <p> <a name='targetDown_198'>targetDown</a> </p>
 
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLables:
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>alert</td><td><div class='my-pre'><code>customLabels:
   alertgroup: ClusterVM
 expr: 100 * (count by(job, namespace, service) (up{job=~"%s"} == 0) / count by(job,
   namespace, service) (up{job=~"%s"}))
@@ -8873,7 +8873,7 @@ unit: bytes
 
 <p><br></p>
 <h4 id="basealert"><a name='baseAlert_213'>baseAlert</a></h4>
-<table><tr><th>Property</th><th>Value</th></tr><tr><td>customLables</td><td><div class='my-pre'><code>{}
+<table><tr><th>Property</th><th>Value</th></tr><tr><td>customLabels</td><td><div class='my-pre'><code>{}
 </code></div>
 </td></tr>
 <tr><td>expr</td><td><div class='my-pre'><code>""</code></div>

@@ -37,7 +37,7 @@
                   expr=alert.expr,
                   thresholds=alert.thresholds,
                   link=alert.link,
-                  customLables=alert.customLables,
+                  customLabels=alert.customLabels,
                 )
                 for alert in alerts
               ]
