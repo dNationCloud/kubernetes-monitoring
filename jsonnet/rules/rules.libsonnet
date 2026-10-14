@@ -26,9 +26,9 @@
     'for': $._config.prometheusRules.alertInterval,
     labels: labels,
   },
-  newAlertPair(name, message, expr, thresholds, link, customLables={}):: [
-    $.newAlert(name, message, expr, thresholds.operator, thresholds.critical, link, { severity: 'critical' } + customLables),
-    $.newAlert(name, message, expr, thresholds.operator, thresholds.warning, link, { severity: 'warning' } + customLables),
+  newAlertPair(name, message, expr, thresholds, link, customLabels={}):: [
+    $.newAlert(name, message, expr, thresholds.operator, thresholds.critical, link, { severity: 'critical' } + customLabels),
+    $.newAlert(name, message, expr, thresholds.operator, thresholds.warning, link, { severity: 'warning' } + customLabels),
   ],
   newRecord(expr, record):: {
     expr: expr,
