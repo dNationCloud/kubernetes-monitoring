@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.0.4](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.4) (2026-10-14)
+
+[Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v3.0.3...v3.0.4)
+
+**Merged pull requests:**
+
+- Fix typo customLables in monitoring [\#231](https://github.com/dNationCloud/kubernetes-monitoring/pull/231)
+
 ## [v3.0.3](https://github.com/dNationCloud/kubernetes-monitoring/tree/v3.0.3) (2026-10-07)
 
 [Full Changelog](https://github.com/dNationCloud/kubernetes-monitoring/compare/v3.0.2...v3.0.3)
@@ -691,6 +699,8 @@
 
 - Add jsonnet build and lint to the GitHub CI/CD pipeline and update chart version [\#2](https://github.com/dNationCloud/kubernetes-monitoring/pull/2)
 - Add GitHub CI/CD [\#1](https://github.com/dNationCloud/kubernetes-monitoring/pull/1)
+
+
 
 
 
