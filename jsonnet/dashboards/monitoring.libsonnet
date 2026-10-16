@@ -131,12 +131,14 @@ local getHostRowGridY(numOfClusters, numOfHosts, panelWidthClusters, panelHeight
 
           local blackBoxPanels = [
             local panelHeight = tpl.panel.gridPos.h;
-            local panelWidth = tpl.panel.gridPos.w;
+            local panelWidth = rowWidth;
             local dataLinkCommonArgsBlackbox = $._config.grafanaDashboards.dataLinkCommonArgsBlackbox;
-            local gridX = if std.type(tpl.panel.gridPos.x) == 'number' then tpl.panel.gridPos.x else 0;
+            local gridX = 0;
             local gridY = if std.type(tpl.panel.gridPos.y) == 'number' then tpl.panel.gridPos.y else getHostRowGridY(numOfClusters, numOfHosts, $._config.templates.L0.k8s.main.panel.gridPos.w, $._config.templates.L0.k8s.main.panel.gridPos.h, $._config.templates.L0.host.main.panel.gridPos.w, $._config.templates.L0.host.main.panel.gridPos.h);
             statBase('Service $target', tpl.panel)
-            + statPanel.panelOptions.withRepeat('target') + statPanel.panelOptions.withMaxPerRow(4)
+            + statPanel.panelOptions.withRepeat('target')
+            + statPanel.panelOptions.withRepeatDirection('h')
+            + statPanel.panelOptions.withMaxPerRow(4)
             + statPanel.queryOptions.withTargets([{ type: 'single', instant: true, expr: tpl.panel.expr % { target: '$target' }, refId: 'A' }])
             + statPanel.standardOptions.thresholds.withMode('absolute') + statPanel.standardOptions.thresholds.withSteps($.grafanaThresholds(tpl.panel.thresholds))
             + statPanel.standardOptions.withMappings(tpl.panel.mappings)
