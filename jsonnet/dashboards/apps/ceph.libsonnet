@@ -20,6 +20,7 @@ local timeSeriesPanel = grafana.panel.timeSeries;
 local statPanel = grafana.panel.stat;
 local gaugePanel = grafana.panel.gauge;
 local row = grafana.panel.row;
+local table = grafana.panel.table;
 local prometheus = grafana.query.prometheus;
 local fieldOverride = grafana.panel.timeSeries.fieldOverride;
 
@@ -99,7 +100,7 @@ local fieldOverride = grafana.panel.timeSeries.fieldOverride;
                              steps=[{ color: color.green, value: null }, { color: color.red, value: 80 }]);
 
       local avgPGs = statBase('Avg PGs',
-                              'sum(ceph_osd_numpg{cluster="$cluster"})',
+                              'avg(ceph_osd_numpg{cluster="$cluster"})',
                               'none',
                               1,
                               steps=[{ color: color.green, value: null }, { color: color.orange, value: 250 }, { color: color.red, value: 300 }]);
@@ -226,6 +227,72 @@ local fieldOverride = grafana.panel.timeSeries.fieldOverride;
         timeSeriesBase('OSD Type Count', 'short', 10, 0, min=0, legend=timeSeriesPanel.options.legend.withCalcs(['lastNotNull']))
         + timeSeriesPanel.queryOptions.withTargets([promTarget('count(ceph_bluestore_kv_commit_lat_count{cluster="$cluster"})', 'BlueStore')]);
 
+      local tableTarget(expr) =
+        prometheus.withExpr(expr) + prometheus.withFormat('table') + prometheus.withInstant(true);
+
+      local tableHide(name) =
+        table.fieldOverride.byName.new(name)
+        + table.fieldOverride.byName.withProperty('custom.hidden', true);
+
+      local tableCol(name, disp, unit=null, decimals=null) =
+        table.fieldOverride.byName.new(name)
+        + table.fieldOverride.byName.withProperty('displayName', disp)
+        + (if unit != null then table.fieldOverride.byName.withProperty('unit', unit) else {})
+        + (if decimals != null then table.fieldOverride.byName.withProperty('decimals', decimals) else {});
+
+      local pgPerPoolPanel =
+        table.new('Placement Groups per Pool')
+        + table.queryOptions.withDatasource('prometheus', '$datasource')
+        + table.panelOptions.withDescription('Number of placement groups (PGs) of each pool, the data stored in it (before replication) and the average size of one PG: stored data divided by the number of PGs.')
+        + table.standardOptions.withOverrides([
+          tableHide('Time'),
+          tableHide('pool_id'),
+          tableHide('Value #A'),
+          tableCol('name', 'Pool') + table.fieldOverride.byName.withProperty('custom.width', 340),
+          tableCol('description', 'Type'),
+          tableCol('Value #B', 'PGs', 'none', 0),
+          tableCol('Value #C', 'Stored', 'bytes', 1),
+          tableCol('Value #D', 'Avg PG size', 'bytes', 1),
+        ])
+        + table.queryOptions.withTransformations([
+          { id: 'merge', options: {} },
+          { id: 'organize', options: { indexByName: { name: 0, description: 1, 'Value #B': 2, 'Value #C': 3, 'Value #D': 4 } } },
+          { id: 'sortBy', options: { fields: {}, sort: [{ field: 'Value #C', desc: true }] } },
+        ])
+        + table.queryOptions.withTargets([
+          tableTarget('max by (pool_id, name, description) (ceph_pool_metadata{cluster="$cluster"})'),
+          tableTarget('max by (pool_id) (ceph_pg_total{cluster="$cluster"})'),
+          tableTarget('max by (pool_id) (ceph_pool_stored{cluster="$cluster"})'),
+          tableTarget('max by (pool_id) (ceph_pool_stored{cluster="$cluster"}) / max by (pool_id) (ceph_pg_total{cluster="$cluster"} > 0)'),
+        ]);
+
+      local fragmentationPanel =
+        timeSeriesBase('Bluestore Fragmentation', 'percent', 10, 1, min=0)
+        + timeSeriesPanel.standardOptions.withMax(100)
+        + timeSeriesPanel.fieldConfig.defaults.custom.thresholdsStyle.withMode('line')
+        + timeSeriesPanel.standardOptions.thresholds.withMode('absolute')
+        + timeSeriesPanel.standardOptions.thresholds.withSteps([{ color: color.green, value: null }, { color: color.red, value: 80 }])
+        + timeSeriesPanel.queryOptions.withTargets([promTarget('ceph_bluestore_fragmentation_micros{cluster="$cluster"} / 10000', '{{ceph_daemon}}')]);
+
+      local ingressEgressPanel =
+        timeSeriesBase('In-/Egress', 'Bps', 10, 1)
+        + timeSeriesPanel.panelOptions.withDescription('How fast the data stored in all pools grows (positive) or shrinks (negative).')
+        + timeSeriesPanel.queryOptions.withTargets([promTarget('sum(deriv(ceph_pool_stored{cluster="$cluster"}[5m]))', 'Stored data')]);
+
+      local recoveryRatePanel =
+        timeSeriesBase('Recovery Rate', 'ops', 10, 1, min=0)
+        + timeSeriesPanel.queryOptions.withTargets([promTarget('sum(rate(ceph_osd_recovery_ops{cluster="$cluster"}[5m]))', 'Op/s')]);
+
+      local osdLatenciesPanel =
+        timeSeriesBase('OSD Latencies', 'ms', 10, 2, min=0, legend=legendTableFull)
+        + timeSeriesPanel.panelOptions.withDescription('95th percentile and average over all OSDs. A P95 far above the average means a few OSDs are much slower than the rest.')
+        + timeSeriesPanel.queryOptions.withTargets([
+          promTarget('quantile(0.95, ceph_osd_apply_latency_ms{cluster="$cluster"})', 'Apply Latency P95'),
+          promTarget('quantile(0.95, ceph_osd_commit_latency_ms{cluster="$cluster"})', 'Commit Latency P95'),
+          promTarget('avg(ceph_osd_apply_latency_ms{cluster="$cluster"})', 'Avg Apply Latency'),
+          promTarget('avg(ceph_osd_commit_latency_ms{cluster="$cluster"})', 'Avg Commit Latency'),
+        ]);
+
       local panels = [
         row.new('CLUSTER STATE') + { gridPos: { x: 0, y: 0, w: 24, h: 1 } },
         clusterHealth { gridPos: { x: 0, y: 1, w: 3, h: 6 } },
@@ -262,6 +329,13 @@ local fieldOverride = grafana.panel.timeSeries.fieldOverride;
         poolQuotaBytesPanel { gridPos: { x: 0, y: 28, w: 8, h: 8 } },
         poolObjectsQuotaPanel { gridPos: { x: 8, y: 28, w: 8, h: 8 } },
         osdTypeCountPanel { gridPos: { x: 16, y: 28, w: 8, h: 8 } },
+        row.new('PLACEMENT GROUPS') + { gridPos: { x: 0, y: 36, w: 24, h: 1 } },
+        pgPerPoolPanel { gridPos: { x: 0, y: 37, w: 24, h: 10 } },
+        row.new('PERFORMANCE') + { gridPos: { x: 0, y: 47, w: 24, h: 1 } },
+        osdLatenciesPanel { gridPos: { x: 0, y: 48, w: 12, h: 8 } },
+        fragmentationPanel { gridPos: { x: 12, y: 48, w: 12, h: 8 } },
+        recoveryRatePanel { gridPos: { x: 0, y: 56, w: 12, h: 8 } },
+        ingressEgressPanel { gridPos: { x: 12, y: 56, w: 12, h: 8 } },
       ];
 
       dashboard.new('Ceph Cluster Overview')

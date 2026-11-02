@@ -281,6 +281,39 @@ local prometheus = grafana.query.prometheus;
                     tableTarget('round(max by (id) (increase(node_vmstat_oom_kill{%s}[$__range]))) and on(id) pve_guest_info{%s}' % [guestOsSelector, commonSelector]),
                   ]);
 
+      // One column per physical CPU; organize puts them in numeric order, the
+      // query returns them in no particular order.
+      local guestCoresPanel =
+        tableBase('Physical cores used by guests',
+                  'CPU time each guest (all its threads: vCPUs, I/O, vhost) spent on each physical core of its node, as % of that core, averaged over the selected time range. A guest that is not pinned moves between cores and appears on several; a pinned guest only on its allowed CPUs. The row total is how many cores the guest used. Measured by the pve-guest-cpu service on the nodes; needs a time range of at least a few minutes.',
+                  [
+                    rename('name', 'Guest'),
+                    show('instance', 'Node'),
+                    rename('cpus', 'Allowed CPUs'),
+                    fieldOverride.byRegexp.new('/^cpu \\d+$/')
+                    + fieldOverride.byRegexp.withProperty('unit', 'percent')
+                    + fieldOverride.byRegexp.withProperty('decimals', 1)
+                    + fieldOverride.byRegexp.withProperty('custom.width', 80)
+                    + fieldOverride.byRegexp.withProperty('custom.cellOptions', { type: 'color-background' })
+                    + fieldOverride.byRegexp.withProperty('thresholds', { mode: 'absolute', steps: [{ color: 'transparent', value: null }, { color: color.green, value: 1 }, { color: color.orange, value: 75 }, { color: color.red, value: 90 }] }),
+                  ],
+                  [
+                    { id: 'joinByLabels', options: { value: 'cpu', join: ['name', 'instance', 'cpus'] } },
+                    { id: 'organize', options: { indexByName: { name: 0, instance: 1, cpus: 2 } + { ['cpu %d' % i]: i + 3 for i in std.range(0, 511) } } },
+                  ],
+                  [promTarget(|||
+                    label_replace(
+                      (
+                        sum by (id, instance, cpu) (rate(pve_guest_cpu_seconds_total{%(os)s}[$__range])) * 100
+                          * on(id, instance) group_left(cpus) max by (id, instance, cpus) (pve_guest_cpu_affinity_info{%(os)s})
+                        or on(id, instance, cpu)
+                        sum by (id, instance, cpu) (rate(pve_guest_cpu_seconds_total{%(os)s}[$__range])) * 100
+                      )
+                      * on(id) group_left(name) max by (id, name) (pve_guest_info{%(common)s}),
+                      "cpu", "cpu $1", "cpu", "(.*)"
+                    )
+                  ||| % { os: osSelector, common: commonSelector }, instant=true)]);
+
       local guestLocksPanel =
         tableBase('Guest locks',
                   'Guests whose configuration is currently locked, for example while a backup, migration or snapshot runs. A lock is normal operation, not a fault.',
@@ -307,6 +340,26 @@ local prometheus = grafana.query.prometheus;
                        unit='percent',
                        decimals=1,
                        min=0);
+
+      local guestCpuPerCorePanel =
+        timeSeriesBase('Guest CPU usage per vCPU (inside)',
+                       [promTarget('(1 - rate(node_cpu_seconds_total{mode="idle", %s}[5m])) * on(id) group_left(name) max by (id, name) (pve_guest_info{%s}) * 100' % [guestOsSelector, commonSelector], '{{name}} cpu{{cpu}}')],
+                       labelY1='CPU',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100,
+                       desc="Load of each vCPU as the VM's own kernel sees it, from node_exporter inside the VM. Empty when no VM has it installed. These are virtual CPUs: which physical cores they ran on is not visible from inside the guest.");
+
+      local guestCpuPerSocketPanel =
+        timeSeriesBase('Guest CPU usage per socket (inside)',
+                       [promTarget('avg by (id, package) ((1 - rate(node_cpu_seconds_total{mode="idle", %s}[5m])) * on(id, cpu) group_left(package) max by (id, cpu, package) (node_cpu_info{%s})) * on(id) group_left(name) max by (id, name) (pve_guest_info{%s}) * 100' % [guestOsSelector, guestOsSelector, commonSelector], '{{name}} socket {{package}}')],
+                       labelY1='CPU',
+                       unit='percent',
+                       decimals=1,
+                       min=0,
+                       max=100,
+                       desc="Load averaged over the vCPUs of each virtual socket, from node_exporter inside the VM. The sockets are the VM's configured topology (sockets × cores in the VM config), not the node's physical sockets; a VM with one socket has a single line, the average over all its vCPUs.");
 
       local guestMemoryPanel =
         timeSeriesBase('Guest memory usage',
@@ -718,53 +771,56 @@ local prometheus = grafana.query.prometheus;
         storageUsagePanel { gridPos: { x: 0, y: 29, w: 24, h: 7 } },
         row.new('Guests') + { gridPos: { x: 0, y: 36, w: 24, h: 1 } },
         guestsTablePanel { gridPos: { x: 0, y: 37, w: 24, h: 7 } },
-        guestCpuPanel { gridPos: { x: 0, y: 44, w: 12, h: 7 } },
-        guestMemoryPanel { gridPos: { x: 12, y: 44, w: 12, h: 7 } },
-        guestNetworkPanel { gridPos: { x: 0, y: 51, w: 12, h: 7 } },
-        guestDiskPanel { gridPos: { x: 12, y: 51, w: 12, h: 7 } },
-        guestLocksPanel { gridPos: { x: 0, y: 58, w: 12, h: 6 } },
-        guestOomPanel { gridPos: { x: 12, y: 58, w: 12, h: 6 } },
-        row.new('Replication') + { gridPos: { x: 0, y: 64, w: 24, h: 1 } },
-        replicationPanel { gridPos: { x: 0, y: 65, w: 24, h: 7 } },
-        row.new('Operations') + { gridPos: { x: 0, y: 72, w: 24, h: 1 } },
-        haStatePanel { gridPos: { x: 0, y: 73, w: 8, h: 7 } },
-        subscriptionPanel { gridPos: { x: 8, y: 73, w: 12, h: 7 } },
-        notBackedUpPanel { gridPos: { x: 20, y: 73, w: 4, h: 7 } },
-        row.new('Corosync') + { gridPos: { x: 0, y: 80, w: 24, h: 1 } },
-        corosyncQuoratePanel { gridPos: { x: 0, y: 81, w: 4, h: 4 } },
-        corosyncMarginPanel { gridPos: { x: 4, y: 81, w: 4, h: 4 } },
-        corosyncLinksDownPanel { gridPos: { x: 8, y: 81, w: 4, h: 4 } },
-        corosyncFlapsPanel { gridPos: { x: 12, y: 81, w: 4, h: 4 } },
-        corosyncTokenLossPanel { gridPos: { x: 16, y: 81, w: 4, h: 4 } },
-        corosyncRetransmitsPanel { gridPos: { x: 20, y: 81, w: 4, h: 4 } },
-        corosyncNodesPanel { gridPos: { x: 0, y: 85, w: 12, h: 7 } },
-        corosyncLinksPanel { gridPos: { x: 12, y: 85, w: 12, h: 7 } },
-        corosyncLatencyPanel { gridPos: { x: 0, y: 92, w: 12, h: 7 } },
-        corosyncTokenRoundPanel { gridPos: { x: 12, y: 92, w: 12, h: 7 } },
-        corosyncFlapsTimePanel { gridPos: { x: 0, y: 99, w: 6, h: 7 } },
-        corosyncTokenLossTimePanel { gridPos: { x: 6, y: 99, w: 6, h: 7 } },
-        corosyncRetransmitsTimePanel { gridPos: { x: 12, y: 99, w: 6, h: 7 } },
-        corosyncBacklogPanel { gridPos: { x: 18, y: 99, w: 6, h: 7 } },
-        row.new('Node OS overview') + { gridPos: { x: 0, y: 106, w: 24, h: 1 } },
-        osNodesOnlinePanel { gridPos: { x: 0, y: 107, w: 4, h: 5 } },
-        osNodesTablePanel { gridPos: { x: 4, y: 107, w: 20, h: 5 } },
-        row.new('Node CPU & memory') + { gridPos: { x: 0, y: 112, w: 24, h: 1 } },
-        osCpuPanel { gridPos: { x: 0, y: 113, w: 6, h: 7 } },
-        osMemoryPanel { gridPos: { x: 6, y: 113, w: 6, h: 7 } },
-        osLoadPanel { gridPos: { x: 12, y: 113, w: 6, h: 7 } },
-        osOomPanel { gridPos: { x: 18, y: 113, w: 6, h: 7 } },
-        osCpuPerCorePanel { gridPos: { x: 0, y: 120, w: 12, h: 7 } },
-        osCpuPerSocketPanel { gridPos: { x: 12, y: 120, w: 12, h: 7 } },
-        row.new('Node disk & network') + { gridPos: { x: 0, y: 127, w: 24, h: 1 } },
-        osFilesystemPanel { gridPos: { x: 0, y: 128, w: 8, h: 7 } },
-        osDiskIOPanel { gridPos: { x: 8, y: 128, w: 8, h: 7 } },
-        osNetworkPanel { gridPos: { x: 16, y: 128, w: 8, h: 7 } },
-        row.new('SMART (disk health)') + { gridPos: { x: 0, y: 135, w: 24, h: 1 } },
-        smartDevicesPanel { gridPos: { x: 0, y: 136, w: 4, h: 4 } },
-        smartIssuesPanel { gridPos: { x: 4, y: 136, w: 4, h: 4 } },
-        smartTablePanel { gridPos: { x: 8, y: 136, w: 16, h: 6 } },
-        smartTemperaturePanel { gridPos: { x: 0, y: 142, w: 12, h: 7 } },
-        smartWearoutPanel { gridPos: { x: 12, y: 142, w: 12, h: 7 } },
+        guestCoresPanel { gridPos: { x: 0, y: 44, w: 24, h: 8 } },
+        guestCpuPanel { gridPos: { x: 0, y: 52, w: 12, h: 7 } },
+        guestMemoryPanel { gridPos: { x: 12, y: 52, w: 12, h: 7 } },
+        guestNetworkPanel { gridPos: { x: 0, y: 59, w: 12, h: 7 } },
+        guestDiskPanel { gridPos: { x: 12, y: 59, w: 12, h: 7 } },
+        guestLocksPanel { gridPos: { x: 0, y: 66, w: 12, h: 6 } },
+        guestOomPanel { gridPos: { x: 12, y: 66, w: 12, h: 6 } },
+        guestCpuPerCorePanel { gridPos: { x: 0, y: 72, w: 12, h: 7 } },
+        guestCpuPerSocketPanel { gridPos: { x: 12, y: 72, w: 12, h: 7 } },
+        row.new('Replication') + { gridPos: { x: 0, y: 79, w: 24, h: 1 } },
+        replicationPanel { gridPos: { x: 0, y: 80, w: 24, h: 7 } },
+        row.new('Operations') + { gridPos: { x: 0, y: 87, w: 24, h: 1 } },
+        haStatePanel { gridPos: { x: 0, y: 88, w: 8, h: 7 } },
+        subscriptionPanel { gridPos: { x: 8, y: 88, w: 12, h: 7 } },
+        notBackedUpPanel { gridPos: { x: 20, y: 88, w: 4, h: 7 } },
+        row.new('Corosync') + { gridPos: { x: 0, y: 95, w: 24, h: 1 } },
+        corosyncQuoratePanel { gridPos: { x: 0, y: 96, w: 4, h: 4 } },
+        corosyncMarginPanel { gridPos: { x: 4, y: 96, w: 4, h: 4 } },
+        corosyncLinksDownPanel { gridPos: { x: 8, y: 96, w: 4, h: 4 } },
+        corosyncFlapsPanel { gridPos: { x: 12, y: 96, w: 4, h: 4 } },
+        corosyncTokenLossPanel { gridPos: { x: 16, y: 96, w: 4, h: 4 } },
+        corosyncRetransmitsPanel { gridPos: { x: 20, y: 96, w: 4, h: 4 } },
+        corosyncNodesPanel { gridPos: { x: 0, y: 100, w: 12, h: 7 } },
+        corosyncLinksPanel { gridPos: { x: 12, y: 100, w: 12, h: 7 } },
+        corosyncLatencyPanel { gridPos: { x: 0, y: 107, w: 12, h: 7 } },
+        corosyncTokenRoundPanel { gridPos: { x: 12, y: 107, w: 12, h: 7 } },
+        corosyncFlapsTimePanel { gridPos: { x: 0, y: 114, w: 6, h: 7 } },
+        corosyncTokenLossTimePanel { gridPos: { x: 6, y: 114, w: 6, h: 7 } },
+        corosyncRetransmitsTimePanel { gridPos: { x: 12, y: 114, w: 6, h: 7 } },
+        corosyncBacklogPanel { gridPos: { x: 18, y: 114, w: 6, h: 7 } },
+        row.new('Node OS overview') + { gridPos: { x: 0, y: 121, w: 24, h: 1 } },
+        osNodesOnlinePanel { gridPos: { x: 0, y: 122, w: 4, h: 5 } },
+        osNodesTablePanel { gridPos: { x: 4, y: 122, w: 20, h: 5 } },
+        row.new('Node CPU & memory') + { gridPos: { x: 0, y: 127, w: 24, h: 1 } },
+        osCpuPanel { gridPos: { x: 0, y: 128, w: 6, h: 7 } },
+        osMemoryPanel { gridPos: { x: 6, y: 128, w: 6, h: 7 } },
+        osLoadPanel { gridPos: { x: 12, y: 128, w: 6, h: 7 } },
+        osOomPanel { gridPos: { x: 18, y: 128, w: 6, h: 7 } },
+        osCpuPerCorePanel { gridPos: { x: 0, y: 135, w: 12, h: 7 } },
+        osCpuPerSocketPanel { gridPos: { x: 12, y: 135, w: 12, h: 7 } },
+        row.new('Node disk & network') + { gridPos: { x: 0, y: 142, w: 24, h: 1 } },
+        osFilesystemPanel { gridPos: { x: 0, y: 143, w: 8, h: 7 } },
+        osDiskIOPanel { gridPos: { x: 8, y: 143, w: 8, h: 7 } },
+        osNetworkPanel { gridPos: { x: 16, y: 143, w: 8, h: 7 } },
+        row.new('SMART (disk health)') + { gridPos: { x: 0, y: 150, w: 24, h: 1 } },
+        smartDevicesPanel { gridPos: { x: 0, y: 151, w: 4, h: 4 } },
+        smartIssuesPanel { gridPos: { x: 4, y: 151, w: 4, h: 4 } },
+        smartTablePanel { gridPos: { x: 8, y: 151, w: 16, h: 6 } },
+        smartTemperaturePanel { gridPos: { x: 0, y: 157, w: 12, h: 7 } },
+        smartWearoutPanel { gridPos: { x: 12, y: 157, w: 12, h: 7 } },
       ];
 
       dashboard.new('Proxmox VE')
