@@ -36,7 +36,7 @@
                   expr=alert.expr % std.makeArray(std.length(std.findSubstr('job=~"%s"', alert.expr)), function(x) std.join('|', $.hostJobs)),
                   thresholds=alert.thresholds,
                   link=alert.link,
-                  customLables=alert.customLables,
+                  customLabels=alert.customLabels,
                 )
                 for alert in alerts
               ]

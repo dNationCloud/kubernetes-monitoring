@@ -13,9 +13,10 @@
 # limitations under the License.
 #
 
-# Proxmox alerting. Separate from the Kubernetes rules (rules.yaml):
-# own jsonnet entry point and own PrometheusRule label (proxmoxAlerting.labelPrometheus).
-{{- if .Values.proxmoxAlerting.enabled }}
+# Proxmox alerting. Separate from the Kubernetes rules (k8s-rules.yaml): own jsonnet entry
+# point. The same translator writes these rules to their own PrometheusRule object
+# (proxmoxRules.rulesObjectName) with their own label (proxmoxRules.labelPrometheus).
+{{- if .Values.proxmoxRules.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -25,15 +26,16 @@ metadata:
 {{ include "k8s-monitoring.labels" . | indent 4 }}
     app: {{ include "k8s-monitoring.name" . }}
     release: {{ include "k8s-monitoring.release" . }}
-{{- with .Values.proxmoxAlerting.labelJsonnet }}
+{{- with .Values.prometheusRules.labelJsonnet }}
 {{ toYaml . | indent 4 }}
 {{- end }}
   annotations:
 {{ include "k8s-monitoring.annotations" . | indent 4 }}
     jsonnet_filename: "rules-proxmox.jsonnet"
+    prometheus_rules_object_name: {{ .Values.proxmoxRules.rulesObjectName | quote }}
     tla_codes: |-
       { 'customConfig': '{{ .Values | mustToJson }}' }
-{{- with .Values.proxmoxAlerting.labelPrometheus }}
+{{- with .Values.proxmoxRules.labelPrometheus }}
     prometheus_label: {{ printf "%s=%s" (first (keys .)) (first (values .)) | quote }}
 {{- end }}
 binaryData:

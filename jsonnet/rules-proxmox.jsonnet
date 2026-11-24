@@ -17,7 +17,7 @@
   Proxmox alerting: generates Prometheus rules for Proxmox VE clusters.
 
   Kept apart from the Kubernetes alerting (rules.jsonnet, templates.libsonnet):
-  own configuration (rules/proxmox/config.libsonnet, Helm values `proxmoxAlerting`),
+  own configuration (rules/proxmox/config.libsonnet, Helm values `proxmoxRules`),
   own ConfigMap and own PrometheusRule label, so the rules can be evaluated by
   a different component (e.g. Thanos Ruler) than the Kubernetes rules.
 */
@@ -31,10 +31,10 @@ function(customConfig={})
   /**
    * Generate Proxmox prometheus rules
    *
-   * @param customConfig Helm values (the `proxmoxAlerting` key is used).
+   * @param customConfig Helm values (the `proxmoxRules` key is used).
    * @return one prometheus rule object per file name.
    */
-  local cfg = std.mergePatch(defaults, if std.objectHas(customConfig, 'proxmoxAlerting') then customConfig.proxmoxAlerting else {});
+  local cfg = std.mergePatch(defaults, if std.objectHas(customConfig, 'proxmoxRules') then customConfig.proxmoxRules else {});
   local sets = {
     'proxmox-nodes': nodes,
     'proxmox-ceph': ceph,

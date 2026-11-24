@@ -17,7 +17,7 @@
   Default configuration of Proxmox alerting.
 
   Independent of the Kubernetes alerting (config.libsonnet, templates.libsonnet).
-  Every value can be overridden from Helm values under `proxmoxAlerting`
+  Every value can be overridden from Helm values under `proxmoxRules`
   (JSON merge patch, RFC 7396).
 
   Thresholds of every alert (same model as the Kubernetes thresholds):

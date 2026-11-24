@@ -65,11 +65,11 @@ prometheusRules:
 ## Thresholds per alert (same model as the Kubernetes thresholds): type (absolute|percent),
 ## operator (direction, e.g. '>=' or '<='), warning, critical.
 ## Set warning or critical to false to drop that rule (Helm removes keys set to null).
-proxmoxAlerting:
+proxmoxRules:
   enabled: false
-  # Label of the Proxmox jsonnet rule ConfigMap, watched by proxmox-jsonnet-translator
-  labelJsonnet:
-    prometheus_rule_pve_jsonnet: '1'
+  # PrometheusRule object the translator writes the Proxmox rules to (kept apart from
+  # the Kubernetes rules, so it can carry its own label)
+  rulesObjectName: prometheus-rules-proxmox-generated
   # Label of the generated PrometheusRule. Use a label your rule evaluator selects:
   # Thanos Ruler when Proxmox metrics are pushed to Thanos Receive, or prometheus_rule: '1'
   # when they are scraped by / remote written to Prometheus.
@@ -91,24 +91,6 @@ proxmoxAlerting:
   #       nodeDown:
   #         for: 1m
   clusters: {}
-
-## Translator instance for Proxmox alerting (enable together with proxmoxAlerting).
-## Watches only the Proxmox rule ConfigMap and writes its own PrometheusRule. The dashboard
-## selectors point to labels nothing carries, so it never touches generated dashboards.
-proxmox-jsonnet-translator:
-  enabled: false
-  image:
-    args:
-    - --jsonnet_rules_selector
-    - prometheus_rule_pve_jsonnet=1
-    - --prometheus_rules_object_name
-    - prometheus-rules-proxmox-generated
-    - --jsonnet_dashboards_selector
-    - proxmox_translator_dashboards=1
-    - --json_dashboards_selector
-    - proxmox_translator_json_dashboard=1
-    - --grafana_dashboards_cm_name
-    - grafana-dashboards-proxmox-generated
 
 ## Create dashboards for monitoring the cluster
 ##

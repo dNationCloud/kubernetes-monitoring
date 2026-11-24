@@ -70,7 +70,7 @@
                     expr=alert.expr,
                     thresholds=alert.thresholds,
                     link=alert.link,
-                    customLables=alertGroupK8sApps + alert.customLables,
+                    customLabels=alertGroupK8sApps + alert.customLabels,
                   )
                   for alert in k8sAppAlerts
                 ]
@@ -87,7 +87,7 @@
                     expr=alert.expr,
                     thresholds=alert.thresholds,
                     link=alert.link,
-                    customLables=alertGroupHostApps + alert.customLables,
+                    customLabels=alertGroupHostApps + alert.customLabels,
                   )
                   for alert in hostAppAlerts
                 ]
@@ -104,7 +104,7 @@
                     expr=alert.expr,
                     thresholds=alert.thresholds,
                     link=alert.link,
-                    customLables=alertGroupVmApps + alert.customLables,
+                    customLabels=alertGroupVmApps + alert.customLabels,
                   )
                   for alert in vmAppAlerts
                 ]

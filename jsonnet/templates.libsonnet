@@ -26,7 +26,7 @@
           {
             name: templates[template].alert.name % { prefix: group },
             message: templates[template].alert.message % { prefix: group },
-            customLables: { alertgroup: group },
+            customLabels: { alertgroup: group },
           }
         else
           {},
@@ -111,7 +111,7 @@
       baseAlert: {
         name: 'error must be overwritten',
         message: '',
-        customLables: {},
+        customLabels: {},
         expr: '',
         linkGetParams: '',
         thresholds: {},
@@ -161,13 +161,13 @@
     L1: {
       local maxWarnings = $.defaultConfig.grafanaDashboards.constants.maxWarnings,
       k8s: {
-        local k8sCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupCluster },
+        local k8sCustomLabels = { alertgroup: $.defaultConfig.prometheusRules.alertGroupCluster },
         targetDown: {
           panel: null,
           alert: {
             name: 'ClusterTargetDown',
             message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: '100 * (count by(job, namespace, service, cluster) (up{pod!~"virt-launcher.*|"} == 0) / count by(job, namespace, service, cluster) (up{pod!~"virt-launcher.*|"}))',
             thresholds: {
               operator: '>=',
@@ -193,7 +193,7 @@
           alert: {
             name: 'NodesHealthLow',
             message: 'Nodes Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round(sum(kube_node_info) by (cluster) / (sum(kube_node_info) by (cluster) + sum(kube_node_spec_unschedulable) by (cluster) + sum(kube_node_status_condition{condition=~"DiskPressure|MemoryPressure|PIDPressure", status=~"true|unknown"}) by (cluster) + sum(kube_node_status_condition{condition="Ready", status=~"false|unknown"}) by (cluster)) * 100)',
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -216,7 +216,7 @@
           alert: {
             name: 'RunningPodsHealthLow',
             message: 'Pods Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round(sum(kube_pod_status_phase{phase="Running"}) by (cluster) / (sum(kube_pod_status_phase{phase="Running"}) by (cluster) + sum(kube_pod_status_phase{phase="Pending"}) by (cluster) + sum(kube_pod_status_phase{phase="Failed"}) by (cluster) + sum(kube_pod_status_phase{phase="Unknown"}) by (cluster)) * 100)',
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -239,7 +239,7 @@
           alert: {
             name: 'RunningStatefulSetsHealthLow',
             message: 'StatefulSets Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round(sum(kube_statefulset_status_replicas_ready) by (cluster) / sum(kube_statefulset_status_replicas) by (cluster) * 100)',
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -262,7 +262,7 @@
           alert: {
             name: 'RunningDaemonSetsHealthLow',
             message: 'DaemonSets Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round((sum(kube_daemonset_status_updated_number_scheduled OR kube_daemonset_updated_number_scheduled) by (cluster) + sum(kube_daemonset_status_number_available) by (cluster)) / (2 * sum(kube_daemonset_status_desired_number_scheduled) by (cluster)) * 100)',
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -289,7 +289,7 @@
           alert: {
             name: 'PVCBoundRateLow',
             message: 'PVC Bound Rate Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round(sum(kube_persistentvolumeclaim_status_phase{phase="Bound"}) by (cluster) / (\nsum(kube_persistentvolumeclaim_status_phase{phase="Bound"}) by (cluster) + sum(kube_persistentvolumeclaim_status_phase{phase="Pending"}) by (cluster) +\nsum(kube_persistentvolumeclaim_status_phase{phase="Lost"}) by (cluster)\n) * 100)',
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -312,7 +312,7 @@
           alert: {
             name: 'RunningDeploymentsHealthLow',
             message: 'Running Deployments Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round((sum(kube_deployment_status_replicas_updated) by (cluster) + sum(kube_deployment_status_replicas_available) by (cluster)) / (2 * sum(kube_deployment_status_replicas) by (cluster)) * 100)',
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -335,7 +335,7 @@
           alert: {
             name: 'RunningContainersHealthLow',
             message: 'Running Containers Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round(sum(kube_pod_container_status_running) by (cluster) / (sum(kube_pod_container_status_running) by (cluster) + (count(kube_pod_container_status_terminated) by (cluster) - count(kube_pod_container_status_terminated unless ignoring(reason) kube_pod_container_status_terminated_reason{reason!="Completed"}) by (cluster)) + sum(kube_pod_container_status_waiting) by (cluster)) * 100)',
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -361,7 +361,7 @@
           alert: {
             name: 'SucceededJobsRateLow',
             message: 'Succeeded Jobs Rate Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round(sum(kube_job_status_succeeded) by (cluster) / (sum(kube_job_status_succeeded) by (cluster) + sum(kube_job_status_failed) by (cluster)) * 100)',
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -391,7 +391,7 @@
           alert: {
             name: 'PVCUtilizationHigh',
             message: '"{{ $labels.persistentvolumeclaim }}": High PVC Utilization {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'sum(((kubelet_volume_stats_capacity_bytes - kubelet_volume_stats_available_bytes) / kubelet_volume_stats_capacity_bytes) * 100) by (persistentvolumeclaim, cluster)',
             linkGetParams: 'var-pvc={{ $labels.persistentvolumeclaim }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -416,7 +416,7 @@
           alert: {
             name: 'ClusterApiServerHealthLow',
             message: 'Cluster Api Server Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: '(sum(up{%(apiServer)s}) by (cluster) / count(up{%(apiServer)s}) by (cluster)) * 100' % $.defaultConfig.grafanaDashboards.selectors,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -441,7 +441,7 @@
           alert: {
             name: 'ClusterControllerManagerHealthLow',
             message: 'Cluster Controller Manager Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: '(sum(up{%(controllerManager)s}) by (cluster) / count(up{%(controllerManager)s}) by (cluster)) * 100' % $.defaultConfig.grafanaDashboards.selectors,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -466,7 +466,7 @@
           alert: {
             name: 'ClusterEtcdHealthLow',
             message: 'Cluster Etcd Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: '(sum(up{%(etcd)s}) by (cluster) / count(up{%(etcd)s}) by (cluster)) * 100' % $.defaultConfig.grafanaDashboards.selectors,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -491,7 +491,7 @@
           alert: {
             name: 'ClusterKubeletHealthLow',
             message: 'Cluster Kubelet Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: '(sum(up{%(kubelet)s, metrics_path="/metrics"}) by (cluster) / count(up{%(kubelet)s, metrics_path="/metrics"}) by (cluster)) * 100' % $.defaultConfig.grafanaDashboards.selectors,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -516,7 +516,7 @@
           alert: {
             name: 'ClusterProxyHealthLow',
             message: 'Cluster Proxy Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: '(sum(up{%(proxy)s}) by (cluster) / count(up{%(proxy)s}) by (cluster)) * 100' % $.defaultConfig.grafanaDashboards.selectors,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -541,7 +541,7 @@
           alert: {
             name: 'ClusterSchedulerHealthLow',
             message: 'Cluster Scheduler Health Low {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: '(sum(up{%(scheduler)s}) by (cluster) / count(up{%(scheduler)s}) by (cluster)) * 100' % $.defaultConfig.grafanaDashboards.selectors,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -569,7 +569,7 @@
           alert: {
             name: 'ClusterMasterNodeCPUUtilizationHigh',
             message: 'Cluster Master Node {{ $labels.nodename }}: High CPU Utilization {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round((1 - (avg(irate(node_cpu_seconds_total{%(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, cluster) )) * 100)' % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -597,7 +597,7 @@
           alert: {
             name: 'ClusterMasterNodesRAMUtilizationHigh',
             message: 'Cluster Master Node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename, cluster) (node_memory_MemTotal_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info))) * 100)' % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -622,7 +622,7 @@
           alert: {
             name: 'ClusterMasterNodeDiskUtilizationHigh',
             message: 'Cluster Master Node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round((sum(node_filesystem_size_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster)) / ((sum(node_filesystem_size_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster)) + sum(node_filesystem_avail_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster)) * 100)' % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -654,7 +654,7 @@
           alert: {
             name: 'ClusterMasterNodeNetworkErrorsHigh',
             message: 'Cluster Master Node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'sum(rate(node_network_transmit_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename, cluster) + sum(rate(node_network_receive_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename, cluster)' % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -682,7 +682,7 @@
             name: 'ClusterMasterNodesCPUOverallHigh',
             message: 'Cluster Master Nodes High CPU Overall Utilization {{ $value }}%',
             expr: 'avg(%s) by (cluster)' % 'round((1 - (avg(irate(node_cpu_seconds_total{%(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, cluster) )) * 100)' % { job: 'job=~"node-exporter"' },
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
           },
@@ -710,7 +710,7 @@
             name: 'ClusterMasterNodesRAMOverallHigh',
             message: 'Cluster Master Nodes High RAM Overall Utilization {{ $value }}%',
             expr: 'avg(%s) by (cluster)' % 'round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) / sum by (job, nodename, cluster) (node_memory_MemTotal_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info))) * 100)' % { job: 'job=~"node-exporter"' },
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
           },
@@ -735,7 +735,7 @@
             name: 'ClusterMasterNodesDiskOverallHigh',
             message: 'Cluster Master Nodes High Disk Overall Utilization {{ $value }}%',
             expr: 'avg(%s) by (cluster)' % 'round((sum(node_filesystem_size_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster)) / ((sum(node_filesystem_size_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster)) + sum(node_filesystem_avail_bytes{%(job)s} * on(instance, pod) group_left(nodename) (master_uname_info)) by (job, nodename, device, cluster)) * 100 > 0)' % { job: 'job=~"node-exporter"' },
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
           },
@@ -767,7 +767,7 @@
             name: 'ClusterMasterNodesNetworkOverallErrorsHigh',
             message: 'Cluster Master Nodes High Overall Network Errors Count {{ $value }}%',
             expr: 'sum(%s) by (cluster)' % 'sum(rate(node_network_transmit_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename, cluster) + sum(rate(node_network_receive_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (master_uname_info) ) by (job, nodename, cluster)' % { job: 'job=~"node-exporter"' },
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
           },
@@ -890,7 +890,7 @@
           alert: {
             name: 'ClusterWorkerNodeCPUUtilizationHigh',
             message: 'Cluster Worker Node {{ $labels.nodename }}: High CPU Utilization {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round((1 - (avg(irate(node_cpu_seconds_total{%(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, cluster) )) * 100)' % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -918,7 +918,7 @@
           alert: {
             name: 'ClusterWorkerNodesRAMUtilizationHigh',
             message: 'Cluster Worker Node {{ $labels.nodename }}: High RAM Utilization {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename, cluster) (node_memory_MemTotal_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info))) * 100)' % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -943,7 +943,7 @@
           alert: {
             name: 'ClusterWorkerNodeDiskUtilizationHigh',
             message: 'Cluster Worker Node {{ $labels.nodename }}: High Disk Utilization {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'round((sum(node_filesystem_size_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster)) / ((sum(node_filesystem_size_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster)) + sum(node_filesystem_avail_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster)) * 100)' % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -975,7 +975,7 @@
           alert: {
             name: 'ClusterWorkerNodeNetworkErrorsHigh',
             message: 'Cluster Worker Node {{ $labels.nodename }}: High Network Errors Count {{ $value }}%',
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             expr: 'sum(rate(node_network_transmit_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename, cluster) + sum(rate(node_network_receive_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename, cluster)' % { job: 'job=~"node-exporter"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}&var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
@@ -1003,7 +1003,7 @@
             name: 'ClusterWorkerNodesCPUOverallHigh',
             message: 'Cluster Worker Nodes High CPU Overall Utilization {{ $value }}%',
             expr: 'avg(%s) by (cluster)' % 'round((1 - (avg(irate(node_cpu_seconds_total{%(job)s, mode="idle"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, cluster) )) * 100)' % { job: 'job=~"node-exporter"' },
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
           },
@@ -1031,7 +1031,7 @@
             name: 'ClusterWorkerNodesRAMOverallHigh',
             message: 'Cluster Worker Nodes High RAM Overall Utilization {{ $value }}%',
             expr: 'avg(%s) by (cluster)' % 'round((1 - sum by (job, nodename, cluster) (node_memory_MemAvailable_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) / sum by (job, nodename, cluster) (node_memory_MemTotal_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info))) * 100)' % { job: 'job=~"node-exporter"' },
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
           },
@@ -1056,7 +1056,7 @@
             name: 'ClusterWorkerNodesDiskOverallHigh',
             message: 'Cluster Worker Nodes High Disk Overall Utilization {{ $value }}%',
             expr: 'avg(%s) by (cluster)' % 'round((sum(node_filesystem_size_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster)) / ((sum(node_filesystem_size_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster) - sum(node_filesystem_free_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster)) + sum(node_filesystem_avail_bytes{%(job)s} * on(instance, pod) group_left(nodename) (worker_uname_info)) by (job, nodename, device, cluster)) * 100 > 0)' % { job: 'job=~"node-exporter"' },
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
           },
@@ -1088,7 +1088,7 @@
             name: 'ClusterWorkerNodesNetworkOverallErrorsHigh',
             message: 'Cluster Worker Nodes High Overall Network Errors Count {{ $value }}%',
             expr: 'sum(%s) by (cluster)' % 'sum(rate(node_network_transmit_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"} [5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename, cluster) + sum(rate(node_network_receive_errs_total{%(job)s, device!~"lo|veth.+|docker.+|flannel.+|cali.+|cbr.|cni.+|br.+"}[5m]) * on(instance, pod) group_left(nodename) (worker_uname_info) ) by (job, nodename, cluster)' % { job: 'job=~"node-exporter"' },
-            customLables: k8sCustomLables,
+            customLabels: k8sCustomLabels,
             linkGetParams: 'var-cluster={{ $externalLabels.cluster }}',
             thresholds: thresholds,
           },
@@ -1192,14 +1192,14 @@
       },
 
       host: {
-        local hostCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupHost },
+        local hostCustomLabels = { alertgroup: $.defaultConfig.prometheusRules.alertGroupHost },
 
         targetDown: {
           panel: null,
           alert: {
             name: 'HostTargetDown',
             message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
-            customLables: hostCustomLables,
+            customLabels: hostCustomLabels,
             expr: '100 * (count by(job, namespace, service) (up{job=~"%s"} == 0) / count by(job, namespace, service) (up{job=~"%s"}))',
             thresholds: {
               operator: '>=',
@@ -1227,7 +1227,7 @@
             message: 'Host {{ $labels.nodename }}: High CPU Overall Utilization {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
-            customLables: hostCustomLables,
+            customLabels: hostCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -1251,7 +1251,7 @@
             message: 'Host {{ $labels.nodename }}: High RAM Overall Utilization {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
-            customLables: hostCustomLables,
+            customLabels: hostCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -1275,7 +1275,7 @@
             message: 'Host {{ $labels.nodename }}: High Disk Overall Utilization {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
-            customLables: hostCustomLables,
+            customLabels: hostCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -1303,7 +1303,7 @@
             message: 'Host {{ $labels.nodename }}: High Overall Network Errors Count {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
-            customLables: hostCustomLables,
+            customLabels: hostCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -2544,14 +2544,14 @@
         },
       },
       vm: {
-        local vmCustomLables = { alertgroup: $.defaultConfig.prometheusRules.alertGroupClusterVM },
+        local vmCustomLabels = { alertgroup: $.defaultConfig.prometheusRules.alertGroupClusterVM },
 
         targetDown: {
           panel: null,
           alert: {
             name: 'VMTargetDown',
             message: '{{ printf "%.4g" $value }}% of the {{ $labels.job }}/{{ $labels.service }} targets in {{ $labels.namespace }} namespace are down.',
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             expr: '100 * (count by(job, namespace, service) (up{job=~"%s"} == 0) / count by(job, namespace, service) (up{job=~"%s"}))',
             thresholds: {
               operator: '>=',
@@ -2579,7 +2579,7 @@
             name: 'VMCPUOverallHigh',
             message: 'VM High CPU Overall Utilization {{ $value }}%',
             expr: 'avg(%s)' % expr % { job: 'job=~"%s"' },
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -2603,7 +2603,7 @@
             message: 'VM {{ $labels.nodename }}: High CPU Utilization {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -2627,7 +2627,7 @@
             name: 'VMRAMOverallHigh',
             message: 'VM High RAM Overall Utilization {{ $value }}%',
             expr: 'avg(%s)' % expr % { job: 'job=~"%s"' },
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -2652,7 +2652,7 @@
             message: 'VM {{ $labels.nodename }}: High RAM Utilization {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -2676,7 +2676,7 @@
             name: 'VMDiskOverallHigh',
             message: 'VM High Disk Overall Utilization {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -2701,7 +2701,7 @@
             message: 'VM {{ $labels.nodename }}: High Disk Utilization {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -2729,7 +2729,7 @@
             name: 'VMNetworkOverallErrorsHigh',
             message: 'VM High Overall Network Errors Count {{ $value }}%',
             expr: 'sum(%s)' % expr % { job: 'job=~"%s"' },
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             thresholds: thresholds,
           },
         },
@@ -2758,7 +2758,7 @@
             message: 'VM {{ $labels.nodename }}: High Network Errors Count {{ $value }}%',
             expr: expr % { job: 'job=~"%s"' },
             linkGetParams: 'var-instance={{ $labels.nodename }}',
-            customLables: vmCustomLables,
+            customLabels: vmCustomLabels,
             thresholds: thresholds,
           },
         },
