@@ -31,6 +31,14 @@ dependencies:
   version: "2.0.*"
   repository: https://dnationcloud.github.io/helm-hub/
   condition: dnation-kubernetes-jsonnet-translator.enabled
+# Second translator instance for Proxmox alerting. The translator merges all rule
+# ConfigMaps it watches into one PrometheusRule with one label, so Proxmox rules need
+# their own instance to get their own PrometheusRule and label.
+- name: dnation-kubernetes-jsonnet-translator
+  alias: proxmox-jsonnet-translator
+  version: "2.0.*"
+  repository: https://dnationcloud.github.io/helm-hub/
+  condition: proxmox-jsonnet-translator.enabled
 icon: https://cdn.ifne.eu/public/icons/dnation_k8sm8g.png
 maintainers:
 - name: dNation

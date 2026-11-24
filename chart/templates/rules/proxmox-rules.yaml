@@ -1,0 +1,41 @@
+#
+# Copyright 2026 The dNation Kubernetes Monitoring Authors. All Rights Reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Proxmox alerting. Separate from the Kubernetes rules (rules.yaml):
+# own jsonnet entry point and own PrometheusRule label (proxmoxAlerting.labelPrometheus).
+{{- if .Values.proxmoxAlerting.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ include "k8s-monitoring.namespace" . }}
+  name: {{ include "k8s-monitoring.fullname" . }}-proxmox-rules-jsonnet
+  labels:
+{{ include "k8s-monitoring.labels" . | indent 4 }}
+    app: {{ include "k8s-monitoring.name" . }}
+    release: {{ include "k8s-monitoring.release" . }}
+{{- with .Values.proxmoxAlerting.labelJsonnet }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+  annotations:
+{{ include "k8s-monitoring.annotations" . | indent 4 }}
+    jsonnet_filename: "rules-proxmox.jsonnet"
+    tla_codes: |-
+      { 'customConfig': '{{ .Values | mustToJson }}' }
+{{- with .Values.proxmoxAlerting.labelPrometheus }}
+    prometheus_label: {{ printf "%s=%s" (first (keys .)) (first (values .)) | quote }}
+{{- end }}
+binaryData:
+  jsonnet-rules.tar.gz: {{ .Files.Get "jsonnet-rules.tar.gz" | b64enc }}
+{{- end }}

@@ -59,6 +59,57 @@ prometheusRules:
   labelPrometheus:
     prometheus_rule: '1'
 
+## Proxmox alerting
+## Prometheus rules for Proxmox VE clusters (nodes and Ceph), separate from the Kubernetes rules above.
+## Defaults of every alert are in jsonnet/rules/proxmox/config.libsonnet; values here override them.
+## Thresholds per alert (same model as the Kubernetes thresholds): type (absolute|percent),
+## operator (direction, e.g. '>=' or '<='), warning, critical.
+## Set warning or critical to false to drop that rule (Helm removes keys set to null).
+proxmoxAlerting:
+  enabled: false
+  # Label of the Proxmox jsonnet rule ConfigMap, watched by proxmox-jsonnet-translator
+  labelJsonnet:
+    prometheus_rule_pve_jsonnet: '1'
+  # Label of the generated PrometheusRule. Use a label your rule evaluator selects:
+  # Thanos Ruler when Proxmox metrics are pushed to Thanos Receive, or prometheus_rule: '1'
+  # when they are scraped by / remote written to Prometheus.
+  labelPrometheus:
+    prometheus_rule_pve: '1'
+  # Labels added to every Proxmox alert
+  commonLabels: {}
+  # Global settings per alert, e.g.
+  # alerts:
+  #   nodeDown:
+  #     for: 10m
+  #     labels:
+  #       team: infra
+  alerts: {}
+  # Per cluster overrides (key = value of the `cluster` label), merged onto the global settings, e.g.
+  # clusters:
+  #   my-pve-cluster:
+  #     alerts:
+  #       nodeDown:
+  #         for: 1m
+  clusters: {}
+
+## Translator instance for Proxmox alerting (enable together with proxmoxAlerting).
+## Watches only the Proxmox rule ConfigMap and writes its own PrometheusRule. The dashboard
+## selectors point to labels nothing carries, so it never touches generated dashboards.
+proxmox-jsonnet-translator:
+  enabled: false
+  image:
+    args:
+    - --jsonnet_rules_selector
+    - prometheus_rule_pve_jsonnet=1
+    - --prometheus_rules_object_name
+    - prometheus-rules-proxmox-generated
+    - --jsonnet_dashboards_selector
+    - proxmox_translator_dashboards=1
+    - --json_dashboards_selector
+    - proxmox_translator_json_dashboard=1
+    - --grafana_dashboards_cm_name
+    - grafana-dashboards-proxmox-generated
+
 ## Create dashboards for monitoring the cluster
 ##
 grafanaDashboards:
