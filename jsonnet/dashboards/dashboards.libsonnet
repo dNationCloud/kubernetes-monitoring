@@ -74,6 +74,7 @@
 (import 'apps/harbor.libsonnet') +
 (import 'apps/ceph.libsonnet') +
 (import 'apps/openstack.libsonnet') +
+(import 'apps/proxmox.libsonnet') +
 
 // VMs dashboards
 (import 'vms/vm-monitoring.libsonnet') +

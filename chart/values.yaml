@@ -59,6 +59,39 @@ prometheusRules:
   labelPrometheus:
     prometheus_rule: '1'
 
+## Proxmox alerting
+## Prometheus rules for Proxmox VE clusters (nodes and Ceph), separate from the Kubernetes rules above.
+## Defaults of every alert are in jsonnet/rules/proxmox/config.libsonnet; values here override them.
+## Thresholds per alert (same model as the Kubernetes thresholds): type (absolute|percent),
+## operator (direction, e.g. '>=' or '<='), warning, critical.
+## Set warning or critical to false to drop that rule (Helm removes keys set to null).
+proxmoxRules:
+  enabled: false
+  # PrometheusRule object the translator writes the Proxmox rules to (kept apart from
+  # the Kubernetes rules, so it can carry its own label)
+  rulesObjectName: prometheus-rules-proxmox-generated
+  # Label of the generated PrometheusRule. Use a label your rule evaluator selects:
+  # Thanos Ruler when Proxmox metrics are pushed to Thanos Receive, or prometheus_rule: '1'
+  # when they are scraped by / remote written to Prometheus.
+  labelPrometheus:
+    prometheus_rule_pve: '1'
+  # Labels added to every Proxmox alert
+  commonLabels: {}
+  # Global settings per alert, e.g.
+  # alerts:
+  #   nodeDown:
+  #     for: 10m
+  #     labels:
+  #       team: infra
+  alerts: {}
+  # Per cluster overrides (key = value of the `cluster` label), merged onto the global settings, e.g.
+  # clusters:
+  #   my-pve-cluster:
+  #     alerts:
+  #       nodeDown:
+  #         for: 1m
+  clusters: {}
+
 ## Create dashboards for monitoring the cluster
 ##
 grafanaDashboards:

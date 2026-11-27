@@ -24,7 +24,7 @@ jsonnet-package-dashboards:
 
 jsonnet-package-rules:
 	@echo "[Packaging jsonnet rule files]"
-	tar -czf chart/jsonnet-rules.tar.gz -C jsonnet rules config.libsonnet templates.libsonnet util.libsonnet rules.jsonnet
+	tar -czf chart/jsonnet-rules.tar.gz -C jsonnet rules config.libsonnet templates.libsonnet util.libsonnet rules.jsonnet rules-proxmox.jsonnet
 
 helm-lint:
 	@echo "[Linting helm chart]"
@@ -33,6 +33,10 @@ helm-lint:
 json-dashboards:
 	@echo "[Building grafana dashboards]"
 	docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m json jsonnet/dashboards.jsonnet
+
+json-rules-proxmox:
+	@echo "[Building Proxmox prometheus rules]"
+	docker run -u `id -u` --rm -t -v `pwd`:/src dnationcloud/jsonnet:latest jsonnet -c -m json jsonnet/rules-proxmox.jsonnet
 
 json-rules:
 	@echo "[Building prometheus rules]"
